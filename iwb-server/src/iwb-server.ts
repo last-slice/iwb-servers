@@ -13,7 +13,11 @@ import { listen } from "@colyseus/tools";
 // Import Colyseus config
 import app from "./app.config";
 
-require('dotenv').config();
+require('dotenv').config({path: "../.env"});
+
+export const playFabTitleId = process.env.PLAYFAB_ID;
+export const playFabSecretKey = process.env.PLAYFAB_KEY;
+
 const port = parseInt(process.env.NODE_ENV === 'production' ? process.env.PROD_SERVER_PORT : process.env.DEV_SERVER_PORT);
 
 listen(app, port);

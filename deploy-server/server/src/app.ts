@@ -6,7 +6,7 @@ import * as dotenv from "dotenv";
 import 'dotenv/config'
 import { router } from "./api/api.router";
 
-dotenv.config({ path: __dirname+'/.env' });
+dotenv.config({ path: '../.env', });
 
 const devServerPort = process.env.DEV_SERVER_PORT
 const prodServerPort = process.env.PROD_SERVER_PORT 
@@ -29,6 +29,6 @@ app.use(bodyParser.json());
 app.use(cors({ origin: true}))
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/dcl/", router);
+app.use("/dcl/deployment", router);
 export default app;
 

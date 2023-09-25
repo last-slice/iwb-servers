@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { addDeployment } from "../deploy/deployment";
-import { buckets } from "src/deploy/buckets";
+import { buckets } from "../deploy/buckets";
 export const router = express.Router();
 
 router.get("/buckets/:bucket", async function(req: express.Request, res: express.Response) {

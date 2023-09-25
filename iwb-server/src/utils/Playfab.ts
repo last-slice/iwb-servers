@@ -1,9 +1,5 @@
 import { PlayFabClient, PlayFabServer, PlayFabAdmin } from "playfab-sdk";
-require('dotenv').config();
-
-const playFabTitleId = process.env.PLAYFAB_ID;
-const playFabSecretKey = process.env.PLAYFAB_KEY;
-
+import { playFabSecretKey, playFabTitleId } from "../iwb-server";
 
 // Initialize the PlayFab client
 PlayFabServer.settings.titleId = playFabTitleId;

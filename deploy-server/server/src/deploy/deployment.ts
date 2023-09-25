@@ -1,4 +1,4 @@
-import { deployKey } from "src/app";
+import { deployKey } from "../app";
 import { buckets } from "./buckets";
 import { updateSceneMetadata } from "./sceneData";
 
