@@ -33,7 +33,7 @@ router.post("/deploy", async function(req: express.Request, res: express.Respons
 })
 
 router.post("/iwb-deploy", async function(req: express.Request, res: express.Response) {
-    console.log("deploy api received")
+    console.log("deploy iwb api received")
     if(!req.body){
         res.status(200).json({result: "failure", msg:"invalid api call"})
         return
@@ -46,13 +46,6 @@ router.post("/iwb-deploy", async function(req: express.Request, res: express.Res
 
     //more error checking for scene data
 
-    console.log("")
-    console.log("/////////////////////////////////////////////////////////////////////")
-    console.log("new deployment pending")
-    console.log(JSON.stringify(req.body))
-    console.log("/////////////////////////////////////////////////////////////////////")
-    console.log("")
-  
-    addDeployment(req.body.scene)
-    res.status(200).json({result: "success", msg:"deployment added to queue"})
+    console.log("need to deploy iwb to world")
+    res.status(200).json({result: "success", msg:"deploying new iwb to world"})
 })

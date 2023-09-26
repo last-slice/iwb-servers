@@ -1,16 +1,30 @@
 import crypto from 'crypto';
-import { githookSecreyKey } from '../iwb-server';
+import { deploymentAuth, deploymentEndpoint, githookSecreyKey } from '../iwb-server';
+import axios from 'axios';
 
 export function handleGithook(req:any){
     const payload = JSON.stringify(req.body);
     const signature = req.header('x-hub-signature-256') || '';
-  
-    if (!verifySignature(payload, signature, githookSecreyKey)) {
-        console.log('signature failed')
+    if (verifySignature(payload, signature, githookSecreyKey)) {
+        if(req.body.ref === "refs/heads/test-webhook"){
+            console.log('githook detected push to deploy branch, init world redeploy')
+            initIWBDeploy()
+        }
     }
-    else{
-        console.log('signature verified')
-    }
+}
+
+export function initIWBDeploy(){
+    axios.post(deploymentEndpoint,{
+        auth:deploymentAuth
+    })
+    .then(function (response:any) {
+    // handle success
+    console.log(response);
+    })
+    .catch(function (error:any) {
+    // handle error
+    console.log(error);
+    })
 }
 
 function verifySignature(payload: string, signature: string, secret: string) {

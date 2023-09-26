@@ -6,7 +6,9 @@ import { ItemManager } from "./Objects/ItemManager";
 import Listener from "./utils/eventListener";
 import { initPlayFab } from "./utils/Playfab";
 import { SceneManager } from "./Objects/SceneManager";
-import { handleGithook } from "./Objects/Githooks";
+import { handleGithook, initIWBDeploy } from "./Objects/Githooks";
+import axios from "axios";
+import { deploymentAuth, deploymentEndpoint } from "./iwb-server";
 
 export let itemManager:ItemManager
 export let sceneManager:SceneManager
@@ -31,9 +33,7 @@ export default config({
         });
 
         app.post("/githook", (req, res) => {
-            console.log('githook api')
-            console.log('githook headers', req.headers)
-            console.log('githook body', req.body)
+            console.log('githook api request')
             handleGithook(req)
             res.send("It's time to kick ass and chew bubblegum!");
         });
@@ -43,6 +43,18 @@ export default config({
         }
 
         app.use("/colyseus", monitor());
+
+
+
+
+
+
+        ///test api to be remove
+        app.get("/test-deploy", (req, res) => {
+            console.log('test deploy api request')
+            initIWBDeploy()
+            res.send("It's time to kick ass and chew bubblegum!");
+        });
     },
 
 
