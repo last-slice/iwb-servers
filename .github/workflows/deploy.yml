@@ -1,15 +1,13 @@
 name: Deploy Express Apps
 
 on:
-  push:
-    branches:
-      - test-gitaction
   workflow_dispatch:
     inputs:
       app_to_deploy:
         description: 'Select the app to deploy'
         required: true
         default: 'app1' # Default to app1, you can change this to 'app2' if needed.
+
 
 jobs:
   deploy_app1:
