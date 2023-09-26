@@ -2,8 +2,9 @@ import { Room, Client } from "@colyseus/core";
 import { IWBRoomState } from "./schema/IWBRoomState";
 import { Player } from "../Objects/Player";
 import { RoomMessageHandler } from "./MessageHandler";
-import { eventListener, itemManager } from "../app.config";
+import { eventListener, itemManager, sceneManager } from "../app.config";
 import { pushPlayfabEvent } from "../Objects/PlayfabEvents";
+import { SERVER_MESSAGE_TYPES } from "../utils/types";
 
 export class IWBRoom extends Room<IWBRoomState> {
 
@@ -45,15 +46,20 @@ export class IWBRoom extends Room<IWBRoomState> {
   onLeave (client: Client, consented: boolean) {
     console.log(client.sessionId, "left!");
 
+    //player cleanup
+    sceneManager.freeTemporaryParcels(this.state.players.get(client.userData.userId))
+
     this.state.players.delete(client.userData.userId)
+    this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player:client.userData.userId})
   }
 
   onDispose() {
     console.log("room", this.roomId, "disposing...");
+    sceneManager.cleanUp()
   }
 
   async getPlayerInfo(client:Client, options:any){
-    client.send('init', {
+    client.send(SERVER_MESSAGE_TYPES.INIT, {
       catalog: itemManager.items
     })
 

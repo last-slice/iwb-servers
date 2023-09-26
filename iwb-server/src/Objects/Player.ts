@@ -16,6 +16,8 @@ export class Player extends Schema {
   updateTimer:any
   modified = false
 
+  temporaryParcels:any[] = []
+
   constructor(room:IWBRoom, client:Client){
     super()
     this.room = room

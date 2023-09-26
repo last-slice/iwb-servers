@@ -4,15 +4,21 @@ import { playground } from "@colyseus/playground";
 import { IWBRoom } from "./rooms/IWBRoom";
 import { ItemManager } from "./Objects/ItemManager";
 import Listener from "./utils/eventListener";
+import { initPlayFab } from "./utils/Playfab";
+import { SceneManager } from "./Objects/SceneManager";
 
 export let itemManager:ItemManager
+export let sceneManager:SceneManager
 export let eventListener:Listener
 
 export default config({
 
     initializeGameServer: (gameServer) => {
+        initPlayFab()
+
         eventListener = new Listener()
         itemManager = new ItemManager()
+        sceneManager = new SceneManager()
 
         gameServer.define('iwb-world', IWBRoom);
     },

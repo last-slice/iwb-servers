@@ -1,4 +1,4 @@
-import { getTitleData, initPlayFab } from "../utils/Playfab"
+import { getTitleData } from "../utils/Playfab"
 
 
 
@@ -7,14 +7,18 @@ export class ItemManager{
     items:Map<string, any> = new Map()
 
     constructor(){
-        initPlayFab()
         this.getServerItems()
     }
 
     async getServerItems(){
         try{
-            let response = await await getTitleData({Keys: ["Builder Items", "Test"]})
+            let response = await await getTitleData({Keys: ["Builder Items", "Catalog1"]})
             let data = JSON.parse(response.Data['Builder Items'])
+            data.forEach((item:any, i:number)=>{
+                this.items.set(item.id, item)
+            })
+
+            data = JSON.parse(response.Data["Catalog1"])
             data.forEach((item:any, i:number)=>{
                 this.items.set(item.id, item)
             })

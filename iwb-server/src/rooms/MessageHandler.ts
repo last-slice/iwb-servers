@@ -3,6 +3,7 @@ import axios from "axios";
 import { generateId } from "colyseus";
 import Listener from "../utils/eventListener";
 import { IWBRoom } from "./IWBRoom";
+import { createSceneHandlers } from "./handlers/CreateSceneHandlers";
 
 export class RoomMessageHandler {
     
@@ -12,9 +13,7 @@ export class RoomMessageHandler {
     constructor(room:IWBRoom, listener:Listener){
         this.room = room
         this.listener = listener
-
-        this.room.onMessage("", async(client, message)=>{
-        })
+        createSceneHandlers(room)
     }
 
 }
