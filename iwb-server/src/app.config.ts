@@ -2,10 +2,18 @@ import config from "@colyseus/tools";
 import { monitor } from "@colyseus/monitor";
 import { playground } from "@colyseus/playground";
 import { IWBRoom } from "./rooms/IWBRoom";
+import { ItemManager } from "./Objects/ItemManager";
+import Listener from "./utils/eventListener";
+
+export let itemManager:ItemManager
+export let eventListener:Listener
 
 export default config({
 
     initializeGameServer: (gameServer) => {
+        eventListener = new Listener()
+        itemManager = new ItemManager()
+
         gameServer.define('iwb-world', IWBRoom);
     },
 
