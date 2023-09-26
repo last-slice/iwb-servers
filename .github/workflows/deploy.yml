@@ -3,7 +3,7 @@ name: Deploy Express Apps
 on:
   push:
     branches:
-      - git-action
+      - test-gitaction
   workflow_dispatch:
     inputs:
       app_to_deploy:
