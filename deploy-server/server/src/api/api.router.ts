@@ -8,6 +8,10 @@ router.get("/buckets/:bucket", async function(req: express.Request, res: express
     res.status(200).json({result: "success", bucket: buckets.get(req.params.bucket as string)})
 })
 
+router.get("/status/", async function(req: express.Request, res: express.Response) {
+    res.status(200).json({result: "success", bucket: buckets.get(req.params.bucket as string)})
+})
+
 router.post("/deploy", async function(req: express.Request, res: express.Response) {
     console.log("deploy api received")
     if(!req.body){

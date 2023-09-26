@@ -1,12 +1,19 @@
 # iwb-deploy.sh
 
+debug=false
+
+PRIVATE_KEY="$1"
+
 # Define the repository URL and branch
 repo_url="https://github.com/last-slice/dcl-iwb.git"
-branch_name="hq"
+branch_name="iwb-deploy"
 
-#change directory to available deployment bucket
+# change pointer to correct directory
+if [ "$debug" = true ]; then
 cd /Users/lastraum/Desktop/Programming/Decentraland/Lastslice/sdk7/iwb/servers/deploy-server/iwb-template
-# cd /Users/lastraum/Desktop/Programming/Decentraland/Lastslice/sdk7/iwb/toolset/deploy-server/buckets/$bucket
+else
+cd /root/deployment/iwb-template
+fi
 
 # Clone or update the repository
 if [ -d "$branch_name" ]; then
@@ -23,10 +30,44 @@ fi
 mv "$branch_name"/* .
 rm -rf "$branch_name"
 
+
+source_folder=""
+#retrieve all catalog assets
+if [ "$debug" = true ]; then
+source_folder="/Users/lastraum/Desktop/Programming/Decentraland/Lastslice/sdk7/iwb/iwb-assets"
+else
+source_folder="/root/iwb-assets/"
+fi
+
+destination_folder=""
+if [ "$debug" = true ]; then
+destination_folder="/Users/lastraum/Desktop/Programming/Decentraland/Lastslice/sdk7/iwb/servers/deploy-server/iwb-template/assets"
+else
+destination_folder="/root/deployment/iwb-template/assets"
+fi
+
+# Use the '-r' flag for recursive copy if you want to copy subdirectories and their contents
+cp -r "$source_folder"/* "$destination_folder"
+
+# Optional: Display a message to confirm the copy
+echo "Contents of $source_folder copied to $destination_folder"
+
 #make sure to install latest modules
 npm install
 
 #deploy with private key
-# DCL_PRIVATE_KEY=$PRIVATE_KEY npm run deploy -- --target-content https://worlds-content-server.decentraland.org
+DCL_PRIVATE_KEY=$PRIVATE_KEY npm run deploy -- --target-content https://worlds-content-server.decentraland.org
 
 echo "Done Deploying"
+
+folder_to_clear=""
+# Folder path
+if [ "$debug" = true ]; then
+folder_to_clear="/Users/lastraum/Desktop/Programming/Decentraland/Lastslice/sdk7/iwb/servers/deploy-server/iwb-template"
+else
+folder_to_clear="/root/deployment/iwb-template"
+fi
+rm -r "$folder_to_clear"/*
+
+# Optional: Display a message to confirm the deletion
+echo "Contents of $folder_to_clear have been deleted."

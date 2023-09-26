@@ -1,3 +1,5 @@
+import { deployKey } from "../app";
+
 const fs = require('fs-extra');
 const path = require('path');
 const { exec } = require('child_process');
@@ -7,7 +9,7 @@ const command = '../../iwb-deploy.sh';
 export function deployIWB(){
     try {
         // Execute the shell command
-        const childProcess = exec(command)
+        const childProcess = exec(command + " " + deployKey)
   
         // Listen for stdout data events
         childProcess.stdout.on('data', (data:any) => {

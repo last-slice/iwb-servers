@@ -7,6 +7,10 @@ import Listener from "./utils/eventListener";
 import { initPlayFab } from "./utils/Playfab";
 import { SceneManager } from "./Objects/SceneManager";
 import { handleGithook, initIWBDeploy } from "./Objects/Githooks";
+import cors from 'cors'
+import bodyParser from "body-parser";
+
+
 import axios from "axios";
 import { deploymentAuth, deploymentEndpoint } from "./iwb-server";
 
@@ -27,6 +31,12 @@ export default config({
     },
 
     initializeExpress: (app) => {
+
+        app.use(cors({ origin: true}))  
+        app.options('*', cors());        
+        app.use(bodyParser.urlencoded({ extended: true }));
+
+
         app.get("/hello_world", (req, res) => {
             console.log('hello world server')
             res.send("It's time to kick ass and chew bubblegum!");
@@ -43,11 +53,6 @@ export default config({
         }
 
         app.use("/colyseus", monitor());
-
-
-
-
-
 
         ///test api to be remove
         app.get("/test-deploy", (req, res) => {

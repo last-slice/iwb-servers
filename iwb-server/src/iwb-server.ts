@@ -18,6 +18,7 @@ require('dotenv').config({path: "../.env"});
 export const playFabTitleId = process.env.PLAYFAB_ID;
 export const playFabSecretKey = process.env.PLAYFAB_KEY;
 export const githookSecreyKey = process.env.GITHOOK_SECRET
+export const gitDeploymentBranch = process.env.GIT_DEPLOYMENT_BRANCH
 export const deploymentEndpoint = process.env.DEPLOYMENT_ENDPOINT
 export const deploymentAuth = process.env.DEPLOYMENT_AUTH
 
