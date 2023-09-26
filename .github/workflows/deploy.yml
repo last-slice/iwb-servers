@@ -8,7 +8,6 @@ on:
         required: true
         default: 'app1' # Default to app1, you can change this to 'app2' if needed.
 
-
 jobs:
   deploy_app1:
     if: github.event.inputs.app_to_deploy == 'app1' || github.event.inputs.app_to_deploy == 'both'
@@ -46,10 +45,9 @@ jobs:
           npm run build
           pm2 restart iwb-deploy
 
-  # deploy_app2:
-  #   if: github.event.inputs.app_to_deploy == 'app2' || github.event.inputs.app_to_deploy == 'both'
-  #   runs-on: ubuntu-latest
+# deploy_app2:
+#   if: github.event.inputs.app_to_deploy == 'app2' || github.event.inputs.app_to_deploy == 'both'
+#   runs-on: ubuntu-latest
 
-  #   steps:
-  #     # Your App 2 deployment steps here...
-##
+#   steps:
+#     # Your App 2 deployment steps here...
