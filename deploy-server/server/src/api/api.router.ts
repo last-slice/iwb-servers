@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
-import { addDeployment } from "../deploy/deployment";
+import { addDeployment } from "../deploy/scene-deployment";
 import { buckets } from "../deploy/buckets";
+import { deployIWB } from "../deploy/iwb-deployment";
 export const router = express.Router();
 
 router.get("/buckets/:bucket", async function(req: express.Request, res: express.Response) {
@@ -45,6 +46,8 @@ router.post("/iwb-deploy", async function(req: express.Request, res: express.Res
     }
 
     //more error checking for scene data
+
+    deployIWB()
 
     console.log("need to deploy iwb to world")
     res.status(200).json({result: "success", msg:"deploying new iwb to world"})

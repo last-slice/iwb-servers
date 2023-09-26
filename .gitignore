@@ -87,3 +87,7 @@ typings/
 .DS_Store
 **/.DS_Store
 node_modules
+
+#custom
+deploy-server/iwb-template
+upload-dapp
