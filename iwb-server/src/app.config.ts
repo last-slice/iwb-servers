@@ -9,10 +9,11 @@ import { SceneManager } from "./Objects/SceneManager";
 import { handleGithook, initIWBDeploy } from "./Objects/Githooks";
 import cors from 'cors'
 import bodyParser from "body-parser";
-
-
+import express from 'express';
+import path from 'path';
 import axios from "axios";
 import { deploymentAuth, deploymentEndpoint } from "./iwb-server";
+import { router } from "./Objects/Router";
 
 export let itemManager:ItemManager
 export let sceneManager:SceneManager
@@ -35,31 +36,11 @@ export default config({
         app.use(cors({ origin: true}))  
         app.options('*', cors());        
         app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(express.static('public')); // notice the absence of `__dirname`, explained later on
+        app.use(express.static(path.join(__dirname, '..', 'public')));
+        app.use("/", router);
 
-
-        app.get("/hello_world", (req, res) => {
-            console.log('hello world server')
-            res.send("It's time to kick ass and chew bubblegum!");
-        });
-
-        app.post("/githook", (req, res) => {
-            console.log('githook api request')
-            handleGithook(req)
-            res.send("It's time to kick ass and chew bubblegum!");
-        });
-
-        if (process.env.NODE_ENV !== "production") {
-            app.use("/", playground);
-        }
-
-        app.use("/colyseus", monitor());
-
-        ///test api to be remove
-        app.get("/test-deploy", (req, res) => {
-            console.log('test deploy api request')
-            initIWBDeploy()
-            res.send("It's time to kick ass and chew bubblegum!");
-        });
+        console.log(path.join(__dirname, '..', 'public'))
     },
 
 
