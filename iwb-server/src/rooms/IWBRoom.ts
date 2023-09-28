@@ -21,7 +21,9 @@ export class IWBRoom extends Room<IWBRoomState> {
   onCreate (options: any) {
     this.setState(new IWBRoomState());
 
-    new RoomMessageHandler(this, eventListener)
+    let handler = new RoomMessageHandler(this, eventListener)
+
+    itemManager.messageHandler = handler
   }
 
   onJoin (client: Client, options: any) {

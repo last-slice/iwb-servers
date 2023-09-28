@@ -13,4 +13,8 @@ export class RoomMessageHandler {
         createSceneHandlers(room)
     }
 
+    broadcast(type:any, data:any){
+        this.room.broadcast(type, data)
+    }
+
 }

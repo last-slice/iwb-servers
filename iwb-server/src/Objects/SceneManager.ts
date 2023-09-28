@@ -1,12 +1,11 @@
-import { getTitleData, initPlayFab } from "../utils/Playfab"
+import { RoomMessageHandler } from "../rooms/MessageHandler"
 import { Player } from "./Player"
-
-
 
 export class SceneManager{
 
     scenes:any[] = []
     occupiedParcels:any[] = ["0,0", "0,1", "1,0", "1,1"]
+    messageHandler:RoomMessageHandler
 
     constructor(){
     }
