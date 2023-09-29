@@ -1,0 +1,51 @@
+name: Deploy Express Apps
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_to_deploy:
+        description: 'Select the app to deploy'
+        required: true
+        default: 'app1' # Default to app1, you can change this to 'app2' if needed.
+
+jobs:
+  deploy_app1:
+    if: github.event.inputs.app_to_deploy == 'app1' || github.event.inputs.app_to_deploy == 'both'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy iwb-deploy-server
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+
+    - name: Install dependencies for App 1
+      run: |
+        cd /root/deployment/server
+        npm install
+
+    - name: Build IWB Deploy Server
+      run: |
+        cd /root/deployment/server
+        npm run build
+
+    - name: Deploying IWB Deploy Server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DO_SERVER_IP }}
+        username: ${{ secrets.DO_SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /root/github
+          git pull origin test-gitaction
+
+
+# deploy_app2:
+#   if: github.event.inputs.app_to_deploy == 'app2' || github.event.inputs.app_to_deploy == 'both'
+#   runs-on: ubuntu-latest
+
+#   steps:
+#     # Your App 2 deployment steps here...
