@@ -5,6 +5,7 @@ import axios from 'axios';
 export function handleGithook(req:any){
     const payload = JSON.stringify(req.body);
     const signature = req.header('x-hub-signature-256') || '';
+    console.log(req.body.ref)
     if (verifySignature(payload, signature, githookSecreyKey)) {
         switch(req.body.ref){
             case "ref/heads/" + gitDeploymentBranch:
@@ -16,6 +17,9 @@ export function handleGithook(req:any){
                 console.log("attempting to redeploy iwb-server")
                 break;
         }
+    }
+    else{
+        console.log('failed git signature for', req.body.ref)
     }
 }
 
