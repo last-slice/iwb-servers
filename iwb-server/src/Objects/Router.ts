@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { monitor } from "@colyseus/monitor";
 import { playground } from "@colyseus/playground";
 import path from "path";
-import { handleGithook, initIWBDeploy } from "./Githooks";
+import { handleGithook } from "./Githooks";
 import { itemManager } from "../app.config";
 import { gitDeploymentBranch, gitIWBServerDeploymentBranch } from "../iwb-server";
 

@@ -6,7 +6,6 @@ import { ItemManager } from "./Objects/ItemManager";
 import Listener from "./utils/eventListener";
 import { initPlayFab } from "./utils/Playfab";
 import { SceneManager } from "./Objects/SceneManager";
-import { handleGithook, initIWBDeploy } from "./Objects/Githooks";
 import cors from 'cors'
 import bodyParser from "body-parser";
 import express from 'express';

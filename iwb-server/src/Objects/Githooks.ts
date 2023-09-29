@@ -1,6 +1,6 @@
 import crypto from 'crypto';
-import { deploymentAuth, deploymentEndpoint, gitDeploymentBranch, gitIWBServerDeploymentBranch, githookSecreyKey } from '../iwb-server';
-import axios from 'axios';
+import { gitDeploymentBranch, gitIWBServerDeploymentBranch, githookSecreyKey } from '../iwb-server';
+import { initDeployServerDeploy, initIWBDeploy } from '../utils/functions';
 
 export function handleGithook(req:any){
     const payload = JSON.stringify(req.body);
@@ -10,31 +10,18 @@ export function handleGithook(req:any){
         switch(req.body.ref){
             case "refs/heads/" + gitDeploymentBranch:
                 console.log('githook detected push to deploy branch, init world redeploy')
-                initIWBDeploy()
+                initDeployServerDeploy()
                 break;
 
             case "refs/heads/" + gitIWBServerDeploymentBranch:
                 console.log("attempting to redeploy iwb-server")
+                initIWBDeploy()
                 break;
         }
     }
     else{
         console.log('failed git signature for', req.body.ref)
     }
-}
-
-export function initIWBDeploy(){
-    axios.post(deploymentEndpoint,{
-        auth:deploymentAuth
-    })
-    .then(function (response:any) {
-    // handle success
-    console.log(response);
-    })
-    .catch(function (error:any) {
-    // handle error
-    console.log(error);
-    })
 }
 
 function verifySignature(payload: string, signature: string, secret: string) {
