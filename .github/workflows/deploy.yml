@@ -41,9 +41,7 @@ jobs:
         script: |
           cd /root/deployment/server
           git pull origin main
-          npm install
-          npm run build
-          pm2 restart iwb-deploy
+
 
 # deploy_app2:
 #   if: github.event.inputs.app_to_deploy == 'app2' || github.event.inputs.app_to_deploy == 'both'
