@@ -16,10 +16,25 @@ export class SceneManager{
     freeTemporaryParcels(player:Player){
         player.temporaryParcels.forEach((parcel)=>{
             let index = this.occupiedParcels.findIndex((p)=> p === parcel)
-            if(index >=0){
+            if(index >= 0){
                 this.occupiedParcels.splice(index,1)
             }
         })
+    }
+
+    removeTemporaryParcel(parcel:any){
+        let index = this.occupiedParcels.findIndex((p)=> p === parcel)
+        if(index >= 0){
+          this.occupiedParcels.splice(index,1)
+        }
+      }
+    
+    addOccupiedParcel(parcel:any){
+        this.occupiedParcels.push(parcel)
+    }
+
+    hasTemporaryParcel(parcel:any){
+        return this.occupiedParcels.find((p)=> p === parcel)
     }
 
     cleanUp(){
