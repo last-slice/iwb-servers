@@ -39,7 +39,7 @@ jobs:
         username: ${{ secrets.DO_SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          cd /root/deployment/server
+          cd /root/github
           git pull origin test-gitaction
 
 
