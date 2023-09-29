@@ -8,12 +8,12 @@ export function handleGithook(req:any){
     console.log(req.body.ref)
     if (verifySignature(payload, signature, githookSecreyKey)) {
         switch(req.body.ref){
-            case "ref/heads/" + gitDeploymentBranch:
+            case "refs/heads/" + gitDeploymentBranch:
                 console.log('githook detected push to deploy branch, init world redeploy')
                 initIWBDeploy()
                 break;
 
-            case "ref/heads/" + gitIWBServerDeploymentBranch:
+            case "refs/heads/" + gitIWBServerDeploymentBranch:
                 console.log("attempting to redeploy iwb-server")
                 break;
         }
