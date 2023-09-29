@@ -1,6 +1,7 @@
 import Listener from "../utils/eventListener";
 import { IWBRoom } from "./IWBRoom";
-import { createSceneHandlers } from "./handlers/CreateSceneHandlers";
+import { sceneCreationHandlers } from "./handlers/CreateSceneHandlers";
+import { playerHandlers } from "./handlers/PlayerHandlers";
 
 export class RoomMessageHandler {
     
@@ -10,7 +11,8 @@ export class RoomMessageHandler {
     constructor(room:IWBRoom, listener:Listener){
         this.room = room
         this.listener = listener
-        createSceneHandlers(room)
+        sceneCreationHandlers(room)
+        playerHandlers(room)
     }
 
     broadcast(type:any, data:any){
