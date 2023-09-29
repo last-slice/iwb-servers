@@ -4,6 +4,7 @@ import { playground } from "@colyseus/playground";
 import path from "path";
 import { handleGithook, initIWBDeploy } from "./Githooks";
 import { itemManager } from "../app.config";
+import { gitDeploymentBranch, gitIWBServerDeploymentBranch } from "../iwb-server";
 
 export const router = express.Router();
 
@@ -21,7 +22,12 @@ router.get("/hello_world", (req:any, res:any) => {
     res.send("It's time to kick ass and chew bubblegum!");
 });
 
-router.use('/colyseus', monitor())
+//github webhooks
+router.post("/githook/deploy/server", (req, res) => {
+    console.log('githook api request to deploy iwb server')
+    handleGithook(req)
+    res.send("It's time to kick ass and chew bubblegum!");
+});
 
 router.post("/githook", (req, res) => {
     console.log('githook api request')
@@ -29,16 +35,11 @@ router.post("/githook", (req, res) => {
     res.send("It's time to kick ass and chew bubblegum!");
 });
 
+router.use('/colyseus', monitor())
+
 if (process.env.NODE_ENV !== "production") {
     router.use("/playground", playground);
 }
-
-///test api to be remove
-router.get("/test-deploy", (req, res) => {
-    console.log('test deploy api request')
-    initIWBDeploy()
-    res.send("It's time to kick ass and chew bubblegum!");
-});
 
 router.get('/:user/:key', (req, res) => {
     console.log('load asset creator page')

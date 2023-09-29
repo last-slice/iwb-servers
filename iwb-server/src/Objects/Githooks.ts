@@ -1,14 +1,20 @@
 import crypto from 'crypto';
-import { deploymentAuth, deploymentEndpoint, gitDeploymentBranch, githookSecreyKey } from '../iwb-server';
+import { deploymentAuth, deploymentEndpoint, gitDeploymentBranch, gitIWBServerDeploymentBranch, githookSecreyKey } from '../iwb-server';
 import axios from 'axios';
 
 export function handleGithook(req:any){
     const payload = JSON.stringify(req.body);
     const signature = req.header('x-hub-signature-256') || '';
     if (verifySignature(payload, signature, githookSecreyKey)) {
-        if(req.body.ref === "refs/heads/" + gitDeploymentBranch){
-            console.log('githook detected push to deploy branch, init world redeploy')
-            initIWBDeploy()
+        switch(req.body.ref){
+            case "ref/heads/" + gitDeploymentBranch:
+                console.log('githook detected push to deploy branch, init world redeploy')
+                initIWBDeploy()
+                break;
+
+            case "ref/heads/" + gitIWBServerDeploymentBranch:
+                console.log("attempting to redeploy iwb-server")
+                break;
         }
     }
 }
