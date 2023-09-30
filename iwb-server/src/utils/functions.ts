@@ -1,8 +1,9 @@
 const { exec } = require('child_process');
-const command = '../../iwb-server.sh';
 
 import axios from 'axios';
 import { deploymentAuth, deploymentEndpoint } from '../iwb-server';
+
+const command = '../iwb-server.sh';
 
 export function initDeployServerDeploy(){
   axios.post(deploymentEndpoint,{
