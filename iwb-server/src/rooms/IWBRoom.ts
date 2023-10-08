@@ -14,30 +14,31 @@ export interface JWTPayloadUserId extends jwt.JwtPayload {
 
 export class IWBRoom extends Room<IWBRoomState> {
 
-    async onAuth(client: Client, options: any, req: any) {
+    // async onAuth(client: Client, options: any, req: any) {
 
-        console.log("onAuth", options)
+    //     console.log("onAuth", options)
 
-        const token = options.token
-        if (!token) return false;
+    //     const token = options.token
+    //     if (!token) return false;
 
-        //Decode token
-        const decodedToken = <JWTPayloadUserId>jwt.verify(token, process.env.SERVER_SECRET);
+    //     //Decode token
+    //     const decodedToken = <JWTPayloadUserId>jwt.verify(token, process.env.SERVER_SECRET);
 
-        console.log("auth", decodedToken)
+    //     console.log("auth", decodedToken)
 
-        if (this.state.players.has(decodedToken.userId)) {
-            console.log('user already signed in')
-            return false
-        }
+    //     if (this.state.players.has(decodedToken.userId)) {
+    //         console.log('user already signed in')
+    //         return false
+    //     }
 
-        // return auth data so we can read in onJoin
-        return decodedToken
-    }
+    //     // return auth data so we can read in onJoin
+    //     return decodedToken
+    // }
 
     onCreate(options: any) {
         this.setState(new IWBRoomState());
 
+        itemManager.addRoom(this)
         itemManager.messageHandler = new RoomMessageHandler(this, eventListener)
     }
 
@@ -71,6 +72,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     onDispose() {
         console.log("room", this.roomId, "disposing...");
         sceneManager.cleanUp()
+        itemManager.removeRoom(this)
     }
 
     async getPlayerInfo(client: Client, options: any) {

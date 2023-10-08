@@ -93,3 +93,5 @@ deploy-server/iwb-template
 upload-dapp/package-lock.json
 iwb-server/iwb-server.sh
 .idea
+/build
+Upload-dapp/build/

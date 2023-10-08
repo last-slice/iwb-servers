@@ -50,4 +50,8 @@ export class Player extends Schema {
   hasTemporaryParcel(parcel:any){
     return this.temporaryParcels.find((p)=> p === parcel)
   }
+
+  sendPlayerMessage(type:string, data:any){
+    this.client.send(type,data)
+  }
 }

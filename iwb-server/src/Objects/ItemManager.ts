@@ -1,16 +1,27 @@
+import { IWBRoom } from "../rooms/IWBRoom"
 import { RoomMessageHandler } from "../rooms/MessageHandler"
 import { getTitleData } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
+import { Player } from "./Player"
 
 
 
 export class ItemManager{
-
+    
+    rooms:Map<string, IWBRoom> = new Map()
     items:Map<string, any> = new Map()
     messageHandler:RoomMessageHandler
 
     constructor(){
         this.getServerItems(true)
+    }
+
+    addRoom(room:IWBRoom){
+        this.rooms.set(room.roomId, room)
+    }
+
+    removeRoom(room:IWBRoom){
+        this.rooms.delete(room.roomId)
     }
 
     async getServerItems(init?:boolean){
@@ -42,5 +53,14 @@ export class ItemManager{
         catch(e){
             console.log('error getting server items', e)
         }
+    }
+
+    pingUserAssetUploaded(user:string, data:any){
+        this.rooms.forEach((room, key)=>{
+            let player:Player = room.state.players.get(user)
+            if(player){
+                player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, data)
+            }
+        })
     }
 }

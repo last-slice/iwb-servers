@@ -1,40 +1,46 @@
 {
+  "name": "my-react-bootstrap-app",
+  "version": "0.1.0",
   "private": true,
-  "version": "1.5.1",
-  "description": "Preview glTF models using three.js and a drag-and-drop interface.",
-  "author": "Don McCurdy <dm@donmccurdy.com> (https://www.donmccurdy.com)",
-  "license": "MIT",
-  "main": "public/app.js",
-  "browserslist": [
-    ">1%",
-    "not dead"
-  ],
-  "staticFiles": {
-    "staticPath": [
-      {
-        "staticPath": "assets",
-        "staticOutDir": "assets"
-      }
+  "dependencies": {
+    "@react-three/drei": "^9.86.3",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.5.1",
+    "bootstrap": "^5.3.2",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.9.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.16.0",
+    "react-scripts": "5.0.1",
+    "react-three-fiber": "^6.0.13",
+    "three": "^0.157.0",
+    "web-vitals": "^2.1.4"
+  },
+  "homepage": "/toolset",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
     ]
   },
-  "scripts": {
-    "dev": "vite --port 3000",
-    "build": "vite build",
-    "clean": "rimraf dist/**",
-    "test": "node test/gen_test.js",
-    "deploy": "npm run build && vercel --local-config vercel.json --prod",
-    "postversion": "git push && git push --tags"
-  },
-  "dependencies": {
-    "dat.gui": "^0.7.9",
-    "gltf-validator": "^2.0.0-dev.3.9",
-    "query-string": "^8.1.0",
-    "simple-dropzone": "^0.8.3",
-    "three": "^0.154.0",
-    "vhtml": "^2.2.0"
-  },
-  "devDependencies": {
-    "rimraf": "^5.0.1",
-    "vite": "^4.4.3"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

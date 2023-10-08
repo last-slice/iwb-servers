@@ -6,7 +6,8 @@ export enum SERVER_MESSAGE_TYPES {
     SELECT_PARCEL = "select_parcel",
     REMOVE_PARCEL = "remove_parcel",
     CATALOG_UPDATED = 'catalog_updated',
-    PLAY_MODE_CHANGED = 'play_mode_changed'
+    PLAY_MODE_CHANGED = 'play_mode_changed',
+    PLAYER_ASSET_UPLOADED = 'player_asset_uploaded'
 }
 
 export enum SCENE_MODES {

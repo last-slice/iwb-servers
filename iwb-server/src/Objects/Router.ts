@@ -6,6 +6,8 @@ import {handleGithook} from "./Githooks";
 import {itemManager} from "../app.config";
 import * as jwt from "jsonwebtoken";
 import * as dcl from "decentraland-crypto-middleware";
+import { sign } from "crypto";
+import { handleAssetUploaderSigning, handleNewAssetData } from "./Service";
 
 export const router = express.Router();
 
@@ -48,6 +50,15 @@ router.post(
     }
 )
 
+router.post("/uploader/sign", (req: any, res: any) => {
+    console.log('get jwt token for asset upload session')
+    handleAssetUploaderSigning(req, res)
+});
+
+router.post("/asset/uploaded", async (req: any, res: any) => {
+    console.log('receive new asset data')
+    handleNewAssetData(req, res)
+});
 
 router.get("/catalog/refresh", (req: any, res: any) => {
     console.log('refresh cached items on server')

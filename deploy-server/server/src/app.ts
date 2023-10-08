@@ -14,8 +14,11 @@ const nodeEnv = process.env.NODE_ENV
 const deployAuth = process.env.DEPLOY_AUTH
 const queueTimer = 30000 ///30 seconds to check deployment queue
 export const deployKey = process.env.DEPLOY_KEY
+export const uploadKey = process.env.UPLOAD_AUTH
 
 const app = express();
+// const sse = require('sse-express');
+
 app.set("port", nodeEnv === 'production' ? prodServerPort : devServerPort);
 app.use(requestIp.mw());
 
@@ -25,6 +28,7 @@ app.use((req:any, res:any, next:any) => {
 });
 
 
+// app.use(sse());
 app.use(bodyParser.json());
 app.use(cors({ origin: true}))
 app.use(bodyParser.urlencoded({ extended: true }));
