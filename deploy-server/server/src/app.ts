@@ -7,19 +7,14 @@ import 'dotenv/config'
 import { router } from "./api/api.router";
 
 dotenv.config({ path: '../.env', });
-
-const devServerPort = process.env.DEV_SERVER_PORT
-const prodServerPort = process.env.PROD_SERVER_PORT 
-const nodeEnv = process.env.NODE_ENV
+ 
 const deployAuth = process.env.DEPLOY_AUTH
 const queueTimer = 30000 ///30 seconds to check deployment queue
-export const deployKey = process.env.DEPLOY_KEY
-export const uploadKey = process.env.UPLOAD_AUTH
 
 const app = express();
 // const sse = require('sse-express');
 
-app.set("port", nodeEnv === 'production' ? prodServerPort : devServerPort);
+app.set("port", process.env.NODE_ENV === 'production' ? process.env.PROD_SERVER_PORT  : process.env.DEV_SERVER_PORT);
 app.use(requestIp.mw());
 
 app.use((req:any, res:any, next:any) => {
@@ -33,6 +28,6 @@ app.use(bodyParser.json());
 app.use(cors({ origin: true}))
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/dcl/deployment", router);
+app.use("/", router);
 export default app;
 

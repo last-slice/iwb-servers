@@ -3,11 +3,11 @@ import {monitor} from "@colyseus/monitor";
 import {playground} from "@colyseus/playground";
 import path from "path";
 import {handleGithook} from "./Githooks";
-import {itemManager} from "../app.config";
+import {itemManager, iwbManager} from "../app.config";
 import * as jwt from "jsonwebtoken";
 import * as dcl from "decentraland-crypto-middleware";
 import { sign } from "crypto";
-import { handleAssetUploaderSigning, handleNewAssetData } from "./Service";
+import { handleAssetUploaderSigning, handleNewAssetData, updateIWBVersion } from "./Service";
 
 export const router = express.Router();
 
@@ -49,6 +49,16 @@ router.post(
             });
     }
 )
+
+router.post("/user/message", async (req: any, res: any) => {
+    console.log('send message to user')
+    iwbManager.attemptUserMessage(req, res)
+});
+
+router.get("/update/version", async (req: any, res: any) => {
+    console.log('receive ping to update iwb version')
+    updateIWBVersion(req, res)
+});
 
 router.post("/uploader/sign", (req: any, res: any) => {
     console.log('get jwt token for asset upload session')

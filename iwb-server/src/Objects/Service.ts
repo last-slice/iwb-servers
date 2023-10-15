@@ -1,5 +1,5 @@
 import * as jwt from "jsonwebtoken";
-import { itemManager } from "../app.config";
+import { itemManager, iwbManager } from "../app.config";
 
 export function handleAssetUploaderSigning(req:any, res:any){
     if(req.body.user && req.header('Authorization') && req.header('AssetAuth')){
@@ -54,10 +54,10 @@ export function handleNewAssetData(req:any, res:any){
                 console.log('error validating scene upload token for user', req.body.user)
                 return res.status(200).json({valid:false, message: 'Invalid token' });
             }
-            console.log('new asset signature verified, need to store data in playfab', req.body)
+            console.log('new asset signature verified, need to store data in playfab')
 
             res.status(200).send({valid: true})
-            itemManager.pingUserAssetUploaded(req.body.user, req.body)
+            itemManager.saveNewAsset(req.body.user, req.body)
         });
     }else{
         res.status(200).send({valid: false, token: false})
@@ -79,4 +79,28 @@ export function authenticateToken(req:any, res:any, next:any) {
         req.user = user; // Store the user information in the request object
         next(); // Continue to the next middleware or route
     });
+}
+
+export function updateIWBVersion(req:any, res:any){
+    if(req.header('AssetAuth')){
+        const assetAuth = req.header('AssetAuth').replace('Bearer ', '').trim();
+
+        if (!assetAuth) {
+            console.log('no scene or asset token')
+            return res.status(200).json({valid:false, message: 'Unauthorized' });
+        }
+
+        if (assetAuth !== process.env.IWB_UPLOAD_AUTH_KEY) {
+            console.log('invalid asset auth key')
+            return res.status(200).json({valid:false, message: 'Unauthorized' });
+        }
+        iwbManager.incrementVersion()
+
+        //need to iterate over all new items and find their owners and if they're in world, notify them to refresh browser
+        itemManager.notifyUsersDeploymentReady()
+
+        res.status(200).send({valid: true})
+    }else{
+        res.status(200).send({valid: false, token: false})
+    }
 }

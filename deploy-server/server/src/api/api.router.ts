@@ -26,7 +26,7 @@ router.post("/scene/verify", async (req: any, res: any) => {
   console.log('validate scene jwt and return iwb jwt')
   await validateSceneToken(req, res)
 });
-
+ 
 router.post("/uploader/sign", (req: any, res: any) => {
   console.log('validate scene jwt and return uploader jwt')
   handleAssetSigning(req, res)
@@ -54,6 +54,10 @@ router.post("/deploy", async function(req: express.Request, res: express.Respons
   handleSceneDeploy(req,res)
 })
 
-router.post("/iwb-deploy", async function(req: express.Request, res: express.Response) {
-  handleIWBDeploy(req,res)
+router.post("/iwb-deploy/:force", async function(req: express.Request, res: express.Response) {
+  handleIWBDeploy(req,res, req.params.force === "true" ? true : false)
+})
+
+router.get("/hello-world", async function(req: express.Request, res: express.Response) {
+  res.status(200).json({result: "success"})
 })

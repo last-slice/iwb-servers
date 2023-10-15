@@ -9,9 +9,11 @@ import bodyParser from "body-parser";
 import express from 'express';
 import path from 'path';
 import {router} from "./Objects/Router";
+import { IWBManager } from "./Objects/IWBManager";
 
 export let itemManager: ItemManager
 export let sceneManager: SceneManager
+export let iwbManager: IWBManager
 export let eventListener: Listener
 
 export default config({
@@ -21,6 +23,7 @@ export default config({
 
         eventListener = new Listener()
         itemManager = new ItemManager()
+        iwbManager = new IWBManager()
         sceneManager = new SceneManager()
 
         gameServer.define('iwb-world', IWBRoom);

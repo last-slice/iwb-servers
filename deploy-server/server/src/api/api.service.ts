@@ -1,6 +1,7 @@
 import Axios from "axios";
-import { deployIWB } from "../deploy/iwb-deployment";
+import { deployIWB, newAssetsReady } from "../deploy/iwb-deployment";
 import { addDeployment } from "../deploy/scene-deployment";
+import { status } from "../config/config";
 const jwt = require("jsonwebtoken");
 
 export function handleSceneDeploy(req:any, res:any){
@@ -28,23 +29,26 @@ export function handleSceneDeploy(req:any, res:any){
     res.status(200).json({result: "success", msg:"deployment added to queue"})
 }
 
-export function handleIWBDeploy(req:any, res:any){
+export function handleIWBDeploy(req:any, res:any, fromGithub?:boolean, override?:boolean){
     console.log("deploy iwb api received")
-    if(!req.body){
-        res.status(200).json({result: "failure", msg:"invalid api call"})
-        return
-    }
 
-    if(!req.body.auth){
-        res.status(200).json({result: "failure", msg:"invalid auth"})
-        return
+    if(override){}
+    else{
+        if(!req.body){
+            res.status(200).json({result: "failure", msg:"invalid api call"})
+            return
+        }
+    
+        if(!req.body.auth){
+            res.status(200).json({result: "failure", msg:"invalid auth"})
+            return
+        }
     }
 
     //more error checking for scene data
 
-    deployIWB()
-
     console.log("need to deploy iwb to world")
+    deployIWB(fromGithub)
     res.status(200).json({result: "success", msg:"deploying new iwb to world"})
 }
 
@@ -96,6 +100,7 @@ export function handleSceneSigning(req:any, res:any){
 }
 
 export function authenticateToken(req:any, res:any, next:any) {
+    if(status.DEBUG){}
     if(req.header('SceneAuth')){
         const token = req.header('SceneAuth').replace('Bearer ', '').trim();
         const uploadAuth = req.header('UploadAuth').replace('Bearer ', '').trim();
@@ -157,11 +162,12 @@ export function validateSceneToken(req:any, res:any){
 }
 
 export async function postNewAssetData(req:any, res:any){
-    const {name, polycount, image} = req.body
+    const {name, polycount, image, scale} = req.body
 
     let assetData:any = {
         name:name,
         polycount:polycount,
+        scale: scale,
         image:image,
         file: req.file.filename.split('.')[0],
         user: req.user
@@ -175,10 +181,12 @@ export async function postNewAssetData(req:any, res:any){
             'AssetAuth': `Bearer ${process.env.IWB_UPLOAD_AUTH_KEY}`,
         }},
         );
-        console.log('result is', result.data)
         if(result.data.valid){
+            console.log('new asset successfully pinged on iwb server')
+            newAssetsReady(req.user)
             res.status(200).send({valid: true, token: result.data.token})
         }else{
+            console.log('new asset not pinged on iwb server')
             res.status(200).send({valid: false})
         }
 }

@@ -1,4 +1,3 @@
-import { deployKey } from "../app";
 import { buckets } from "./buckets";
 import { updateSceneMetadata } from "./sceneData";
 
@@ -20,7 +19,7 @@ async function deploy(bucket:string){
         let b = buckets.get(bucket)
         b.status = "Deploying"
 
-        let temp = command + " " + bucket + " " + deployKey
+        let temp = command + " " + bucket + " " + process.env.DEPLOY_KEY
 
         // Execute the shell command
         const childProcess = exec(temp)

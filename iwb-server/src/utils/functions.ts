@@ -1,20 +1,18 @@
 const { exec } = require('child_process');
 
 import axios from 'axios';
-import { deploymentAuth, deploymentEndpoint } from '../iwb-server';
+import { deploymentEndpoint } from '../iwb-server';
 
 const command = '../iwb-server.sh';
 
 export function initDeployServerDeploy(){
-  axios.post(deploymentEndpoint,{
-      auth:deploymentAuth
+  axios.post(deploymentEndpoint + "/false",{
+      auth:process.env.DEPLOYMENT_AUTH
   })
   .then(function (response:any) {
-  // handle success
   console.log(response);
   })
   .catch(function (error:any) {
-  // handle error
   console.log(error);
   })
 }
