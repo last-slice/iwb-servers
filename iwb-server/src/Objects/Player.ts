@@ -1,8 +1,9 @@
-import { Schema, Context,MapSchema,ArraySchema, type } from "@colyseus/schema";
-import { IWBRoom } from "../rooms/IWBRoom";
-import { Room, Client } from "@colyseus/core";
-import { SCENE_MODES, SERVER_MESSAGE_TYPES } from "../utils/types";
-import { updatePlayerData, updatePlayerStatistic } from "../utils/Playfab";
+import {MapSchema, Schema, type} from "@colyseus/schema";
+import {IWBRoom} from "../rooms/IWBRoom";
+import {Client} from "@colyseus/core";
+import {SCENE_MODES, SERVER_MESSAGE_TYPES} from "../utils/types";
+import {updatePlayerData} from "../utils/Playfab";
+import {Scene} from "./Scene";
 
 export class Player extends Schema {
   @type("string") id:string;
@@ -24,9 +25,11 @@ export class Player extends Schema {
 
   temporaryParcels:any[] = []
 
+  @type({ map: Scene })
+  scenes: Map<string,Scene> = new Map()
+
   stats = new MapSchema<number>()
   settings: Map<string,any> = new Map()
-  scenes: Map<string,any> = new Map()
   assets: Map<string,any> = new Map()
 
   constructor(room:IWBRoom, client:Client){
@@ -76,9 +79,24 @@ export class Player extends Schema {
     return this.temporaryParcels.find((p)=> p === parcel)
   }
 
+  clearTemporaryParcels(){
+    this.temporaryParcels = []
+  }
+
   sendPlayerMessage(type:string, data:any){
     console.log('sending playing message', type,data)
     this.client.send(type,data)
+  }
+
+  createScene(parcels:string[]){
+    let scene = new Scene()
+    scene.parcels  = parcels
+    scene.baseParcel = parcels[0]
+
+    this.scenes.set(scene.parcels[0], scene)
+    this.clearTemporaryParcels()
+
+    return scene
   }
 
   setStats(stats:any[]){
