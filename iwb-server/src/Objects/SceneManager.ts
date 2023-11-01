@@ -1,4 +1,4 @@
-import { RoomMessageHandler } from "../rooms/MessageHandler"
+import { RoomMessageHandler } from "../rooms/handlers/MessageHandler"
 import { Player } from "./Player"
 
 export class SceneManager{
@@ -10,7 +10,8 @@ export class SceneManager{
     constructor(){
     }
 
-    async getServerScenes(){
+    initServerScenes(scenes:any){
+        this.scenes = JSON.parse(scenes)
     }
 
     freeTemporaryParcels(player:Player){
@@ -39,6 +40,5 @@ export class SceneManager{
 
     cleanUp(){
         this.occupiedParcels = ["0,0", "0,1", "1,0", "1,1"]
-        this.scenes.length = 0
     }
 }

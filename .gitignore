@@ -95,3 +95,4 @@ iwb-server/iwb-server.sh
 .idea
 /build
 Upload-dapp/build/
+/bulk-upload-server

@@ -2,16 +2,10 @@ import {Client, Room} from "@colyseus/core";
 import {IWBRoomState} from "./schema/IWBRoomState";
 import {Player} from "../Objects/Player";
 import {RoomMessageHandler} from "./handlers/MessageHandler";
-import {eventListener, itemManager, iwbManager, playerManager, sceneManager} from "../app.config";
+import {eventListener, itemManager, iwbManager, sceneManager} from "../app.config";
 import {SERVER_MESSAGE_TYPES} from "../utils/types";
 import * as jwt from "jsonwebtoken";
 import { playerLogin, updatePlayerDisplayName, updatePlayerInternalData } from "../utils/Playfab";
-
-export interface JWTPayloadUserId extends jwt.JwtPayload {
-    userId: string
-    realm: string
-    origin: string
-}
 
 export class IWBRoom extends Room<IWBRoomState> {
 
@@ -45,9 +39,9 @@ export class IWBRoom extends Room<IWBRoomState> {
         itemManager.messageHandler = new RoomMessageHandler(this, eventListener)
     }
 
-    onJoin(client: Client, options: any, auth: JWTPayloadUserId) {
+    onJoin(client: Client, options: any) {
         try {
-            console.log(options.userData.userId, "joined! -", options.userData.displayName, "Realm -", auth.realm);
+            console.log(options.userData.userId, "joined! -", options.userData.displayName, " private world");
 
             client.userData = options.userData;
             delete client.userData.avatar
@@ -67,11 +61,9 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         let player:Player = this.state.players.get(client.userData.userId)
         if(player){
+            console.log('found player to clean up')
+          await player.saveCache()
           this.state.players.delete(client.userData.userId)
-
-          if(!playerManager.isInPrivateWorld(player)){
-            playerManager.savePlayerCache(player)
-          }
         }
 
         this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
@@ -89,9 +81,7 @@ export class IWBRoom extends Room<IWBRoomState> {
             iwb: {v:iwbManager.version}
         })
 
-        let player = new Player(this, client)
-        this.state.players.set(options.userData.userId, player)
-        playerManager.addPlayerToWorld(player)
+        this.state.players.set(options.userData.userId, new Player(this, client))
 
         //todo
         // pushPlayfabEvent({
@@ -194,7 +184,7 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         let data:any = {
           Settings:{
-            Value:JSON.stringify([])
+            Value:JSON.stringify({})
           },
           Assets:{
             Value:JSON.stringify([])

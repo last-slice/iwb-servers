@@ -3,6 +3,7 @@ import { IWBRoom } from "../rooms/IWBRoom";
 import { Room, Client } from "@colyseus/core";
 import { SCENE_MODES, SERVER_MESSAGE_TYPES } from "../utils/types";
 import { updatePlayerData, updatePlayerStatistic } from "../utils/Playfab";
+import { sceneManager } from "../app.config";
 
 export class Player extends Schema {
   @type("string") id:string;
@@ -35,12 +36,32 @@ export class Player extends Schema {
     this.client = client
 
     this.playFabData = client.auth.playfab
-    console.log('playfab data is', this.playFabData)
+    // console.log('playfab data is', this.playFabData)
     this.dclData = client.userData
 
     this.mode = SCENE_MODES.PLAYMODE
 
     this.setAssets(this.playFabData.InfoResultPayload.UserData)
+    this.setScenes(this.playFabData.InfoResultPayload.UserData)//
+  }
+
+  setScenes(data:any){
+    if(data.hasOwnProperty("Scenes")){
+      let sceneIds = JSON.parse(data.Scenes.Value)
+
+      ///hard coded test data
+      sceneIds = ["2831","2832","2833"]
+      ////
+
+      let scenes = sceneManager.scenes.filter((element) => sceneIds.includes(element.id))
+      scenes.forEach((scene)=>{
+        this.scenes.set(scene.id, scene)
+      })
+
+      if(scenes.length > 0){
+        this.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_SCENES_CATALOG, {scenes:scenes, user:this.dclData.userId})
+      }
+    }
   }
 
   setAssets(data:any){
@@ -135,7 +156,7 @@ export class Player extends Schema {
   async recordPlayerTime(){
     let now = Math.floor(Date.now()/1000)
 
-    this.increaseValueInMap(this.stats, 'pt', now-this.playtime)
+    // this.increaseValueInMap(this.stats, 'pt', now-this.playtime)
 
     //to do
     //log player play time to playfab

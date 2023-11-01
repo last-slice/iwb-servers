@@ -1,6 +1,6 @@
-import { itemManager } from "../app.config"
+import { itemManager, sceneManager } from "../app.config"
 import { IWBRoom } from "../rooms/IWBRoom"
-import { RoomMessageHandler } from "../rooms/MessageHandler"
+import { RoomMessageHandler } from "../rooms/handlers/MessageHandler"
 import { getTitleData, setTitleData } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
@@ -46,12 +46,13 @@ export class IWBManager{
 
     async getServerConfigurations(init?:boolean){
         try{
-            let response = await await getTitleData({Keys: ["Builder Items", "Catalog1", "Config"]})
+            let response = await await getTitleData({Keys: ["Builder Items", "Catalog1", "Config", "Scenes"]})
             
             let config = JSON.parse(response.Data['Config'])
             this.version = config.v
 
-            itemManager.initServerItems(response.Data)
+            itemManager.initServerItems([response.Data['Builder Items'], response.Data['Catalog1']])
+            sceneManager.initServerScenes(response.Data['Scenes'])
         }
         catch(e){
             console.log('error getting server items', e)

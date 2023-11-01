@@ -7,7 +7,7 @@ import {itemManager, iwbManager} from "../app.config";
 import * as jwt from "jsonwebtoken";
 import * as dcl from "decentraland-crypto-middleware";
 import { sign } from "crypto";
-import { handleAssetUploaderSigning, handleNewAssetData, updateIWBVersion } from "./Service";
+import { handleAssetUploaderSigning, handleNewAssetData, updateCatalogAssets, updateIWBVersion } from "./Service";
 
 export const router = express.Router();
 
@@ -53,6 +53,11 @@ router.post(
 router.post("/user/message", async (req: any, res: any) => {
     console.log('send message to user')
     iwbManager.attemptUserMessage(req, res)
+});
+
+router.post("/update/catalog", async (req: any, res: any) => {
+    console.log('receive ping to update iwb catalog')
+    updateCatalogAssets(req, res)
 });
 
 router.get("/update/version", async (req: any, res: any) => {
