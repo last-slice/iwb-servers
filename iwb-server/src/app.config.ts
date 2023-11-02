@@ -10,10 +10,12 @@ import express from 'express';
 import path from 'path';
 import {router} from "./Objects/Router";
 import { IWBManager } from "./Objects/IWBManager";
+import { PlayerManager } from "./Objects/PlayerManager";
 
 export let itemManager: ItemManager
 export let sceneManager: SceneManager
 export let iwbManager: IWBManager
+export let playerManager: PlayerManager
 export let eventListener: Listener
 
 export default config({
@@ -23,10 +25,14 @@ export default config({
 
         eventListener = new Listener()
         itemManager = new ItemManager()
-        iwbManager = new IWBManager()
         sceneManager = new SceneManager()
+        iwbManager = new IWBManager()
+
+        playerManager = new PlayerManager()
 
         gameServer.define('iwb-world', IWBRoom);
+        gameServer.define('user-world', IWBRoom)
+            .filterBy(['userId'])
     },
 
     initializeExpress: (app) => {
@@ -34,7 +40,7 @@ export default config({
         app.use(cors({origin: true}))
         app.options('*', cors());
         app.use(bodyParser.urlencoded({extended: true}));
-        app.use(express.static('public')); // notice the absence of `__dirname`, explained later on
+        app.use(express.static('public'));
         app.use(express.static(path.join(__dirname, '..', 'public')));
         app.use("/", router);
 

@@ -1,12 +1,11 @@
 import { PlayFabClient, PlayFabServer, PlayFabAdmin } from "playfab-sdk";
-import { playFabSecretKey, playFabTitleId } from "../iwb-server";
 
 export function initPlayFab(){
-  PlayFabServer.settings.titleId = playFabTitleId;
-  PlayFabServer.settings.developerSecretKey = playFabSecretKey;
+  PlayFabServer.settings.titleId = process.env.PLAYFAB_ID;
+  PlayFabServer.settings.developerSecretKey = process.env.PLAYFAB_KEY;
 
-  PlayFabAdmin.settings.titleId = playFabTitleId;
-  PlayFabAdmin.settings.developerSecretKey = playFabSecretKey;
+  PlayFabAdmin.settings.titleId = process.env.PLAYFAB_ID;
+  PlayFabAdmin.settings.developerSecretKey = process.env.PLAYFAB_KEY;
 }
 
 const c = (resolve:any, reject:any) => {

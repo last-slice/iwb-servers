@@ -76,8 +76,8 @@ export function authenticateToken(req:any, res:any, next:any) {
             return res.status(403).json({ message: 'Invalid token' });
         }
         console.log('user is', user)
-        req.user = user; // Store the user information in the request object
-        next(); // Continue to the next middleware or route
+        req.user = user;
+        next();
     });
 }
 
@@ -95,11 +95,31 @@ export function updateIWBVersion(req:any, res:any){
             return res.status(200).json({valid:false, message: 'Unauthorized' });
         }
         iwbManager.incrementVersion()
-
-        //need to iterate over all new items and find their owners and if they're in world, notify them to refresh browser
         itemManager.notifyUsersDeploymentReady()
 
         res.status(200).send({valid: true})
+    }else{
+        res.status(200).send({valid: false, token: false})
+    }
+}
+
+export async function updateCatalogAssets(req:any, res:any){
+    if(req.body.assets && req.header('Authorization')){
+        const authtoken = req.header('Authorization').replace('Bearer ', '').trim();
+
+        if (!authtoken) {
+            console.log('no scene or asset token')
+            return res.status(200).json({valid:false, message: 'Unauthorized' });
+        }
+
+        if (authtoken !== process.env.IWB_UPLOAD_AUTH_KEY) {
+            console.log('invalid asset auth key')
+            return res.status(200).json({valid:false, message: 'Unauthorized' });
+        }
+
+        res.status(200).send({valid: true})
+        await itemManager.saveNewCatalogAssets(req.body.assets)
+
     }else{
         res.status(200).send({valid: false, token: false})
     }

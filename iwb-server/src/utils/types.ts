@@ -17,6 +17,7 @@ export enum SERVER_MESSAGE_TYPES {
     PLAYER_ASSET_CATALOG = 'player_asset_catalog',
     PLAYER_CATALOG_DEPLOYED = 'player_catalog_deployed',
     PLAYER_RECEIVED_MESSAGE = 'player_received_message',
+    PLAYER_SCENES_CATALOG = 'player_scenes_catalog',
 
     // Scene
     SCENE_SAVE_NEW = "scene_save_new",

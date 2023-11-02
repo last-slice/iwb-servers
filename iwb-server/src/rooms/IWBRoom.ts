@@ -1,8 +1,8 @@
 import {Client, Room} from "@colyseus/core";
 import {IWBRoomState} from "./schema/IWBRoomState";
 import {Player} from "../Objects/Player";
-import {RoomMessageHandler} from "./MessageHandler";
-import {eventListener, itemManager, iwbManager, sceneManager} from "../app.config";
+import {RoomMessageHandler} from "./handlers/MessageHandler";
+import {eventListener, itemManager, iwbManager, playerManager, sceneManager} from "../app.config";
 import {SERVER_MESSAGE_TYPES} from "../utils/types";
 import * as jwt from "jsonwebtoken";
 import {playerLogin, updatePlayerDisplayName, updatePlayerInternalData} from "../utils/Playfab";
@@ -66,11 +66,13 @@ export class IWBRoom extends Room<IWBRoomState> {
         //player cleanup
         sceneManager.freeTemporaryParcels(this.state.players.get(client.userData.userId))
 
-        let player: Player = this.state.players.get(client.userData.userId)
-        if (player) {
-            console.log('found player to clean up')
-            await player.saveCache()
-            this.state.players.delete(client.userData.userId)
+        let player:Player = this.state.players.get(client.userData.userId)
+        if(player){
+          this.state.players.delete(client.userData.userId)
+
+          if(!playerManager.isInPrivateWorld(player)){
+            playerManager.savePlayerCache(player)
+          }
         }
 
         this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
@@ -89,7 +91,9 @@ export class IWBRoom extends Room<IWBRoomState> {
             occupiedParcels: sceneManager.occupiedParcels,
         })
 
-        this.state.players.set(options.userData.userId, new Player(this, client))
+        let player = new Player(this, client)
+        this.state.players.set(options.userData.userId, player)
+        playerManager.addPlayerToWorld(player)
 
         //todo
         // pushPlayfabEvent({
@@ -186,16 +190,16 @@ export class IWBRoom extends Room<IWBRoomState> {
         //   stats.push({StatisticName:stat.StatisticName, Value:stat.Value})
         // })
 
-        let data: any = {
-            Settings: {
-                Value: JSON.stringify({})
-            },
-            Assets: {
-                Value: JSON.stringify([])
-            },
-            Scenes: {
-                Value: JSON.stringify([])
-            }
+        let data:any = {
+          Settings:{
+            Value:JSON.stringify([])
+          },
+          Assets:{
+            Value:JSON.stringify([])
+          },
+          Scenes:{
+            Value:JSON.stringify([])
+          }
         }
 
         return [data, stats]
