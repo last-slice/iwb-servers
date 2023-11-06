@@ -1,5 +1,6 @@
 import { itemManager, sceneManager } from "../app.config"
 import { IWBRoom } from "../rooms/IWBRoom"
+import { UserRoom } from "../rooms/UserRoom"
 import { RoomMessageHandler } from "../rooms/handlers/MessageHandler"
 import { getTitleData, setTitleData } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
@@ -7,7 +8,7 @@ import { Player } from "./Player"
 
 export class IWBManager{
     
-    rooms:Map<string, IWBRoom> = new Map()
+    rooms:Map<string, IWBRoom | UserRoom> = new Map()
     messageHandler:RoomMessageHandler
 
     backupInterval:any
@@ -26,11 +27,11 @@ export class IWBManager{
         1000 * 20)
     }
 
-    addRoom(room:IWBRoom){
+    addRoom(room:IWBRoom | UserRoom){
         this.rooms.set(room.roomId, room)
     }
 
-    removeRoom(room:IWBRoom){
+    removeRoom(room:IWBRoom | UserRoom){
         this.rooms.delete(room.roomId)
     }
 

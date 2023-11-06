@@ -16,6 +16,7 @@ export class Player extends Schema {
   room:IWBRoom
   roomId:string
   client:Client
+  world:string = "main"
 
   playtime:number = 0
   updateTimer:any
@@ -36,31 +37,37 @@ export class Player extends Schema {
     this.client = client
 
     this.playFabData = client.auth.playfab
-    // console.log('playfab data is', this.playFabData)
+    console.log('playfab data is', this.playFabData)
     this.dclData = client.userData
 
     this.mode = SCENE_MODES.PLAYMODE
 
     this.setAssets(this.playFabData.InfoResultPayload.UserData)
-    this.setScenes(this.playFabData.InfoResultPayload.UserData)//
+    // this.setScenes(this.playFabData.InfoResultPayload.UserData)
   }
 
-  setScenes(data:any){
+  setScenes(){
+    let data = this.playFabData.InfoResultPayload.UserData
+    console.log('player setting scenes', data)
+
+    //hard coded test data
+    let sceneIds = ["2831","2832","2833"]
+    ////
+
+    
     if(data.hasOwnProperty("Scenes")){
-      let sceneIds = JSON.parse(data.Scenes.Value)
+      sceneIds = JSON.parse(data.Scenes.Value)
+    }
 
-      ///hard coded test data
-      sceneIds = ["2831","2832","2833"]
-      ////
+    let scenes = sceneManager.scenes.filter((element) => sceneIds.includes(element.id))
+    console.log('any scenes are a', scenes)
+    scenes.forEach((scene)=>{
+      this.scenes.set(scene.id, scene)
+    })
 
-      let scenes = sceneManager.scenes.filter((element) => sceneIds.includes(element.id))
-      scenes.forEach((scene)=>{
-        this.scenes.set(scene.id, scene)
-      })
-
-      if(scenes.length > 0){
-        this.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_SCENES_CATALOG, {scenes:scenes, user:this.dclData.userId})
-      }
+    if(scenes.length > 0){
+      console.log('player scenes greater than 0')
+      this.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_SCENES_CATALOG, {scenes:scenes, user:this.dclData.userId})
     }
   }
 

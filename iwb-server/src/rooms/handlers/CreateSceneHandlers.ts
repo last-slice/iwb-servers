@@ -2,8 +2,9 @@ import { Player } from "../../Objects/Player";
 import { sceneManager } from "../../app.config";
 import { SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types";
 import { IWBRoom } from "../IWBRoom";
+import { UserRoom } from "../UserRoom";
 
-export function sceneCreationHandlers(room:IWBRoom){
+export function sceneHandlers(room:IWBRoom | UserRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.SELECT_PARCEL, async(client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.SELECT_PARCEL + " message", info)
 

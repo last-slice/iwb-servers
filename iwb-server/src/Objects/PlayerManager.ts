@@ -1,23 +1,21 @@
+import {Client, Room} from "@colyseus/core";
 import { Player } from "./Player"
 
 export class PlayerManager {
     
-    players:Map<string,any> = new Map()
+    players:Map<string,Player> = new Map()
 
     addPlayerToWorld(player:Player){
         if(!this.players.has(player.dclData.userId)){
-            this.players.set(player.dclData.userId, {
-                data:player,
-                world:"main"
-            })
+            this.players.set(player.dclData.userId, player)
         }
     }
 
-    addPlayerToPrivateWorld(user:string, world:string){
-        if(this.players.has(user)){
-            this.players.get(user).world = world
-        }
-    }
+    addPlayerToPrivateWorld(player:Player, client:Client, world:string){
+        player.client.leave()
+        player.client = client
+        player.world = world
+    }   
 
     removePlayer(user:string){
         this.players.delete(user)

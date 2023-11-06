@@ -60,7 +60,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     }
 
     async onLeave(client: Client, consented: boolean) {
-        console.log(client.userData, "left!");
+        console.log(client.userData, "left!", consented);
 
         //player cleanup
         sceneManager.freeTemporaryParcels(this.state.players.get(client.userData.userId))
