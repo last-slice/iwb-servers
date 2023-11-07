@@ -1,5 +1,8 @@
 import {Client, Room} from "@colyseus/core";
 import { Player } from "./Player"
+import { SERVER_MESSAGE_TYPES } from "../utils/types";
+import { IWBRoom } from "../rooms/IWBRoom";
+import { UserRoom } from "../rooms/UserRoom";
 
 export class PlayerManager {
     
@@ -11,10 +14,11 @@ export class PlayerManager {
         }
     }
 
-    addPlayerToPrivateWorld(player:Player, client:Client, world:string){
+    addPlayerToPrivateWorld(player:Player, client:Client, world:any){
         player.client.leave()
         player.client = client
         player.world = world
+        player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_JOINED_USER_WORLD, world)
     }   
 
     removePlayer(user:string){

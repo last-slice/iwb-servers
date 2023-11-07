@@ -32,7 +32,6 @@ export default config({
         playerManager = new PlayerManager()
 
         gameServer.define('iwb-world', IWBRoom)
-
         gameServer.define('user-world', UserRoom)
         .filterBy(['world'])
     },

@@ -6,6 +6,7 @@ import {eventListener, itemManager, iwbManager, playerManager, sceneManager} fro
 import {SERVER_MESSAGE_TYPES} from "../utils/types";
 import * as jwt from "jsonwebtoken";
 import { playerLogin, updatePlayerDisplayName, updatePlayerInternalData } from "../utils/Playfab";
+import { RoomSceneHandler } from "./handlers/SceneHandler";
 
 export class UserRoom extends Room<IWBRoomState> {
 
@@ -15,6 +16,7 @@ export class UserRoom extends Room<IWBRoomState> {
 
         iwbManager.addRoom(this)
         new RoomMessageHandler(this, eventListener)
+        this.state.sceneHandler = new RoomSceneHandler(this)
 
         sceneManager.loadWorldScenes(this)
     }
@@ -24,9 +26,11 @@ export class UserRoom extends Room<IWBRoomState> {
             let player:Player = playerManager.players.get(options.userData.userId)
             if(player){
               console.log('player was already in main iwb world, log them into private wworld')
+              client.userData = options.userData
+
               playerManager.addPlayerToPrivateWorld(player, client, options.world)
-              
-              // player.setScenes()
+              this.state.players.set(player.dclData.userId, player)
+
             }else{
               console.log('player tried to join private world directly')
               client.leave(4114)
@@ -37,10 +41,10 @@ export class UserRoom extends Room<IWBRoomState> {
     }
 
     async onLeave(client: Client, consented: boolean) {
-        console.log(client.userData, "left!");
+        console.log(client.userData.displayName, "left!");
 
         //player cleanup
-        sceneManager.freeTemporaryParcels(this.state.players.get(client.userData.userId))
+        this.state.sceneHandler.freeTemporaryParcels()
 
         let player:Player = this.state.players.get(client.userData.userId)
         if(player){
@@ -54,8 +58,8 @@ export class UserRoom extends Room<IWBRoomState> {
 
     onDispose() {
         console.log("room", this.roomId, "disposing...");
-        sceneManager.cleanUp()
         iwbManager.removeRoom(this)
+        sceneManager.saveWorldScenes(this.state.scenes)
     }
 
 }
