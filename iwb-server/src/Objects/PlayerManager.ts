@@ -15,7 +15,6 @@ export class PlayerManager {
     }
 
     addPlayerToPrivateWorld(player:Player, client:Client, world:any){
-        player.client.leave()
         player.client = client
         player.world = world
         player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_JOINED_USER_WORLD, world)
