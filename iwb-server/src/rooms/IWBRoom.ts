@@ -5,7 +5,7 @@ import {RoomMessageHandler} from "./handlers/MessageHandler";
 import {eventListener, itemManager, iwbManager, playerManager, sceneManager} from "../app.config";
 import {SERVER_MESSAGE_TYPES} from "../utils/types";
 import * as jwt from "jsonwebtoken";
-import { playerLogin, updatePlayerDisplayName, updatePlayerInternalData } from "../utils/Playfab";
+import {playerLogin, updatePlayerDisplayName, updatePlayerInternalData} from "../utils/Playfab";
 
 export interface JWTPayloadUserId extends jwt.JwtPayload {
     userId: string
@@ -33,23 +33,31 @@ export class IWBRoom extends Room<IWBRoomState> {
         // }
 
         // // return auth data so we can read in onJoin
-        // return decodedToken
-
-        return this.doLogin(client, options, req)
+        // return {...decodedToken, ...await this.doLogin(client, options, req)}
+        return await this.doLogin(client, options, req)
     }
 
     onCreate(options: any) {
         this.setState(new IWBRoomState());
+        this.state.world = options.world
 
         iwbManager.addRoom(this)
         itemManager.messageHandler = new RoomMessageHandler(this, eventListener)
+
+        /**
+         * todo for future loading scenes in main IWB Lobby
+         */
+        sceneManager.loadLobbyScenes(this)
     }
 
     onJoin(client: Client, options: any, auth: JWTPayloadUserId) {
         try {
-            console.log(options.userData.userId, "joined! -", options.userData.displayName, "Realm -", auth.realm);
+            // console.log(auth.userId, "joined! -", options.userData.displayName, "Realm -", auth.realm);
 
             client.userData = options.userData;
+            // client.userData.userId = auth.userId;
+            // client.userData.realm = auth.realm;
+
             delete client.userData.avatar
             client.userData.roomId = this.roomId
 
@@ -60,33 +68,35 @@ export class IWBRoom extends Room<IWBRoomState> {
     }
 
     async onLeave(client: Client, consented: boolean) {
-        console.log(client.userData, "left!", consented);
-
-        //player cleanup
-        sceneManager.freeTemporaryParcels(this.state.players.get(client.userData.userId))
+        console.log(client.userData.userId, "left!", consented);
 
         let player:Player = this.state.players.get(client.userData.userId)
         if(player){
-          this.state.players.delete(client.userData.userId)
+            this.state.players.delete(client.userData.userId)
 
-          if(!playerManager.isInPrivateWorld(player)){
-            playerManager.savePlayerCache(player)
-          }
+          setTimeout(()=>{
+            if(!playerManager.isInPrivateWorld(player)){
+                console.log('player is not in another world, need to remove them from server')
+                playerManager.removePlayer(player.dclData.userId)
+                playerManager.savePlayerCache(player)
+                this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
+              }
+          }, 1000 * 5)
+
         }
-
-        this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
     }
 
     onDispose() {
         console.log("room", this.roomId, "disposing...");
-        sceneManager.cleanUp()
         iwbManager.removeRoom(this)
     }
 
     async getPlayerInfo(client: Client, options: any) {
         client.send(SERVER_MESSAGE_TYPES.INIT, {
             catalog: itemManager.items,
-            iwb: {v:iwbManager.version}
+            scenes: sceneManager.getScenes(),
+            iwb: {v: iwbManager.version},
+            world: {world:'main', label:"Lobby"}
         })
 
         let player = new Player(this, client)
@@ -105,88 +115,84 @@ export class IWBRoom extends Room<IWBRoomState> {
         // })
     }
 
-    async doLogin(client:any, options:any, request:any){
+    async doLogin(client: any, options: any, request: any) {
 
         const ipAddress = request.headers['x-forwarded-for'] || request.socket.address().address;
         console.log(`Client IP address: ${ipAddress}`);
-    
-        try{
-          const playfabInfo = await playerLogin(
-            {
-              CreateAccount: true, 
-              ServerCustomId: options.userData.userId,
-              InfoRequestParameters:{
-                "UserDataKeys":[], "UserReadOnlyDataKeys":[],
-                "GetUserReadOnlyData":true,
-                "GetUserInventory":false,
-                "GetUserVirtualCurrency":false,
-                "GetPlayerStatistics":true,
-                "GetCharacterInventories":false,
-                "GetCharacterList":false,
-                "GetPlayerProfile":true,
-                "GetTitleData":false,
-                "GetUserAccountInfo":true,
-                "GetUserData":true,
-            },
-            CustomTags: {
-              ipAddress: ipAddress
-            }
-            })
-      
-          if(playfabInfo.error){
-            console.log('playfab login error => ', playfabInfo.error)
-            return false
-          }
-          else{
-            console.log('playfab login success')
-            client.auth = {}
-            client.auth.playfab = playfabInfo
-            client.auth.ip = ipAddress
-            client.auth.realm = options.realm
-            // console.log('playfab info', playfabInfo)
-      
-            if (playfabInfo.NewlyCreated) {
-              let [data,stats] = await this.initializeServerPlayerData(options, client.auth)
-              client.auth.playfab.InfoResultPayload.PlayerStatistics = stats
-              client.auth.playfab.InfoResultPayload.UserData = data
-              return client.auth
-            }
-            else{
-            //to do 
-            // we have no stats yet
-            //   let stats = await this.checkInitStats(client.auth)
-            //   client.auth.InfoResultPayload.PlayerStatistics = stats
-              return client.auth
-            }
-          }
-        }
-        catch(e){
-          console.log('playfab connection error', e)
-        }
-       
-      }
 
-      async initializeServerPlayerData(options:any, auth:any){
+        try {
+            const playfabInfo = await playerLogin(
+                {
+                    CreateAccount: true,
+                    ServerCustomId: options.userData.userId,
+                    InfoRequestParameters: {
+                        "UserDataKeys": [], "UserReadOnlyDataKeys": [],
+                        "GetUserReadOnlyData": true,
+                        "GetUserInventory": false,
+                        "GetUserVirtualCurrency": false,
+                        "GetPlayerStatistics": true,
+                        "GetCharacterInventories": false,
+                        "GetCharacterList": false,
+                        "GetPlayerProfile": true,
+                        "GetTitleData": false,
+                        "GetUserAccountInfo": true,
+                        "GetUserData": true,
+                    },
+                    CustomTags: {
+                        ipAddress: ipAddress
+                    }
+                })
+
+            if (playfabInfo.error) {
+                console.log('playfab login error => ', playfabInfo.error)
+                return false
+            } else {
+                console.log('playfab login success')
+                client.auth = {}
+                client.auth.playfab = playfabInfo
+                client.auth.ip = ipAddress
+                // console.log('playfab info', playfabInfo)
+
+                if (playfabInfo.NewlyCreated) {
+                    let [data, stats] = await this.initializeServerPlayerData(options, client.auth)
+                    client.auth.playfab.InfoResultPayload.PlayerStatistics = stats
+                    client.auth.playfab.InfoResultPayload.UserData = data
+                    return client.auth
+                } else {
+                    //to do
+                    // we have no stats yet
+                    //   let stats = await this.checkInitStats(client.auth)
+                    //   client.auth.InfoResultPayload.PlayerStatistics = stats
+                    return client.auth
+                }
+            }
+        } catch (e) {
+            console.log('playfab connection error', e)
+        }
+
+    }
+
+    async initializeServerPlayerData(options: any, auth: any) {
 
         //set new user display name
         const result = await updatePlayerDisplayName({
-          DisplayName: options.userData.displayName,
-          PlayFabId: auth.playfab.PlayFabId
+            DisplayName: options.userData.displayName,
+            PlayFabId: auth.playfab.PlayFabId
         })
         console.log('setting player name res is', result)
 
-        let def:any = {}
-        def.address= options.userData.userId, 
+        let def: any = {}
+        def.address = options.userData.userId
         def.web3 = options.userData.hasConnectedWeb3
 
         //set initial player data
         const initPlayerDataRes = await updatePlayerInternalData({
-          Data: def,
-          PlayFabId: auth.playfab.PlayFabId
+            Data: def,
+            PlayFabId: auth.playfab.PlayFabId
         })
         console.log('setting eth address result', initPlayerDataRes)
 
-        let stats:any[] = []
+        let stats: any[] = []
         //we have no stats for now
         // initManager.pDefaultStats.forEach((stat,key)=>{
         //   stats.push({StatisticName:stat.StatisticName, Value:stat.Value})
@@ -205,6 +211,6 @@ export class IWBRoom extends Room<IWBRoomState> {
         }
 
         return [data, stats]
-  }
+    }
 
 }
