@@ -11,6 +11,7 @@ import path from 'path';
 import {router} from "./Objects/Router";
 import { IWBManager } from "./Objects/IWBManager";
 import { PlayerManager } from "./Objects/PlayerManager";
+import { UserRoom } from "./rooms/UserRoom";
 
 export let itemManager: ItemManager
 export let sceneManager: SceneManager
@@ -30,9 +31,9 @@ export default config({
 
         playerManager = new PlayerManager()
 
-        gameServer.define('iwb-world', IWBRoom);
-        gameServer.define('user-world', IWBRoom)
-            .filterBy(['userId'])
+        gameServer.define('iwb-world', IWBRoom)
+        gameServer.define('user-world', UserRoom)
+        .filterBy(['world'])
     },
 
     initializeExpress: (app) => {

@@ -38,9 +38,15 @@ export class IWBRoom extends Room<IWBRoomState> {
 
     onCreate(options: any) {
         this.setState(new IWBRoomState());
+        this.state.world = options.world
 
         iwbManager.addRoom(this)
         itemManager.messageHandler = new RoomMessageHandler(this, eventListener)
+
+        /**
+         * todo for future loading scenes in main IWB Lobby
+         */
+        sceneManager.loadLobbyScenes(this)
     }
 
     onJoin(client: Client, options: any, auth: JWTPayloadUserId) {
@@ -61,34 +67,42 @@ export class IWBRoom extends Room<IWBRoomState> {
     }
 
     async onLeave(client: Client, consented: boolean) {
-        console.log(client.userData, "left!");
+        console.log(client.userData.userId, "left!", consented);
+
+        let player:Player = this.state.players.get(client.userData.userId)
+        if(player){
+            this.state.players.delete(client.userData.userId)
 
         //player cleanup
-        sceneManager.freeTemporaryParcels(this.state.players.get(client.userData.userId))
+       // sceneManager.freeTemporaryParcels(this.state.players.get(client.userData.userId))
 
         let player:Player = this.state.players.get(client.userData.userId)
         if(player){
           this.state.players.delete(client.userData.userId)
 
-          if(!playerManager.isInPrivateWorld(player)){
-            playerManager.savePlayerCache(player)
-          }
-        }
+          setTimeout(()=>{
+            if(!playerManager.isInPrivateWorld(player)){
+                console.log('player is not in another world, need to remove them from server')
+                playerManager.removePlayer(player.dclData.userId)
+                playerManager.savePlayerCache(player)
+                this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
+              }
+          }, 1000 * 5)
 
-        this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
+        }
     }
 
     onDispose() {
         console.log("room", this.roomId, "disposing...");
-        sceneManager.cleanUp()
         iwbManager.removeRoom(this)
     }
 
     async getPlayerInfo(client: Client, options: any) {
         client.send(SERVER_MESSAGE_TYPES.INIT, {
             catalog: itemManager.items,
+            scenes: sceneManager.getScenes(),
             iwb: {v: iwbManager.version},
-            occupiedParcels: sceneManager.occupiedParcels,
+            world: {world:'main', label:"Lobby"}
         })
 
         let player = new Player(this, client)

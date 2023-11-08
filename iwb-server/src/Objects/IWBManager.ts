@@ -1,14 +1,14 @@
 import { itemManager, sceneManager } from "../app.config"
 import { IWBRoom } from "../rooms/IWBRoom"
-import { RoomMessageHandler } from "../rooms/handlers/MessageHandler"
+import { UserRoom } from "../rooms/UserRoom"
 import { getTitleData, setTitleData } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
+import { Scene } from "./Scene"
 
 export class IWBManager{
     
-    rooms:Map<string, IWBRoom> = new Map()
-    messageHandler:RoomMessageHandler
+    rooms:Map<string, IWBRoom | UserRoom> = new Map()
 
     backupInterval:any
     configModified:boolean = false
@@ -26,11 +26,11 @@ export class IWBManager{
         1000 * 20)
     }
 
-    addRoom(room:IWBRoom){
+    addRoom(room:IWBRoom | UserRoom){
         this.rooms.set(room.roomId, room)
     }
 
-    removeRoom(room:IWBRoom){
+    removeRoom(room:IWBRoom | UserRoom){
         this.rooms.delete(room.roomId)
     }
 
@@ -70,6 +70,12 @@ export class IWBManager{
         }else{
             res.status(200).send({valid: false, msg: "Invalid information"})
         }
+    }
+
+    sendAllMessage(type:SERVER_MESSAGE_TYPES, data:any){
+        this.rooms.forEach((room, key)=>{
+            room.broadcast(type,data)
+        })
     }
 
     sendUserMessage(user:string, type:SERVER_MESSAGE_TYPES, data:any){
