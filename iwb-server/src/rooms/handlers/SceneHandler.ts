@@ -22,17 +22,19 @@ export class RoomSceneHandler {
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && player.mode === SCENE_MODES.CREATE_SCENE_MODE){
-    
-                if(this.hasTemporaryParcel(info.parcel)){
-                    console.log('player has temporary parcel', info.parcel)
-                    this.removeTemporaryParcel(info.parcel)
 
-                    room.broadcast(SERVER_MESSAGE_TYPES.REMOVE_PARCEL, info)
-                }else{
-                    if(!this.hasTemporaryParcel(info.parcel)){
-                        console.log('scene doesnt have temp parcel')
-                        this.addOccupiedParcel(info.parcel) 
-                        room.broadcast(SERVER_MESSAGE_TYPES.SELECT_PARCEL, info)
+                if(!this.isOccupied(info.parcel)){
+                    if(this.hasTemporaryParcel(info.parcel)){
+                        console.log('player has temporary parcel', info.parcel)
+                        this.removeTemporaryParcel(info.parcel)
+    
+                        room.broadcast(SERVER_MESSAGE_TYPES.REMOVE_PARCEL, info)
+                    }else{
+                        if(!this.hasTemporaryParcel(info.parcel)){
+                            console.log('scene doesnt have temp parcel')
+                            this.addTempParcel(info.parcel) 
+                            room.broadcast(SERVER_MESSAGE_TYPES.SELECT_PARCEL, info)
+                        }
                     }
                 }
             }
@@ -119,11 +121,20 @@ export class RoomSceneHandler {
     }
 
     addOccupiedParcel(parcel: any) {
+        this.occupiedParcels.push(parcel)
+    }
+
+    addTempParcel(parcel: any) {
         this.temporaryParcels.push(parcel)
     }
 
+    isOccupied(parcel: any){
+        return [...this.occupiedParcels, ...this.reservedParcels]
+            .find((p) => p === parcel)
+    }
+
     hasTemporaryParcel(parcel: any) {
-        return this.temporaryParcels
+        return [...this.temporaryParcels, ...this.occupiedParcels, ...this.reservedParcels]
             .find((p) => p === parcel)
     }
 }

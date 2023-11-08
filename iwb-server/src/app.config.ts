@@ -12,6 +12,7 @@ import {router} from "./Objects/Router";
 import { IWBManager } from "./Objects/IWBManager";
 import { PlayerManager } from "./Objects/PlayerManager";
 import { UserRoom } from "./rooms/UserRoom";
+import { playground } from "@colyseus/playground";
 
 export let itemManager: ItemManager
 export let sceneManager: SceneManager
@@ -44,6 +45,10 @@ export default config({
         app.use(express.static('public'));
         app.use(express.static(path.join(__dirname, '..', 'public')));
         app.use("/", router);
+
+
+// ...
+app.use("/playground", playground);
 
         console.log(path.join(__dirname, '..', 'public'))
     },
