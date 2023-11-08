@@ -69,26 +69,27 @@ export class IWBRoom extends Room<IWBRoomState> {
     async onLeave(client: Client, consented: boolean) {
         console.log(client.userData.userId, "left!", consented);
 
-        let player:Player = this.state.players.get(client.userData.userId)
-        if(player){
+        let player: Player = this.state.players.get(client.userData.userId)
+        if (player) {
             this.state.players.delete(client.userData.userId)
 
-        //player cleanup
-       // sceneManager.freeTemporaryParcels(this.state.players.get(client.userData.userId))
+            //player cleanup
+            // sceneManager.freeTemporaryParcels(this.state.players.get(client.userData.userId))
 
-        let player:Player = this.state.players.get(client.userData.userId)
-        if(player){
-          this.state.players.delete(client.userData.userId)
+            let player: Player = this.state.players.get(client.userData.userId)
+            if (player) {
+                this.state.players.delete(client.userData.userId)
 
-          setTimeout(()=>{
-            if(!playerManager.isInPrivateWorld(player)){
-                console.log('player is not in another world, need to remove them from server')
-                playerManager.removePlayer(player.dclData.userId)
-                playerManager.savePlayerCache(player)
-                this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
-              }
-          }, 1000 * 5)
+                setTimeout(() => {
+                    if (!playerManager.isInPrivateWorld(player)) {
+                        console.log('player is not in another world, need to remove them from server')
+                        playerManager.removePlayer(player.dclData.userId)
+                        playerManager.savePlayerCache(player)
+                        this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
+                    }
+                }, 1000 * 5)
 
+            }
         }
     }
 
