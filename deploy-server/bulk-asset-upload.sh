@@ -2,8 +2,6 @@
 
 debug=false
 
-PRIVATE_KEY="$1"
-
 # Define the repository URL and branch
 repo_url="https://github.com/last-slice/iwb-3d-wip.git"
 branch_name="main"

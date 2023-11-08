@@ -76,7 +76,7 @@ export class ItemManager{
 
     async saveNewCatalogAssets(data:any){
         for(let i = 0; i < data.length; i++){
-            let asset = await this.createNewAsset(data[i].o,data[i])
+            let asset = await this.createNewAsset(data[i])
             this.newItemsToDeploy.push(asset)
         
             this.items.set(asset.id, asset)
@@ -86,7 +86,7 @@ export class ItemManager{
 
     async saveNewAsset(user:string, data:any){
         console.log('saving new asset', user, data)
-        let asset = await this.createNewAsset(user,data)
+        let asset = await this.createNewAsset(data)
         this.newItemsToDeploy.push(asset)
     
         this.items.set(asset.id, asset)
@@ -97,19 +97,21 @@ export class ItemManager{
         }
     }
 
-    async createNewAsset(user:string, data:any){
+    async createNewAsset(data:any){
         let asset:any = {
-            id: data.file,
-            n: data.name,
-            im: data.image,
-            d: "Test upload description",
-            cat: 'Test',
-            o: user,
-            isdl: false,
-            ty: '3d',
-            pc: data.polycount,
-            si: {},
-            tag:[],
+            id: data.id,
+            m: data.m,
+            n: data.n,
+            im: data.im,
+            d: data.d,
+            cat: data.cat,
+            on: data.on,
+            o: data.o,
+            isdl: data.isdl,
+            ty: data.ty,
+            pc: data.pc,
+            si: data.fs,
+            tag:data.tag,
             v: iwbManager.version + 1
         }
         if(data.scale){

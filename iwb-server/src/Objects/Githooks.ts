@@ -9,12 +9,12 @@ export function handleGithook(req:any){
         switch(req.body.ref){
             case "refs/heads/" + process.env.GIT_DEPLOYMENT_BRANCH:
                 console.log('githook detected push to deploy branch, init world redeploy')
-                initDeployServerDeploy()
+                initIWBDeploy()
                 break;
 
             case "refs/heads/" + process.env.GIT_SERVER_DEPLOYMENT_BRANCH:
                 console.log("attempting to redeploy iwb-server")
-                initIWBDeploy()
+                initDeployServerDeploy()
                 break;
         }
     }

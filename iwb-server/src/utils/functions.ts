@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const command = '../iwb-server.sh';
 
-export function initDeployServerDeploy(){
+export function initIWBDeploy(){
   axios.post( process.env.DEPLOYMENT_ENDPOINT + "/false",{
       auth:process.env.DEPLOYMENT_AUTH
   })
@@ -16,7 +16,7 @@ export function initDeployServerDeploy(){
   })
 }
 
-export function initIWBDeploy(){
+export function initDeployServerDeploy(){
   try {
       // Execute the shell command
       const childProcess = exec(command)
