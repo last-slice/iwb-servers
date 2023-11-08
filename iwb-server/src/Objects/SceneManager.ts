@@ -32,7 +32,7 @@ export class SceneManager {
     }
 
     loadLobbyScenes(room:IWBRoom){    
-        let scenes = this.scenes.filter((scene) => scene.o === "0x" && scene.e)
+        let scenes = this.scenes.filter((scene) => scene.o === "iwb" && scene.e)
         // let scenes = this.scenes.filter((scene) => scene.e)//
         console.log('world scenes are ', scenes)
         scenes.forEach((config)=>{
@@ -42,10 +42,12 @@ export class SceneManager {
     }
 
     loadWorldScenes(room:UserRoom){    
-        let scenes = this.scenes.filter((scene) => scene.o === room.state.world && scene.e)
+        let scenes = this.scenes.filter((scene) => scene.o === room.state.world.world && scene.e)
         scenes.forEach((config)=>{
-            // let scene:Scene = 
             room.state.scenes.set(config.id, new Scene(config))
+            config.pcls.forEach((parcel)=>{
+                room.state.sceneHandler.addOccupiedParcel(parcel)
+            })
         })
     }
 
