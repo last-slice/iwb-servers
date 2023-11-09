@@ -18,9 +18,9 @@ export class Quaternion extends Schema {
 export class SceneItem extends Schema {
   @type("string") id: string
   @type("string") name: string
-  @type(Vector3) position: Vector3 = new Vector3()
-  @type(Quaternion) rotation: Vector3 = new Vector3()
-  @type(Vector3) scale: Vector3 = new Vector3()
+  @type(Vector3) p: Vector3 = new Vector3()
+  @type(Quaternion) r: Vector3 = new Vector3()
+  @type(Vector3) s: Vector3 = new Vector3()
 }
 
 export class Scene extends Schema {
@@ -72,7 +72,15 @@ export class Scene extends Schema {
     this.pc = data.pc
     this.isdl = data.isdl
     this.e = data.e
-    this.ass = data.ass
+
+    data.ass.forEach((asset:any)=>{
+      let item = new SceneItem()
+      item.id = asset.id
+      item.p = new Vector3(asset.p)
+      item.r = new Quaternion(asset.r)
+      item.s = new Vector3(asset.s)
+      this.ass.push(item)
+    })
   }
 
 }

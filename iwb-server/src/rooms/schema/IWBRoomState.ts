@@ -3,6 +3,7 @@ import { Player } from "../../Objects/Player";
 import { Scene } from "../../Objects/Scene";
 import { RoomSceneHandler } from "../handlers/SceneHandler";
 
+let iwbtype = Context.create()
 export class IWBRoomState extends Schema {
 
   world:any

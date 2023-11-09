@@ -6,19 +6,23 @@ const fse = require('fs-extra');
 const { v4: uuidv4 } = require('uuid');
 const { exec } = require('child_process');
 
+const NFTStorageAuth = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDlCNTIyZDczN0UyOEMwOEFmNzhiQzM2Njk5QzVhMmM2ZDI4NDFBRmYiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY5NzI0MDY4MjY4OCwibmFtZSI6IklXQiBVUGxvYWRlciJ9.7nIofYjxMC6-y5RkNI6IYIOrxRritSH-NKGCz8KuMX4"
 const command = '../../bulk-asset-upload.sh';
 const sourceDirectory = '/root/deployment/asset-git'; // The source directory
 const targetDirectory = '/root/iwb-assets/'; // The target directory where you want to copy files
 
 let errors:any[] = []
+let uploaded:any[] = []
 
 export async function handleBulkUpload(data:any, res:any){
-  let status = false
-  let msg = ""
-  let files = ""
-  let uploaded:any[] = []
   errors = [...data]
 
+  pullGithub(data)
+  // .then((result)=> modifyAssets(result))
+  // .then((result2)=> updateServer(result2))
+}
+
+async function pullGithub(data:any){
   try {
     const childProcess = exec(command + " " + process.env.DEPLOY_KEY)
 
@@ -36,52 +40,7 @@ export async function handleBulkUpload(data:any, res:any){
     childProcess.on('exit', async (code:any, signal:any) => {
         if (code === 0) {
             console.log('Child process exited successfully.');
-
-          console.log('data is', data.length)
-          for(let i = 0; i < data.length; i++){
-            let asset = data[i]
-                console.log('asset is ', asset)
-                let subDir = asset.art
-                const subfolderPath = path.join(sourceDirectory, subDir);
-            
-                if (fs.existsSync(subfolderPath)) {
-
-                  fs.readdirSync(subfolderPath).forEach((file:any) => {
-                    
-                    if(file === asset.n + ".glb"){
-                      const filePath = path.join(subfolderPath, file);
-
-                     if (fs.statSync(filePath).isFile() && path.extname(filePath) === '.glb') {
-                        let id = uuidv4()
-                        asset.id = id
-                        const newFilePath = path.join(targetDirectory, subDir, id + ".glb");
-              
-                        // Copy the file to the target directory
-                        fse.copySync(filePath, newFilePath);
-
-                        let size = getFileSize(filePath)
-                        asset.fs = size
-                        asset.file = id + ".glb"
-                        asset.fs = 0
-                        asset.on = "IWB Team"
-                        asset.o = ""
-                        asset.isdl = true
-                        asset.tag = []
-                        asset.name = asset.n
-                        asset.image = ""
-                        asset.polycount = 0
-                        errors.splice(i,1)
-                        uploaded.push(asset)
-                     }
-                    }
-                  });
-                }
-              }
-
-            logFile('upload-success',uploaded)
-
-            await postAssetsToIWB(uploaded)
-
+            await modifyAssets(data)
         } else {
             console.error(`Child process exited with code ${code}.`);
             logFile('upload-error', errors)
@@ -92,6 +51,83 @@ export async function handleBulkUpload(data:any, res:any){
     console.error("try/catch deploy error ", error);
     logFile('upload-error', errors)
   }
+}
+
+async function modifyAssets(data:any){
+  console.log('data is', data.length)
+  for(let i = 0; i < data.length; i++){
+    let asset = data[i]
+    try{
+      console.log('asset is ', asset)
+      let subDir = asset.on
+      const subfolderPath = path.join(sourceDirectory, subDir);
+  
+      if (fs.existsSync(subfolderPath)) {
+
+        for(const file of fs.readdirSync(subfolderPath)){
+          if(file === asset.n + ".glb"){
+            const filePath = path.join(subfolderPath, file);
+
+           if (fs.statSync(filePath).isFile() && path.extname(filePath) === '.glb') {
+              let id = uuidv4()
+              asset.id = id
+              const newFilePath = path.join(targetDirectory, id + ".glb");
+    
+              // Copy the file to the target directory
+              fse.copySync(filePath, newFilePath);
+
+              let size = getFileSize(filePath)
+              asset.fs = size
+
+              try{
+                let filename = asset.n + ".png"
+                let fileContent = fs.readFileSync(path.join(subfolderPath, filename))
+
+                var myHeaders = new Headers();
+                myHeaders.append("Authorization", NFTStorageAuth);
+              
+                var requestOptions = {
+                  method: 'POST',
+                  headers: myHeaders,
+                  body: fileContent
+                };
+                
+                let response = await fetch("https://api.nft.storage/upload", requestOptions)
+                let json = await response.json()
+            
+                // console.log('image storage json is', json)
+                if(json.ok){
+                  console.log('asset image uploaded successfully')
+                  asset.im = "https://" + json.value.cid + ".ipfs.dweb.link"
+                }
+                else{
+                  console.log('error asset image upload')
+                }
+
+              }catch(e){
+                console.log('asset image upload error')
+              }
+
+              errors.splice(i,1)
+              uploaded.push(asset)
+           }
+          }
+        }
+      }
+    }
+    catch(e){
+      console.log('error moving file', asset)
+    }
+
+    }
+
+    console.log('finished modifying assets, need to post to iwb server')
+    logFile('upload-success',uploaded)
+    await postAssetsToIWB(uploaded)
+}
+
+async function updateServer(data:any){
+
 }
 
 function logFile(filename:string, data:any){

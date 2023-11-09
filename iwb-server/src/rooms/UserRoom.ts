@@ -56,10 +56,11 @@ export class UserRoom extends Room<IWBRoomState> {
         this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
     }
 
-    onDispose() {
+    async onDispose() {
         console.log("room", this.roomId, "disposing...");
         iwbManager.removeRoom(this)
-        sceneManager.saveWorldScenes(this.state.scenes)
+        await sceneManager.saveWorldScenes(this.state.scenes)
+        this.state.scenes.clear()
     }
 
 }

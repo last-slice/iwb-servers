@@ -77,13 +77,16 @@ export class RoomSceneHandler {
     
                 const newItem = new SceneItem()
                 newItem.id = item.id
-                newItem.position = new Vector3(item.position)
-                newItem.rotation = new Quaternion(item.rotation)
-                newItem.scale = new Vector3(item.scale)
-    
-                console.log(JSON.stringify(newItem))
+                newItem.p = new Vector3(item.position)
+                newItem.r = new Quaternion(item.rotation)
+                newItem.s = new Vector3(item.scale)
     
                 player.scenes.get(info.baseParcel)?.ass.push(newItem)
+
+                let scene = room.state.scenes.get(info.item.sceneId)
+                if(scene){
+                    scene.ass.push(newItem)
+                }
     
                 room.broadcast(
                     SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM,
@@ -91,16 +94,6 @@ export class RoomSceneHandler {
                 )
             }
     
-        })
-    }
-
-    loadWorldScenes(){
-        let scenes = sceneManager.scenes.filter((scene) => scene.o === this.room.state.world.world && scene.e)
-        console.log('world scenes area', scenes)
-        scenes.forEach((config)=>{
-            let scene:Scene = new Scene(config)
-            // thisroom.state.scenes.set(config.id, scene)
-            this.scenes.push(scene)
         })
     }
 
