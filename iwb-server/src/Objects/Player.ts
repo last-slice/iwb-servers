@@ -171,8 +171,8 @@ export class Player extends Schema {
   }
 
   async saveCache(){
-    await this.recordPlayerTime()
-    await this.saveToDB()
+    // await this.recordPlayerTime()
+    // await this.saveToDB()
   }
 
   async recordPlayerTime(){

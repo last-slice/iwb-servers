@@ -72,9 +72,11 @@ export class ItemManager{
             items.push(item)
         })
         await setTitleData({Key:"Catalog1", Value:JSON.stringify(items)})
+        console.log('catalog backup success')
     }
 
     async saveNewCatalogAssets(data:any){
+        console.log('saving new catalog assets', data)
         for(let i = 0; i < data.length; i++){
             let asset = await this.createNewAsset(data[i])
             this.newItemsToDeploy.push(asset)

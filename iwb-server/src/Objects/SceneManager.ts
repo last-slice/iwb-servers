@@ -34,7 +34,7 @@ export class SceneManager {
     loadLobbyScenes(room:IWBRoom){    
         let scenes = this.scenes.filter((scene) => scene.o === "iwb" && scene.e)
         // let scenes = this.scenes.filter((scene) => scene.e)//
-        console.log('world scenes are ', scenes)
+        // console.log('lobby scenes are ', scenes)
         scenes.forEach((config)=>{
             let scene:Scene = new Scene(config)
             room.state.scenes.set(config.id, scene)
@@ -43,6 +43,7 @@ export class SceneManager {
 
     loadWorldScenes(room:UserRoom){    
         let scenes = this.scenes.filter((scene) => scene.o === room.state.world.world && scene.e)
+        console.log('loading world scenes', scenes)
         scenes.forEach((config)=>{
             room.state.scenes.set(config.id, new Scene(config))
             config.pcls.forEach((parcel)=>{
@@ -59,7 +60,7 @@ export class SceneManager {
         return serverScenes
     }
 
-    saveWorldScenes(scenes:Map<string, Scene>){
+    async saveWorldScenes(scenes:Map<string, Scene>){
         scenes.forEach((scene, key)=>{
             let sceneIndex = this.scenes.findIndex((sc:any) =>sc.id === scene.id)
             if(sceneIndex >= 0){
@@ -69,6 +70,8 @@ export class SceneManager {
             }
             this.modified = true
         })
+
+        console.log('saved world scenes', this.scenes)
     }
 
     addNewScene(scene:SceneData){
