@@ -6,7 +6,7 @@ const fse = require('fs-extra');
 const { v4: uuidv4 } = require('uuid');
 const { exec } = require('child_process');
 
-const NFTStorageAuth = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDlCNTIyZDczN0UyOEMwOEFmNzhiQzM2Njk5QzVhMmM2ZDI4NDFBRmYiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY5NzI0MDY4MjY4OCwibmFtZSI6IklXQiBVUGxvYWRlciJ9.7nIofYjxMC6-y5RkNI6IYIOrxRritSH-NKGCz8KuMX4"
+const NFTStorageAuth = process.env.NFT_STORAGE_KEY
 const command = '../../bulk-asset-upload.sh';
 const sourceDirectory = '/root/deployment/asset-git'; // The source directory
 const targetDirectory = '/root/iwb-assets/'; // The target directory where you want to copy files

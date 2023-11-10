@@ -2,14 +2,13 @@ import { IWBRoom } from "../rooms/IWBRoom"
 import { UserRoom } from "../rooms/UserRoom"
 import { RoomMessageHandler } from "../rooms/handlers/MessageHandler"
 import { setTitleData } from "../utils/Playfab"
-import { SceneData } from "../utils/types"
 import { Player } from "./Player"
 import { Scene } from "./Scene"
 
 
 export class SceneManager {
 
-    scenes: SceneData[] = []
+    scenes: Scene[] = []
     occupiedParcels: string[] = []
     reservedParcels: string[] = ["0,0", "0,1", "1,0", "1,1"]
 
@@ -35,17 +34,18 @@ export class SceneManager {
         let scenes = this.scenes.filter((scene) => scene.o === "iwb" && scene.e)
         // let scenes = this.scenes.filter((scene) => scene.e)//
         // console.log('lobby scenes are ', scenes)
-        scenes.forEach((config)=>{
-            let scene:Scene = new Scene(config)
-            room.state.scenes.set(config.id, scene)
-        })
+        // scenes.forEach((config)=>{
+        //     let scene:Scene = new Scene(config)
+        //     room.state.scenes.set(config.id, scene)
+        // })
     }
 
     loadWorldScenes(room:UserRoom){    
         let scenes = this.scenes.filter((scene) => scene.o === room.state.world.world && scene.e)
         console.log('loading world scenes', scenes)
         scenes.forEach((config)=>{
-            room.state.scenes.set(config.id, new Scene(config))
+            room.state.sceneHandler.scenes.set(config.id, new Scene(config))
+            // room.state.scenes.set(config.id, new Scene(config))
             config.pcls.forEach((parcel)=>{
                 room.state.sceneHandler.addOccupiedParcel(parcel)
             })
@@ -61,7 +61,7 @@ export class SceneManager {
     }
 
     async saveWorldScenes(scenes:Map<string, Scene>){
-        scenes.forEach((scene, key)=>{
+        scenes.forEach((scene:Scene, key)=>{
             let sceneIndex = this.scenes.findIndex((sc:any) =>sc.id === scene.id)
             if(sceneIndex >= 0){
                 this.scenes[sceneIndex] = scene
@@ -74,7 +74,7 @@ export class SceneManager {
         console.log('saved world scenes', this.scenes)
     }
 
-    addNewScene(scene:SceneData){
+    addNewScene(scene:Scene){
         this.scenes.push(scene)
     }
 }

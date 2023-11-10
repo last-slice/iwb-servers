@@ -1,7 +1,7 @@
 import {MapSchema, Schema, type} from "@colyseus/schema";
 import {IWBRoom} from "../rooms/IWBRoom";
 import {Client} from "@colyseus/core";
-import {SCENE_MODES, SERVER_MESSAGE_TYPES, SceneData} from "../utils/types";
+import {SCENE_MODES, SERVER_MESSAGE_TYPES} from "../utils/types";
 import {updatePlayerData} from "../utils/Playfab";
 import {Scene} from "./Scene";
 import { sceneManager } from "../app.config";
@@ -95,7 +95,7 @@ export class Player extends Schema {
   }
 
   createScene(info:any, parcels:string[]){
-    let sceneData:SceneData = {
+    let sceneData:Scene = {
       id: "" + generateId(5),
       n: info.name,
       d: info.desc,
@@ -105,7 +105,7 @@ export class Player extends Schema {
       cat:"",
       rat:[],
       rev:[],
-      ass:[],
+      ass:null,
       pcls:parcels,
       bpcl: parcels[0],
       cd: Math.floor(Date.now()/1000),

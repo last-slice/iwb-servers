@@ -31,6 +31,8 @@ export class UserRoom extends Room<IWBRoomState> {
               playerManager.addPlayerToPrivateWorld(player, client, options.world)
               this.state.players.set(player.dclData.userId, player)
 
+              this.state.sceneHandler.sendScenes(player)
+
             }else{
               console.log('player tried to join private world directly')
               client.leave(4114)
@@ -59,8 +61,8 @@ export class UserRoom extends Room<IWBRoomState> {
     async onDispose() {
         console.log("room", this.roomId, "disposing...");
         iwbManager.removeRoom(this)
-        await sceneManager.saveWorldScenes(this.state.scenes)
-        this.state.scenes.clear()
+        await sceneManager.saveWorldScenes(this.state.sceneHandler.scenes)
+        // this.state.scenes.clear()
     }
 
 }
