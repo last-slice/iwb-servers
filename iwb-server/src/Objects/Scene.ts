@@ -17,41 +17,39 @@ export class Quaternion extends Schema {
 
 export class SceneItem extends Schema {
   @type("string") id: string
-  @type("string") name: string
+  @type("number") ent: number
+  @type('string') aid: string
+  @type("string") n: string
   @type(Vector3) p: Vector3 = new Vector3()
   @type(Quaternion) r: Vector3 = new Vector3()
   @type(Vector3) s: Vector3 = new Vector3()
 }
 
-export class Scene extends Schema {
-  @type("string") id:string;
-  @type("string") n:string
-  @type("string") ona:string
-  @type("string") d:string 
-  @type("string") o:string
-  @type("string") cat:string
-  @type("string") bpcl:string
+export class Scene {
 
-  @type(["string"]) bps:string[]
-  @type(["string"]) rat:string[]
-  @type(["string"]) rev:string[]
-  @type(["string"]) pcls:string[]
-  @type(["string"]) sp:string[]
-  
-  @type("number") si:number
-  @type("number") toc:number
-  @type("number") pc:number
-  @type("number") pcnt: number
-  @type("number") cd: number
-  @type("number") upd: number
-
-  @type("boolean") isdl:boolean
-  @type("boolean") e:boolean
-
-  @type([SceneItem]) ass: SceneItem[] = []
+  id:string
+  n:string
+  d:string
+  o:string
+  ona:string
+  cat:string
+  bpcl:string
+  bps:string[]
+  rat:string[]
+  rev:string[]
+  pcls:string[]
+  sp:string[]
+  cd:number
+  upd:number
+  si:number
+  toc:number
+  pc:number
+  pcnt:number
+  isdl:boolean
+  e:boolean
+  ass:SceneItem[] = []
 
   constructor(data:any){
-    super()
     this.id = data.id
     this.n = data.n
     this.d = data.d
@@ -74,13 +72,15 @@ export class Scene extends Schema {
     this.e = data.e
 
     data.ass.forEach((asset:any)=>{
+      console.log('asset is ', asset)
       let item = new SceneItem()
-      item.id = asset.id
+      item.id = asset.id 
+      item.ent = asset.ent
       item.p = new Vector3(asset.p)
       item.r = new Quaternion(asset.r)
       item.s = new Vector3(asset.s)
-      this.ass.push(item)
+      item.aid = asset.aid
+      this.ass.push(asset)
     })
   }
-
 }

@@ -96,7 +96,6 @@ export class IWBRoom extends Room<IWBRoomState> {
     onDispose() {
         console.log("room", this.roomId, "disposing...");
         iwbManager.removeRoom(this)
-        this.state.scenes.clear()
     }
 
     async getPlayerInfo(client: Client, options: any) {

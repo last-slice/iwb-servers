@@ -19,12 +19,15 @@ export enum SERVER_MESSAGE_TYPES {
     PLAYER_RECEIVED_MESSAGE = 'player_received_message',
     PLAYER_SCENES_CATALOG = 'player_scenes_catalog',
     PLAYER_JOINED_USER_WORLD = 'player_joined_private_world',
+    PLAYER_EDIT_ASSET = 'player_edit_asset',
 
     // Scene
     SCENE_SAVE_NEW = "scene_save_new",
     SCENE_ADD_ITEM = 'scene_add_item',
     SCENE_ADDED_NEW = "scene_added_new",
-    SCENE_LOAD = 'scene_load'
+    SCENE_LOAD = 'scene_load',
+    SCENE_UPDATE_ITEM = 'scene_update_item',
+    SCENE_DELETE_ITEM = 'scene_delete_item'
 }
 
 export enum SCENE_MODES {
@@ -33,32 +36,43 @@ export enum SCENE_MODES {
     BUILD_MODE
 }
 
+export enum EDIT_MODES {
+    GRAB,
+    EDIT
+}
+
+export enum EDIT_MODIFIERS {
+    POSITION,
+    ROTATION,
+    SCALE
+}
+
 export type PlayerData = {
     dclData:any | null,
     mode: SCENE_MODES,
     buildMode:number | null,
 }
 
-export type SceneData = {
-    id:string,
-    n:string, 
-    d:string,
-    o:string,
-    ona:string,
-    cat:string,
-    bpcl:string,
-    ass:any[],
-    bps:string[],
-    rat:string[],
-    rev:string[],
-    pcls:string[],
-    sp:string[],
-    cd:number,
-    upd:number,
-    si:number,
-    toc:number,
-    pc:number,
-    pcnt:number,
-    isdl:boolean,
-    e:boolean
-}
+// export type SceneData = {
+//     id:string,
+//     n:string, 
+//     d:string,
+//     o:string,
+//     ona:string,
+//     cat:string,
+//     bpcl:string,
+//     ass:any[],
+//     bps:string[],
+//     rat:string[],
+//     rev:string[],
+//     pcls:string[],
+//     sp:string[],
+//     cd:number,
+//     upd:number,
+//     si:number,
+//     toc:number,
+//     pc:number,
+//     pcnt:number,
+//     isdl:boolean,
+//     e:boolean
+// }
