@@ -129,8 +129,8 @@ export function handleWorldDeployment(req:any, res:any){
     if (req.body.auth !== process.env.IWB_UPLOAD_AUTH_KEY) {
         console.log('invalid asset auth key')
         return res.status(200).json({valid:false, message: 'Unauthorized' });
+    }else{
+        res.status(200).send({valid: true})
+        iwbManager.saveNewWorld(req.body.world)
     }
-
-    res.status(200).send({valid: true})
-    iwbManager.saveNewWorld(req.body.world)
 }

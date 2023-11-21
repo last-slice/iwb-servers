@@ -138,7 +138,8 @@ export class IWBManager{
                 world:{
                     ens:world.ens,
                     worldName: world.name,
-                    owner: world.owner
+                    owner: world.owner,
+                    init:true
                 }
             })
         })
@@ -150,12 +151,13 @@ export class IWBManager{
         world.updated = Math.floor(Date.now()/1000)
         world.builds = 0
 
-        this.worlds.push(world)
-        this.worldsModified = true
-
         this.rooms.forEach((room:IWBRoom)=>{
             room.broadcast(SERVER_MESSAGE_TYPES.NEW_WORLD_CREATED, world)
         })
+
+        delete world.init
+        this.worlds.push(world)
+        this.worldsModified = true
     }
 
     addWorldPendingSave(world:string){

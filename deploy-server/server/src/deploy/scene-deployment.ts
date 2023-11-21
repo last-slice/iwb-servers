@@ -7,7 +7,7 @@ const ncp = require('ncp').ncp;
 const path = require('path');
 const { exec } = require('child_process');
 
-const command = '../../deploy.sh';
+const command = '../deploy.sh';
 
 let queue:DeploymentData[] = []
 
