@@ -26,7 +26,7 @@ app.use((req:any, res:any, next:any) => {
 // app.use(sse());
 app.use(bodyParser.json());
 app.use(cors({ origin: true}))
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ limit:'10mb', extended: true, parameterLimit: 50000 }));
 
 app.use("/", router);
 export default app;

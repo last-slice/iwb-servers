@@ -1,22 +1,24 @@
-import Listener from "../../utils/eventListener";
 import { IWBRoom } from "../IWBRoom";
-import { UserRoom } from "../UserRoom";
-import { playerHandlers } from "./PlayerHandlers";
+import { RoomPlayerHandler } from "./PlayerHandlers";
+import { RoomSceneHandler } from "./SceneHandler";
+import { RoomSceneItemHandler } from "./SceneItemHandler";
 
 export class RoomMessageHandler {
     
-    room:IWBRoom | UserRoom
-    listener:Listener
+    room:IWBRoom
 
-    constructor(room:IWBRoom | UserRoom, listener:Listener){
+    playerHandler:RoomPlayerHandler
+    sceneHandler:RoomSceneHandler
+    sceneItemHandler:RoomSceneItemHandler
+
+    constructor(room:IWBRoom){
         this.room = room
-        this.listener = listener
-
-        playerHandlers(room)
+        this.playerHandler = new RoomPlayerHandler(room)
+        this.sceneHandler = new RoomSceneHandler(room)
+        this.sceneItemHandler = new RoomSceneItemHandler(room)
     }
 
     broadcast(type:any, data:any){
         this.room.broadcast(type, data)
     }
-
 }

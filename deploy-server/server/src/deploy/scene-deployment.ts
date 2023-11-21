@@ -1,25 +1,27 @@
+import { DeploymentData } from "src/utils/types";
 import { buckets } from "./buckets";
 import { updateSceneMetadata } from "./sceneData";
 
 const fs = require('fs-extra');
+const ncp = require('ncp').ncp;
 const path = require('path');
 const { exec } = require('child_process');
 
 const command = '../../deploy.sh';
 
-let queue:any[] = []
+let queue:DeploymentData[] = []
 
-export function addDeployment(data:any){
+export function addDeployment(data:DeploymentData){
     queue.push(data)
     checkDeploymentQueue()
 }
 
-async function deploy(bucket:string){
+async function deploy(key:string, data:DeploymentData){
     try {
-        let b = buckets.get(bucket)
+        let b = buckets.get(key)
         b.status = "Deploying"
 
-        let temp = command + " " + bucket + " " + process.env.DEPLOY_KEY
+        let temp = command + " " + key + " " + process.env.DEPLOY_KEY
 
         // Execute the shell command
         const childProcess = exec(temp)
@@ -45,19 +47,23 @@ async function deploy(bucket:string){
         childProcess.on('exit', (code:any, signal:any) => {
             if (code === 0) {
                 console.log('Child process exited successfully.');
+                b.status = "Deployed"
+                successIWBServer(key, data).then(()=>{
+                    resetBucket(key)
+                })
               } else {
                 console.error(`Child process exited with code ${code}.`);
+                throw new Error("DCL Deployment Error")
               }        
-            restBucket(bucket)
-        });
+        });//
 
       } catch (error) {
         console.error(error);
-        restBucket(bucket)
+        throw new Error("DCL Deployment Error")
       }
 }
 
-function restBucket(key:string){
+function resetBucket(key:string){
     const projectRoot = "../../"
     const bucketsFolderPath = path.join(projectRoot, 'buckets'); // Path to the "buckets" folder
     const dep1FolderPath = path.join(bucketsFolderPath, key); // Path to the "dep1" folder inside "buckets"
@@ -76,29 +82,29 @@ function restBucket(key:string){
 }
 
 function checkDeploymentQueue(){
-    let tempData = queue.shift()
+    let tempData:DeploymentData = queue.shift()
 
-    buckets.forEach((bucket:any, key:string)=>{
+    outerLoop: for (const [key, bucket] of buckets) {
         if(bucket.available){
             console.log('bucket ' + key + " is available")
             bucket.available = false
             try{
-                buildBucket(key, bucket, tempData).then(()=>{
-                    modifyScene(key, bucket, tempData).then(()=>{
-                        deploy(key)
-                    })
+                buildBucket(key, bucket).then(()=>{
+                  modifyScene(key, tempData).then(()=>{
+                         deploy(key, tempData)
+                     })
                 })
-                return
             }
             catch(e){
                 console.log("bucket for each error", e)
-                return
+                failBucket(key)
             }
+            break outerLoop;
         }
-    })
+      }
 }
 
-async function modifyScene(key:string, bucket:any, data:any){
+async function modifyScene(key:string, data:DeploymentData){
     const projectRoot = "../../"
     const bucketsFolderPath = path.join(projectRoot, 'buckets'); // Path to the "buckets" folder
     const dep1FolderPath = path.join(bucketsFolderPath, key); // Path to the "dep1" folder inside "buckets"
@@ -108,10 +114,11 @@ async function modifyScene(key:string, bucket:any, data:any){
     }
     catch(e){
         console.log('error modifying scene')
+        throw new Error("Error modifying scene")
     }
 }
 
-async function buildBucket(key:string, bucket:any, data:any){
+async function buildBucket(key:string, bucket:any){
     console.log("building temp deploy bucket", key)
     try {
         bucket.status = "building"
@@ -119,16 +126,47 @@ async function buildBucket(key:string, bucket:any, data:any){
         const projectRoot = "../../"
         const bucketsFolderPath = path.join(projectRoot, 'buckets'); // Path to the "buckets" folder
         const dep1FolderPath = path.join(bucketsFolderPath, key); // Path to the "dep1" folder inside "buckets"
-        const templateFolderPath = path.join(projectRoot, 'template'); // Path to the "template" folder
+        console.log('dep1 folder path is', dep1FolderPath)
+        const templateFolderPath = path.join(projectRoot, 'iwb-template'); // Path to the "template" folder
     
-        await fs.mkdir(dep1FolderPath);
-        await fs.copy(templateFolderPath, dep1FolderPath);
+        await fs.mkdir(dep1FolderPath, {recursive: true});
+        await copyFolder(templateFolderPath, dep1FolderPath);
 
     } catch (error:any) {
         console.error("error building deployment bucket", error);
-        bucket.status = "failed"
-        bucket.available = true
+        throw new Error("Error Building Bucket")
       }
-
-    
 }
+
+function failBucket(key:any){
+    let bucket = buckets.get(key)
+    bucket.status = "failed"
+    bucket.available = false
+}
+
+// Create a function to promisify the ncp operation
+function copyFolder(source:string, destination:string) {
+    return new Promise((resolve, reject) => {
+      ncp(source, destination, (err:any) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({});
+        }
+      });
+    });
+  }
+
+async function successIWBServer(bucket:any, data:DeploymentData){
+    let res = await fetch(process.env.IWB_PATH + "deployment/success",{
+        method:"POST",
+        headers:{"content-type":"application/json"},
+        body:JSON.stringify({
+            auth:process.env.IWB_UPLOAD_AUTH_KEY,
+            world:data
+        })
+    })
+    let json = await res.json()
+    console.log('ping iwb server success deployment', json)
+}
+

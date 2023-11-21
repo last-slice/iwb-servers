@@ -1,8 +1,6 @@
 import {Client, Room} from "@colyseus/core";
 import { Player } from "./Player"
 import { SERVER_MESSAGE_TYPES } from "../utils/types";
-import { IWBRoom } from "../rooms/IWBRoom";
-import { UserRoom } from "../rooms/UserRoom";
 
 export class PlayerManager {
     
@@ -25,7 +23,7 @@ export class PlayerManager {
     }
 
     savePlayerCache(player:Player){
-        // player.saveCache()
+        player.saveCache()
     }
 
     isInPrivateWorld(player:Player){

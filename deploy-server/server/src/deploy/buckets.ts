@@ -7,28 +7,28 @@ buckets.set("dep1", {
     owner:"",
     id:""
 })
-buckets.set("dep1", {
+buckets.set("dep2", {
     enabled: false,
     available:true,
     status: "",
     owner:"",
     id:""
 })
-buckets.set("dep1", {
+buckets.set("dep3", {
     enabled: false,
     available:true,
     status: "",
     owner:"",
     id:""
 })
-buckets.set("dep1", {
+buckets.set("dep4", {
     enabled: false,
     available:true,
     status: "",
     owner:"",
     id:""
 })
-buckets.set("dep1", {
+buckets.set("dep5", {
     enabled: false,
     available:true,
     status: "",

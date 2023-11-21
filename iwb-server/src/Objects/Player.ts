@@ -4,20 +4,17 @@ import {Client} from "@colyseus/core";
 import {SCENE_MODES, SERVER_MESSAGE_TYPES} from "../utils/types";
 import {updatePlayerData} from "../utils/Playfab";
 import {Scene} from "./Scene";
-import { sceneManager } from "../app.config";
 import { generateId } from "colyseus";
-import { UserRoom } from "../rooms/UserRoom";
 
 export class Player extends Schema {
   @type("string") id:string;
   @type("string") address:string
   @type("string") name:string 
-  scenes: Map<string,Scene> = new Map()
 
   playFabData:any
   dclData:any
 
-  room:IWBRoom | UserRoom
+  room:IWBRoom
   roomId:string
   client:Client
   world:string = "main"
@@ -95,18 +92,13 @@ export class Player extends Schema {
   }
 
   createScene(info:any, parcels:string[]){
-    let sceneData:Scene = {
+    let sceneData:any = {
       id: "" + generateId(5),
       n: info.name,
       d: info.desc,
       o: this.dclData.userId,
       ona: this.dclData.displayName,
-      bps:[],
       cat:"",
-      rat:[],
-      rev:[],
-      ass:null,
-      pcls:parcels,
       bpcl: parcels[0],
       cd: Math.floor(Date.now()/1000),
       upd: Math.floor(Date.now()/1000),
@@ -114,13 +106,14 @@ export class Player extends Schema {
       toc:0,
       pc: 0,
       pcnt: parcels.length,
-      sp:["0,0"],
       isdl: false,
-      e:true
+      e:true,
+      pcls:parcels,
+      sp:["0,0"]
     }
+
     console.log('creating new scene with data', sceneData)
     let scene = new Scene(sceneData)
-    this.scenes.set(scene.id, scene)
     return scene
   }
 
@@ -223,8 +216,7 @@ export class Player extends Schema {
 
       const playerData:any = {
         "Settings":JSON.stringify(this.settings),
-        "Assets":JSON.stringify(assets),
-        "Scenes":JSON.stringify(this.scenes),
+        "Scenes":JSON.stringify(assets)
       }
 
       console.log('player data to save is' ,playerData)

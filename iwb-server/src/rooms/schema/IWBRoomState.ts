@@ -1,13 +1,20 @@
-import { Schema, Context, MapSchema,type, ArraySchema } from "@colyseus/schema";
+import { Schema, MapSchema,ArraySchema, type } from "@colyseus/schema";
 import { Player } from "../../Objects/Player";
-import { Scene } from "../../Objects/Scene";
-import { RoomSceneHandler } from "../handlers/SceneHandler";
+import { Scene, TempScene } from "../../Objects/Scene";
+import { RoomMessageHandler } from "../handlers/MessageHandler";
+import { RoomSceneManager } from "../handlers/SceneManager";
 
 export class IWBRoomState extends Schema {
 
   world:any
-  sceneHandler:RoomSceneHandler
+  messageHandler:RoomMessageHandler
+  sceneManager:RoomSceneManager
 
+  @type(TempScene) tempScene:TempScene
+
+  @type(["string"]) occupiedParcels = new ArraySchema<string>()
+  @type(["string"]) temporaryParcels = new ArraySchema<string>()
+  
+  @type({map: Scene}) scenes = new MapSchema<Scene>()
   @type({ map: Player }) players = new MapSchema<Player>();
-  // @type({ map: Scene }) scenes = new MapSchema<Scene>();
 }

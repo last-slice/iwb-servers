@@ -10,9 +10,6 @@ import { Player } from "./Player"
 export class ItemManager{
     
     items:Map<string, any> = new Map()
-    messageHandler:RoomMessageHandler
-
-
     newItemsToDeploy:any[] = []
 
     constructor(){
@@ -28,11 +25,6 @@ export class ItemManager{
                 }
             })
         })
-
-        // for(let i = 0; i < 2000; i++){
-        //     let data = this.items.get("065b0495-1dfb-48f9-baa5-b5028bd56a89")
-        //     this.items.set("065b0495-1dfb-48f9-baa5-b5028bd56a89" + i, data)
-        // }
     }
 
     async getServerItems(init?:boolean){
@@ -51,15 +43,6 @@ export class ItemManager{
                     this.items.set(item.id, item)
                 }
             })
-
-            if(init){
-                for(let i = 0; i < 2000; i++){
-                    let data = this.items.get("065b0495-1dfb-48f9-baa5-b5028bd56a89")
-                    this.items.set("065b0495-1dfb-48f9-baa5-b5028bd56a89" + i, data)
-                }
-            }else{
-                this.messageHandler.broadcast(SERVER_MESSAGE_TYPES.CATALOG_UPDATED, {})
-            }
         }
         catch(e){
             console.log('error getting server items', e)

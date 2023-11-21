@@ -27,7 +27,12 @@ export enum SERVER_MESSAGE_TYPES {
     SCENE_ADDED_NEW = "scene_added_new",
     SCENE_LOAD = 'scene_load',
     SCENE_UPDATE_ITEM = 'scene_update_item',
-    SCENE_DELETE_ITEM = 'scene_delete_item'
+    SCENE_DELETE_ITEM = 'scene_delete_item',
+
+
+    //World
+    INIT_WORLD = "init_world",
+    NEW_WORLD_CREATED = 'new_world_created'
 }
 
 export enum SCENE_MODES {
@@ -44,7 +49,8 @@ export enum EDIT_MODES {
 export enum EDIT_MODIFIERS {
     POSITION,
     ROTATION,
-    SCALE
+    SCALE,
+    TRANSFORM
 }
 
 export type PlayerData = {

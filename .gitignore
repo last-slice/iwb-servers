@@ -96,3 +96,4 @@ iwb-server/iwb-server.sh
 /build
 Upload-dapp/build/
 /bulk-upload-server
+iwb-template

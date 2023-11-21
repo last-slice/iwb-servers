@@ -2,10 +2,11 @@ import {Client, Room} from "@colyseus/core";
 import {IWBRoomState} from "./schema/IWBRoomState";
 import {Player} from "../Objects/Player";
 import {RoomMessageHandler} from "./handlers/MessageHandler";
-import {eventListener, itemManager, iwbManager, playerManager, sceneManager} from "../app.config";
+import {itemManager, iwbManager, playerManager} from "../app.config";
 import {SERVER_MESSAGE_TYPES} from "../utils/types";
-import * as jwt from "jsonwebtoken";
 import {playerLogin, updatePlayerDisplayName, updatePlayerInternalData} from "../utils/Playfab";
+import * as jwt from "jsonwebtoken";
+import { RoomSceneManager } from "./handlers/SceneManager";
 
 export interface JWTPayloadUserId extends jwt.JwtPayload {
     userId: string
@@ -34,20 +35,17 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         // // return auth data so we can read in onJoin
         // return {...decodedToken, ...await this.doLogin(client, options, req)}
-        return await this.doLogin(client, options, req)
+        return await this.doLogin(client, options, req)//
     }
 
     onCreate(options: any) {
         this.setState(new IWBRoomState());
         this.state.world = options.world
 
-        iwbManager.addRoom(this)
-        itemManager.messageHandler = new RoomMessageHandler(this, eventListener)
+        this.state.messageHandler = new RoomMessageHandler(this)
+        this.state.sceneManager = new RoomSceneManager(this, options.world)
 
-        /**
-         * todo for future loading scenes in main IWB Lobby
-         */
-        sceneManager.loadLobbyScenes(this)
+        iwbManager.addRoom(this)
     }
 
     onJoin(client: Client, options: any, auth: JWTPayloadUserId) {
@@ -75,12 +73,10 @@ export class IWBRoom extends Room<IWBRoomState> {
             this.state.players.delete(client.userData.userId)
 
           setTimeout(()=>{
-            if(!playerManager.isInPrivateWorld(player)){
-                console.log('player is not in another world, need to remove them from server')
-                playerManager.removePlayer(player.dclData.userId)
-                playerManager.savePlayerCache(player)
-                this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
-              }
+            console.log('player is not in another world, need to remove them from server')
+            playerManager.removePlayer(player.dclData.userId)
+            playerManager.savePlayerCache(player)
+            this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
           }, 1000 * 5)
 
         }
@@ -94,9 +90,9 @@ export class IWBRoom extends Room<IWBRoomState> {
     async getPlayerInfo(client: Client, options: any) {
         client.send(SERVER_MESSAGE_TYPES.INIT, {
             catalog: itemManager.items,
-            scenes: sceneManager.getScenes(),
+            scenes: iwbManager.getScenes(),
+            worlds: iwbManager.worlds,
             iwb: {v: iwbManager.version},
-            world: {world:'main', label:"Lobby"}
         })
 
         let player = new Player(this, client)

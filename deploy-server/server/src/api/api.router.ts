@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { buckets } from "../deploy/buckets";
-import { authenticateToken, handleAssetSigning, handleIWBDeploy, handleSceneDeploy, handleSceneSigning, postNewAssetData, validateSceneToken } from "./api.service";
+import { authenticateToken, handleAssetSigning, handleIWBDeploy, handleWorldDeploy, handleSceneSigning, postNewAssetData, validateSceneToken } from "./api.service";
 
 export const router = express.Router();
 const multer = require('multer');
@@ -50,8 +50,8 @@ router.get("/status/", async function(req: express.Request, res: express.Respons
     res.status(200).json({result: "success", bucket: buckets.get(req.params.bucket as string)})
 })
 
-router.post("/deploy", async function(req: express.Request, res: express.Response) {
-  handleSceneDeploy(req,res)
+router.post("/world-deploy", async function(req: express.Request, res: express.Response) {
+  handleWorldDeploy(req,res)
 })
 
 router.post("/iwb-deploy/:force", async function(req: express.Request, res: express.Response) {
