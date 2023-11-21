@@ -62,7 +62,7 @@ export class Scene extends Schema{
   constructor(data?:any){
     super()
     if(data){
-      console.log('creating new scene', data)
+      // console.log('creating new scene', data)
       this.id = data.id
       this.n = data.n
       this.d = data.d
@@ -87,7 +87,7 @@ export class Scene extends Schema{
       if(data.ass){
         data.ass.forEach((asset:any)=>{
           try{
-            console.log('asset is ', asset)
+            // console.log('asset is ', asset)
             let item = new SceneItem()
             item.id = asset.id 
             item.ent = asset.ent

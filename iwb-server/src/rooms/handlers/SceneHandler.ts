@@ -44,10 +44,8 @@ export class RoomSceneHandler {
                     this.room.state.temporaryParcels.forEach((parcel)=>{
                        this.room.state.occupiedParcels.push(parcel)
                     })
-                   this.freeTemporaryParcels()
+                    this.freeTemporaryParcels()
 
-                    // iwbManager.addNewScene(scene)
-                    console.log('iwb rooms are', iwbManager.rooms)
                     player.updatePlayMode(SCENE_MODES.BUILD_MODE)
                     client.send(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED, {mode:player.mode})
                 }

@@ -6,7 +6,7 @@ import { RoomSceneManager } from "../handlers/SceneManager";
 
 export class IWBRoomState extends Schema {
 
-  world:any
+  @type("string") world:string
   messageHandler:RoomMessageHandler
   sceneManager:RoomSceneManager
 

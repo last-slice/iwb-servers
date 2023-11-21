@@ -1,3 +1,4 @@
+import axios from "axios";
 import { PlayFabClient, PlayFabServer, PlayFabAdmin } from "playfab-sdk";
 
 export function initPlayFab(){
@@ -192,5 +193,84 @@ export const executeCloudScript = (request:PlayFabServerModels.ExecuteCloudScrip
 export const getLeaderboard = (request:PlayFabServerModels.GetLeaderboardRequest):Promise<PlayFabServerModels.GetLeaderboardResult> => {
   return new Promise((resolve, reject)=>{
     PlayFabServer.GetLeaderboard( request, c(resolve, reject)) 
+  })
+}
+
+
+export const initializeUploadPlayerFiles = (entityToken:string, request:PlayFabDataModels.InitiateFileUploadsRequest):Promise<PlayFabDataModels.InitiateFileUploadsResponse> =>{
+  return new Promise((resolve, reject)=>{
+    axios.post("https://"+process.env.PLAYFAB_ID+".playfabapi.com/File/InitiateFileUploads",
+    request,
+    {
+        headers:{
+            'content-type': 'application/json',
+            'X-EntityToken': entityToken
+        }
+    }
+    )
+    .then(function (response) {
+      resolve(response.data.data)
+    })
+    .catch(function (error) {
+      reject(error)
+    });
+  })
+}
+
+export const uploadPlayerFiles = (url:string, request:any):Promise<any> =>{
+  return new Promise((resolve, reject)=>{
+    axios.put(url,
+    request,
+    {
+        headers:{
+            'content-type': 'application/json'
+        }
+    }
+    )
+    .then(function (response) {
+      resolve(response.data.data)
+    })
+    .catch(function (error) {
+      reject(error)
+    });
+  })
+}
+export const finalizeUploadFiles = (entityToken:string, request:PlayFabDataModels.FinalizeFileUploadsRequest):Promise<PlayFabDataModels.FinalizeFileUploadsResponse> =>{
+  return new Promise((resolve, reject)=>{
+    axios.post("https://"+process.env.PLAYFAB_ID+".playfabapi.com/File/FinalizeFileUploads",
+    request,
+    {
+        headers:{
+            'content-type': 'application/json',
+            'X-EntityToken': entityToken
+        }
+    }
+    )
+    .then(function (response) {
+      resolve(response.data.data)
+    })
+    .catch(function (error) {
+      reject(error)
+    });
+  })
+}
+
+export const abortFileUploads = (entityToken:string, request:PlayFabDataModels.AbortFileUploadsRequest):Promise<PlayFabDataModels.AbortFileUploadsResponse> =>{
+  return new Promise((resolve, reject)=>{
+    axios.post("https://"+process.env.PLAYFAB_ID+".playfabapi.com/File/AbortFileUploads",
+    request,
+    {
+        headers:{
+            'content-type': 'application/json',
+            'X-EntityToken': entityToken
+        }
+    }
+    )
+    .then(function (response) {
+      resolve(response.data.data)
+    })
+    .catch(function (error) {
+      reject(error)
+    });
   })
 }

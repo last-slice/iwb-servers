@@ -15,6 +15,7 @@ export class IWBManager{
     configModified:boolean = false
     scenes:any[] = []
     worlds:any[] = []
+    pendingSaves:any[] = []
 
     version:number = 0
 
@@ -90,15 +91,6 @@ export class IWBManager{
         return serverScenes
     }
 
-    addNewScene(scene:Scene){
-        this.scenes.push(scene)
-        if(this.rooms.length > 0){
-            this.rooms.forEach((room:IWBRoom)=>{
-                room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ADDED_NEW, {id:scene.id, scna:scene.n, owner:scene.o, updated: scene.upd, name: scene.ona})
-            })
-        }
-    }
-
     attemptUserMessage(req:any, res:any){
         if(req.body){
             if(req.body.user){
@@ -164,5 +156,16 @@ export class IWBManager{
         this.rooms.forEach((room:IWBRoom)=>{
             room.broadcast(SERVER_MESSAGE_TYPES.NEW_WORLD_CREATED, world)
         })
+    }
+
+    addWorldPendingSave(world:string){
+        this.pendingSaves.push(world)
+    }
+
+    removeWorldPendingSave(world:string){
+        let index = this.pendingSaves.findIndex((w)=> w === world)
+        if(index >=0){
+            this.pendingSaves.splice(index,1)
+        }
     }
 }

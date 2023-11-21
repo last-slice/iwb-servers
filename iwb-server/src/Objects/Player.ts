@@ -99,6 +99,7 @@ export class Player extends Schema {
       o: this.dclData.userId,
       ona: this.dclData.displayName,
       cat:"",
+      bps:[],
       bpcl: parcels[0],
       cd: Math.floor(Date.now()/1000),
       upd: Math.floor(Date.now()/1000),
@@ -112,7 +113,7 @@ export class Player extends Schema {
       sp:["0,0"]
     }
 
-    console.log('creating new scene with data', sceneData)
+    // console.log('creating new scene with data', sceneData)
     let scene = new Scene(sceneData)
     return scene
   }

@@ -41,6 +41,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     onCreate(options: any) {
         this.setState(new IWBRoomState());
         this.state.world = options.world
+        console.log('room realm is', options.world)
 
         this.state.messageHandler = new RoomMessageHandler(this)
         this.state.sceneManager = new RoomSceneManager(this, options.world)
@@ -85,6 +86,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     onDispose() {
         console.log("room", this.roomId, "disposing...");
         iwbManager.removeRoom(this)
+        this.state.sceneManager.saveRealmScenes()
     }
 
     async getPlayerInfo(client: Client, options: any) {
