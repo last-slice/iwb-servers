@@ -17,7 +17,9 @@ export class IWBManager{
     worlds:any[] = []
     pendingSaves:any[] = []
 
+    //server config
     version:number = 0
+    styles:string[] = []
 
     initQueue:any[]= []
 
@@ -69,6 +71,7 @@ export class IWBManager{
             
             let config = JSON.parse(response.Data['Config'])
             this.version = config.v
+            this.styles = config.styles
 
             let scenes = JSON.parse(response.Data['Scenes'])
             this.scenes = scenes

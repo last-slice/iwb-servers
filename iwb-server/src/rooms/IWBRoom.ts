@@ -92,6 +92,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     async getPlayerInfo(client: Client, options: any) {
         client.send(SERVER_MESSAGE_TYPES.INIT, {
             catalog: itemManager.items,
+            styles: iwbManager.styles,
             scenes: iwbManager.getScenes(),
             worlds: iwbManager.worlds,
             iwb: {v: iwbManager.version},

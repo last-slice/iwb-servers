@@ -67,10 +67,6 @@ export class RoomSceneHandler {
                     let assetIndex = scene.ass.findIndex((ass)=> ass.aid === info.aid)
                     if(assetIndex >= 0){
                         scene.ass.splice(assetIndex,1)
-                        // room.broadcast(
-                        //     SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM,
-                        //     {userId: client.userData.userId, sceneId:info.sceneId, entity:info.entity, aid:info.aid}
-                        // )
                     }
                 }
             }
