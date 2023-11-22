@@ -82,16 +82,17 @@ export class RoomSceneHandler {
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
                 const {item} = info
-    
-                const newItem = new SceneItem()
-                newItem.id = item.id
-                newItem.aid = item.aid
-                newItem.p = new Vector3(item.position)
-                newItem.r = new Quaternion(item.rotation)
-                newItem.s = new Vector3(item.scale)
 
                 let scene = this.room.state.scenes.get(info.item.sceneId)
+                console.log('scene to edit item in is', scene)
                 if(scene){
+                    const newItem = new SceneItem()
+                    newItem.id = item.id
+                    newItem.aid = item.aid
+                    newItem.p = new Vector3(item.position)
+                    newItem.r = new Quaternion(item.rotation)
+                    newItem.s = new Vector3(item.scale)
+
                     scene.ass.push(newItem)
                 }
             }
@@ -120,6 +121,30 @@ export class RoomSceneHandler {
                         sceneItem.r.z = item.rotation.z
                     }
                 }
+            }
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.USE_SELECTED_ASSET, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.USE_SELECTED_ASSET + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+
+            if(player && player.mode === SCENE_MODES.BUILD_MODE){
+                this.room.broadcast(SERVER_MESSAGE_TYPES.USE_SELECTED_ASSET, info)
+            }else{
+                console.log('player is not in create scene mode')
+            }
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.PLACE_SELECTED_ASSET, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.PLACE_SELECTED_ASSET + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+
+            if(player && player.mode === SCENE_MODES.BUILD_MODE){
+                this.room.broadcast(SERVER_MESSAGE_TYPES.PLACE_SELECTED_ASSET, info)
+            }else{
+                console.log('player is not in create scene mode')
             }
         })
     }
@@ -154,9 +179,12 @@ export class RoomSceneHandler {
     }
 
     canBuild(user:string, sceneId:any){
+        console.log('can build world is', this.room.state.world)
+        console.log('can build user ens is', iwbManager.worlds.find((w)=>w.owner === user).ens)
+    
         let scene:Scene = this.room.state.scenes.get(sceneId)
         if(scene){
-            if(scene.bps.includes(user)){
+            if(scene.bps.includes(user) || user === iwbManager.worlds.find((w)=>w.ens === this.room.state.world).owner){
                 return true
             }else{
                 return false

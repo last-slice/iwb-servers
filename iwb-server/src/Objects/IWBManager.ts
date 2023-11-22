@@ -162,7 +162,7 @@ export class IWBManager{
             delete world.init
             let index = this.worlds.find((w)=> w.ens === world.ens)
             if(index >= 0){
-                this.worlds[index] = world
+                this.worlds[index].updated = world.updated
             }
         }
 
