@@ -96,6 +96,32 @@ export class RoomSceneHandler {
                 }
             }
         })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.SCENE_UPDATE_ITEM, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.SCENE_UPDATE_ITEM + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
+                const {item} = info
+
+                let scene = this.room.state.scenes.get(info.item.sceneId)
+                console.log('scene to edit item in is', scene)
+                if(scene){
+                    console.log('we have scene for asset edit')
+                    let sceneItem = scene.ass.find((as)=> as.aid === info.item.aid)
+                    console.log('scene item is ', sceneItem)
+                    if(sceneItem){
+                        sceneItem.p.x = item.position.x
+                        sceneItem.p.y = item.position.y
+                        sceneItem.p.z = item.position.z
+
+                        sceneItem.r.x = item.rotation.x
+                        sceneItem.r.y = item.rotation.y
+                        sceneItem.r.z = item.rotation.z
+                    }
+                }
+            }
+        })
     }
 
     freeTemporaryParcels() {
