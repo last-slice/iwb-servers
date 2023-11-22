@@ -97,7 +97,7 @@ export class Player extends Schema {
   }
 
   createScene(info:any, parcels:string[]){
-    let sceneData:Scene = {
+    let sceneData:any= {
       id: "" + generateId(5),
       n: info.name,
       d: info.desc,
@@ -107,7 +107,7 @@ export class Player extends Schema {
       cat:"",
       rat:[],
       rev:[],
-      ass:null,
+      ass:[],
       pcls:parcels,
       bpcl: parcels[0],
       cd: Math.floor(Date.now()/1000),

@@ -25,31 +25,36 @@ export class SceneItem extends Schema {
   @type(Vector3) s: Vector3 = new Vector3()
 }
 
-export class Scene {
 
-  id:string
-  n:string
-  d:string
-  o:string
-  ona:string
-  cat:string
-  bpcl:string
-  bps:string[]
-  rat:string[]
-  rev:string[]
-  pcls:string[]
-  sp:string[]
-  cd:number
-  upd:number
-  si:number
-  toc:number
-  pc:number
-  pcnt:number
-  isdl:boolean
-  e:boolean
-  ass:SceneItem[] = []
+export class Scene extends Schema {
+  @type("string") id:string;
+  @type("string") n:string
+  @type("string") ona:string
+  @type("string") d:string
+  @type("string") o:string
+  @type("string") cat:string
+  @type("string") bpcl:string
+
+  @type(["string"]) bps:string[]
+  @type(["string"]) rat:string[]
+  @type(["string"]) rev:string[]
+  @type(["string"]) pcls:string[]
+  @type(["string"]) sp:string[]
+
+  @type("number") si:number
+  @type("number") toc:number
+  @type("number") pc:number
+  @type("number") pcnt: number
+  @type("number") cd: number
+  @type("number") upd: number
+
+  @type("boolean") isdl:boolean
+  @type("boolean") e:boolean
+
+  @type([SceneItem]) ass: SceneItem[] = []
 
   constructor(data:any){
+    super()
     this.id = data.id
     this.n = data.n
     this.d = data.d
@@ -70,17 +75,82 @@ export class Scene {
     this.pc = data.pc
     this.isdl = data.isdl
     this.e = data.e
+    this.ass = data.ass
 
-    data.ass.forEach((asset:any)=>{
-      console.log('asset is ', asset)
-      let item = new SceneItem()
-      item.id = asset.id 
-      item.ent = asset.ent
-      item.p = new Vector3(asset.p)
-      item.r = new Quaternion(asset.r)
-      item.s = new Vector3(asset.s)
-      item.aid = asset.aid
-      this.ass.push(asset)
-    })
+    // if(!data.ass) return
+    // data.ass.forEach((asset:any)=>{
+    //   console.log('asset is ', asset)
+    //   let item = new SceneItem()
+    //   item.id = asset.id
+    //   item.ent = asset.ent
+    //   item.p = new Vector3(asset.p)
+    //   item.r = new Quaternion(asset.r)
+    //   item.s = new Vector3(asset.s)
+    //   item.aid = asset.aid
+    //   this.ass.push(asset)
+    // })
   }
+
 }
+//
+//
+// export class Scene {
+//
+//   id:string
+//   n:string
+//   d:string
+//   o:string
+//   ona:string
+//   cat:string
+//   bpcl:string
+//   bps:string[]
+//   rat:string[]
+//   rev:string[]
+//   pcls:string[]
+//   sp:string[]
+//   cd:number
+//   upd:number
+//   si:number
+//   toc:number
+//   pc:number
+//   pcnt:number
+//   isdl:boolean
+//   e:boolean
+//   ass:SceneItem[] = []
+//
+//   constructor(data:any){
+//     this.id = data.id
+//     this.n = data.n
+//     this.d = data.d
+//     this.pcnt = data.pcnt
+//     this.cd = data.cd
+//     this.upd = data.upd
+//     this.o = data.o
+//     this.ona = data.ona
+//     this.cat = data.cat
+//     this.bpcl = data.bpcl
+//     this.bps = data.bps
+//     this.rat = data.rat
+//     this.rev = data.rev
+//     this.pcls = data.pcls
+//     this.sp = data.sp
+//     this.si = data.si
+//     this.toc = data.toc
+//     this.pc = data.pc
+//     this.isdl = data.isdl
+//     this.e = data.e
+//
+//     if(!data.ass) return
+//     data.ass.forEach((asset:any)=>{
+//       console.log('asset is ', asset)
+//       let item = new SceneItem()
+//       item.id = asset.id
+//       item.ent = asset.ent
+//       item.p = new Vector3(asset.p)
+//       item.r = new Quaternion(asset.r)
+//       item.s = new Vector3(asset.s)
+//       item.aid = asset.aid
+//       this.ass.push(asset)
+//     })
+//   }
+// }
