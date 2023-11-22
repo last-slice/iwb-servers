@@ -17,6 +17,8 @@ export class RoomSceneHandler {
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && player.mode === SCENE_MODES.CREATE_SCENE_MODE){
 
+                // for(let scene)
+
                 if(!this.isOccupied(info.parcel)){
                     if(this.hasTemporaryParcel(info.parcel)){
                         console.log('player has temporary parcel', info.parcel)
@@ -78,8 +80,7 @@ export class RoomSceneHandler {
             console.log(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
-            if(player && player.mode === SCENE_MODES.BUILD_MODE){
-    
+            if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
                 const {item} = info
     
                 const newItem = new SceneItem()
@@ -124,5 +125,18 @@ export class RoomSceneHandler {
     hasTemporaryParcel(parcel: any) {
         return [...this.room.state.temporaryParcels, ...this.room.state.occupiedParcels]
             .find((p) => p === parcel)
+    }
+
+    canBuild(user:string, sceneId:any){
+        let scene:Scene = this.room.state.scenes.get(sceneId)
+        if(scene){
+            if(scene.bps.includes(user)){
+                return true
+            }else{
+                return false
+            }
+        }else{
+            return false
+        }
     }
 }
