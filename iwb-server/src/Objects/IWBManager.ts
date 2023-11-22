@@ -155,8 +155,17 @@ export class IWBManager{
             room.broadcast(SERVER_MESSAGE_TYPES.NEW_WORLD_CREATED, world)
         })
 
-        delete world.init
-        this.worlds.push(world)
+        if(world.init){
+            delete world.init
+            this.worlds.push(world)
+        }else{
+            delete world.init
+            let index = this.worlds.find((w)=> w.ens === world.ens)
+            if(index >= 0){
+                this.worlds[index] = world
+            }
+        }
+
         this.worldsModified = true
     }
 
