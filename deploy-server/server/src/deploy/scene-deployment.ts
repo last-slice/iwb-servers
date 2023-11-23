@@ -9,7 +9,7 @@ const { exec } = require('child_process');
 
 const command = '../deploy.sh';
 
-let queue:DeploymentData[] = []
+export let queue:DeploymentData[] = []
 
 export function addDeployment(data:DeploymentData){
     queue.push(data)
@@ -20,20 +20,21 @@ async function deploy(key:string, data:DeploymentData){
     try {
         let b = buckets.get(key)
         b.status = "Deploying"
+        b.owner = data.ens
 
         let temp = command + " " + key + " " + process.env.DEPLOY_KEY
 
         // Execute the shell command
-        const childProcess = exec(temp)
+        b.process = exec(temp)
   
         // Listen for stdout data events
-        childProcess.stdout.on('data', (data:any) => {
+        b.process.stdout.on('data', (data:any) => {
             // console.log(`stdout: ${data}`);
         });
             
         // Listen for stderr data events
-        childProcess.stderr.on('data', (data:any) => {
-            // console.error(`stderr: ${data}`);
+        b.process.stderr.on('data', (data:any) => {
+            console.error(`stderr: ${data}`);
 
             if(data.substring(0,5) === "Error"){
                 console.log('we have an error with deployment')
@@ -45,11 +46,12 @@ async function deploy(key:string, data:DeploymentData){
         });
 
         // You can also listen for the child process to exit
-        childProcess.on('exit', (code:any, signal:any) => {
-            console.log('deploy bucket process exited wit hcode', key, code)
+        b.process.on('exit', (code:any, signal:any) => {
+            console.log('deploy bucket process exited with code', key, code)
             if (code === 0) {
                 console.log('Child process exited successfully.');
                 b.status = "Deployed"
+                b.process = null
                 successIWBServer(key, data).then(()=>{
                     resetBucket(key)
                 })
@@ -65,7 +67,8 @@ async function deploy(key:string, data:DeploymentData){
       }
 }
 
-function resetBucket(key:string){
+export function resetBucket(key:string){
+    console.log('resetting bucket', key)
     const projectRoot = "../../"
     const bucketsFolderPath = path.join(projectRoot, 'buckets'); // Path to the "buckets" folder
     const dep1FolderPath = path.join(bucketsFolderPath, key); // Path to the "dep1" folder inside "buckets"
@@ -73,37 +76,50 @@ function resetBucket(key:string){
     // Remove the folder and its contents
     fs.remove(dep1FolderPath)
     .then(() => {
-    console.log(`Removed folder: ${dep1FolderPath}`);
+        console.log(`Removed folder: ${dep1FolderPath}`);
+        let b = buckets.get(key)
+        b.status = "free"
+        b.available = true
+        b.owner = ""
+        checkDeploymentQueue()
     })
     .catch((error:any) => {
     console.error(`Error removing folder: ${dep1FolderPath}`, error);
+        let b = buckets.get(key)
+        b.status = "Bucket Failure"
+        b.reason = "Error Removing Bucket"
+        b.available = false
+        b.owner = ""
+        checkDeploymentQueue()
     });
-    let b = buckets.get(key)
-    b.status = "free"
-    b.available = true
 }
 
-function checkDeploymentQueue(){
-    let tempData:DeploymentData = queue.shift()
-
-    outerLoop: for (const [key, bucket] of buckets) {
-        if(bucket.available){
-            console.log('bucket ' + key + " is available")
-            bucket.available = false
-            try{
-                buildBucket(key, bucket).then(()=>{
-                  modifyScene(key, tempData).then(()=>{
-                         deploy(key, tempData)
-                     })
-                })
+export function checkDeploymentQueue(){
+    if(queue.length > 0){
+        console.log('deployment queue greater than 0')
+        outerLoop: for (const [key, bucket] of buckets) {
+            if(bucket.available && bucket.enabled){
+                let tempData:DeploymentData = queue.shift()
+                console.log('bucket ' + key + " is available")
+                bucket.available = false
+                try{
+                    buildBucket(key, bucket).then(()=>{
+                      modifyScene(key, tempData).then(()=>{
+                             deploy(key, tempData)
+                         })
+                    })
+                }
+                catch(e){
+                    console.log("bucket for each error", e)
+                    failBucket(key)
+                }
+                break outerLoop;
             }
-            catch(e){
-                console.log("bucket for each error", e)
-                failBucket(key)
+            else{
+                console.log('no buckets available for deployment')
             }
-            break outerLoop;
-        }
-      }
+          }
+    }
 }
 
 async function modifyScene(key:string, data:DeploymentData){
@@ -123,7 +139,7 @@ async function modifyScene(key:string, data:DeploymentData){
 async function buildBucket(key:string, bucket:any){
     console.log("building temp deploy bucket", key)
     try {
-        bucket.status = "building"
+        bucket.status = "Building"
 
         const projectRoot = "../../"
         const bucketsFolderPath = path.join(projectRoot, 'buckets'); // Path to the "buckets" folder

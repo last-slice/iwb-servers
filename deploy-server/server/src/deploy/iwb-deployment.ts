@@ -9,7 +9,7 @@ let newAssets:any[]= []
 let deploying:boolean = false
 
 let redeployInterval = setInterval(()=>{
-  console.log('checking deployment queue')
+  console.log('checking iwb deployment queue')
   if(newAssets.length > 0 && !deploying){
     console.log('new assets available, need to deploy iwb scene')
     deployIWB()

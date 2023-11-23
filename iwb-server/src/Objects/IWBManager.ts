@@ -171,6 +171,7 @@ export class IWBManager{
     }
 
     saveNewWorld(world:any){
+        console.log('saving new world', world)
         world.updated = Math.floor(Date.now()/1000)
         world.builds = 0
         world.v = this.version
@@ -184,12 +185,12 @@ export class IWBManager{
             this.worlds.push(world)
         }else{
             delete world.init
-            let index = this.worlds.find((w)=> w.ens === world.ens)
-            if(index >= 0){
-                this.worlds[index].updated = world.updated
+            let cachedWorld = this.worlds.find((w)=> w.ens === world.ens)
+            if(cachedWorld){
+                cachedWorld.updated = world.updated
+                cachedWorld.v = world.v
             }
         }
-
         this.worldsModified = true
 
         let index = this.initQueue.findIndex((w)=> w.ens === world.ens)

@@ -1,8 +1,52 @@
 import Axios from "axios";
 import { deployIWB, newAssetsReady } from "../deploy/iwb-deployment";
-import { addDeployment } from "../deploy/scene-deployment";
+import { addDeployment, resetBucket } from "../deploy/scene-deployment";
 import { status } from "../config/config";
+import { buckets } from "../deploy/buckets";
 const jwt = require("jsonwebtoken");
+
+export function handleBucketEnable(req:any, res:any){
+    if(!req.params.auth || !req.params.bucket || req.params.auth !== process.env.DEPLOY_AUTH){
+        res.status(200).json({result: "failure", msg:"invalid auth"})
+        return
+    }
+    let bucket = buckets.get(req.params.bucket)
+    if(bucket){
+        if(bucket.available){
+            try{
+                bucket.enabled = req.params.enabled === "enabled" ? true: false
+                bucket.available = req.params.enabled === "enabled" ? true: false
+                bucket.status = req.params.enabled === "enabled" ? '' : 'Offline'
+                res.status(200).json({result: "success"})
+            }
+            catch(e){
+                console.log('error resetting bucket', req.params.bucket)
+                res.status(200).json({result: "failure", msg:"bucket is in use"})
+            }
+        }
+    }
+}
+
+export function handleBucketReset(req:any, res:any){
+    if(!req.params.auth || !req.params.bucket || req.params.auth !== process.env.DEPLOY_AUTH){
+        res.status(200).json({result: "failure", msg:"invalid auth"})
+        return
+    }
+    let bucket = buckets.get(req.params.bucket)
+    if(bucket){
+        try{
+            if(bucket.process && bucket.process !== null){
+                bucket.process.kill('SIGTERM')
+            }
+            resetBucket(req.params.bucket)
+            res.status(200).json({result: "success"})
+        }
+        catch(e){
+            console.log('error resetting bucket', req.params.bucket, e)
+            res.status(200).json({result: "failure", msg:"error resetting bucket"})
+        }
+    }
+}
 
 export function handleWorldDeploy(req:any, res:any){
     console.log("deploy world api received")
