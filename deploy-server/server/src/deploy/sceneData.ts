@@ -11,7 +11,7 @@ export async function updateSceneMetadata(filePath:string, deploymentData:Deploy
       
         try {
           const jsonObject = JSON.parse(data);
-          console.log('Parsed JSON data:', jsonObject);
+          // console.log('Parsed JSON data:', jsonObject);
           jsonObject.display.title = "" + deploymentData.worldName + "'s IWB World";
           jsonObject.display.description = "IWB World playground"
           jsonObject.worldConfiguration = {

@@ -134,3 +134,13 @@ export function handleWorldDeployment(req:any, res:any){
         iwbManager.saveNewWorld(req.body.world)
     }
 }
+
+export function handlBulkWorldsDeployments(req:any, res:any){
+    if (req.params.auth !== process.env.IWB_UPLOAD_AUTH_KEY) {
+        console.log('invalid asset auth key')
+        return res.status(200).json({valid:false, message: 'Unauthorized' });
+    }else{
+        res.status(200).send({valid: true})
+        iwbManager.updateAllWorlds()
+    }
+}

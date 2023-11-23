@@ -156,6 +156,12 @@ export class RoomSceneManager {
             scenes.push(scene)
         })
 
+        let world = iwbManager.worlds.find((w)=>w.ens === this.room.state.world)
+        if(world){
+            world.builds = scenes.length
+            world.updated = Math.floor(Date.now()/1000)
+        }
+
         if(scenes.length > 0){
             try{
                 iwbManager.addWorldPendingSave(this.room.state.world)

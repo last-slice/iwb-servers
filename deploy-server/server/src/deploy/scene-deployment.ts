@@ -28,23 +28,25 @@ async function deploy(key:string, data:DeploymentData){
   
         // Listen for stdout data events
         childProcess.stdout.on('data', (data:any) => {
-            console.log(`stdout: ${data}`);
+            // console.log(`stdout: ${data}`);
         });
             
         // Listen for stderr data events
         childProcess.stderr.on('data', (data:any) => {
-            console.error(`stderr: ${data}`);
+            // console.error(`stderr: ${data}`);
 
             if(data.substring(0,5) === "Error"){
                 console.log('we have an error with deployment')
             }
-            else if(data === "Content uploaded successfully"){
+            
+            if(data === "Content uploaded successfully"){
                 console.log('we finished deploying')
             }
         });
 
         // You can also listen for the child process to exit
         childProcess.on('exit', (code:any, signal:any) => {
+            console.log('deploy bucket process exited wit hcode', key, code)
             if (code === 0) {
                 console.log('Child process exited successfully.');
                 b.status = "Deployed"

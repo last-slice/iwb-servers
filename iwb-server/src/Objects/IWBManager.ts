@@ -19,6 +19,7 @@ export class IWBManager{
 
     //server config
     version:number = 0
+    versionUpdates:any[] = []
     styles:string[] = []
 
     initQueue:any[]= []
@@ -36,8 +37,14 @@ export class IWBManager{
 
         this.backupInterval = setInterval(async ()=>{
             if(this.worldsModified){
-                await setTitleData({Key:'Worlds', Value: JSON.stringify(this.worlds)})
-                this.worldsModified = false
+                try{
+                    await setTitleData({Key:'Worlds', Value: JSON.stringify(this.worlds)})
+                    this.worldsModified = false
+                }
+                catch(e){
+                    console.log('error saving worlds', e)
+                }
+
             }
         },
         1000 * 20)
@@ -71,6 +78,7 @@ export class IWBManager{
             
             let config = JSON.parse(response.Data['Config'])
             this.version = config.v
+            this.versionUpdates = config.updates
             this.styles = config.styles
 
             let scenes = JSON.parse(response.Data['Scenes'])
@@ -130,9 +138,13 @@ export class IWBManager{
         return player
     }
 
+    async updateAllWorlds(){
+        for(let i = 0; i < this.worlds.length; i++){
+            await this.deployWorld(this.worlds[i], false)
+        }
+    }
 
-    async initWorld(world:any){
-        this.initQueue.push(world)
+    async deployWorld(world:any, init:boolean){
         let res = await fetch(process.env.DEPLOYMENT_WORLD_ENDPOINT,{
             headers:{"content-type":"application/json"},
             method:"POST",
@@ -142,7 +154,7 @@ export class IWBManager{
                     ens:world.ens,
                     worldName: world.name,
                     owner: world.owner,
-                    init:true
+                    init:init
                 }
             })
         })
@@ -150,9 +162,18 @@ export class IWBManager{
         console.log('world deployment api response is', json)
     }
 
+    async initWorld(world:any){
+        let current = this.initQueue.find((w)=>w.ens === world.ens)
+        if(!current){
+            this.initQueue.push(world)
+            await this.deployWorld(world,true)
+        }
+    }
+
     saveNewWorld(world:any){
         world.updated = Math.floor(Date.now()/1000)
         world.builds = 0
+        world.v = this.version
 
         this.rooms.forEach((room:IWBRoom)=>{
             room.broadcast(SERVER_MESSAGE_TYPES.NEW_WORLD_CREATED, world)
@@ -170,6 +191,11 @@ export class IWBManager{
         }
 
         this.worldsModified = true
+
+        let index = this.initQueue.findIndex((w)=> w.ens === world.ens)
+        if(index >=0){
+            this.initQueue.splice(index,1)
+        }
     }
 
     addWorldPendingSave(world:string){

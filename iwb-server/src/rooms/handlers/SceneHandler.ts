@@ -11,6 +11,18 @@ export class RoomSceneHandler {
     constructor(room:IWBRoom) {
         this.room = room
 
+        room.onMessage(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player){
+                let world = iwbManager.worlds.find((w)=> w.ens === this.room.state.world)
+                if(world && world.owner === client.userData.userId){
+                    iwbManager.deployWorld(world, false)
+                }
+            }
+        })
+
         room.onMessage(SERVER_MESSAGE_TYPES.SELECT_PARCEL, async(client, info)=>{
             console.log(SERVER_MESSAGE_TYPES.SELECT_PARCEL + " message", info)
     
@@ -47,6 +59,12 @@ export class RoomSceneHandler {
                        this.room.state.occupiedParcels.push(parcel)
                     })
                     this.freeTemporaryParcels()
+
+                    let world = iwbManager.worlds.find((w)=>w.ens === this.room.state.world)
+                    if(world){
+                        world.builds += 1
+                        world.updated = Math.floor(Date.now()/1000)
+                    }
 
                     player.updatePlayMode(SCENE_MODES.BUILD_MODE)
                     client.send(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED, {mode:player.mode})

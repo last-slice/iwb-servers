@@ -7,7 +7,7 @@ import {itemManager, iwbManager} from "../app.config";
 import * as jwt from "jsonwebtoken";
 import * as dcl from "decentraland-crypto-middleware";
 import { sign } from "crypto";
-import { handleAssetUploaderSigning, handleNewAssetData, handleWorldDeployment, updateCatalogAssets, updateIWBVersion } from "./Service";
+import { handlBulkWorldsDeployments, handleAssetUploaderSigning, handleNewAssetData, handleWorldDeployment, updateCatalogAssets, updateIWBVersion } from "./Service";
 
 export const router = express.Router();
 
@@ -82,6 +82,11 @@ router.get("/catalog/refresh", (req: any, res: any) => {
 
     itemManager.getServerItems()
     res.status(200).send({valid: true, msg: "refreshing server items"})
+});
+
+router.post("/deployment/worlds/bulk/:auth", async (req: any, res: any) => {
+    console.log('received bulk deployment request', req.body)
+    handlBulkWorldsDeployments(req, res)
 });
 
 router.post("/deployment/success", async (req: any, res: any) => {

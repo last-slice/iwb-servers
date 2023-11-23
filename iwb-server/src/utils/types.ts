@@ -34,7 +34,8 @@ export enum SERVER_MESSAGE_TYPES {
 
     //World
     INIT_WORLD = "init_world",
-    NEW_WORLD_CREATED = 'new_world_created'
+    NEW_WORLD_CREATED = 'new_world_created',
+    FORCE_DEPLOYMENT = 'force_deployment'
 }
 
 export enum SCENE_MODES {
