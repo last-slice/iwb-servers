@@ -81,7 +81,7 @@ export class IWBManager{
         if(updates){
             this.versionUpdates.length = 0
             this.versionUpdates = updates
-            this.backingUp = true
+            this.backup()
         }
     }
 
