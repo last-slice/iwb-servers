@@ -52,7 +52,7 @@ export class RoomSceneHandler {
 
             if(player && player.mode === SCENE_MODES.CREATE_SCENE_MODE){
                 if(this.room.state.temporaryParcels.length > 0){
-                    let scene:Scene = player.createScene(info, [...this.room.state.temporaryParcels])
+                    let scene:Scene = player.createScene(this.room.state.world, info, [...this.room.state.temporaryParcels])
                     this.room.state.scenes.set(scene.id, scene)
 
                     this.room.state.temporaryParcels.forEach((parcel)=>{
@@ -78,16 +78,7 @@ export class RoomSceneHandler {
             console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM + " message", info)
 
             let player:Player = room.state.players.get(client.userData.userId)
-            if(player && player.mode === SCENE_MODES.BUILD_MODE){
-
-                let scene = this.room.state.scenes.get(info.sceneId)
-                if(scene){
-                    let assetIndex = scene.ass.findIndex((ass)=> ass.aid === info.aid)
-                    if(assetIndex >= 0){
-                        scene.ass.splice(assetIndex,1)
-                    }
-                }
-            }
+            this.deleteSceneItem(player, info)
         })
     
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, async(client, info)=>{
@@ -109,6 +100,9 @@ export class RoomSceneHandler {
 
                     scene.ass.push(newItem)
                 }
+
+                info.user = client.userData.userId
+                room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, info)
             }
         })
 
@@ -138,15 +132,40 @@ export class RoomSceneHandler {
             }
         })
 
-        room.onMessage(SERVER_MESSAGE_TYPES.USE_SELECTED_ASSET, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.USE_SELECTED_ASSET + " message", info)
+        room.onMessage(SERVER_MESSAGE_TYPES.PLAYER_CANCELED_CATALOG_ASSET, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.PLAYER_CANCELED_CATALOG_ASSET + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
 
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
-                this.room.broadcast(SERVER_MESSAGE_TYPES.USE_SELECTED_ASSET, info)
+                player.removeSelectedAsset()
+                // this.room.broadcast(SERVER_MESSAGE_TYPES.SELECT_NEW_ASSET, info)
             }else{
                 console.log('player is not in create scene mode')
+            }
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+
+            if(player && player.mode === SCENE_MODES.BUILD_MODE){
+                player.addSelectedAsset(info)
+                // this.room.broadcast(SERVER_MESSAGE_TYPES.SELECT_NEW_ASSET, info)
+            }else{
+                console.log('player is not in create scene mode')
+            }
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+
+            if(player && player.mode === SCENE_MODES.BUILD_MODE){
+                player.addSelectedAsset(info)
+                this.deleteSceneItem(player, info)
             }
         })
 
@@ -211,6 +230,11 @@ export class RoomSceneHandler {
                 let scene = this.room.state.scenes.get(info.sceneId)
                 if(scene){
                     if(scene.o === client.userData.userId){
+                        let worldConfig = iwbManager.worlds.find((w)=> w.ens === this.room.state.world)
+                        if(worldConfig){
+                            worldConfig.builds -= 1
+                            worldConfig.updated = Math.floor(Date.now()/1000)
+                        }
                         this.room.state.scenes.delete(info.sceneId)
                         scene.bps.forEach((user)=>{
                             let player:Player = room.state.players.get(user) 
@@ -222,6 +246,18 @@ export class RoomSceneHandler {
                 }
             }
         })
+    }
+
+    deleteSceneItem(player:Player, info:any){
+        if(player && player.mode === SCENE_MODES.BUILD_MODE){
+            let scene = this.room.state.scenes.get(info.sceneId)
+            if(scene){
+                let assetIndex = scene.ass.findIndex((ass)=> ass.aid === info.assetId)
+                if(assetIndex >= 0){
+                    scene.ass.splice(assetIndex,1)
+                }
+            }
+        }
     }
 
     freeTemporaryParcels() {

@@ -81,7 +81,7 @@ export function authenticateToken(req:any, res:any, next:any) {
     });
 }
 
-export function updateIWBVersion(req:any, res:any){
+export function updateIWBVersion(req:any, res:any, manual?:boolean){
     if(req.header('AssetAuth')){
         const assetAuth = req.header('AssetAuth').replace('Bearer ', '').trim();
 
@@ -94,8 +94,11 @@ export function updateIWBVersion(req:any, res:any){
             console.log('invalid asset auth key')
             return res.status(200).json({valid:false, message: 'Unauthorized' });
         }
-        iwbManager.incrementVersion()
-        itemManager.notifyUsersDeploymentReady()
+        iwbManager.incrementVersion(manual ? req.body.updates : undefined)
+
+        if(manual){} else{
+            itemManager.notifyUsersDeploymentReady()
+        }
 
         res.status(200).send({valid: true})
     }else{

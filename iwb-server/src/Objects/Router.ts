@@ -65,6 +65,11 @@ router.get("/update/version", async (req: any, res: any) => {
     updateIWBVersion(req, res)
 });
 
+router.post("/update/version/manual", async (req: any, res: any) => {
+    console.log('receive ping to update iwb version')
+    updateIWBVersion(req, res, true)
+});
+
 router.post("/uploader/sign", (req: any, res: any) => {
     console.log('get jwt token for asset upload session')
     handleAssetUploaderSigning(req, res)

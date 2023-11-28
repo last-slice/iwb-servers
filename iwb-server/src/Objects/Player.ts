@@ -6,10 +6,21 @@ import {updatePlayerData} from "../utils/Playfab";
 import {Scene} from "./Scene";
 import { generateId } from "colyseus";
 
+export class SelectedAsset extends Schema {
+  @type("string") catalogId: string
+  @type("string") assetId: string
+  constructor(info:any){
+    super()
+    this.catalogId = info.catalogId
+    this.assetId = info.assetId
+  }
+}
+
 export class Player extends Schema {
   @type("string") id:string;
   @type("string") address:string
   @type("string") name:string 
+  @type(SelectedAsset) selectedAsset: SelectedAsset
 
   playFabData:any
   dclData:any
@@ -38,6 +49,8 @@ export class Player extends Schema {
     this.playFabData = client.auth.playfab
     // console.log('playfab data is', this.playFabData)
     this.dclData = client.userData
+    this.address = client.userData.userId
+    this.name = client.userData.displayName
 
     this.mode = SCENE_MODES.PLAYMODE
 
@@ -91,8 +104,17 @@ export class Player extends Schema {
     this.client.send(type,data)
   }
 
-  createScene(info:any, parcels:string[]){
+  addSelectedAsset(info:any){
+    this.selectedAsset = new SelectedAsset(info)
+  }
+
+  removeSelectedAsset(){
+    this.selectedAsset = null
+  }
+
+  createScene(world:string, info:any, parcels:string[]){
     let sceneData:any = {
+      w: world,
       id: "" + generateId(5),
       n: info.name,
       d: info.desc,

@@ -40,6 +40,7 @@ export class Scene extends Schema{
   @type("string") ona:string
   @type("string") cat:string
   @type("string") bpcl:string
+  @type("string") w:string
 
   @type([ 'string' ]) bps = new ArraySchema<string>();
   @type([ 'string' ]) rat = new ArraySchema<string>();
@@ -83,6 +84,7 @@ export class Scene extends Schema{
       this.pc = data.pc
       this.isdl = data.isdl
       this.e = data.e
+      this.w = data.w
 
       if(data.ass){
         data.ass.forEach((asset:any)=>{

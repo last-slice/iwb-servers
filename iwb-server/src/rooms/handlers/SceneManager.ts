@@ -144,7 +144,8 @@ export class RoomSceneManager {
     }
 
     loadRealmScenes(scenes:any[]){
-        scenes.forEach((scene)=>{
+        let filter = scenes.filter((scene)=> scene.w === this.room.state.world)
+        filter.forEach((scene)=>{
             this.room.state.scenes.set(scene.id, new Scene(scene))
         })
     }

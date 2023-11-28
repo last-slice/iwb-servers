@@ -13,6 +13,7 @@ export class IWBManager{
     backupInterval:any
     worldsModified:boolean = false
     configModified:boolean = false
+    backingUp:boolean = false
     scenes:any[] = []
     worlds:any[] = []
     pendingSaves:any[] = []
@@ -28,9 +29,8 @@ export class IWBManager{
         this.getServerConfigurations()
 
         this.backupInterval = setInterval(async ()=>{
-            if(this.configModified){
-                await setTitleData({Key:'Config', Value: JSON.stringify({v:this.version})})
-                this.configModified = false
+            if(this.configModified && !this.backingUp){
+                this.backup()
             }
         },
         1000 * 20)
@@ -50,6 +50,13 @@ export class IWBManager{
         1000 * 20)
     }
 
+    async backup(){
+        this.backingUp = true
+        await setTitleData({Key:'Config', Value: JSON.stringify({v:this.version, updates:this.versionUpdates, styles:this.styles})})
+        this.configModified = false
+        this.backingUp = false
+    }
+
     addRoom(room:IWBRoom){
         this.rooms.push(room)
     }
@@ -66,10 +73,16 @@ export class IWBManager{
         console.log('update version request verified, updating iwb version to ', version)
     }
 
-    incrementVersion(){
+    incrementVersion(updates?:string[]){
         console.log('increment version request verified, updating iwb version from ' + this.version + " to " + (this.version + 1))
         this.version++
         this.configModified = true
+
+        if(updates){
+            this.versionUpdates.length = 0
+            this.versionUpdates = updates
+            this.backingUp = true
+        }
     }
 
     async getServerConfigurations(init?:boolean){
