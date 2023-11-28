@@ -161,6 +161,67 @@ export class RoomSceneHandler {
                 console.log('player is not in create scene mode')
             }
         })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADD_BP, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.SCENE_ADD_BP + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player){
+                let scene = this.room.state.scenes.get(info.sceneId)
+                if(scene){
+                    if(!scene.bps.includes(info.user)){
+                        scene.bps.push(info.user)
+                        client.send(SERVER_MESSAGE_TYPES.SCENE_ADD_BP, info)
+                        let otherPlayer = this.room.state.players.get(info.user)
+                        if(otherPlayer){
+                            otherPlayer.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_ADD_BP, info)
+                        }
+                    }
+                }
+            }
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE_BP, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_BP + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player){
+                let scene = this.room.state.scenes.get(info.sceneId)
+                if(scene){
+                    if(scene.bps.includes(info.user)){
+                        let userIndex = scene.bps.findIndex((us)=> us === info.user)
+                        if(userIndex >= 0){
+                            scene.bps.splice(userIndex, 1)
+                            client.send(SERVER_MESSAGE_TYPES.SCENE_DELETE_BP, info)
+                            let otherPlayer = this.room.state.players.get(info.user)
+                            if(otherPlayer){
+                                otherPlayer.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE_BP, info)
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player){
+                let scene = this.room.state.scenes.get(info.sceneId)
+                if(scene){
+                    if(scene.o === client.userData.userId){
+                        this.room.state.scenes.delete(info.sceneId)
+                        scene.bps.forEach((user)=>{
+                            let player:Player = room.state.players.get(user) 
+                            if(player){
+                                player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE, info)
+                            }
+                        })
+                    }
+                }
+            }
+        })
     }
 
     freeTemporaryParcels() {
@@ -174,22 +235,24 @@ export class RoomSceneHandler {
         }
     }
 
-    addOccupiedParcel(parcel: any) {
-        this.room.state.occupiedParcels.push(parcel)
-    }
-
     addTempParcel(parcel: any) {
         this.room.state.temporaryParcels.push(parcel)
     }
 
     isOccupied(parcel: any){
-        return [...this.room.state.occupiedParcels]
+        let parcels:string[] = []
+        this.room.state.scenes.forEach((scene, key)=>{
+            scene.pcls.forEach((parcel)=>{
+                parcels.push(parcel)
+            })
+        })
+        return parcels
             .find((p) => p === parcel)
     }
 
     hasTemporaryParcel(parcel: any) {
-        return [...this.room.state.temporaryParcels, ...this.room.state.occupiedParcels]
-            .find((p) => p === parcel)
+        return [...this.room.state.temporaryParcels]
+            .find((p) => p === parcel) || this.isOccupied(parcel)
     }
 
     canBuild(user:string, sceneId:any){
