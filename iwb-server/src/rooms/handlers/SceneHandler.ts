@@ -103,6 +103,8 @@ export class RoomSceneHandler {
 
                 info.user = client.userData.userId
                 room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, info)
+
+                player.removeSelectedAsset()
             }
         })
 
@@ -176,6 +178,7 @@ export class RoomSceneHandler {
 
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
                 this.room.broadcast(SERVER_MESSAGE_TYPES.PLACE_SELECTED_ASSET, info)
+                player.removeSelectedAsset()
             }else{
                 console.log('player is not in create scene mode')
             }
