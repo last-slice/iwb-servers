@@ -25,6 +25,7 @@ export enum SERVER_MESSAGE_TYPES {
     PLAYER_SCENES_CATALOG = 'player_scenes_catalog',
     PLAYER_JOINED_USER_WORLD = 'player_joined_private_world',
     PLAYER_EDIT_ASSET = 'player_edit_asset',
+    UPDATE_ITEM_COMPONENT = "update_component",//
 
     // Scene
     SCENE_SAVE_NEW = "scene_save_new",
@@ -65,6 +66,15 @@ export type PlayerData = {
     dclData:any | null,
     mode: SCENE_MODES,
     buildMode:number | null,
+}
+
+export enum COMPONENT_TYPES {
+    VISBILITY_COMPONENT = "Visibility",
+    IMAGE_COMPONENT = "Image",
+    VIDEO_COMPONENT = 'Video',
+    MATERIAL_COMPONENT = "Material",
+    COLLISION_COMPONENT = "Collision",
+    TRANSFORM_COMPONENT = "Transform"
 }
 
 // export type SceneData = {

@@ -1,8 +1,8 @@
 import {Client} from "@colyseus/core";
 import { Player } from "../../Objects/Player"
-import { Quaternion, Scene, SceneItem, Vector3 } from "../../Objects/Scene"
-import { iwbManager } from "../../app.config"
-import { SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types"
+import { ImageComponent, MaterialComponent, Quaternion, Scene, SceneItem, Vector3, VisibilityComponent } from "../../Objects/Scene"
+import { itemManager, iwbManager } from "../../app.config"
+import { COMPONENT_TYPES, SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types"
 import { IWBRoom } from "../IWBRoom"
 
 export class RoomSceneHandler {
@@ -97,8 +97,13 @@ export class RoomSceneHandler {
                     newItem.p = new Vector3(item.position)
                     newItem.r = new Quaternion(item.rotation)
                     newItem.s = new Vector3(item.scale)
+                    newItem.type = itemManager.items.get(item.id).ty
+
+                    this.addItemComponents(newItem, itemManager.items.get(item.id).n)
 
                     scene.ass.push(newItem)
+
+                    // console.log('asset type is', itemManager.items.get(item.id).ty)
                 }
 
                 info.user = client.userData.userId
@@ -308,5 +313,46 @@ export class RoomSceneHandler {
         }else{
             return false
         }
+    }
+
+    addItemComponents(item:SceneItem, name:string){
+        item.comps.push(COMPONENT_TYPES.TRANSFORM_COMPONENT)
+
+        this.addVisibilityComponent(item)
+
+        switch(item.type){
+            case '3D':
+                item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
+                break;
+
+            case '2D':
+                switch(name){
+                    case 'Image':        
+                        this.addImageComponent(item)                
+                        this.addMaterialComponent(item)
+                        break;
+                }
+                break;
+        }
+    }
+
+    addVisibilityComponent(item:SceneItem){
+        item.comps.push(COMPONENT_TYPES.VISBILITY_COMPONENT)
+        item.visComp = new VisibilityComponent()
+        item.visComp.visible = true
+    }
+
+    addImageComponent(item:SceneItem){
+        item.comps.push(COMPONENT_TYPES.IMAGE_COMPONENT)
+        item.imgComp = new ImageComponent()
+    }
+
+    addMaterialComponent(item:SceneItem){
+        item.comps.push(COMPONENT_TYPES.MATERIAL_COMPONENT)
+        item.matComp = new MaterialComponent()
+        item.matComp.color.push("1")
+        item.matComp.color.push("1")
+        item.matComp.color.push("1")
+        item.matComp.color.push("1")
     }
 }

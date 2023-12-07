@@ -1,6 +1,6 @@
 import { Player } from "../../Objects/Player";
-import { Scene, Vector3 } from "../../Objects/Scene";
-import { EDIT_MODIFIERS, SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types";
+import { Scene, SceneItem, Vector3 } from "../../Objects/Scene";
+import { COMPONENT_TYPES, EDIT_MODIFIERS, SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types";
 import { IWBRoom } from "../IWBRoom";
 
 export class RoomSceneItemHandler {
@@ -9,9 +9,24 @@ export class RoomSceneItemHandler {
     constructor(room:IWBRoom) {
         this.room = room
 
+        room.onMessage(SERVER_MESSAGE_TYPES.UPDATE_ITEM_COMPONENT, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.UPDATE_ITEM_COMPONENT + " message", info)
+
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player && player.mode === SCENE_MODES.BUILD_MODE){
+                let scene = room.state.scenes.get(info.data.sceneId)
+                if(scene){
+                    let asset = scene.ass.find((a)=> a.aid === info.data.aid)
+                    if(asset){
+                        this.updateComponent(asset, info)
+                    }
+                }
+            }
+        })
+
         room.onMessage(SERVER_MESSAGE_TYPES.PLAYER_EDIT_ASSET, async(client, info)=>{
             console.log(SERVER_MESSAGE_TYPES.PLAYER_EDIT_ASSET + " message", info)
-    
+
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
                 let scene = room.state.scenes.get(info.sceneId)
@@ -80,6 +95,18 @@ export class RoomSceneItemHandler {
                     }
                     break;
             }
+        }
+    }
+
+    updateComponent(asset:SceneItem, info:any){
+        switch(info.component){
+            case COMPONENT_TYPES.VISBILITY_COMPONENT:
+                asset.visComp.visible = !asset.visComp.visible
+                break;
+
+            case COMPONENT_TYPES.IMAGE_COMPONENT:
+                asset.imgComp.url = info.data.url
+                break;
         }
     }
 }
