@@ -50,6 +50,11 @@ router.post(
     }
 )
 
+router.post("/lobby/create", async (req: any, res: any) => {
+    console.log('creating lobby for world', req.body.world)
+    iwbManager.createRealmLobby(req.body.world)
+});
+
 router.post("/user/message", async (req: any, res: any) => {
     console.log('send message to user')
     iwbManager.attemptUserMessage(req, res)

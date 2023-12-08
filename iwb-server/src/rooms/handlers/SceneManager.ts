@@ -20,7 +20,6 @@ export class RoomSceneManager {
     realmToken:string
     realmId:string
     realmTokenType:string
-    realmFileKey:string = 'scenes.json'
 
     constructor(room:IWBRoom, realm:string) {
         this.room = room
@@ -46,17 +45,17 @@ export class RoomSceneManager {
             setTimeout(()=>{
                 let world = iwbManager.worlds.find((w)=> w.ens === this.realm)
                 if(world){
-                    this.initiateRealm(world.owner)
+                    iwbManager.initiateRealm(world.owner)
                     .then((realmData)=>{
                         // console.log('realm data is', realmData)
                         this.realmToken = realmData.EntityToken.EntityToken
                         this.realmId = realmData.EntityToken.Entity.Id
                         this.realmTokenType = realmData.EntityToken.Entity.Type
         
-                        this.fetchRealmData(realmData)
+                        iwbManager.fetchRealmData(realmData)
                         .then((realmScenes)=>{
                             console.log('realm scenes are ', realmScenes)
-                            this.fetchRealmScenes(realmScenes)
+                            iwbManager.fetchRealmScenes(realmScenes)
                             .then((sceneData)=>{
     
                                 this.loadRealmScenes(sceneData)
@@ -68,78 +67,6 @@ export class RoomSceneManager {
                     })
                 }
             }, 1000)
-        }
-    }
-
-    async initiateRealm(user:string){
-        try{
-            const playfabInfo = await playerLogin(
-              {
-                CreateAccount: true, 
-                ServerCustomId: user,
-                InfoRequestParameters:{
-                  "UserDataKeys":[], "UserReadOnlyDataKeys":[],
-                  "GetUserReadOnlyData":false,
-                  "GetUserInventory":false,
-                  "GetUserVirtualCurrency":true,
-                  "GetPlayerStatistics":false,
-                  "GetCharacterInventories":false,
-                  "GetCharacterList":false,
-                  "GetPlayerProfile":true,
-                  "GetTitleData":false,
-                  "GetUserAccountInfo":true,
-                  "GetUserData":false,
-              }
-              })
-        
-            if(playfabInfo.error){
-              console.log('playfab login error => ', playfabInfo.error)
-              return null
-            }
-            else{
-              console.log('playfab login success, initiate realm')
-              return playfabInfo
-            }
-          }
-          catch(e){
-            console.log('playfab connection error', e)
-            return null
-          }
-    }
-
-    async fetchRealmData(realmData:any){
-        let response = await axios.post("https://" + process.env.PLAYFAB_ID + ".playfabapi.com/File/GetFiles", 
-        {Entity: {Id: realmData.EntityToken.Entity.Id, Type: realmData.EntityToken.Entity.Type}},
-        {headers:{
-            'content-type': 'application/json',
-            'X-EntityToken': realmData.EntityToken.EntityToken}}
-        )
-        return response.data
-    }
-
-    async fetchRealmScenes(realmScenes:any){
-        if(realmScenes.code === 200){
-            this.version = realmScenes.data.ProfileVersion
-            if(this.version > 0){
-                let metadata = realmScenes.data.Metadata
-                let count = 0
-                for (const key in metadata) {
-                    if (metadata.hasOwnProperty(key)) {
-                        count++
-                    }
-                }
-
-                if(count > 0){
-                    let res = await fetch( metadata[this.realmFileKey].DownloadUrl)
-                    let json = await res.json()
-                    return json
-                }else{
-                    return []
-                }
-                
-            }else{
-                return []
-            }
         }
     }
 
@@ -164,41 +91,8 @@ export class RoomSceneManager {
         }
 
         if(scenes.length > 0){
-            try{
-                iwbManager.addWorldPendingSave(this.room.state.world)
-
-                let initres = await initializeUploadPlayerFiles(this.realmToken,{
-                    Entity: {Id: this.realmId, Type: this.realmTokenType},
-                    FileNames:[this.realmFileKey]
-                })
-                console.log('init res is', initres)
-                console.log('init upload url is', initres.UploadDetails[0])
-        
-                let uploadres = await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(scenes))
-                console.log('upload res is', uploadres)
-        
-                let finalres = await finalizeUploadFiles(this.realmToken,
-                    {
-                    Entity: {Id: this.realmId, Type: this.realmTokenType},
-                    FileNames:[this.realmFileKey],
-                    ProfileVersion:initres.ProfileVersion,
-                })
-                console.log('final res upload is', finalres)
-                iwbManager.removeWorldPendingSave(this.room.state.world)
-            }
-            catch(e){
-                console.log('error backing up realm scenes', this.room.state.world)
-                this.abortSaveSceneUploads()
-            }
+            iwbManager.backupScene(this.room.state.world, this.realmToken, this.realmTokenType, this.realmId, scenes)
         }
-    }
-
-    async abortSaveSceneUploads(){
-        await abortFileUploads(this.realmToken,{
-            Entity: {Id: this.realmId, Type: this.realmTokenType},
-            FileNames:[this.realmFileKey]
-          })
-        iwbManager.removeWorldPendingSave(this.room.state.world)
     }
 
     // async saveWorldScenes(scenes:Map<string, Scene>){
