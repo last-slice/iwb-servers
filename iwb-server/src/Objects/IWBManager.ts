@@ -1,9 +1,11 @@
+import axios from "axios"
 import { itemManager } from "../app.config"
 import { IWBRoom } from "../rooms/IWBRoom"
-import { getTitleData, setTitleData } from "../utils/Playfab"
+import { abortFileUploads, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playerLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
 import { Scene } from "./Scene"
+import { generateId } from "colyseus"
 
 export class IWBManager{
     
@@ -24,6 +26,7 @@ export class IWBManager{
     styles:string[] = []
 
     initQueue:any[]= []
+    realmFileKey:string = 'scenes.json'
 
     constructor(){
         this.getServerConfigurations()
@@ -195,7 +198,7 @@ export class IWBManager{
 
         if(world.init){
             delete world.init
-            this.worlds.push(world)
+            this.createRealmLobby(world)
         }else{
             delete world.init
             let cachedWorld = this.worlds.find((w)=> w.ens === world.ens)
@@ -222,4 +225,220 @@ export class IWBManager{
             this.pendingSaves.splice(index,1)
         }
     }
+
+    async createRealmLobby(world:any){
+        this.initiateRealm(world.owner)
+        .then((realmData)=>{           
+            let realmToken = realmData.EntityToken.EntityToken
+            let realmId = realmData.EntityToken.Entity.Id
+            let realmTokenType = realmData.EntityToken.Entity.Type
+
+            this.fetchRealmData(realmData)
+            .then((realmScenes)=>{
+                console.log('realm scenes are ', realmScenes)
+                this.fetchRealmScenes(realmScenes)
+                .then((sceneData)=>{
+                    let scenes = sceneData.filter((scene:any)=> scene.w === world.ens)
+                    scenes.push(this.createLobbyScene(world))
+
+                    world.builds = 1
+                    world.updated = Math.floor(Date.now()/1000)
+        
+                    this.backupScene(world.ens, realmToken, realmTokenType, realmId, scenes)
+                    .then(()=>{
+                        this.worlds.push(world)
+                    })
+                    .catch((e)=>{
+                        console.log('error backing up lobby scene', world.ens, e)
+                    })
+
+                })
+            })  
+        })
+    }
+
+    async initiateRealm(user:string){
+        try{
+            const playfabInfo = await playerLogin(
+              {
+                CreateAccount: true, 
+                ServerCustomId: user,
+                InfoRequestParameters:{
+                  "UserDataKeys":[], "UserReadOnlyDataKeys":[],
+                  "GetUserReadOnlyData":false,
+                  "GetUserInventory":false,
+                  "GetUserVirtualCurrency":true,
+                  "GetPlayerStatistics":false,
+                  "GetCharacterInventories":false,
+                  "GetCharacterList":false,
+                  "GetPlayerProfile":true,
+                  "GetTitleData":false,
+                  "GetUserAccountInfo":true,
+                  "GetUserData":false,
+              }
+              })
+        
+            if(playfabInfo.error){
+              console.log('playfab login error => ', playfabInfo.error)
+              return null
+            }
+            else{
+              console.log('playfab login success, initiate realm')
+              return playfabInfo
+            }
+          }
+          catch(e){
+            console.log('playfab connection error', e)
+            return null
+          }
+    }
+
+    async fetchRealmData(realmData:any){
+        let response = await axios.post("https://" + process.env.PLAYFAB_ID + ".playfabapi.com/File/GetFiles", 
+        {Entity: {Id: realmData.EntityToken.Entity.Id, Type: realmData.EntityToken.Entity.Type}},
+        {headers:{
+            'content-type': 'application/json',
+            'X-EntityToken': realmData.EntityToken.EntityToken}}
+        )
+        return response.data
+    }
+
+    async fetchRealmScenes(realmScenes:any){
+        if(realmScenes.code === 200){
+            this.version = realmScenes.data.ProfileVersion
+            if(this.version > 0){
+                let metadata = realmScenes.data.Metadata
+                let count = 0
+                for (const key in metadata) {
+                    if (metadata.hasOwnProperty(key)) {
+                        count++
+                    }
+                }
+
+                if(count > 0){
+                    let res = await fetch( metadata[this.realmFileKey].DownloadUrl)
+                    let json = await res.json()
+                    return json
+                }else{
+                    return []
+                }
+                
+            }else{
+                return []
+            }
+        }
+    }
+
+    createLobbyScene(world:any){
+        let lobby:Scene = new Scene({
+            w: world.ens,
+            id: "" + generateId(5),
+            n: "Realm Lobby",
+            d: "Realm Lobby Scene",
+            o: world.owner,
+            ona: world.worldName,
+            cat:"",
+            bps:[],
+            bpcl: "0,0",
+            cd: Math.floor(Date.now()/1000),
+            upd: Math.floor(Date.now()/1000),
+            si: 0,
+            toc:0,
+            pc: 0,
+            pcnt: 4,
+            isdl: false,
+            e:true,
+            pcls:["0,0", "1,0", "1,1", "0,1"],
+            sp:["16,16"],
+            ass:[            
+                {"id": "e6991f31-4b1e-4c17-82c2-2e484f53a123",
+                "aid": "vBXS97",
+                "type": "2D",
+                "p": {
+                "x": 16,
+                "y": 0,
+                "z": 16
+                },
+                "r": {
+                "x": 90,
+                "y": 0,
+                "z": 0
+                },
+                "s": {
+                "x": 32,
+                "y": 32,
+                "z": 1
+                },
+                "comps": [
+                    "Transform",
+                    "Visibility",
+                    "Image",
+                    "Material"
+                  ],
+                  "visComp": {
+                    "visible": true
+                  },
+                  "matComp": {
+                    "shadows": true,
+                    "metallic": 0,
+                    "roughness": 1,
+                    "intensity": 0,
+                    "emissPath": "",
+                    "emissInt": 0,
+                    "textPath": "",
+                    "color": [
+                      "1",
+                      "1",
+                      "1",
+                      "1"
+                    ]
+                  },
+                  "imgComp": {
+                    "url": "https://bafkreihxmbloqwqgjljwtq4wzhmo5pclxavyedugdafn2dhuzghgpszuim.ipfs.nftstorage.link/"
+                  }
+            }
+            ]
+          })
+
+        return lobby
+    }
+
+
+    async backupScene(world:string, token:string, type:string, realmId:string, scenes:any[]){
+        try{
+            this.addWorldPendingSave(world)
+
+            let initres = await initializeUploadPlayerFiles(token,{
+                Entity: {Id: realmId, Type: type},
+                FileNames:[this.realmFileKey]
+            })
+            console.log('init res is', initres)
+            console.log('init upload url is', initres.UploadDetails[0])
+    
+            let uploadres = await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(scenes))
+            console.log('upload res is', uploadres)
+    
+            let finalres = await finalizeUploadFiles(token,
+                {
+                Entity: {Id: realmId, Type: type},
+                FileNames:[this.realmFileKey],
+                ProfileVersion:initres.ProfileVersion,
+            })
+            console.log('final res upload is', finalres)
+            this.removeWorldPendingSave(world)
+        }
+        catch(e){
+            console.log('error backing up realm scenes', world)
+            this.abortSaveSceneUploads(world, token, type, realmId)
+        }
+    }
+
+    async abortSaveSceneUploads(world:string, token:string, type:string, realmId:string){
+        await abortFileUploads(token,{
+            Entity: {Id: realmId, Type: type},
+            FileNames:[this.realmFileKey]
+          })
+        this.removeWorldPendingSave(world)
+    }
+
 }

@@ -49,16 +49,27 @@ export class RoomSceneItemHandler {
                 case EDIT_MODIFIERS.POSITION:
                     switch(data.axis){
                         case 'x':
-                            asset.p.x += (data.direction * data.factor)
+                            if(data.manual){
+                                asset.p.x = data.value === "" ? 0 : data.value
+                            }else{
+                                asset.p.x += (data.direction * data.factor)
+                            }
                             break;
 
                         case 'y':
-                            asset.p.y += (data.direction * data.factor)
-                            console.log('asset is now', asset.p.y)
+                            if(data.manual){
+                                asset.p.y = data.value === "" ? 0 : data.value
+                            }else{
+                                asset.p.y += (data.direction * data.factor)
+                            }
                             break;
 
                         case 'z':
-                            asset.p.z += (data.direction * data.factor)
+                            if(data.manual){
+                                asset.p.z = data.value === "" ? 0 : data.value
+                            }else{
+                                asset.p.z += (data.direction * data.factor)
+                            }
                             break;
                     }
                     break;
@@ -66,15 +77,27 @@ export class RoomSceneItemHandler {
                 case EDIT_MODIFIERS.ROTATION:
                     switch(data.axis){
                         case 'x':
-                            asset.r.x += (data.direction * data.factor)
+                            if(data.manual){
+                                asset.r.x = data.value === "" ? 0 : data.value
+                            }else{
+                                asset.r.x += (data.direction * data.factor)
+                            }
                             break;
 
                         case 'y':
-                            asset.r.y += (data.direction * data.factor)
+                            if(data.manual){
+                                asset.r.y = data.value === "" ? 0 : data.value
+                            }else{
+                                asset.r.y += (data.direction * data.factor)
+                            }
                             break;
 
                         case 'z':
-                            asset.r.z += (data.direction * data.factor)
+                            if(data.manual){
+                                asset.r.z = data.value === "" ? 0 : data.value
+                            }else{
+                                asset.r.z += (data.direction * data.factor)
+                            }
                             break;
                     }
                     break;
@@ -82,15 +105,27 @@ export class RoomSceneItemHandler {
                 case EDIT_MODIFIERS.SCALE:
                     switch(data.axis){
                         case 'x':
-                            asset.s.x += (data.direction * data.factor)
+                            if(data.manual){
+                                asset.s.x = data.value === "" ? 0 : data.value
+                            }else{
+                                asset.s.x += (data.direction * data.factor)
+                            }
                             break;
 
                         case 'y':
-                            asset.s.y += (data.direction * data.factor)
+                            if(data.manual){
+                                asset.s.y = data.value === "" ? 0 : data.valuee
+                            }else{
+                                asset.s.y += (data.direction * data.factor)
+                            }
                             break;
 
                         case 'z':
-                            asset.s.z += (data.direction * data.factor)
+                            if(data.manual){
+                                asset.s.z = data.value === "" ? 0 : data.value
+                            }else{
+                                asset.s.z += (data.direction * data.factor)
+                            }
                             break;
                     }
                     break;
