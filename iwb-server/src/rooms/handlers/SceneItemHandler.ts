@@ -107,6 +107,10 @@ export class RoomSceneItemHandler {
             case COMPONENT_TYPES.IMAGE_COMPONENT:
                 asset.imgComp.url = info.data.url
                 break;
+
+            case COMPONENT_TYPES.VIDEO_COMPONENT:
+                asset.vidComp.url = info.data.url
+                break;
         }
     }
 }

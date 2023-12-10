@@ -1,6 +1,15 @@
 import {Client} from "@colyseus/core";
 import { Player } from "../../Objects/Player"
-import { ImageComponent, MaterialComponent, Quaternion, Scene, SceneItem, Vector3, VisibilityComponent } from "../../Objects/Scene"
+import {
+    ImageComponent,
+    MaterialComponent,
+    Quaternion,
+    Scene,
+    SceneItem,
+    Vector3,
+    VideoComponent,
+    VisibilityComponent
+} from "../../Objects/Scene"
 import { itemManager, iwbManager } from "../../app.config"
 import { COMPONENT_TYPES, SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types"
 import { IWBRoom } from "../IWBRoom"
@@ -305,11 +314,7 @@ export class RoomSceneHandler {
     
         let scene:Scene = this.room.state.scenes.get(sceneId)
         if(scene){
-            if(scene.bps.includes(user) || user === iwbManager.worlds.find((w)=>w.ens === this.room.state.world).owner){
-                return true
-            }else{
-                return false
-            }
+            return scene.bps.includes(user) || user === iwbManager.worlds.find((w) => w.ens === this.room.state.world).owner;
         }else{
             return false
         }
@@ -331,6 +336,9 @@ export class RoomSceneHandler {
                         this.addImageComponent(item)                
                         this.addMaterialComponent(item)
                         break;
+                    case 'Video':
+                        this.addVideoComponent(item)
+                        break;
                 }
                 break;
         }
@@ -345,6 +353,11 @@ export class RoomSceneHandler {
     addImageComponent(item:SceneItem){
         item.comps.push(COMPONENT_TYPES.IMAGE_COMPONENT)
         item.imgComp = new ImageComponent()
+    }
+
+    addVideoComponent(item:SceneItem){
+        item.comps.push(COMPONENT_TYPES.VIDEO_COMPONENT)
+        item.vidComp = new VideoComponent()
     }
 
     addMaterialComponent(item:SceneItem){
