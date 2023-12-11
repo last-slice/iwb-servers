@@ -116,6 +116,7 @@ export class Player extends Schema {
     let sceneData:any = {
       w: world,
       id: "" + generateId(5),
+      im: info.image ? info.image : "",
       n: info.name,
       d: info.desc,
       o: this.dclData.userId,
@@ -125,14 +126,15 @@ export class Player extends Schema {
       bpcl: parcels[0],
       cd: Math.floor(Date.now()/1000),
       upd: Math.floor(Date.now()/1000),
-      si: parcels.length > 20 ? 300 : parcels.length * 15,
+      si: 0,
       toc:0,
       pc: 0,
       pcnt: parcels.length,
       isdl: false,
-      e:true,
+      e:info.enabled,
       pcls:parcels,
-      sp:["0,0"]
+      sp:["0,0"],
+      priv:info.private
     }
 
     // console.log('creating new scene with data', sceneData)

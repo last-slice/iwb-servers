@@ -36,23 +36,34 @@ export class RoomSceneHandler {
             console.log(SERVER_MESSAGE_TYPES.SELECT_PARCEL + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
-            if(player && player.mode === SCENE_MODES.CREATE_SCENE_MODE){
+            if(player && (player.mode === SCENE_MODES.CREATE_SCENE_MODE || info.current)){
 
-                // for(let scene)
-
-                if(!this.isOccupied(info.parcel)){
-                    if(this.hasTemporaryParcel(info.parcel)){
-                        console.log('player has temporary parcel', info.parcel)
-                        this.removeTemporaryParcel(info.parcel)
+                if(info.current){
+                    let scene = this.room.state.scenes.get(info.current)
+                    if(scene){
+                        if(this.isOccupied(info.parcel)){
+                            this.removeParcel(scene, info.parcel)
                         }else{
-                        if(!this.hasTemporaryParcel(info.parcel)){
-                            console.log('scene doesnt have temp parcel')
-                            this.addTempParcel(info.parcel) 
+                            scene.pcls.push(info.parcel)
+                        }
+                    }
+
+                }else{
+                    if(!this.isOccupied(info.parcel)){
+                        if(info.current){}
+                        if(this.hasTemporaryParcel(info.parcel)){
+                            console.log('player has temporary parcel', info.parcel)
+                            this.removeTemporaryParcel(info.parcel)
+                            }else{
+                            if(!this.hasTemporaryParcel(info.parcel)){
+                                console.log('scene doesnt have temp parcel')
+                                this.addTempParcel(info.parcel) 
+                            }
                         }
                     }
                 }
             }
-        })
+        })   
     
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_SAVE_NEW, async(client, info)=>{
             console.log(SERVER_MESSAGE_TYPES.SCENE_SAVE_NEW + " message", info)
@@ -100,19 +111,23 @@ export class RoomSceneHandler {
                 let scene = this.room.state.scenes.get(info.item.sceneId)
                 console.log('scene to edit item in is', scene)
                 if(scene){
-                    const newItem = new SceneItem()
-                    newItem.id = item.id
-                    newItem.aid = item.aid
-                    newItem.p = new Vector3(item.position)
-                    newItem.r = new Quaternion(item.rotation)
-                    newItem.s = new Vector3(item.scale)
-                    newItem.type = itemManager.items.get(item.id).ty
-
-                    this.addItemComponents(newItem, itemManager.items.get(item.id).n)
-
-                    scene.ass.push(newItem)
-
-                    // console.log('asset type is', itemManager.items.get(item.id).ty)
+                    if(this.checkSceneLimits(scene, itemManager.items.get(item.id))){
+                        const newItem = new SceneItem()
+                        newItem.id = item.id
+                        newItem.aid = item.aid
+                        newItem.p = new Vector3(item.position)
+                        newItem.r = new Quaternion(item.rotation)
+                        newItem.s = new Vector3(item.scale)
+                        newItem.type = itemManager.items.get(item.id).ty
+    
+                        this.addItemComponents(newItem, itemManager.items.get(item.id).n)
+    
+                        scene.ass.push(newItem)
+                        scene.pc += itemManager.items.get(item.id).pc
+                        scene.si += itemManager.items.get(item.id).si
+                    }else{
+                        player.sendPlayerMessage(SERVER_MESSAGE_TYPES.ASSET_OVER_SCENE_LIMIT, {})
+                    }
                 }
 
                 info.user = client.userData.userId
@@ -263,6 +278,31 @@ export class RoomSceneHandler {
                 }
             }
         })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.SCENE_SAVE_EDITS, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.SCENE_SAVE_EDITS + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player){
+                let scene:Scene = this.room.state.scenes.get(info.sceneId)
+                if(scene){
+                    if(scene.o === client.userData.userId){
+
+                        scene.n = info.name
+                        scene.d = info.desc
+                        scene.e = info.enabled
+                        scene.priv = info.priv
+
+                        let worldConfig = iwbManager.worlds.find((w)=> w.ens === this.room.state.world)
+                        if(worldConfig){
+                            worldConfig.updated = Math.floor(Date.now()/1000)
+                        }
+                        
+                        room.broadcast(SERVER_MESSAGE_TYPES.SCENE_SAVE_EDITS, info)
+                    }
+                }
+            }
+        })
     }
 
     deleteSceneItem(player:Player, info:any){
@@ -271,10 +311,20 @@ export class RoomSceneHandler {
             if(scene){
                 let assetIndex = scene.ass.findIndex((ass)=> ass.aid === info.assetId)
                 if(assetIndex >= 0){
+                    scene.pc -= itemManager.items.get(scene.ass.find((a)=>a.aid === info.assetId).id).pc
                     scene.ass.splice(assetIndex,1)
                 }
             }
         }
+    }
+
+    removeParcel(scene:Scene, parcel: any) {
+        let parcelIndex = scene.pcls.findIndex((p) => p === parcel)
+        if (parcelIndex >= 0) {
+            //to do
+            //remove parcel asssets
+            scene.pcls.splice(parcelIndex, 1)
+        }   
     }
 
     freeTemporaryParcels() {
@@ -367,5 +417,18 @@ export class RoomSceneHandler {
         item.matComp.color.push("1")
         item.matComp.color.push("1")
         item.matComp.color.push("1")
+    }
+
+    checkSceneLimits(scene:Scene, item:SceneItem){
+        let totalSize = (scene.pcnt > 20 ? 300 : scene.pcnt * 15) * (1024 ** 2)
+        let totalPoly = scene.pcnt * 10000
+
+        if(scene.si > totalSize || scene.pc > totalPoly){
+            console.log('scene is over limitations')
+            return false
+        }else{
+            console.log('scene is within limitations')
+            return true
+        }
     }
 }

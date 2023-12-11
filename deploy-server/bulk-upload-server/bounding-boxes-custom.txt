@@ -1,0 +1,3185 @@
+    BicycleBmxTeal, {x:1.84, y:1.02, z:1.29}
+    BalloonBunchRed, {x:1.32, y:1.03, z:3.26}
+    VipRopeSilverAddon, {x:3.53, y:0.46, z:1.17}
+    VipRopeGoldShort, {x:0.46, y:2.05, z:1.17}
+    GuitarMetalRed, {x:0.48, y:0.10, z:1.39}
+    WhiteboardEraser, {x:0.29, y:0.15, z:0.07}
+    BalloonBlack, {x:0.50, y:0.50, z:2.23}
+    BicycleBmxPegsYellow, {x:1.84, y:1.02, z:1.28}
+    BalloonBunchBlue, {x:1.20, y:0.95, z:1.15}
+    ConstructionConeNeon, {x:0.56, y:0.56, z:0.62}
+    BicycleBeachCruiserBlue, {x:2.47, y:0.72, z:1.49}
+    VipRopeGold, {x:3.82, y:0.46, z:1.17}
+    StageStar, {x:12.17, y:11.58, z:1.05}
+    StageTrussDark, {x:14.03, y:2.04, z:8.11}
+    SpeakersBigMulti, {x:1.50, y:1.50, z:1.99}
+    SurfboardShortboard, {x:0.50, y:0.31, z:2.25}
+    SkateboardComplete, {x:1.04, y:0.28, z:0.19}
+    TrophyBronze, {x:0.67, y:0.47, z:0.93}
+    BalloonBunchOrange, {x:1.32, y:1.03, z:3.26}
+    MobileWhiteboard, {x:3.27, y:0.30, z:2.82}
+    BalloonNeonOrange, {x:0.50, y:0.50, z:2.23}
+    BicycleBmxRed, {x:1.84, y:1.02, z:1.29}
+    LightingArraySpotlightsColored, {x:13.19, y:1.53, z:1.44}
+    FoldingTableFolded, {x:2.64, y:0.98, z:0.17}
+    BalloonOrange, {x:0.50, y:0.50, z:2.23}
+    LightingArraySpotlightsDark, {x:13.19, y:1.53, z:1.44}
+    FoldingTable, {x:2.64, y:0.98, z:0.85}
+    MiningTrackStraight, {x:3.19, y:0.70, z:0.07}
+    BackdropBlack, {x:4.00, y:4.00, z:4.00}
+    GreenScreen, {x:8.00, y:4.00, z:4.00}
+    StageRectangularLight, {x:9.00, y:6.00, z:1.00}
+    BicycleBeachCruiserBlackKickstand, {x:2.47, y:0.72, z:1.50}
+    Banana, {x:0.36, y:0.10, z:0.07}
+    LightingStand, {x:1.31, y:1.13, z:3.41}
+    BicycleBmxPegsPink, {x:1.83, y:0.97, z:1.29}
+    BicycleBmxPegsBlue, {x:1.83, y:0.97, z:1.29}
+    BalloonPurple, {x:0.50, y:0.50, z:2.23}
+    SkateboardDeck, {x:1.04, y:0.22, z:0.22}
+    BicycleBeachCruiserTeal, {x:2.47, y:0.72, z:1.49}
+    SpeakersBig, {x:1.00, y:1.20, z:1.99}
+    GroupOfSpeakersTower, {x:1.50, y:1.50, z:6.01}
+    ScooterBlue, {x:1.03, y:0.44, z:1.05}
+    ScooterPink, {x:1.03, y:0.44, z:1.05}
+    VipRopeGoldShortAddon, {x:1.76, y:0.46, z:1.17}
+    BalloonBunchPurple, {x:1.20, y:0.95, z:1.15}
+    BalloonBunchBlack, {x:1.20, y:0.95, z:1.15}
+    BusinessCanopyWide, {x:8.08, y:4.27, z:4.76}
+    ScooterRed, {x:1.03, y:0.44, z:1.05}
+    TrophyGold, {x:0.67, y:0.47, z:0.93}
+    StageHeart, {x:11.97, y:8.94, z:1.06}
+    BikeRacks, {x:0.76, y:2.72, z:0.63}
+    SurfboardLongboard, {x:0.76, y:0.52, z:3.10}
+    BananaGold, {x:0.07, y:0.14, z:0.35}
+    BicycleBeachCruiserBasketPink, {x:2.47, y:0.72, z:1.49}
+    VipRopeGoldAddon, {x:3.53, y:0.46, z:1.17}
+    ShakerPepper, {x:0.07, y:0.08, z:0.15}
+    VipRopeSilverShort, {x:2.05, y:0.46, z:1.17}
+    StageTrussLight, {x:14.03, y:2.04, z:8.11}
+    BicycleBeachCruiserBasketYellowKickstand, {x:2.47, y:0.72, z:1.50}
+    SpeakersStand, {x:1.31, y:1.16, z:2.91}
+    MetalBarrier, {x:2.61, y:0.36, z:1.15}
+    MiningTrackCurved, {x:2.02, y:2.14, z:0.07}
+    MicrophoneStandEmpty, {x:0.40, y:0.42, z:1.44}
+    MicrophoneStand, {x:0.47, y:0.47, z:1.58}
+    SqueezeBottleMustard, {x:0.10, y:0.10, z:0.34}
+    SqueezeBottleKetchup, {x:0.10, y:0.10, z:0.34}
+    GuitarBassBlack, {x:0.42, y:0.11, z:1.34}
+    StageTrussDarkLighting, {x:14.00, y:3.25, z:8.98}
+    BicycleBeachCruiserBasketWhiteKickstand, {x:2.47, y:0.72, z:1.50}
+    TrafficConeOrange, {x:0.60, y:0.70, z:1.30}
+    ShakerSalt, {x:0.07, y:0.08, z:0.15}
+    SqueezeBottleMayo, {x:0.10, y:0.10, z:0.34}
+    BalloonWhite, {x:0.50, y:0.50, z:2.23}
+    MetalBarrierYellow, {x:2.61, y:0.36, z:1.15}
+    MobileChalkboard, {x:3.27, y:0.30, z:2.82}
+    VipRopeSilverShortAddon, {x:1.70, y:0.40, z:1.17}
+    HotSauceRed, {x:0.10, y:0.10, z:0.30}
+    HotSauceGreen, {x:0.10, y:0.10, z:0.30}
+    ConstructionConeOrange, {x:0.56, y:0.56, z:0.62}
+    BalloonBunchGreen, {x:1.32, y:1.03, z:3.26}
+    BalloonBunchNeonOrange, {x:1.20, y:0.95, z:1.15}
+    SpeakersMounted, {x:2.29, y:1.12, z:2.28}
+    BusinessCanopy, {x:4.27, y:4.27, z:4.76}
+    BananaSilver, {x:0.07, y:0.14, z:0.35}
+    VipRopeSilver, {x:3.82, y:0.46, z:1.17}
+    BalloonBrown, {x:0.48, y:0.48, z:0.70}
+    BananaBunchGold, {x:0.23, y:0.30, z:0.37}
+    MetalBarrierDark, {x:2.61, y:0.36, z:1.15}
+    LightingArraySpotlightsLight, {x:13.19, y:1.53, z:1.44}
+    BananaBunchSilver, {x:0.23, y:0.30, z:0.37}
+    BicycleBmxPurple, {x:1.84, y:1.02, z:1.29}
+    Microphone, {x:0.12, y:0.24, z:0.31}
+    BackdropWhite, {x:4.00, y:4.00, z:4.00}
+    BalloonBunchNeonGreen, {x:1.32, y:1.03, z:3.26}
+    StageTrussLightLighting, {x:14.03, y:3.27, z:9.03}
+    StageRectangularDark, {x:9.00, y:6.00, z:1.00}
+    TrafficConeNeon, {x:0.60, y:0.70, z:1.30}
+    ScooterGreen, {x:1.03, y:0.44, z:1.05}
+    PullupBars, {x:3.88, y:0.10, z:3.30}
+    BalloonRed, {x:0.48, y:0.48, z:0.70}
+    BalloonNeonGreen, {x:0.50, y:0.50, z:2.23}
+    BalloonBunchWhite, {x:1.20, y:0.95, z:1.15}
+    MiningCart, {x:1.55, y:0.65, z:0.79}
+    GuestbookModern, {x:0.87, y:0.87, z:1.13}
+    SpeakersSmall, {x:0.66, y:0.76, z:1.00}
+    BalloonBlue, {x:0.50, y:0.50, z:2.23}
+    BananaBunch, {x:0.23, y:0.39, z:0.26}
+    GuitarMetalPurple, {x:0.48, y:0.10, z:1.39}
+    SqueezeBottleSourCream, {x:0.10, y:0.10, z:0.34}
+    BalloonBunchYellow, {x:1.32, y:1.03, z:3.26}
+    GreenScreenCorner, {x:4.00, y:4.00, z:4.00}
+    BalloonBunchBrown, {x:1.32, y:1.03, z:3.26}
+    TrussStructure, {x:1.04, y:1.04, z:4.03}
+    LightingStandColored, {x:1.31, y:1.13, z:3.41}
+    GuitarBassPink, {x:0.42, y:0.11, z:1.34}
+    SpeakersSoundwall, {x:4.50, y:1.09, z:5.69}
+    BalloonYellow, {x:0.50, y:0.50, z:2.23}
+    SpeakersStageMonitor, {x:0.99, y:0.89, z:0.71}
+    BalloonGreen, {x:0.50, y:0.50, z:2.23}
+    TrophySilver, {x:0.67, y:0.47, z:0.93}
+    SpookyTree09, {x:6.06, y:4.77, z:6.56}
+    CandleShapeC.022, {x:0.17, y:0.19, z:0.18}
+    Swallowtail, {x:0.45, y:0.35, z:0.12}
+    Frog01, {x:0.29, y:0.36, z:0.21}
+    CandleShapeB.027, {x:0.10, y:0.12, z:0.20}
+    Penguin, {x:0.45, y:0.64, z:1.01}
+    CandleSkullShapeB.002, {x:0.20, y:0.31, z:0.36}
+    CrateSkulls01, {x:0.90, y:0.90, z:1.00}
+    CandleSkullShapeB.016, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.017, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.003, {x:0.20, y:0.31, z:0.36}
+    CandleShapeB.032, {x:0.10, y:0.12, z:0.20}
+    CandleShapeB.026, {x:0.10, y:0.12, z:0.20}
+    WildBoar, {x:0.64, y:1.74, z:0.82}
+    Wolf, {x:0.56, y:2.23, z:1.35}
+    CandleShapeC.023, {x:0.17, y:0.19, z:0.18}
+    SpookyTree08, {x:6.59, y:5.28, z:6.56}
+    Hawk, {x:0.26, y:0.69, z:0.66}
+    GrassHopper, {x:0.25, y:0.56, z:0.26}
+    CandleShapeC.009, {x:0.17, y:0.19, z:0.18}
+    CandleShapeC.021, {x:0.17, y:0.19, z:0.18}
+    Frog02, {x:0.37, y:0.32, z:0.14}
+    CandleShapeB.018, {x:0.10, y:0.12, z:0.20}
+    CarvedPumpkinCluster, {x:1.67, y:1.11, z:0.73}
+    CandleShapeB.030, {x:0.10, y:0.12, z:0.20}
+    CandleShapeB.024, {x:0.10, y:0.12, z:0.20}
+    Goose, {x:0.59, y:0.61, z:1.05}
+    CandleSkullShapeB.015, {x:0.20, y:0.31, z:0.36}
+    CrateSkulls02, {x:0.90, y:0.90, z:1.13}
+    CandleSkullShapeB.001, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.000, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.014, {x:0.20, y:0.31, z:0.36}
+    HalloweenRug, {x:0.89, y:0.62, z:0.03}
+    CandleShapeB.025, {x:0.10, y:0.12, z:0.20}
+    CandleShapeB.031, {x:0.10, y:0.12, z:0.20}
+    CandleShapeB.019, {x:0.10, y:0.12, z:0.20}
+    HoneyBadger, {x:0.49, y:1.30, z:0.57}
+    CandleShapeC.020, {x:0.17, y:0.19, z:0.18}
+    CandleShapeC.008, {x:0.17, y:0.19, z:0.18}
+    CandleShapeC.024, {x:0.17, y:0.19, z:0.18}
+    CandleShapeC.030, {x:0.17, y:0.19, z:0.18}
+    CandleShapeC.018, {x:0.17, y:0.19, z:0.18}
+    MonitorLizard, {x:1.77, y:1.40, z:0.52}
+    CandleShapeB.021, {x:0.10, y:0.12, z:0.20}
+    CandleShapeB.009, {x:0.10, y:0.12, z:0.20}
+    CandleSkullShapeB.010, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.004, {x:0.20, y:0.31, z:0.36}
+    Narwhal, {x:1.11, y:3.89, z:0.55}
+    CandleSkullShapeB.005, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.011, {x:0.20, y:0.31, z:0.36}
+    Caterpillar, {x:0.29, y:0.23, z:0.08}
+    CandleShapeB.008, {x:0.10, y:0.12, z:0.20}
+    CandleShapeB.020, {x:0.10, y:0.12, z:0.20}
+    GhoulScream, {x:2.66, y:1.81, z:2.31}
+    CandleShapeC.019, {x:0.17, y:0.19, z:0.18}
+    CandleShapeC.031, {x:0.17, y:0.19, z:0.18}
+    CandleShapeC.025, {x:0.17, y:0.19, z:0.18}
+    Crab, {x:0.68, y:0.34, z:0.07}
+    CandleShapeC.027, {x:0.17, y:0.19, z:0.18}
+    CandleShapeB.022, {x:0.10, y:0.12, z:0.20}
+    PostWithSkulls, {x:0.20, y:0.26, z:0.99}
+    Gazelle, {x:0.53, y:2.01, z:1.66}
+    BeetleScarab, {x:0.23, y:0.29, z:0.04}
+    CandleSkullShapeB.007, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.013, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.012, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.006, {x:0.20, y:0.31, z:0.36}
+    Pigeon, {x:0.25, y:0.59, z:0.50}
+    Porcupine, {x:0.74, y:1.10, z:0.77}
+    CandleShapeB.023, {x:0.10, y:0.12, z:0.20}
+    CandleShapeC.026, {x:0.17, y:0.19, z:0.18}
+    CandleShapeC.032, {x:0.17, y:0.19, z:0.18}
+    Mantis, {x:0.30, y:0.32, z:0.38}
+    WoodDecor05, {x:0.38, y:0.82, z:0.05}
+    CandleShapeE.004, {x:0.14, y:0.13, z:0.33}
+    CandleSkullShapeA.001, {x:0.20, y:0.31, z:0.44}
+    CandleShapeE.010, {x:0.14, y:0.13, z:0.33}
+    Bone, {x:0.33, y:0.34, z:0.13}
+    CandleShapeD.029, {x:0.18, y:0.13, z:0.27}
+    CandleShapeD.015, {x:0.18, y:0.13, z:0.27}
+    CandleShapeD.001, {x:0.18, y:0.13, z:0.27}
+    CarvedPumpkin01, {x:0.60, y:0.61, z:0.72}
+    Skull02, {x:0.20, y:0.31, z:0.25}
+    CandleShapeA.018, {x:0.08, y:0.09, z:0.35}
+    CandleShapeA.030, {x:0.08, y:0.09, z:0.35}
+    CandleShapeA.024, {x:0.08, y:0.09, z:0.35}
+    Ghoul, {x:2.58, y:0.68, z:2.86}
+    Snail01, {x:0.17, y:0.46, z:0.28}
+    HockeyMask, {x:0.32, y:0.37, z:0.37}
+    Owl01, {x:0.35, y:0.69, z:0.72}
+    Bat, {x:1.11, y:0.34, z:0.13}
+    CandleShapeA.025, {x:0.08, y:0.09, z:0.35}
+    CandleShapeA.031, {x:0.08, y:0.09, z:0.35}
+    CandleShapeA.019, {x:0.08, y:0.09, z:0.35}
+    Skull03, {x:0.20, y:0.31, z:0.25}
+    CandleShapeD.000, {x:0.18, y:0.13, z:0.27}
+    CandleShapeD.014, {x:0.18, y:0.13, z:0.27}
+    CandleShapeD.028, {x:0.18, y:0.13, z:0.27}
+    Monkey, {x:0.63, y:0.73, z:0.89}
+    CandleSkullShapeA.000, {x:0.20, y:0.31, z:0.44}
+    CandleShapeE.011, {x:0.14, y:0.13, z:0.33}
+    CandleShapeE.005, {x:0.14, y:0.13, z:0.33}
+    Lamb, {x:0.56, y:1.75, z:1.39}
+    WoodDecor04, {x:0.79, y:1.03, z:0.06}
+    WoodDecor06, {x:0.83, y:1.01, z:0.05}
+    CandleShapeE.013, {x:0.14, y:0.13, z:0.33}
+    CandleSkullShapeA.002, {x:0.20, y:0.31, z:0.44}
+    CandleShapeE.007, {x:0.14, y:0.13, z:0.33}
+    PostWithSkull, {x:0.20, y:0.26, z:0.99}
+    CandleShapeD.002, {x:0.18, y:0.13, z:0.27}
+    CandleShapeD.016, {x:0.18, y:0.13, z:0.27}
+    CarvedPumpkin02, {x:0.58, y:0.56, z:0.53}
+    Skull01, {x:0.20, y:0.31, z:0.25}
+    CandleShapeA.027, {x:0.08, y:0.09, z:0.35}
+    Snail02, {x:0.16, y:0.45, z:0.27}
+    Egg, {x:0.14, y:0.14, z:0.18}
+    Moose, {x:1.15, y:2.23, z:2.37}
+    BarrelClosed, {x:0.93, y:0.93, z:1.18}
+    Owl02, {x:0.35, y:0.51, z:0.74}
+    Coffin, {x:1.19, y:2.95, z:0.47}
+    CandleShapeA.032, {x:0.08, y:0.09, z:0.35}
+    CandleShapeA.026, {x:0.08, y:0.09, z:0.35}
+    TurkeyMale, {x:0.84, y:0.98, z:1.08}
+    CarvedPumpkin03, {x:0.60, y:0.59, z:0.70}
+    CandleShapeD.017, {x:0.18, y:0.13, z:0.27}
+    CandleShapeD.003, {x:0.18, y:0.13, z:0.27}
+    CandleShapeE.006, {x:0.14, y:0.13, z:0.33}
+    CandleShapeE.012, {x:0.14, y:0.13, z:0.33}
+    CandleSkullShapeA.003, {x:0.20, y:0.31, z:0.44}
+    Iguana, {x:1.40, y:2.58, z:0.50}
+    CandleSkullShapeA.007, {x:0.20, y:0.31, z:0.44}
+    CandleShapeE.016, {x:0.14, y:0.13, z:0.33}
+    CandleShapeE.002, {x:0.14, y:0.13, z:0.33}
+    WoodDecor03, {x:0.32, y:1.49, z:0.05}
+    Falcon, {x:0.26, y:0.68, z:0.65}
+    BeetleStag, {x:0.27, y:0.50, z:0.13}
+    CandleShapeD.007, {x:0.18, y:0.13, z:0.27}
+    CandleShapeD.013, {x:0.18, y:0.13, z:0.27}
+    Girafe, {x:0.69, y:2.14, z:3.22}
+    Bear01, {x:0.88, y:2.55, z:1.44}
+    CandleShapeA.022, {x:0.08, y:0.09, z:0.35}
+    Llama, {x:0.69, y:2.15, z:2.14}
+    Squirrel02, {x:0.91, y:0.25, z:0.57}
+    PolarBear, {x:0.94, y:2.99, z:1.54}
+    CandleShapeA.023, {x:0.08, y:0.09, z:0.35}
+    Otter, {x:0.33, y:1.73, z:0.53}
+    CandleShapeD.012, {x:0.18, y:0.13, z:0.27}
+    CandleShapeD.006, {x:0.18, y:0.13, z:0.27}
+    WoodDecor02, {x:1.14, y:1.04, z:0.05}
+    CandleShapeE.003, {x:0.14, y:0.13, z:0.33}
+    CandleSkullShapeA.006, {x:0.20, y:0.31, z:0.44}
+    CandleShapeE.017, {x:0.14, y:0.13, z:0.33}
+    HedgeHog, {x:0.39, y:0.45, z:0.34}
+    CandleShapeE.001, {x:0.14, y:0.13, z:0.33}
+    CandleShapeE.015, {x:0.14, y:0.13, z:0.33}
+    CandleSkullShapeA.004, {x:0.20, y:0.31, z:0.44}
+    CandleShapeE.029, {x:0.14, y:0.13, z:0.33}
+    GoldChaliceWithBlood, {x:0.20, y:0.20, z:0.35}
+    CandleShapeD.010, {x:0.18, y:0.13, z:0.27}
+    CandleShapeD.004, {x:0.18, y:0.13, z:0.27}
+    Bear02, {x:0.96, y:1.02, z:2.31}
+    Lemur, {x:0.45, y:0.73, z:0.96}
+    CandleShapeA.021, {x:0.08, y:0.09, z:0.35}
+    Pelican, {x:0.43, y:0.81, z:1.10}
+    CandleShapeA.009, {x:0.08, y:0.09, z:0.35}
+    SilverChalice, {x:0.20, y:0.20, z:0.35}
+    Scorpion, {x:0.49, y:0.49, z:0.26}
+    Squirrel01, {x:0.25, y:0.78, z:0.39}
+    Snake, {x:0.75, y:0.97, z:0.69}
+    CandleShapeA.008, {x:0.08, y:0.09, z:0.35}
+    CandleShapeA.020, {x:0.08, y:0.09, z:0.35}
+    Bear03, {x:0.83, y:2.10, z:1.40}
+    CandleShapeD.005, {x:0.18, y:0.13, z:0.27}
+    CandleShapeD.011, {x:0.18, y:0.13, z:0.27}
+    CandleShapeE.028, {x:0.14, y:0.13, z:0.33}
+    WoodDecor01, {x:0.61, y:1.05, z:0.05}
+    CandleShapeE.014, {x:0.14, y:0.13, z:0.33}
+    CandleSkullShapeA.005, {x:0.20, y:0.31, z:0.44}
+    CandleShapeE.019, {x:0.14, y:0.13, z:0.33}
+    CandleSkullShapeA.008, {x:0.20, y:0.31, z:0.44}
+    CandleShapeE.025, {x:0.14, y:0.13, z:0.33}
+    Unicorn, {x:0.69, y:3.14, z:2.26}
+    Horse02, {x:0.61, y:2.51, z:2.01}
+    CandleShapeD.008, {x:0.18, y:0.13, z:0.27}
+    CandleShapeD.020, {x:0.18, y:0.13, z:0.27}
+    Kangaroo01, {x:0.98, y:1.18, z:2.05}
+    CandleShapeA.011, {x:0.08, y:0.09, z:0.35}
+    BarrelSkulls, {x:0.94, y:0.94, z:1.42}
+    CandleShapeA.005, {x:0.08, y:0.09, z:0.35}
+    Rabbit, {x:0.30, y:0.74, z:0.70}
+    Flamingo02, {x:0.65, y:0.81, z:2.05}
+    Sphynx, {x:0.21, y:0.95, z:0.75}
+    CandleShapeA.004, {x:0.08, y:0.09, z:0.35}
+    CandleShapeA.010, {x:0.08, y:0.09, z:0.35}
+    Cougar02, {x:1.99, y:0.98, z:1.17}
+    CandleShapeD.021, {x:0.18, y:0.13, z:0.27}
+    CandleShapeD.009, {x:0.18, y:0.13, z:0.27}
+    Horse03, {x:0.61, y:2.51, z:2.01}
+    Dog, {x:0.34, y:0.98, z:0.75}
+    Duck, {x:0.32, y:0.84, z:0.62}
+    CandleShapeE.024, {x:0.14, y:0.13, z:0.33}
+    CandleShapeE.018, {x:0.14, y:0.13, z:0.33}
+    CandleShapeE.026, {x:0.14, y:0.13, z:0.33}
+    Horse01, {x:0.61, y:2.51, z:2.01}
+    Toad, {x:0.51, y:0.41, z:0.25}
+    SilverChaliceWithBlood, {x:0.20, y:0.20, z:0.35}
+    PlainPumpkin, {x:0.87, y:0.88, z:0.66}
+    CandleShapeD.023, {x:0.18, y:0.13, z:0.27}
+    Kangaroo02, {x:1.74, y:1.93, z:1.89}
+    CandleShapeA.006, {x:0.08, y:0.09, z:0.35}
+    TombStone04, {x:0.92, y:0.29, z:1.63}
+    CandleShapeA.012, {x:0.08, y:0.09, z:0.35}
+    Flamingo01, {x:0.63, y:0.77, z:1.97}
+    TombStone05, {x:0.38, y:1.07, z:1.71}
+    CandleShapeA.013, {x:0.08, y:0.09, z:0.35}
+    CandleShapeA.007, {x:0.08, y:0.09, z:0.35}
+    Cougar01, {x:0.47, y:2.48, z:1.19}
+    LionFemale, {x:1.56, y:2.10, z:1.35}
+    Ferret, {x:0.29, y:1.23, z:0.54}
+    Tarantula, {x:0.37, y:0.40, z:0.14}
+    CandleShapeD.022, {x:0.18, y:0.13, z:0.27}
+    GhoulIdle, {x:2.06, y:1.46, z:3.15}
+    CandleShapeE.027, {x:0.14, y:0.13, z:0.33}
+    CandleShapeE.023, {x:0.14, y:0.13, z:0.33}
+    SpiderWebWithEggs, {x:3.10, y:0.31, z:3.70}
+    CandleShapeD.026, {x:0.18, y:0.13, z:0.27}
+    LionMale, {x:2.46, y:1.81, z:1.67}
+    CandleShapeA.003, {x:0.08, y:0.09, z:0.35}
+    CandleShapeA.017, {x:0.08, y:0.09, z:0.35}
+    TombStone01, {x:1.19, y:0.61, z:2.20}
+    Rhino, {x:1.20, y:3.26, z:1.54}
+    Peacock01, {x:0.54, y:1.97, z:1.29}
+    Bison, {x:1.00, y:2.60, z:1.93}
+    Monarch, {x:0.50, y:0.29, z:0.16}
+    Cow01, {x:0.74, y:2.70, z:1.71}
+    CandleShapeA.016, {x:0.08, y:0.09, z:0.35}
+    CandleShapeA.002, {x:0.08, y:0.09, z:0.35}
+    Macaw02, {x:1.49, y:0.82, z:0.78}
+    Skellie01, {x:0.93, y:0.62, z:1.91}
+    Cheetah01, {x:0.39, y:2.34, z:1.28}
+    CandleShapeE.022, {x:0.14, y:0.13, z:0.33}
+    ZombieLeg, {x:0.25, y:0.37, z:1.06}
+    CandleShapeE.020, {x:0.14, y:0.13, z:0.33}
+    CandleShapeE.008, {x:0.14, y:0.13, z:0.33}
+    TurkeyFemale, {x:0.29, y:0.79, z:0.92}
+    CandleShapeD.025, {x:0.18, y:0.13, z:0.27}
+    CandleShapeD.019, {x:0.18, y:0.13, z:0.27}
+    PileOfBones, {x:0.86, y:0.68, z:0.28}
+    TombStone02, {x:1.07, y:0.38, z:1.05}
+    CandleShapeA.014, {x:0.08, y:0.09, z:0.35}
+    CandleShapeA.000, {x:0.08, y:0.09, z:0.35}
+    CandleShapeA.028, {x:0.08, y:0.09, z:0.35}
+    TurkeyVulture, {x:0.52, y:0.93, z:0.82}
+    Peacock02, {x:3.25, y:1.28, z:2.25}
+    Platapus, {x:0.72, y:1.50, z:0.36}
+    DragonFly, {x:0.54, y:0.40, z:0.14}
+    Cow02, {x:0.67, y:2.70, z:1.48}
+    CandleShapeA.029, {x:0.08, y:0.09, z:0.35}
+    CandleShapeA.001, {x:0.08, y:0.09, z:0.35}
+    TombStone03, {x:0.40, y:1.12, z:1.37}
+    CandleShapeA.015, {x:0.08, y:0.09, z:0.35}
+    CandleShapeD.024, {x:0.18, y:0.13, z:0.27}
+    GoldChalice, {x:0.20, y:0.20, z:0.35}
+    Macaw01, {x:0.27, y:0.71, z:0.55}
+    Skellie02, {x:0.91, y:0.42, z:1.60}
+    CandleShapeE.009, {x:0.14, y:0.13, z:0.33}
+    Cheetah02, {x:0.41, y:2.30, z:1.12}
+    CandleShapeE.021, {x:0.14, y:0.13, z:0.33}
+    CrateClose, {x:0.90, y:0.90, z:0.90}
+    Sarcophagus03, {x:1.25, y:1.99, z:0.41}
+    Zebra, {x:0.61, y:2.64, z:2.09}
+    CandleShapeC.017, {x:0.17, y:0.19, z:0.18}
+    Cat02, {x:0.65, y:0.60, z:0.50}
+    CandleShapeC.003, {x:0.17, y:0.19, z:0.18}
+    CandleShapeB.006, {x:0.10, y:0.12, z:0.20}
+    CandleShapeB.012, {x:0.10, y:0.12, z:0.20}
+    PlainPumpkinCluster, {x:1.51, y:1.02, z:0.59}
+    CrateOpen, {x:0.90, y:0.90, z:0.90}
+    Goat02, {x:0.59, y:1.95, z:1.56}
+    Rat, {x:0.42, y:0.49, z:0.24}
+    CandleSkullShapeB.023, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.022, {x:0.20, y:0.31, z:0.36}
+    Swan, {x:1.04, y:0.41, z:1.03}
+    Eagle, {x:2.68, y:1.31, z:0.61}
+    CandleShapeB.013, {x:0.10, y:0.12, z:0.20}
+    CandleShapeB.007, {x:0.10, y:0.12, z:0.20}
+    Beaver01, {x:0.51, y:1.53, z:0.55}
+    SpookyTree01, {x:4.80, y:6.99, z:6.80}
+    CandleShapeC.002, {x:0.17, y:0.19, z:0.18}
+    CandleShapeC.016, {x:0.17, y:0.19, z:0.18}
+    Sarcophagus02, {x:0.99, y:1.17, z:1.42}
+    Camel, {x:0.62, y:2.58, z:1.99}
+    CandleShapeC.028, {x:0.17, y:0.19, z:0.18}
+    CandleShapeC.000, {x:0.17, y:0.19, z:0.18}
+    Cat01, {x:0.20, y:0.98, z:0.56}
+    SpookyTree03, {x:6.06, y:4.77, z:6.56}
+    Ostrich, {x:0.84, y:2.05, z:2.24}
+    CandleShapeC.014, {x:0.17, y:0.19, z:0.18}
+    DeerMale, {x:1.25, y:2.05, z:2.44}
+    CandleShapeB.011, {x:0.10, y:0.12, z:0.20}
+    CandleShapeB.005, {x:0.10, y:0.12, z:0.20}
+    Fox04, {x:0.32, y:1.45, z:0.76}
+    Goat01, {x:0.51, y:2.07, z:1.42}
+    CandleSkullShapeB.008, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.020, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.021, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.009, {x:0.20, y:0.31, z:0.36}
+    Sheep, {x:0.80, y:2.16, z:1.23}
+    CandleShapeB.004, {x:0.10, y:0.12, z:0.20}
+    Quokka, {x:0.44, y:1.36, z:0.72}
+    Armadillo, {x:0.34, y:1.01, z:0.39}
+    CandleShapeB.010, {x:0.10, y:0.12, z:0.20}
+    Beaver02, {x:0.35, y:1.06, z:0.48}
+    Chrysalis, {x:0.08, y:0.06, z:0.24}
+    Chicken, {x:0.29, y:0.55, z:0.69}
+    CandleShapeC.015, {x:0.17, y:0.19, z:0.18}
+    CandleShapeC.001, {x:0.17, y:0.19, z:0.19}
+    SpookyTree02, {x:5.22, y:4.49, z:6.91}
+    CandleShapeC.029, {x:0.17, y:0.19, z:0.18}
+    Sarcophagus01, {x:1.46, y:2.12, z:0.42}
+    BlackWidow, {x:0.27, y:0.46, z:0.14}
+    SpookyTree06, {x:6.06, y:4.77, z:6.56}
+    CandleShapeC.005, {x:0.17, y:0.19, z:0.18}
+    CandleShapeC.011, {x:0.17, y:0.19, z:0.18}
+    CandleShapeB.014, {x:0.10, y:0.12, z:0.20}
+    CandleShapeB.000, {x:0.10, y:0.12, z:0.20}
+    Ant, {x:0.22, y:0.23, z:0.04}
+    CandleShapeB.028, {x:0.10, y:0.12, z:0.20}
+    Fox01, {x:0.26, y:1.37, z:0.81}
+    Vine02, {x:0.67, y:0.52, z:0.19}
+    CandleSkullShapeB.025, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.019, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.018, {x:0.20, y:0.31, z:0.36}
+    CandleSkullShapeB.024, {x:0.20, y:0.31, z:0.36}
+    SpiderWebCorner, {x:2.86, y:0.11, z:2.88}
+    Panther01, {x:0.49, y:2.59, z:1.24}
+    CandleShapeB.029, {x:0.10, y:0.12, z:0.20}
+    CandleShapeB.001, {x:0.10, y:0.12, z:0.20}
+    Hippo, {x:1.00, y:2.44, z:1.27}
+    CandleShapeB.015, {x:0.10, y:0.12, z:0.20}
+    Gorilla, {x:1.29, y:1.70, z:1.85}
+    Toucan, {x:0.35, y:1.31, z:0.87}
+    CandleShapeC.010, {x:0.17, y:0.19, z:0.18}
+    SpookyTree07, {x:6.06, y:4.77, z:6.56}
+    CandleShapeC.004, {x:0.17, y:0.19, z:0.18}
+    HummingBird, {x:0.19, y:0.35, z:0.28}
+    DeerFemale, {x:0.49, y:1.75, z:1.80}
+    CandleShapeC.012, {x:0.17, y:0.19, z:0.18}
+    CandleShapeC.006, {x:0.17, y:0.19, z:0.18}
+    SpookyTree05, {x:6.06, y:4.77, z:6.56}
+    CandleShapeB.003, {x:0.10, y:0.12, z:0.20}
+    CandleShapeB.017, {x:0.10, y:0.12, z:0.20}
+    Fox02, {x:0.29, y:1.32, z:0.83}
+    Vine01, {x:0.65, y:0.39, z:0.28}
+    Ghost, {x:1.19, y:1.24, z:2.03}
+    Hyena, {x:0.39, y:1.42, z:1.12}
+    Bee, {x:0.13, y:0.21, z:0.19}
+    SpiderWeb3D, {x:3.10, y:0.29, z:2.07}
+    CandleSkullShapeB.026, {x:0.20, y:0.31, z:0.36}
+    Panther02, {x:2.04, y:1.01, z:1.20}
+    BarrelOpen, {x:0.93, y:0.93, z:1.18}
+    Wildebeast, {x:1.04, y:2.75, z:2.07}
+    Fox03, {x:0.33, y:1.65, z:0.65}
+    Salamander, {x:0.53, y:1.53, z:0.29}
+    CandleShapeB.016, {x:0.10, y:0.12, z:0.20}
+    CandleShapeB.002, {x:0.10, y:0.12, z:0.20}
+    CandleShapeC.007, {x:0.17, y:0.19, z:0.18}
+    SpookyTree04, {x:6.06, y:4.77, z:6.56}
+    SpookyTree10, {x:6.59, y:5.28, z:6.56}
+    CandleShapeC.013, {x:0.17, y:0.19, z:0.18}
+    Cockatiel, {x:0.23, y:0.48, z:0.89}
+    SpaceTool_E3Drill, {x:0.21, y:0.07, z:0.28}
+    SpaceToolToolBox, {x:0.26, y:0.63, z:0.30}
+    SpaceTool_ShipFloorTileV1, {x:1.00, y:1.00, z:0.01}
+    BenchWoodConcrete, {x:1.83, y:0.66, z:1.15}
+    StandingFemale00, {x:0.65, y:0.38, z:1.90}
+    LanternRRBrakeLP, {x:0.20, y:0.18, z:0.39}
+    BenchMarble, {x:1.84, y:0.54, z:0.45}
+    HalloweenTentacles01, {x:13.81, y:7.82, z:14.33}
+    LanternKeroseneOldFashioned, {x:0.20, y:0.19, z:0.41}
+    LanternPropane, {x:0.25, y:0.25, z:0.49}
+    HalloweenPillory, {x:1.27, y:0.14, z:1.89}
+    SpaceCrateV1, {x:0.90, y:0.90, z:0.90}
+    SeatedFemale00, {x:0.63, y:0.78, z:1.54}
+    HalloweenScythe, {x:1.58, y:2.13, z:0.19}
+    SpaceCratev2, {x:0.94, y:0.94, z:0.96}
+    BenchIronVinyl_Taller, {x:1.99, y:0.75, z:1.07}
+    LanternRRBrake, {x:0.19, y:0.16, z:0.27}
+    SpaceTool_ComboWrench, {x:0.27, y:0.05, z:0.01}
+    SpaceTool_RoughCutter, {x:0.06, y:0.01, z:0.30}
+    LFL-whimsical, {x:0.40, y:0.28, z:1.41}
+    SpaceTool_SocketHeadCapture, {x:0.49, y:0.66, z:0.10}
+    BenchIronVinyl, {x:1.99, y:0.75, z:1.01}
+    HalloweenChainsaw, {x:0.40, y:1.14, z:0.40}
+    MicrowaveWallMount, {x:0.70, y:0.52, z:0.45}
+    SpaceTool_DebrisShieldAid, {x:0.15, y:1.55, z:0.27}
+    StackOfSilverBars, {x:0.37, y:0.44, z:0.13}
+    CurtainRightBlack, {x:0.87, y:0.08, z:1.98}
+    HotAirBalloon, {x:4.80, y:4.80, z:5.67}
+    CurtainRightBrightRed, {x:0.87, y:0.08, z:1.98}
+    TanTipiHut, {x:5.81, y:5.08, z:6.58}
+    Dice, {x:0.04, y:0.04, z:0.04}
+    OilDrum, {x:0.63, y:0.63, z:1.10}
+    CastleGate, {x:10.92, y:1.67, z:3.30}
+    PalmTree, {x:1.07, y:0.55, z:6.05}
+    StandardPillowBlack, {x:0.64, y:0.29, z:0.64}
+    NeonSignPizzaSlice, {x:0.65, y:0.03, z:0.66}
+    TorchAnimated, {x:0.14, y:0.14, z:0.25}
+    SilverBar, {x:0.37, y:0.15, z:0.07}
+    PirateFlag, {x:0.05, y:0.05, z:1.70}
+    CurtainRightRoyalPurple, {x:0.87, y:0.08, z:1.98}
+    NeonSignFood, {x:0.81, y:0.01, z:0.30}
+    CurtainLeftWhite, {x:0.87, y:0.08, z:1.98}
+    VatOfAcid, {x:0.76, y:0.76, z:1.10}
+    NeonSignIceCream, {x:0.40, y:0.02, z:0.78}
+    GasolinePumpBox, {x:0.75, y:0.75, z:1.70}
+    CurtainLeftTeal, {x:0.87, y:0.08, z:1.98}
+    Compass, {x:0.12, y:0.03, z:0.15}
+    Pencil, {x:0.01, y:0.01, z:0.24}
+    CurtainLeftBrightRed, {x:0.87, y:0.08, z:1.98}
+    FenceCorner, {x:0.67, y:0.67, z:1.94}
+    FirstAidKit, {x:0.32, y:0.09, z:0.27}
+    AlarmClock, {x:0.23, y:0.06, z:0.24}
+    WindChime, {x:0.20, y:0.20, z:0.06}
+    NeonSignOpen, {x:1.03, y:0.02, z:0.47}
+    StandardPillowNavy, {x:0.64, y:0.29, z:0.64}
+    NeonSignLiveMusic, {x:0.50, y:0.02, z:0.48}
+    StackOfGoldBars, {x:0.37, y:0.44, z:0.13}
+    SprayCan, {x:0.09, y:0.09, z:0.25}
+    WhiteTipiHut, {x:5.86, y:5.19, z:5.68}
+    CastleTower, {x:2.50, y:2.50, z:5.36}
+    CurtainRightWhite, {x:0.87, y:0.08, z:1.98}
+    GasStationMarquee, {x:0.17, y:0.17, z:4.79}
+    WroughtIronFence, {x:2.40, y:0.12, z:1.52}
+    StandardPillowWhite, {x:0.64, y:0.29, z:0.64}
+    EmergencyExitSign, {x:0.31, y:0.25, z:0.25}
+    NeonSignTacos, {x:1.04, y:0.01, z:0.30}
+    CastleWall, {x:10.92, y:1.67, z:3.30}
+    NeonSignCoffee, {x:1.14, y:0.01, z:0.30}
+    CurtainRightCandyCane, {x:0.87, y:0.08, z:1.98}
+    NeonSignBar, {x:0.63, y:0.01, z:0.30}
+    NeonSignNoVacancy, {x:1.51, y:0.01, z:0.64}
+    StandardPillowTeal, {x:0.64, y:0.29, z:0.64}
+    VinylDisc, {x:0.39, y:0.39, z:0.00}
+    CurtainLeftBlack, {x:0.87, y:0.08, z:1.98}
+    MedKit, {x:0.35, y:0.10, z:0.26}
+    GarbageBag, {x:0.50, y:0.50, z:0.67}
+    Torch, {x:0.26, y:0.20, z:0.59}
+    CurtainLeftRoyalPurple, {x:0.87, y:0.08, z:1.98}
+    NeonSignOpen24Hrs, {x:1.04, y:0.01, z:0.63}
+    WroughtIronGates, {x:4.87, y:2.14, z:1.97}
+    StandardPillowGreen, {x:0.64, y:0.29, z:0.64}
+    CurtainLeftCandyCane, {x:0.87, y:0.08, z:1.98}
+    CurtainRightTeal, {x:0.87, y:0.08, z:1.98}
+    GoldBar, {x:0.37, y:0.15, z:0.07}
+    PileOfChoppedWood, {x:0.69, y:0.62, z:0.40}
+    PicnicTable, {x:2.00, y:1.36, z:0.13}
+    HandbagsAndPurses01, {x:0.38, y:0.43, z:0.21}
+    VelvetWallCurtainsClose, {x:2.67, y:0.27, z:2.65}
+    BarFoodAndSnacksBurguer, {x:0.46, y:0.46, z:0.13}
+    EletricKeyboard, {x:1.30, y:0.46, z:0.81}
+    PokerTable, {x:3.64, y:1.45, z:1.08}
+    HandbagsAndPurses00, {x:0.51, y:0.19, z:0.39}
+    VelvetWallCurtainsOpen, {x:2.58, y:0.30, z:2.64}
+    DancePodium, {x:3.52, y:3.52, z:4.64}
+    NeonCeilingTilesNeonLightSclpturesHand, {x:0.71, y:0.02, z:2.04}
+    StriperRunway02, {x:5.14, y:7.39, z:4.14}
+    BarFoodAndSnacksChickenBreading, {x:0.21, y:0.17, z:0.23}
+    StriperRunway01, {x:5.10, y:9.00, z:4.14}
+    SurveillanceCameras, {x:0.19, y:0.55, z:0.43}
+    BarFoodAndSnacksHotDog, {x:0.46, y:0.46, z:0.10}
+    VelvetRopesAndVipAreasVelvetRopeSolo, {x:0.44, y:0.44, z:1.13}
+    CheckersAndChessGameCheckers, {x:0.61, y:0.61, z:0.08}
+    VelvetRopesAndVipAreasVelvetRopesRope, {x:1.43, y:0.44, z:1.13}
+    ConfettiCannons, {x:0.69, y:1.14, z:0.98}
+    AirportOverheadGateNumberSign01, {x:1.66, y:0.07, z:3.87}
+    SmokingAccesories02, {x:0.16, y:0.24, z:0.48}
+    SmokingAccesories03, {x:0.03, y:0.19, z:0.03}
+    CommandCenterLikeFurniturekeyboard, {x:0.96, y:0.32, z:0.10}
+    CheckersAndChessGameChess, {x:0.61, y:0.61, z:0.19}
+    AirportOverheadGateNumberSign00, {x:2.21, y:0.07, z:4.17}
+    AirportOverheadGateNumberSign02, {x:1.66, y:0.07, z:3.87}
+    CommandCenterLikeControlsSetupJoystick, {x:0.21, y:0.21, z:0.25}
+    BarFoodAndSnacksChicken, {x:0.47, y:0.47, z:0.09}
+    SmokingAccesories01, {x:0.02, y:0.16, z:0.02}
+    SmokingAccesories00, {x:0.07, y:0.19, z:0.06}
+    CommandCenterLikeControlsCamera, {x:0.58, y:0.58, z:0.13}
+    AirportOverheadGateNumberSign03, {x:1.66, y:0.07, z:3.87}
+    StripperTableGlassWCocaineLines, {x:5.63, y:3.41, z:4.69}
+    SpaceSuit, {x:1.03, y:1.04, z:2.07}
+    CommandCenterLikeFurnitureMonitor00, {x:1.23, y:0.13, z:0.85}
+    SmokingAccesories04, {x:0.20, y:0.25, z:0.08}
+    StreetLights, {x:0.48, y:0.48, z:3.37}
+    SmokingAccesories05, {x:0.25, y:0.25, z:0.08}
+    CommandCenterLikeFurnitureMonitor01, {x:1.23, y:0.29, z:0.85}
+    AirportOverheadGateNumberSign04, {x:1.66, y:0.07, z:3.87}
+    CommandCenterLikeFurnitureTable, {x:3.87, y:1.59, z:1.08}
+    TableCenter00, {x:0.64, y:0.36, z:1.18}
+    SmokingAccesories07, {x:0.06, y:0.21, z:0.03}
+    SmokingAccesories06, {x:0.01, y:0.13, z:0.01}
+    TableCenter01, {x:0.33, y:0.38, z:1.12}
+    CocktailShakersAndUtensils, {x:0.40, y:0.44, z:0.45}
+    ArcadesAndPinball04, {x:1.13, y:1.68, z:2.05}
+    CommandCenterLikeFurnitureChair, {x:1.09, y:1.10, z:1.87}
+    WallMountedTVs, {x:0.10, y:1.18, z:0.71}
+    ArcadesAndPinball05, {x:1.13, y:1.68, z:2.05}
+    CommandCenterLikeFurnitureMouse, {x:0.20, y:0.32, z:0.11}
+    NeonCeilingTilesNeonLightSclpturesNeonGirl, {x:0.85, y:0.02, z:1.92}
+    ArcadesAndPinball02, {x:1.14, y:1.25, z:2.08}
+    ArcadesAndPinball03, {x:1.14, y:1.25, z:2.08}
+    ArcadesAndPinball01, {x:1.14, y:1.25, z:2.08}
+    AirportEscalator, {x:1.86, y:8.40, z:4.39}
+    CommandCenterLikeControlsSetup, {x:0.58, y:0.28, z:0.58}
+    PianoUpright, {x:2.04, y:1.21, z:1.78}
+    TipJar, {x:0.69, y:0.69, z:0.49}
+    ArcadesAndPinball00, {x:1.14, y:1.25, z:2.08}
+    Arcade Machine Black, {x:1.39, y:1.61, z:2.63}
+    GreenCorner, {x:2.00, y:2.00, z:4.00}
+    Brick Light, {x:1.00, y:1.00, z:1.00}
+    Z Red, {x:0.50, y:0.08, z:0.50}
+    Window 2x2 V3 Open V2, {x:1.41, y:1.32, z:1.79}
+    Grass, {x:16.00, y:16.00, z:0.02}
+    DocksModuleSmall 02, {x:1.83, y:2.01, z:0.98}
+    Door 12, {x:0.49, y:0.09, z:1.23}
+    Valve, {x:1.10, y:1.10, z:0.91}
+    Mines Model 10 M, {x:13.15, y:11.58, z:4.76}
+    Grafitti Wall Short E, {x:2.00, y:0.60, z:2.00}
+    GreyRoof, {x:4.00, y:4.00, z:0.20}
+    Parchement 01, {x:0.13, y:0.15, z:0.46}
+    Planet 01, {x:3.22, y:3.23, z:2.82}
+    Tnt, {x:0.62, y:0.14, z:0.07}
+    BlackRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    DocksModuleMedium 01, {x:1.83, y:4.02, z:1.03}
+    Plant 3, {x:2.90, y:2.63, z:2.30}
+    Vines 01, {x:4.50, y:0.21, z:2.38}
+    SandPatchBig 01, {x:4.03, y:3.53, z:0.93}
+    PinkTileRoof, {x:4.04, y:4.12, z:1.43}
+    OrangeRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    Mail Post 01, {x:0.52, y:0.24, z:1.20}
+    HWN20 Tree 07, {x:7.37, y:7.93, z:5.64}
+    ScienceContainer 02, {x:1.40, y:1.61, z:2.01}
+    Ring Purple Light, {x:2.00, y:2.00, z:0.10}
+    Wood Light Plank, {x:1.00, y:1.00, z:1.00}
+    Vertical Platform Scifi, {x:2.04, y:2.04, z:0.49}
+    HWN20 Candle 18, {x:0.14, y:0.16, z:0.37}
+    Green Scifi Button, {x:0.66, y:0.66, z:0.15}
+    TurquoiseWindowLarge, {x:2.00, y:0.40, z:4.00}
+    LEDGridWall, {x:2.00, y:0.30, z:4.00}
+    BeigeRoof, {x:4.00, y:4.00, z:0.20}
+    MetalCorner, {x:2.00, y:2.00, z:4.00}
+    HWN20 WoodFence 02, {x:0.22, y:3.96, z:1.44}
+    BlueRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    Wood Planks Broken 4x4M, {x:4.00, y:4.00, z:0.18}
+    Chest 01, {x:0.86, y:0.84, z:0.92}
+    Log 02, {x:0.79, y:0.86, z:2.17}
+    L Blue, {x:0.50, y:0.08, z:0.50}
+    M Blue, {x:0.50, y:0.08, z:0.50}
+    Grass 02, {x:0.51, y:0.42, z:0.25}
+    Sack 02, {x:0.53, y:1.01, z:0.41}
+    FloorBaseSand 01, {x:16.00, y:16.00, z:0.02}
+    PinkRoof Corner, {x:4.00, y:4.00, z:0.70}
+    SpaceShip 03, {x:11.43, y:12.86, z:5.47}
+    DarkGreyRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    SignA, {x:2.53, y:0.39, z:4.98}
+    Deck Train Front, {x:7.02, y:2.19, z:3.72}
+    CrystalTotem 01, {x:1.21, y:1.21, z:2.76}
+    Flower Yellow, {x:1.00, y:1.00, z:1.00}
+    BlackCushion, {x:0.63, y:0.13, z:0.63}
+    Factory Building 2, {x:7.36, y:7.36, z:21.57}
+    PlainGreyGreenWall, {x:2.00, y:0.40, z:4.00}
+    JunglePlant 02, {x:1.57, y:1.26, z:0.46}
+    Well, {x:2.58, y:2.42, z:3.00}
+    RockLarge 03, {x:3.49, y:2.54, z:2.94}
+    Chair 04, {x:0.63, y:0.68, z:1.43}
+    Cross Red, {x:1.00, y:1.00, z:1.00}
+    Pot, {x:0.59, y:0.60, z:0.41}
+    Dirt 04, {x:2.10, y:1.93, z:0.39}
+    Arrow Sign, {x:0.00, y:0.00, z:0.00}
+    Fence Straight 02, {x:3.11, y:0.11, z:1.09}
+    Gem 03, {x:0.32, y:0.45, z:0.14}
+    AirVent Exhaust 02, {x:0.31, y:0.66, z:0.07}
+    O Red, {x:0.50, y:0.08, z:0.50}
+    YellowCorner, {x:2.00, y:2.00, z:4.00}
+    RockSand 01, {x:2.68, y:2.86, z:1.40}
+    SteamPunk Number 09, {x:0.42, y:0.42, z:0.92}
+    GrassPatchLarge 04, {x:5.06, y:5.64, z:0.19}
+    GroundFloorSciFi 04, {x:16.00, y:16.00, z:0.02}
+    Bomb 01, {x:0.28, y:0.29, z:0.36}
+    Window 1x2 V2 Frame, {x:1.42, y:0.35, z:1.82}
+    GrassPatchSmall 01, {x:2.00, y:2.00, z:0.06}
+    Pipe Emissive, {x:0.72, y:2.86, z:0.72}
+    Pillar Quad Full 01, {x:1.02, y:1.02, z:2.99}
+    GreenRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    Sushi Shelf, {x:0.64, y:1.63, z:4.10}
+    Spicesbag 02, {x:0.80, y:0.64, z:0.86}
+    Vase 05, {x:0.36, y:0.36, z:0.95}
+    Chair Wood 01, {x:0.55, y:0.61, z:1.66}
+    HWN20 OpenCoffin, {x:1.79, y:2.73, z:1.11}
+    Chest Fantasy, {x:1.40, y:1.10, z:0.28}
+    Fruit 2, {x:0.47, y:0.62, z:0.34}
+    RedRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    Small Billboard, {x:1.12, y:0.65, z:3.72}
+    Fruit 3, {x:0.46, y:0.62, z:0.34}
+    Plate 01, {x:0.51, y:0.50, z:0.03}
+    ArrowWindow, {x:2.00, y:0.40, z:4.00}
+    Rope 01, {x:0.60, y:0.55, z:0.19}
+    Vase 04, {x:0.51, y:0.58, z:0.57}
+    Cable 4M 04, {x:1.33, y:2.45, z:0.20}
+    Stone Pedestal 01, {x:8.00, y:8.00, z:0.35}
+    LimeDoorframe, {x:2.00, y:0.30, z:4.00}
+    Spicesbag 03, {x:0.81, y:0.69, z:0.87}
+    GlassRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    Pipe Straight 05M 01, {x:0.35, y:0.35, z:0.75}
+    Stones Loght, {x:1.00, y:1.00, z:1.00}
+    Drawer 1, {x:0.72, y:0.46, z:0.36}
+    Lever 01, {x:0.35, y:0.47, z:1.22}
+    GlassFloor, {x:4.00, y:4.00, z:0.01}
+    Trunk 01, {x:1.01, y:0.79, z:0.77}
+    GrassPatchLarge 05, {x:6.06, y:6.49, z:0.42}
+    SteamPunk Number 08, {x:0.45, y:0.46, z:0.92}
+    WhiteWindow, {x:2.00, y:0.40, z:4.00}
+    Gem 02, {x:0.34, y:0.34, z:0.15}
+    CreamRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    Train Track 6 M Jiggle , {x:3.03, y:5.52, z:0.34}
+    SandPatchExtraSmall 01, {x:0.94, y:0.82, z:0.23}
+    CreamRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    Chair 1, {x:0.66, y:0.73, z:1.17}
+    RockLarge 02, {x:1.69, y:3.89, z:1.74}
+    JunglePlant 03, {x:1.17, y:1.12, z:1.71}
+    NeonLightTube 01, {x:1.71, y:0.14, z:0.13}
+    Chair 05, {x:1.81, y:0.97, z:1.32}
+    Lambo B, {x:2.66, y:6.34, z:1.54}
+    Ornament 04, {x:0.46, y:0.08, z:0.51}
+    Solid Water, {x:1.00, y:1.00, z:1.00}
+    House 7 M Train Station, {x:7.53, y:9.40, z:7.87}
+    Wood Planks Floor Modules 4x4M, {x:4.00, y:4.00, z:0.14}
+    Couch 01, {x:1.48, y:1.48, z:2.80}
+    Vertical Platform Fantasy Alt, {x:1.42, y:1.42, z:0.56}
+    Stadium Light, {x:1.91, y:1.81, z:10.72}
+    BathroomTilesCorner, {x:2.03, y:2.03, z:4.00}
+    Window 2x2 Broken, {x:1.24, y:0.19, z:1.65}
+    FireEscapeStairs, {x:4.04, y:4.12, z:5.17}
+    GreyRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    Grass 03, {x:0.30, y:0.32, z:0.52}
+    Horizontal Platform Genesis, {x:2.00, y:2.00, z:0.83}
+    Boulder Arthur, {x:1.25, y:1.35, z:2.85}
+    SpaceShip 02, {x:3.51, y:5.06, z:1.93}
+    Log 03, {x:0.82, y:0.90, z:2.12}
+    PurpleCorner, {x:2.00, y:2.00, z:4.00}
+    Train Track 6 M V01, {x:2.44, y:6.00, z:0.34}
+    ChairShip 01, {x:1.24, y:1.39, z:2.00}
+    FloorHexa 01, {x:2.00, y:1.99, z:0.09}
+    HWN20 Candle 19, {x:0.14, y:0.16, z:0.22}
+    Starfish 01, {x:0.54, y:0.53, z:0.07}
+    Word Human, {x:0.78, y:0.00, z:0.22}
+    Map 04, {x:0.71, y:0.67, z:0.12}
+    Bonfire 1, {x:1.55, y:1.49, z:2.19}
+    MetalRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    BeigeFloor, {x:4.00, y:4.00, z:0.01}
+    HWN20 Tree 06, {x:6.28, y:2.39, z:8.09}
+    Flying Taxi Available, {x:2.80, y:4.98, z:2.47}
+    Plant 2, {x:2.49, y:3.12, z:1.41}
+    GreyCushion, {x:0.63, y:0.13, z:0.63}
+    Fence Black Blue, {x:22.70, y:0.23, z:3.96}
+    GreenGreyFloor Small, {x:2.00, y:2.00, z:0.01}
+    Wall Stone Large, {x:5.00, y:0.30, z:1.00}
+    HWN20 YellowGhost, {x:0.15, y:0.99, z:1.23}
+    Window 4x4 V3 Frame, {x:2.36, y:0.35, z:2.28}
+    WhiteRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    BlackRoof Corner, {x:4.00, y:4.00, z:0.70}
+    Ornament Stone Small 01, {x:0.29, y:0.29, z:0.23}
+    Grafitti Wall Short D, {x:2.00, y:0.61, z:2.00}
+    OrangeRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    Flag 01, {x:1.59, y:0.33, z:3.26}
+    ChineseStatuePig 02, {x:0.68, y:0.86, z:0.87}
+    PlantPot 04, {x:0.82, y:0.85, z:1.64}
+    Door 11, {x:0.49, y:0.09, z:1.23}
+    DocksModuleSmall 01, {x:1.83, y:2.01, z:0.98}
+    BeachCorner, {x:2.03, y:2.03, z:4.00}
+    Window 4x4 Closed, {x:2.07, y:0.16, z:1.90}
+    Garland Curve Yellow, {x:15.03, y:0.59, z:1.08}
+    Window 2x2 V3 Open V1, {x:1.74, y:0.60, z:1.80}
+    BoatPaddle 01, {x:0.32, y:2.94, z:0.08}
+    Wall Clock, {x:1.01, y:0.99, z:0.25}
+    WhiteDoorframe, {x:2.00, y:0.30, z:4.00}
+    Light Decor10, {x:0.00, y:0.00, z:0.00}
+    RoundSofa, {x:7.18, y:5.26, z:1.01}
+    GreenRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    Planet 02, {x:3.95, y:3.80, z:4.03}
+    DigitalTable 01, {x:5.42, y:5.42, z:0.88}
+    Barrel Spilled, {x:1.89, y:0.75, z:0.78}
+    Grafitti Wall Short F, {x:2.00, y:0.64, z:2.00}
+    GreyDoorframe, {x:2.00, y:0.30, z:4.00}
+    PurpleRoof Small, {x:2.00, y:2.00, z:0.20}
+    BlackWindowLarge, {x:2.00, y:0.40, z:4.00}
+    BlueRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    Horizontal Platform Pirates Alt, {x:2.10, y:2.01, z:1.26}
+    Door 9, {x:1.00, y:0.17, z:2.30}
+    DarkGreyRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    PlainMagnoliaWall, {x:2.00, y:0.40, z:4.00}
+    F Red, {x:0.50, y:0.08, z:0.50}
+    Vines 02, {x:6.02, y:0.26, z:2.98}
+    DocksModuleMedium 02, {x:1.83, y:4.02, z:1.03}
+    HWN20 Tree 04, {x:3.70, y:3.18, z:4.89}
+    Awning 6M, {x:6.00, y:2.19, z:3.71}
+    ScienceContainer 01, {x:0.57, y:0.57, z:0.85}
+    PinkWindow, {x:2.00, y:0.40, z:4.00}
+    Trash Group, {x:2.09, y:1.36, z:1.25}
+    HWN20 WoodFence 01, {x:0.27, y:2.90, z:1.67}
+    Vertical Blue Pad, {x:2.00, y:2.00, z:0.10}
+    MetalBoltsCorner, {x:2.08, y:2.08, z:4.00}
+    Mines Wood Fence1 4M, {x:3.87, y:0.19, z:3.93}
+    Soil, {x:1.00, y:1.00, z:1.00}
+    Sack 01, {x:0.33, y:0.33, z:0.42}
+    SkirtingBoard 04, {x:1.00, y:0.02, z:0.12}
+    Grass 01, {x:0.25, y:0.28, z:0.12}
+    Drumms, {x:3.03, y:2.29, z:1.92}
+    Train Track 6 M V03, {x:2.39, y:6.00, z:0.34}
+    Log 01, {x:0.67, y:0.65, z:2.63}
+    SignB, {x:2.31, y:1.78, z:2.50}
+    Fork 01, {x:0.05, y:0.39, z:0.02}
+    Neon Oval Sign, {x:0.68, y:0.02, z:0.74}
+    BlackRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    Couch 03, {x:1.44, y:1.49, z:1.11}
+    FancyPillar, {x:0.88, y:0.88, z:4.00}
+    Window 4x4 V3 Closed, {x:2.35, y:0.35, z:2.28}
+    FarmVegetation 04, {x:4.00, y:0.72, z:1.00}
+    Concrete Moss, {x:1.00, y:1.00, z:1.00}
+    F Blue, {x:0.50, y:0.08, z:0.50}
+    InsetPillar, {x:0.58, y:0.58, z:4.00}
+    Containers 01, {x:1.04, y:1.04, z:3.54}
+    G Blue, {x:0.50, y:0.08, z:0.50}
+    MetalRoof Small, {x:2.00, y:2.00, z:0.20}
+    S Red, {x:0.50, y:0.08, z:0.50}
+    Chair 07, {x:0.97, y:0.85, z:1.56}
+    NeonLightTube 03, {x:1.71, y:0.14, z:0.13}
+    GreenRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    JunglePlant 01, {x:1.70, y:1.64, z:0.70}
+    Neon Curve Blue, {x:0.17, y:0.08, z:0.76}
+    Chair 3, {x:0.76, y:0.84, z:1.18}
+    Factory Building 1, {x:2.14, y:0.39, z:3.25}
+    Fence Straight 01, {x:2.00, y:0.10, z:1.09}
+    RockSand 02, {x:7.56, y:7.56, z:2.24}
+    Light 04, {x:2.00, y:2.00, z:0.18}
+    Poster10, {x:1.00, y:0.00, z:1.32}
+    AirVent Exhaust 01, {x:0.96, y:0.34, z:0.65}
+    Module Stone Straight Door 01, {x:4.00, y:0.85, z:4.00}
+    Chest Gear Key, {x:1.08, y:0.39, z:0.09}
+    Sofa White, {x:3.10, y:1.23, z:1.15}
+    CreamRoof Small, {x:2.00, y:2.00, z:0.20}
+    Ceiling 2x2M, {x:2.00, y:2.00, z:0.13}
+    White Car, {x:2.59, y:6.07, z:1.79}
+    RockFloor Module 4M, {x:4.52, y:4.74, z:0.05}
+    Spicesbag 01, {x:0.81, y:0.69, z:0.87}
+    Chest Base Gold 01, {x:1.40, y:1.10, z:0.28}
+    Fruit 1, {x:0.47, y:0.62, z:0.34}
+    ShoreGrass 01, {x:0.64, y:0.75, z:1.13}
+    Vase 06, {x:0.93, y:0.74, z:0.75}
+    FloorBlock 04, {x:1.97, y:0.05, z:2.00}
+    Vase 07, {x:1.42, y:1.14, z:0.54}
+    Floor Wood 1M, {x:2.01, y:2.00, z:0.06}
+    FloorBlock 05, {x:2.00, y:2.00, z:0.14}
+    SpiralStairs, {x:4.02, y:4.02, z:5.08}
+    Street Light, {x:2.12, y:0.50, z:4.96}
+    Drawer 2, {x:0.62, y:0.46, z:0.32}
+    Horizontal Flying Car Blue, {x:2.78, y:4.97, z:2.22}
+    FenceWoodEnd 01, {x:0.14, y:0.14, z:1.21}
+    ConstructionCone 01, {x:0.46, y:0.46, z:0.65}
+    Well 01, {x:1.52, y:1.52, z:2.29}
+    WaterPatchCornerInside 01, {x:8.00, y:8.00, z:0.30}
+    GlassRoof Corner, {x:4.00, y:4.00, z:0.70}
+    Trunk 02, {x:1.01, y:0.80, z:0.78}
+    GrassPatchLarge 06, {x:6.44, y:6.30, z:0.20}
+    Fence Iron 3M, {x:3.13, y:0.26, z:1.20}
+    Dirt Red, {x:1.00, y:1.00, z:1.00}
+    Gem 01, {x:0.24, y:0.49, z:0.10}
+    PurpleFloor, {x:4.00, y:4.00, z:0.01}
+    RockSand 03, {x:3.56, y:4.22, z:2.51}
+    Furnit Bar 1 2M, {x:2.00, y:0.78, z:1.23}
+    Poster11, {x:1.00, y:0.00, z:1.66}
+    WaterPatchFull 01, {x:8.00, y:8.00, z:0.00}
+    Railing Semi Circle, {x:17.75, y:10.48, z:0.84}
+    Street Entry, {x:5.95, y:0.26, z:5.14}
+    GlassRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    Speed Bump, {x:7.35, y:1.16, z:0.11}
+    Barrel 4, {x:2.31, y:1.02, z:1.23}
+    NeonLightTube 02, {x:1.71, y:0.14, z:0.13}
+    Chair 06, {x:1.81, y:0.97, z:1.32}
+    Chair 2, {x:0.72, y:1.16, z:1.20}
+    Mines Model Curve, {x:15.86, y:17.08, z:4.77}
+    RockLarge 01, {x:1.98, y:1.74, z:1.58}
+    OpenChest 01, {x:1.47, y:0.65, z:0.40}
+    AcousticPanelWall, {x:2.00, y:0.36, z:4.00}
+    Lambo A, {x:2.65, y:6.34, z:1.54}
+    TwoColouredPillar, {x:0.50, y:0.50, z:4.00}
+    BonesBig 01, {x:0.19, y:1.03, z:0.09}
+    Pipe Curve, {x:0.72, y:1.04, z:1.03}
+    Ground Curve 8 M, {x:5.54, y:8.60, z:0.38}
+    DarkGreyCushion, {x:0.63, y:0.13, z:0.63}
+    SignC, {x:2.31, y:1.77, z:2.50}
+    Couch 02, {x:1.35, y:1.35, z:3.76}
+    PeachFloor Small, {x:2.00, y:2.00, z:0.01}
+    Train Track 6 M V02, {x:2.44, y:6.00, z:0.34}
+    SpaceShip 01, {x:3.51, y:5.06, z:1.93}
+    CreamWindow, {x:2.00, y:0.40, z:4.00}
+    PinkWindowLarge, {x:2.00, y:0.40, z:4.00}
+    WhiteRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    Steampunk Chair, {x:0.73, y:0.88, z:1.86}
+    Deck 5M V04, {x:5.10, y:2.19, z:3.71}
+    Manhole Purple, {x:1.80, y:0.07, z:1.79}
+    Dagger 01, {x:0.53, y:1.45, z:0.09}
+    HWN20 Tree 05, {x:3.70, y:3.18, z:4.89}
+    Terminal 01, {x:1.16, y:1.22, z:2.20}
+    Door Marco Normal, {x:1.22, y:0.16, z:2.45}
+    Ceiling 4x4M, {x:4.00, y:4.00, z:0.13}
+    Bonfire 2, {x:0.63, y:0.54, z:1.74}
+    Train Track 10 M Curve, {x:10.39, y:10.41, z:0.34}
+    FloorHexa 02, {x:1.00, y:1.99, z:0.09}
+    Plant 1, {x:2.09, y:2.13, z:1.26}
+    WhiteRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    Door 8, {x:0.98, y:0.09, z:2.27}
+    GreyRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    Mushroom Red, {x:1.00, y:1.00, z:1.00}
+    Train Track 11 M Fork V02, {x:8.46, y:11.00, z:0.35}
+    Grafitti Wall Short G, {x:2.01, y:0.64, z:2.00}
+    HighStool, {x:0.58, y:0.58, z:0.98}
+    Planet 03, {x:4.65, y:4.42, z:4.64}
+    TrainTrack Curve 01, {x:1.73, y:1.75, z:0.06}
+    Road Cobble End, {x:2.00, y:1.90, z:0.04}
+    TV Games Console, {x:1.33, y:1.01, z:1.60}
+    ChineseStatuePig 01, {x:0.75, y:0.78, z:0.84}
+    ConstructionScene 01, {x:7.32, y:7.22, z:2.35}
+    MetalRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    Door 10, {x:1.00, y:0.17, z:2.30}
+    Fence Wood V4 Entry, {x:2.94, y:0.15, z:1.63}
+    LightCube 02, {x:0.83, y:0.75, z:0.36}
+    Grafitti Wall Short C, {x:2.00, y:0.63, z:2.00}
+    OrangeRoof Small, {x:2.00, y:2.00, z:0.20}
+    PlantPot 01, {x:1.40, y:1.38, z:1.61}
+    BlackWindow, {x:2.00, y:0.40, z:4.00}
+    Train Coal Tender, {x:2.58, y:6.36, z:2.89}
+    Lava 03, {x:1.00, y:1.00, z:1.00}
+    HWN20 Bat UpsideDown, {x:0.14, y:0.18, z:0.61}
+    GlassRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    Sink Counter, {x:3.24, y:1.37, z:1.66}
+    Umbrella 02, {x:2.78, y:2.78, z:2.80}
+    Carpet 01, {x:3.71, y:0.04, z:3.69}
+    Stone Dirt Snow, {x:1.00, y:1.00, z:1.00}
+    HWN20 Skull 02, {x:0.32, y:0.21, z:0.25}
+    GlassRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    PlasmaYellow 01, {x:0.22, y:0.26, z:0.39}
+    Map 03, {x:0.65, y:0.61, z:0.11}
+    SolarPanel 01, {x:1.37, y:0.44, z:0.99}
+    GlassRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    HWN20 Tree 01, {x:3.70, y:3.18, z:4.89}
+    Droid 01, {x:0.90, y:0.85, z:1.27}
+    Banner Red 01, {x:0.93, y:0.08, z:2.54}
+    CreamRoof, {x:4.00, y:4.00, z:0.20}
+    G Red, {x:0.50, y:0.08, z:0.50}
+    Pumpkin Green, {x:1.00, y:1.00, z:1.00}
+    Grass Module 1M, {x:1.00, y:1.00, z:0.02}
+    Furnit 4 Desk, {x:1.70, y:0.90, z:1.24}
+    Grass 04, {x:1.10, y:1.63, z:1.24}
+    SkirtingBoard 01, {x:1.00, y:0.03, z:0.12}
+    Crate 01, {x:0.75, y:0.75, z:0.74}
+    Log 04, {x:0.60, y:0.62, z:0.11}
+    HWN20 Spider 01, {x:0.02, y:0.10, z:0.43}
+    Train Wood Stopper, {x:3.07, y:1.93, z:1.81}
+    JunglePlant 04, {x:2.06, y:1.99, z:1.91}
+    Leather, {x:1.46, y:1.70, z:0.02}
+    Chair 02, {x:0.60, y:0.66, z:1.37}
+    NeonLightTube 06, {x:1.71, y:0.14, z:0.13}
+    Hello, {x:0.94, y:0.07, z:0.46}
+    Chest Top Iron 01, {x:1.39, y:1.08, z:0.59}
+    Mines Wood Fence3 4M, {x:3.87, y:0.19, z:1.62}
+    Ground 10 M Long, {x:3.57, y:11.42, z:0.44}
+    Fence End 01, {x:2.06, y:0.11, z:1.11}
+    Concrete Wall Short, {x:2.00, y:0.60, z:2.00}
+    FarmVegetation 01, {x:4.00, y:1.57, z:1.00}
+    MetalBoltsWall, {x:2.00, y:0.45, z:4.00}
+    HorizontalBoardCorner, {x:2.03, y:2.03, z:4.00}
+    Ornament 03, {x:0.19, y:0.03, z:0.37}
+    TableSciFi 02, {x:2.66, y:1.33, z:0.98}
+    GreenBoardsWindow, {x:2.00, y:0.40, z:4.00}
+    LightCross 01, {x:1.88, y:1.25, z:0.38}
+    GreyRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    Wood 3, {x:4.59, y:0.13, z:1.67}
+    Telephone Pole 3, {x:0.91, y:8.89, z:4.93}
+    Light 01, {x:0.39, y:0.34, z:1.25}
+    Carriage 01, {x:3.89, y:2.30, z:1.54}
+    Pipe Tip, {x:0.51, y:2.59, z:0.51}
+    Barrel 01, {x:0.96, y:0.95, z:1.12}
+    WallCloths Blue 01, {x:4.08, y:0.75, z:1.53}
+    YellowFloor Small, {x:2.00, y:2.00, z:0.01}
+    Gem 05, {x:0.20, y:0.13, z:0.37}
+    MetalRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    FancyCorner, {x:2.11, y:2.11, z:4.00}
+    Dirt 02, {x:3.34, y:2.96, z:0.62}
+    Switch, {x:0.28, y:0.44, z:0.49}
+    Hallway Module Door 02, {x:6.24, y:0.20, z:3.80}
+    PalmTree 01, {x:9.06, y:4.76, z:6.28}
+    Light Decor8, {x:0.00, y:0.00, z:0.00}
+    Mines Model 16 M, {x:18.42, y:11.60, z:4.71}
+    BathroomTilesDoorframe, {x:2.00, y:0.36, z:4.00}
+    Water, {x:1.00, y:1.00, z:1.00}
+    Chest Gear, {x:1.20, y:1.25, z:1.12}
+    HWN20 Ghost 03, {x:0.12, y:0.85, z:0.83}
+    R Red, {x:0.50, y:0.08, z:0.50}
+    House 8 M Brown, {x:8.87, y:9.51, z:8.80}
+    WhiteRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    Pod 02, {x:1.40, y:1.40, z:1.66}
+    GroundFloorSciFi 02, {x:16.00, y:16.00, z:0.02}
+    Fruit 4, {x:0.51, y:0.54, z:0.48}
+    CityTile, {x:0.00, y:0.00, z:0.00}
+    FloorBlock 01, {x:2.00, y:0.06, z:2.00}
+    GreenRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    Window 2x4 V3 Frame, {x:1.42, y:0.36, z:2.23}
+    Vase 03, {x:0.28, y:0.32, z:0.87}
+    Cable 4M 03, {x:0.44, y:4.00, z:0.12}
+    LimeFloor Small, {x:2.00, y:2.00, z:0.01}
+    Zebra Crossing, {x:13.99, y:6.23, z:0.06}
+    Column 01, {x:0.61, y:0.61, z:3.05}
+    RedRoof Small, {x:2.00, y:2.00, z:0.20}
+    Gear Small 03, {x:0.60, y:0.60, z:0.31}
+    Gear Small 02, {x:0.68, y:0.73, z:0.30}
+    PlantCorner, {x:2.09, y:2.09, z:4.00}
+    BlueFloor Small, {x:2.00, y:2.00, z:0.01}
+    LightWall 01, {x:0.27, y:0.56, z:0.15}
+    BlackRoof, {x:4.00, y:4.00, z:0.20}
+    FishSkeleton 01, {x:0.39, y:0.16, z:0.04}
+    Cable 4M 02, {x:1.48, y:4.00, z:0.18}
+    Vase 02, {x:0.75, y:0.67, z:0.99}
+    Charger 01, {x:0.67, y:0.58, z:1.44}
+    WoodenBoardDoorframe, {x:2.00, y:0.36, z:4.00}
+    Fruit 5, {x:0.53, y:0.53, z:0.48}
+    Steampunk Desk, {x:2.05, y:1.17, z:1.03}
+    GroundFloorSciFi 03, {x:16.00, y:16.00, z:0.02}
+    Bulletin Post, {x:1.93, y:2.02, z:3.41}
+    Chest Pirates, {x:1.47, y:0.65, z:0.37}
+    GreenDoorframe, {x:2.00, y:0.30, z:4.00}
+    HorizontalBoardDoorframe, {x:2.00, y:0.36, z:4.00}
+    HWN20 Ghost 02, {x:0.15, y:0.77, z:1.02}
+    Solid Multicolor, {x:1.00, y:1.00, z:1.00}
+    Pod 03, {x:3.83, y:1.86, z:1.91}
+    ConstructionHat 01, {x:0.41, y:0.23, z:0.47}
+    GrassPatchSmall 06, {x:2.75, y:3.08, z:0.27}
+    Hallway Big Module 01, {x:16.24, y:16.24, z:4.19}
+    BlackRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    ConstructionLight 01, {x:0.81, y:0.81, z:1.43}
+    Dirt 03, {x:2.27, y:2.20, z:0.71}
+    Light Decor9, {x:0.00, y:0.00, z:0.00}
+    Manhole White, {x:1.80, y:0.07, z:1.79}
+    ArrowWall, {x:2.00, y:0.38, z:4.00}
+    Mines Runway 3M, {x:1.07, y:3.00, z:0.11}
+    Fence Black Red, {x:22.70, y:0.23, z:3.96}
+    GlassDoorframe, {x:2.00, y:0.30, z:4.00}
+    TwoColouredCorner, {x:2.00, y:2.00, z:4.00}
+    Rubbish Recycling, {x:2.57, y:1.22, z:1.22}
+    Ice, {x:1.00, y:1.00, z:1.00}
+    Cable Adapter 01, {x:0.19, y:0.30, z:0.19}
+    BlueRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    Gem 04, {x:0.39, y:0.39, z:0.28}
+    Gem 10, {x:0.39, y:0.35, z:0.40}
+    Telephone Pole 2, {x:0.90, y:4.89, z:4.93}
+    RockSand 06, {x:4.27, y:4.79, z:3.85}
+    LEDGridDoorframe, {x:2.00, y:0.30, z:4.00}
+    DarkGreyRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    Wood 2, {x:3.43, y:0.42, z:0.15}
+    CorrugatedMetalWindow, {x:2.00, y:0.40, z:4.00}
+    RockSmall 01, {x:0.81, y:0.87, z:0.22}
+    Ornament 02, {x:0.19, y:0.03, z:0.37}
+    Barrel 1, {x:0.72, y:0.95, z:0.72}
+    Canopy 02, {x:4.24, y:4.67, z:8.44}
+    GreenRoof, {x:4.00, y:4.00, z:0.20}
+    TurquoiseTileDoorframe, {x:2.00, y:0.30, z:4.00}
+    JunglePlant 05, {x:0.36, y:0.37, z:0.26}
+    Ground 7 M Square, {x:6.74, y:6.90, z:0.46}
+    NeonLightTube 07, {x:1.71, y:0.14, z:0.13}
+    Chair 03, {x:0.60, y:0.68, z:1.34}
+    PlanetFloorRed 02, {x:16.00, y:16.00, z:0.24}
+    Window 1x2 Closed, {x:1.15, y:0.16, z:1.65}
+    Grass 05, {x:0.55, y:0.56, z:1.18}
+    PinkFloor, {x:4.00, y:4.00, z:0.01}
+    Spear 01, {x:0.09, y:0.08, z:1.96}
+    Woodplanks, {x:1.00, y:1.00, z:1.00}
+    Bed King, {x:1.88, y:2.63, z:1.22}
+    Trough, {x:2.12, y:0.75, z:0.46}
+    Gear Shaft, {x:0.42, y:0.48, z:1.27}
+    Stone Module 4M, {x:4.00, y:4.00, z:0.08}
+    Window 1x4 Glass Panel, {x:0.50, y:0.11, z:1.65}
+    Window 1x2 V4 Frame, {x:1.42, y:0.35, z:2.02}
+    Mines Model Ramp, {x:6.89, y:14.80, z:4.33}
+    GreyRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    X Blue, {x:0.50, y:0.08, z:0.50}
+    HexagonGridCorner, {x:2.03, y:2.02, z:4.00}
+    Train Track 8 M Curve, {x:4.15, y:7.48, z:0.34}
+    Awning 7M, {x:7.00, y:2.19, z:3.71}
+    Sand Stones, {x:16.00, y:16.00, z:0.02}
+    ChineseFireworks 01, {x:1.09, y:1.05, z:1.60}
+    Y Blue, {x:0.50, y:0.08, z:0.50}
+    FancyDoorframe, {x:2.00, y:0.51, z:4.00}
+    HWN20 Skull 03, {x:0.32, y:0.21, z:0.25}
+    HorizontalBoardWall, {x:2.00, y:0.36, z:4.00}
+    Bench 02, {x:0.74, y:0.51, z:0.74}
+    Solid Grass, {x:1.00, y:1.00, z:1.00}
+    Ceiling Lamp 02, {x:0.53, y:0.56, z:2.83}
+    Deck 5M V01, {x:5.00, y:2.00, z:0.71}
+    GreenHouse 02, {x:25.01, y:11.48, z:5.47}
+    StoneFloor, {x:4.00, y:4.00, z:0.01}
+    Light Wall, {x:0.73, y:0.50, z:0.58}
+    NavyFloor Small, {x:2.00, y:2.00, z:0.01}
+    Road End, {x:2.00, y:1.91, z:0.04}
+    Lava 02, {x:1.00, y:1.00, z:1.00}
+    ConstructionFence 02, {x:0.47, y:2.80, z:1.30}
+    Coffee Table, {x:1.47, y:1.21, z:0.47}
+    Door 01, {x:1.65, y:0.44, z:3.24}
+    GreenRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    NavyCushion, {x:0.63, y:0.13, z:0.63}
+    Warning Tape, {x:6.12, y:0.14, z:0.14}
+    Grass 1, {x:2.08, y:1.87, z:0.84}
+    Grafitti Wall Short B, {x:2.00, y:0.60, z:2.00}
+    CreamWindowLarge, {x:2.00, y:0.40, z:4.00}
+    SimpleRoof, {x:4.43, y:4.00, z:1.41}
+    LightCube 03, {x:0.83, y:0.75, z:0.36}
+    Grass 3, {x:2.37, y:2.32, z:0.82}
+    LightCube 01, {x:0.83, y:0.75, z:0.36}
+    Planet 04, {x:6.23, y:7.12, z:4.02}
+    Solid Violet Pattern, {x:1.00, y:1.00, z:1.00}
+    Bar Green, {x:6.13, y:1.34, z:1.55}
+    Furnace 4 Pipe, {x:0.47, y:0.47, z:2.60}
+    Diamond, {x:1.00, y:1.00, z:1.00}
+    Furnace 5 Pipe, {x:0.41, y:0.41, z:1.50}
+    PlantPot 02, {x:1.13, y:0.55, z:2.49}
+    DiagonalTileWall, {x:2.00, y:0.34, z:4.00}
+    Axe 01, {x:0.29, y:0.08, z:0.63}
+    PeachCorner, {x:2.00, y:2.00, z:4.00}
+    WhiteRoof Small, {x:2.00, y:2.00, z:0.20}
+    Fence 01, {x:1.35, y:0.10, z:0.81}
+    Umbrella 01, {x:3.06, y:3.34, z:3.06}
+    CreamRoof Corner, {x:4.00, y:4.00, z:0.70}
+    Road Cobble Cross Short, {x:4.00, y:4.00, z:0.04}
+    Flying Car Black, {x:2.79, y:4.98, z:2.22}
+    FenceStoneTallMedium 01, {x:0.27, y:3.06, z:1.82}
+    Carpet 02, {x:3.45, y:2.00, z:0.04}
+    PlainOrangeWall, {x:2.00, y:0.40, z:4.00}
+    WhiteRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    GreenGreyWindow, {x:2.00, y:0.40, z:4.00}
+    Deck 5M V03, {x:5.10, y:2.20, z:3.71}
+    Vegetation 08, {x:1.54, y:1.32, z:0.79}
+    HWN20 Candle 21, {x:0.17, y:0.19, z:0.48}
+    Hammock 01, {x:1.11, y:4.62, z:0.62}
+    Parking Lot Sign, {x:0.88, y:0.16, z:2.46}
+    HWN20 Tree 02, {x:3.19, y:2.60, z:4.92}
+    HWN20 Candle 09, {x:0.17, y:0.19, z:0.46}
+    Droid 02, {x:0.84, y:0.86, z:0.84}
+    DocksPillar 01, {x:1.84, y:0.22, z:1.36}
+    Mines Tunel Curve, {x:6.14, y:6.99, z:3.45}
+    HWN20 Skull 01, {x:0.32, y:0.21, z:0.25}
+    Chest Tube Key, {x:0.84, y:0.31, z:0.31}
+    PlainPistachioWall, {x:2.00, y:0.40, z:4.00}
+    SignD, {x:2.30, y:1.76, z:2.50}
+    GlassRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    Banner Red 02, {x:1.89, y:0.08, z:2.22}
+    HWN20 Spider 02, {x:0.03, y:0.10, z:0.47}
+    Window 1x2 V3 Closed, {x:1.41, y:0.48, z:1.75}
+    Table Dinner 01, {x:3.68, y:3.68, z:1.11}
+    Woodplank Light Red, {x:1.00, y:1.00, z:1.00}
+    SkirtingBoard 02, {x:1.00, y:0.05, z:0.10}
+    Crate 02, {x:0.75, y:0.75, z:0.73}
+    Old TV, {x:0.74, y:0.75, z:1.61}
+    Wall Stone Small, {x:1.00, y:0.30, z:1.00}
+    BlackRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    Barrel 3, {x:0.72, y:0.72, z:0.96}
+    Fortune Cat Statue, {x:1.62, y:1.49, z:2.04}
+    Chair 01, {x:0.77, y:0.85, z:1.20}
+    Warning Sign, {x:1.15, y:0.12, z:2.44}
+    NeonLightTube 05, {x:1.71, y:0.14, z:0.13}
+    JunglePlant 07, {x:1.58, y:1.65, z:1.93}
+    BlackRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    TableSciFi 01, {x:0.93, y:0.93, z:1.02}
+    LightCross 02, {x:1.88, y:1.25, z:0.38}
+    FarmVegetation 02, {x:4.00, y:0.64, z:1.00}
+    RockSmall 03, {x:0.76, y:0.53, z:0.34}
+    Paper Ball, {x:0.20, y:0.22, z:0.13}
+    Sushi Plate, {x:0.38, y:0.29, z:0.01}
+    Gem 06, {x:0.31, y:0.06, z:0.31}
+    Light Wheel, {x:1.86, y:1.85, z:1.25}
+    Barrel 02, {x:0.98, y:0.95, z:1.16}
+    WhiteRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    RockSand 04, {x:6.51, y:6.18, z:3.21}
+    MagnoliaFloor Small, {x:2.00, y:2.00, z:0.01}
+    Light 02, {x:0.26, y:0.26, z:1.25}
+    Hallway Module Door 01, {x:6.03, y:0.20, z:3.80}
+    PalmTree 02, {x:5.77, y:6.18, z:7.58}
+    Pink Fantasy Button, {x:0.49, y:0.49, z:0.09}
+    GlassRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    Dirt 01, {x:4.46, y:3.99, z:0.62}
+    CrateBlue 01, {x:1.18, y:0.66, z:0.54}
+    GrassPatchSmall 04, {x:3.09, y:3.27, z:0.25}
+    WoodenBoardWall, {x:2.00, y:0.36, z:4.00}
+    MetalRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    ConstructionLadder 01, {x:1.53, y:0.86, z:2.37}
+    NavyWindow, {x:2.00, y:0.40, z:4.00}
+    GroundFloorSciFi 01, {x:16.00, y:16.00, z:0.02}
+    GrassPatchLarge 01, {x:5.18, y:5.18, z:0.13}
+    Pod 01, {x:1.60, y:1.62, z:2.94}
+    Window 2x4 Open, {x:1.74, y:0.55, z:1.94}
+    N Red, {x:0.50, y:0.08, z:0.50}
+    HWN20 SmallBrokenFence, {x:0.52, y:0.81, z:0.46}
+    FloorBlock 02, {x:2.00, y:0.08, z:2.00}
+    GreyRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    YellowRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    FenceStonePillar 01, {x:0.47, y:0.47, z:1.42}
+    BeigeCorner, {x:2.00, y:2.00, z:4.00}
+    Street Cross, {x:1.50, y:0.22, z:2.50}
+    PinkRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    GlassRoof, {x:4.00, y:4.00, z:0.20}
+    Gear Small 01, {x:0.68, y:0.73, z:0.31}
+    StonePathCurve 01, {x:2.00, y:1.99, z:0.06}
+    PinkRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    Fruit 6, {x:0.53, y:0.54, z:0.48}
+    BlueRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    Vase 01, {x:0.64, y:0.64, z:0.98}
+    PurpleDoorframe, {x:2.00, y:0.30, z:4.00}
+    Cable 4M 01, {x:0.42, y:4.06, z:0.12}
+    DarkGreyRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    Charger 02, {x:0.77, y:0.46, z:0.53}
+    FloorBlock 03, {x:2.00, y:0.09, z:2.00}
+    HWN20 Ghost 01, {x:0.15, y:0.99, z:1.23}
+    Diamond Pattern Red, {x:1.00, y:1.00, z:1.00}
+    Window 2x4 Closed, {x:1.15, y:0.16, z:1.94}
+    CreamRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    GrassPatchSmall 05, {x:2.93, y:2.85, z:0.29}
+    Road Straight Short, {x:1.00, y:2.02, z:0.04}
+    R Blue, {x:0.50, y:0.08, z:0.50}
+    Cable Adapter 02, {x:0.29, y:0.29, z:0.19}
+    BlackRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    TurquoiseFloor, {x:4.00, y:4.00, z:0.01}
+    S Blue, {x:0.50, y:0.08, z:0.50}
+    Window 2x2 V2 Closed, {x:1.42, y:0.35, z:1.82}
+    RockSand 05, {x:9.23, y:9.93, z:4.60}
+    Soup Bowl, {x:0.29, y:0.29, z:0.07}
+    Solid Green, {x:1.00, y:1.00, z:1.00}
+    Light 03, {x:0.64, y:0.64, z:0.31}
+    Telephone Pole 1, {x:0.88, y:0.89, z:4.93}
+    Gem 07, {x:0.22, y:0.22, z:0.40}
+    RockSmall 02, {x:1.00, y:0.60, z:0.33}
+    Ornament 01, {x:0.34, y:0.09, z:0.93}
+    FenceStonePillarTall 01, {x:0.47, y:0.47, z:2.11}
+    FarmVegetation 03, {x:4.00, y:1.18, z:1.00}
+    Wheel 01, {x:1.08, y:0.13, z:1.07}
+    Wood 1, {x:5.29, y:0.24, z:0.69}
+    BeachDoorframe, {x:2.00, y:0.36, z:4.00}
+    LightCross 03, {x:1.88, y:1.25, z:0.38}
+    NeonLightTube 04, {x:1.71, y:0.14, z:0.13}
+    PlanetFloorRed 01, {x:16.00, y:16.00, z:0.24}
+    MetalRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    JunglePlant 06, {x:1.27, y:1.33, z:0.84}
+    MetalStairs Corner, {x:4.12, y:4.12, z:5.15}
+    Canopy 01, {x:4.24, y:4.67, z:4.27}
+    ThankYou, {x:0.92, y:0.07, z:0.45}
+    PinkBoardsWindow, {x:2.00, y:0.40, z:4.00}
+    Blue Pillow, {x:0.00, y:0.00, z:0.00}
+    Barrel 2, {x:0.72, y:1.00, z:0.97}
+    Crate 03, {x:0.89, y:0.84, z:0.90}
+    SkirtingBoard 03, {x:1.00, y:0.02, z:0.12}
+    GirlForestStatue 01, {x:3.86, y:3.03, z:3.99}
+    HWN20 Spider 03, {x:0.05, y:0.07, z:0.04}
+    Road Cross Short, {x:4.03, y:4.00, z:0.04}
+    Stone Dark Pebbles, {x:1.00, y:1.00, z:1.00}
+    ChineseFireworks 02, {x:0.23, y:0.16, z:1.16}
+    GreenRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    HWN20 Candle 08, {x:0.23, y:0.27, z:0.28}
+    HWN20 Tree 03, {x:3.15, y:4.23, z:4.61}
+    Map 01, {x:0.12, y:0.61, z:0.13}
+    Factory Light Tube, {x:0.68, y:16.65, z:0.72}
+    Deck 5M V02, {x:5.10, y:2.19, z:3.71}
+    Ceiling Lamp 01, {x:0.60, y:0.63, z:3.08}
+    Lamp Red, {x:0.31, y:0.96, z:0.40}
+    HWN20 Candle 20, {x:0.14, y:0.16, z:0.26}
+    Vegetation 09, {x:1.55, y:1.32, z:0.79}
+    Carpet 03, {x:3.45, y:2.00, z:0.02}
+    Bench 01, {x:2.26, y:0.62, z:0.56}
+    RubberTire 01, {x:0.89, y:0.26, z:0.89}
+    Neon Tube Blue, {x:0.50, y:0.08, z:0.08}
+    TileFloor Small, {x:2.00, y:2.00, z:0.01}
+    RedFloor Small, {x:2.00, y:2.00, z:0.01}
+    Door Marco Wide, {x:2.24, y:0.18, z:2.43}
+    GreenHouse 01, {x:9.23, y:9.23, z:4.60}
+    ConstructionFence 01, {x:1.03, y:1.94, z:1.10}
+    PlantPot 03, {x:0.51, y:1.14, z:0.51}
+    PurpleRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    Neon Tube Red, {x:0.50, y:0.08, z:0.08}
+    PurpleRoof, {x:4.00, y:4.00, z:0.20}
+    Planet 05, {x:4.48, y:4.45, z:4.29}
+    BrickDoorframe, {x:2.00, y:0.42, z:4.00}
+    WhiteRoof, {x:4.00, y:4.00, z:0.20}
+    Grafitti Wall Short A, {x:2.00, y:0.60, z:2.00}
+    Grass 2, {x:2.35, y:1.96, z:0.97}
+    Table 4, {x:1.12, y:1.50, z:0.59}
+    Fire Hydrant Blue, {x:0.48, y:0.41, z:0.69}
+    RedFloor, {x:4.00, y:4.00, z:0.01}
+    LightBlock 01, {x:0.42, y:1.25, z:0.13}
+    Pot 02, {x:0.51, y:0.51, z:0.51}
+    GlassRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    FloorSciFiPanel 03, {x:2.00, y:2.00, z:0.01}
+    PlantDoorframe, {x:2.00, y:0.48, z:4.00}
+    FloorBaseDirt 02, {x:16.00, y:16.00, z:0.02}
+    RedRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    Furnit 3 Desk, {x:2.49, y:1.24, z:1.10}
+    HWN20 Pumpkin 01, {x:0.61, y:0.60, z:0.75}
+    Lamp Yellow, {x:0.31, y:0.96, z:0.40}
+    Candle 03, {x:0.28, y:0.28, z:0.52}
+    Road Cobble Straight, {x:2.02, y:2.00, z:0.04}
+    Cactus 8, {x:1.30, y:1.95, z:3.24}
+    WhiteCorner, {x:2.00, y:2.00, z:4.00}
+    Window 1x2 V3 Frame, {x:1.41, y:0.48, z:1.75}
+    Bottle 10, {x:0.41, y:0.41, z:0.53}
+    CircleBase 01, {x:3.50, y:3.56, z:0.38}
+    P Red, {x:0.50, y:0.08, z:0.50}
+    Bottle 04, {x:0.26, y:0.26, z:0.47}
+    GeckoBush 01, {x:0.94, y:1.00, z:1.78}
+    Vertical Hallway Door, {x:6.28, y:0.20, z:4.95}
+    ArrowCorner, {x:2.04, y:2.04, z:4.00}
+    Wall Bookshelf, {x:1.63, y:0.44, z:0.94}
+    NavyRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    Bamboo 01, {x:1.12, y:1.17, z:3.46}
+    Statue 01, {x:1.22, y:2.74, z:3.44}
+    Radioactive Container, {x:0.70, y:0.70, z:0.85}
+    Poster7, {x:1.00, y:0.00, z:0.56}
+    PlainWhiteFloor Large, {x:4.00, y:4.00, z:0.01}
+    Furnit 5 Clock, {x:0.79, y:0.70, z:2.99}
+    HWN20 Grave 12, {x:1.25, y:2.22, z:1.26}
+    HWN20 Grave 06, {x:0.99, y:1.17, z:1.42}
+    YellowRoof, {x:4.00, y:4.00, z:0.20}
+    ConstructionSign 01, {x:0.08, y:0.84, z:2.34}
+    OrangeWindowLarge, {x:2.00, y:0.40, z:4.00}
+    Turret 02, {x:2.85, y:3.05, z:1.18}
+    Neon Rectangle Sign, {x:1.20, y:0.04, z:0.50}
+    Pipe, {x:0.72, y:2.86, z:0.72}
+    Stalagmite 03, {x:0.90, y:0.95, z:2.19}
+    PinkRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    Train Track Switcher, {x:3.22, y:0.28, z:1.53}
+    DarkGreyFloor Small, {x:2.00, y:2.00, z:0.01}
+    Logs 1, {x:2.97, y:0.87, z:0.56}
+    FencePicketDoor 01, {x:0.06, y:1.81, z:1.76}
+    BeigeDoorframe, {x:2.00, y:0.30, z:4.00}
+    ChinesePergola 01, {x:5.02, y:5.35, z:2.10}
+    E Red, {x:0.50, y:0.08, z:0.50}
+    Crystal 02, {x:1.23, y:0.91, z:1.74}
+    Deck Railing, {x:0.09, y:1.89, z:1.01}
+    Tree Forest Green 02, {x:8.63, y:6.88, z:8.58}
+    Stones2, {x:16.00, y:16.00, z:0.02}
+    Chandelier 2, {x:0.43, y:0.24, z:0.56}
+    BathroomTilesWindow, {x:2.00, y:0.40, z:4.00}
+    Axe 2, {x:1.02, y:1.17, z:1.77}
+    RockFloor Module 2M, {x:2.26, y:2.37, z:0.01}
+    Coco 02, {x:0.28, y:0.34, z:0.19}
+    HWN21 PumpkinLeaf 02, {x:0.35, y:0.29, z:0.15}
+    Shotgun 2, {x:1.56, y:0.10, z:0.25}
+    PurpleWindow, {x:2.00, y:0.40, z:4.00}
+    LimeRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    Donut Sign, {x:1.00, y:0.03, z:0.53}
+    Window 2x4 V3 Closed, {x:1.42, y:0.36, z:2.23}
+    HWN20 Spider Net 01, {x:0.50, y:0.06, z:0.50}
+    GreenRoof Small, {x:2.00, y:2.00, z:0.20}
+    Train Track 6 M Old V01, {x:2.40, y:6.00, z:0.34}
+    Crystal 03, {x:0.84, y:0.77, z:1.91}
+    ChineseLampRopeLarge 01, {x:5.00, y:0.09, z:0.37}
+    Bus Stop, {x:12.24, y:10.85, z:4.06}
+    Tree Forest Green 03, {x:14.35, y:10.48, z:12.19}
+    Log Small 01, {x:3.00, y:0.24, z:0.28}
+    Compass 01, {x:0.30, y:0.33, z:0.04}
+    Chest Base Iron 01, {x:1.40, y:1.10, z:0.28}
+    LilyPad 01, {x:0.64, y:0.72, z:0.02}
+    Log, {x:1.00, y:1.00, z:1.00}
+    GreenRoof Corner, {x:4.00, y:4.00, z:0.70}
+    ConstructionPallet 01, {x:1.59, y:1.41, z:0.22}
+    Beanbag Navy, {x:1.81, y:1.73, z:0.99}
+    MetalWindow, {x:2.00, y:0.40, z:4.00}
+    OrangeRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    BlueDoorframe, {x:2.00, y:0.30, z:4.00}
+    HWN20 Cat, {x:0.46, y:0.84, z:0.70}
+    Shop Black, {x:6.11, y:9.10, z:4.99}
+    Half Column, {x:0.00, y:0.00, z:0.00}
+    Shovel, {x:0.34, y:0.10, z:1.54}
+    Fence Stone 1M, {x:1.11, y:0.33, z:1.14}
+    Stalagmite 02, {x:0.63, y:0.66, z:1.59}
+    Plant 01, {x:1.07, y:0.26, z:1.06}
+    Turret 03, {x:2.36, y:1.53, z:0.81}
+    GreenWindow, {x:2.00, y:0.40, z:4.00}
+    DiagonalBoardWall, {x:2.00, y:0.37, z:4.00}
+    Gun 01, {x:0.15, y:0.76, z:0.26}
+    FloatingPillar, {x:0.42, y:0.42, z:3.36}
+    HWN20 Grave 07, {x:1.25, y:1.99, z:0.41}
+    Window 4x4 V2 Frame, {x:2.36, y:0.35, z:2.06}
+    Poster6, {x:1.00, y:0.03, z:0.62}
+    Stone Gold, {x:1.00, y:1.00, z:1.00}
+    HWN20 Grave 13, {x:1.20, y:2.31, z:1.42}
+    HWN20 CoffinBase, {x:1.19, y:2.95, z:0.47}
+    Pipe A, {x:1.01, y:0.84, z:1.99}
+    FenceStoneLarge 02, {x:0.27, y:5.06, z:1.10}
+    YellowRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    AntiquePillar, {x:0.81, y:0.81, z:4.00}
+    Concrete Wall, {x:2.00, y:0.30, z:4.00}
+    AcousticPanelDoorframe, {x:2.00, y:0.36, z:4.00}
+    Bottle 05, {x:0.18, y:0.21, z:0.31}
+    FenceStoneTallSmall 01, {x:0.27, y:1.06, z:1.82}
+    Bottle 11, {x:0.19, y:0.19, z:0.67}
+    TableRock 01, {x:2.41, y:1.54, z:0.85}
+    Gear 5 Angled Teeth, {x:1.49, y:1.57, z:0.52}
+    Cactus 9, {x:1.94, y:1.75, z:1.43}
+    PlantSF 01, {x:0.76, y:0.69, z:1.35}
+    Floor Tiles 2M 01, {x:2.00, y:2.00, z:0.07}
+    PillarCat 01, {x:1.96, y:2.61, z:1.53}
+    Solid White, {x:1.00, y:1.00, z:1.00}
+    TwoSeater Couch, {x:2.80, y:1.48, z:1.48}
+    Window 2x4 Glass Panel, {x:0.89, y:0.11, z:1.57}
+    Fence Iron End, {x:0.26, y:0.26, z:1.11}
+    Candle 02, {x:0.05, y:0.05, z:0.29}
+    CreamRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    WaterPatchSide 01, {x:8.00, y:7.45, z:0.38}
+    ChineseHouse 01, {x:12.06, y:10.36, z:11.80}
+    Chest Scifi, {x:0.63, y:0.75, z:1.25}
+    YellowWindow, {x:2.00, y:0.40, z:4.00}
+    FloorSciFiPanel 02, {x:2.00, y:2.00, z:0.04}
+    Window 1x2 V4 Closed, {x:1.42, y:0.35, z:2.02}
+    PlanetFloorViolet 01, {x:16.00, y:16.00, z:0.24}
+    Bench Circular 01, {x:1.00, y:1.05, z:0.45}
+    PlaygroundSlide 01, {x:3.97, y:0.90, z:2.71}
+    Anchor 01, {x:0.96, y:0.14, z:1.34}
+    Solid Fucsia, {x:1.00, y:1.00, z:1.00}
+    NavyRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    LightBlock 02, {x:0.42, y:1.25, z:0.13}
+    TreasurePlate 01, {x:0.44, y:0.44, z:0.02}
+    Pot 01, {x:0.67, y:0.89, z:0.67}
+    HWN20 BatTree 01, {x:3.70, y:3.18, z:4.89}
+    HWN20 PumpkinBasket, {x:0.55, y:0.58, z:0.50}
+    FullHeightUShapeStairs, {x:4.02, y:4.03, z:4.00}
+    ButtonsTable, {x:1.54, y:1.34, z:0.85}
+    FloorBaseDirt 01, {x:16.00, y:16.00, z:0.02}
+    Disk, {x:0.39, y:0.39, z:0.01}
+    LampPostSciFi 01, {x:0.58, y:0.58, z:2.63}
+    Hammer 01, {x:0.23, y:0.55, z:0.11}
+    LimeFloor, {x:4.00, y:4.00, z:0.01}
+    HexagonFloor, {x:4.00, y:4.00, z:0.02}
+    CurvedCouch, {x:4.43, y:2.07, z:1.28}
+    HWN20 Pumpkin 02, {x:0.73, y:0.73, z:0.67}
+    Tube 01, {x:0.50, y:0.49, z:2.00}
+    Road Cobble Angled, {x:2.01, y:2.00, z:0.03}
+    TableBar 01, {x:2.78, y:2.78, z:2.80}
+    Sand, {x:16.00, y:16.00, z:0.02}
+    Grass Long 02, {x:1.00, y:1.00, z:1.00}
+    Furnace 3 Pipe, {x:0.43, y:0.43, z:1.21}
+    Stones Light, {x:1.00, y:1.00, z:1.00}
+    Deck Train Side, {x:3.05, y:11.42, z:3.65}
+    Floor Tiles 2M 03, {x:2.00, y:2.00, z:0.06}
+    PlantSF 03, {x:0.99, y:1.10, z:1.80}
+    L Red, {x:0.50, y:0.08, z:0.50}
+    Red Button, {x:0.29, y:0.29, z:0.11}
+    MetalBarrelStool, {x:0.54, y:0.54, z:0.53}
+    FullHeightStairs, {x:2.00, y:4.02, z:4.00}
+    Pipe Screen, {x:0.72, y:3.42, z:1.38}
+    Leaves, {x:1.00, y:1.00, z:1.00}
+    Bottle 07, {x:0.39, y:0.39, z:0.27}
+    Pipe T, {x:0.72, y:1.34, z:1.03}
+    Fence Red, {x:22.70, y:3.96, z:0.23}
+    RedRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    Rock 08, {x:0.59, y:0.58, z:0.74}
+    Green Button, {x:0.27, y:0.27, z:0.06}
+    Wood Plank Floor 2x2M, {x:2.00, y:2.00, z:0.14}
+    Lever Fantasy, {x:0.63, y:0.82, z:0.29}
+    Bamboo 02, {x:0.11, y:0.12, z:3.68}
+    Statue 02, {x:2.42, y:2.66, z:3.89}
+    HWN20 Bush, {x:3.96, y:6.78, z:1.60}
+    HWN20 Grave 05, {x:1.46, y:2.12, z:0.42}
+    PlainBlueWall, {x:2.00, y:0.40, z:4.00}
+    Tube Grey, {x:0.30, y:0.30, z:4.94}
+    HWN20 Grave 11, {x:0.99, y:0.46, z:1.59}
+    Poster4, {x:1.00, y:0.03, z:0.62}
+    Vertical Platform Genesis, {x:2.00, y:2.00, z:0.83}
+    Pipe Cap, {x:0.75, y:0.29, z:0.75}
+    TreeStump 01, {x:1.81, y:0.48, z:1.61}
+    Street Cleaner, {x:3.32, y:7.16, z:3.90}
+    Bus, {x:4.75, y:19.09, z:5.15}
+    Barrel No Lid, {x:0.78, y:0.74, z:1.14}
+    Turret 01, {x:1.44, y:3.21, z:1.17}
+    RockPillars 01, {x:3.25, y:3.06, z:3.23}
+    PapyrusDesk 01, {x:0.66, y:0.75, z:1.26}
+    Plant 03, {x:0.26, y:0.79, z:0.29}
+    Armchair D, {x:1.60, y:1.22, z:1.15}
+    StoneSlabMedium 01, {x:1.98, y:0.99, z:0.03}
+    Log White, {x:1.00, y:1.00, z:1.00}
+    Logs 2, {x:2.14, y:0.83, z:0.62}
+    PurpleFloor Small, {x:2.00, y:2.00, z:0.01}
+    Road Straight, {x:2.00, y:2.06, z:0.04}
+    StonePathCurveBroken 01, {x:2.00, y:2.00, z:0.06}
+    OvenSmith 01, {x:4.24, y:2.97, z:1.44}
+    Smoker, {x:1.70, y:0.93, z:2.05}
+    Ship 01, {x:5.39, y:17.99, z:13.63}
+    FloorBaseWood 01, {x:16.00, y:16.00, z:0.02}
+    BlackRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    Glass, {x:1.00, y:1.00, z:1.00}
+    PinkRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    Tree Forest Green 01, {x:7.95, y:6.44, z:9.58}
+    Manhole 01, {x:1.53, y:1.53, z:0.24}
+    Stones1, {x:16.00, y:16.00, z:0.02}
+    Crystal 01, {x:1.16, y:1.00, z:1.84}
+    GasCharger 01, {x:1.08, y:0.42, z:1.18}
+    Y Red, {x:0.50, y:0.08, z:0.50}
+    Axe 1, {x:0.41, y:0.12, z:1.19}
+    Rope Tool, {x:2.26, y:0.69, z:3.64}
+    Stones Dark, {x:1.00, y:1.00, z:1.00}
+    Bucket, {x:0.51, y:0.54, z:0.44}
+    PlainRedWall, {x:2.00, y:0.40, z:4.00}
+    Pedestal 01, {x:2.83, y:2.97, z:2.77}
+    PlainNavyWall, {x:2.00, y:0.40, z:4.00}
+    Glass Yellow, {x:1.00, y:1.00, z:1.00}
+    Chandelier 1, {x:0.43, y:0.24, z:0.68}
+    GreenWindowLarge, {x:2.00, y:0.40, z:4.00}
+    Grass Short, {x:1.00, y:1.00, z:1.00}
+    Shotgun 1, {x:1.56, y:0.10, z:0.25}
+    CreamCorner, {x:2.00, y:2.00, z:4.00}
+    Coco 01, {x:0.28, y:0.33, z:0.36}
+    U Blue, {x:0.50, y:0.08, z:0.50}
+    Manhole Red, {x:1.80, y:0.07, z:1.79}
+    T Blue, {x:0.50, y:0.08, z:0.50}
+    Fallen Leaves, {x:3.06, y:2.90, z:0.01}
+    Wood Plank Floor 4x4M, {x:4.00, y:4.00, z:0.14}
+    Vertical Sign 02, {x:0.49, y:0.04, z:3.32}
+    Door Pirates, {x:0.00, y:0.00, z:0.00}
+    MetalFloor Small, {x:2.00, y:2.00, z:0.01}
+    House 7 M Yellow, {x:7.53, y:9.40, z:7.87}
+    Binoculars 01, {x:0.11, y:0.76, z:0.12}
+    HWN20 Spider Net 02, {x:0.65, y:0.35, z:0.54}
+    Deck 8M V01, {x:8.00, y:2.00, z:0.70}
+    Solid Yellow, {x:1.00, y:1.00, z:1.00}
+    House 6 M Blue, {x:6.29, y:9.27, z:9.13}
+    PinkCorner, {x:2.00, y:2.00, z:4.00}
+    Outdoor Box Lamp 2, {x:0.56, y:0.51, z:0.95}
+    Dirt Pebbles, {x:1.00, y:1.00, z:1.00}
+    MetalBoltsWindow, {x:2.00, y:0.40, z:4.00}
+    Teleporter 01, {x:2.90, y:2.90, z:0.45}
+    LimeRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    BlackFloor, {x:4.00, y:4.00, z:0.01}
+    Tree Forest Turquoise 04, {x:4.26, y:3.92, z:7.90}
+    Coffin, {x:0.73, y:2.16, z:0.46}
+    PinkRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    Logs 3, {x:1.17, y:0.81, z:0.62}
+    Deck L, {x:7.56, y:8.05, z:1.75}
+    Vertical Platform Scifi Alt, {x:2.61, y:2.61, z:0.47}
+    PurpleArmchair, {x:1.50, y:1.00, z:1.23}
+    Plant 02, {x:0.88, y:1.23, z:0.92}
+    Stalagmite 01, {x:0.46, y:0.43, z:1.24}
+    BlackRoof Small, {x:2.00, y:2.00, z:0.20}
+    Cigarettes, {x:0.26, y:0.29, z:0.03}
+    Gazebo, {x:0.00, y:0.00, z:0.00}
+    BeachWindow, {x:2.00, y:0.40, z:4.00}
+    OrangeRoof Corner, {x:4.00, y:4.00, z:0.70}
+    HWN20 Grave 10, {x:1.22, y:1.34, z:2.42}
+    Poster5, {x:1.00, y:0.03, z:0.62}
+    Stone Moss, {x:1.00, y:1.00, z:1.00}
+    HWN20 PumpkinLeaf, {x:0.33, y:0.13, z:0.48}
+    OrangeRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    OxygenWall 01, {x:1.89, y:0.69, z:1.92}
+    HWN20 Grave 04, {x:0.99, y:0.46, z:1.74}
+    Brick Broken Concrete, {x:1.00, y:1.00, z:1.00}
+    Deck 2M, {x:2.00, y:0.93, z:0.71}
+    Deck 6M V08, {x:6.00, y:2.01, z:4.74}
+    Solid Light Blue, {x:1.00, y:1.00, z:1.00}
+    HWN20 CrowTrio, {x:0.81, y:0.88, z:0.39}
+    Pipe B, {x:4.31, y:0.86, z:3.43}
+    FenceStoneLarge 01, {x:0.32, y:5.06, z:1.10}
+    Bottle 12, {x:0.26, y:0.30, z:0.48}
+    Bottle 06, {x:0.22, y:0.22, z:0.29}
+    Wall Stone Medium, {x:3.00, y:0.30, z:1.00}
+    PlantSF 02, {x:0.51, y:0.45, z:1.78}
+    Floor Tiles 2M 02, {x:2.00, y:2.00, z:0.06}
+    Manhole Green, {x:1.80, y:0.07, z:1.79}
+    Arcade Machine Blue, {x:1.39, y:1.61, z:2.63}
+    CyberPunkWall, {x:2.00, y:0.34, z:4.00}
+    Candle 01, {x:0.51, y:0.44, z:0.45}
+    Neon DCL Sign, {x:0.68, y:0.02, z:0.74}
+    Chess Tile, {x:1.00, y:1.00, z:1.00}
+    PinkRoof Small, {x:2.00, y:2.00, z:0.20}
+    HWN20 Pumpkin 03, {x:0.77, y:0.69, z:0.68}
+    Stove 01, {x:0.79, y:0.83, z:1.73}
+    FloorSciFiPanel 01, {x:2.00, y:2.00, z:0.01}
+    FloorFantasyRocks 04, {x:16.00, y:16.00, z:0.02}
+    HexagonFloor Small, {x:2.00, y:2.00, z:0.02}
+    Papyrus 01, {x:0.11, y:0.57, z:0.12}
+    TreeHouse 01, {x:5.56, y:3.17, z:4.95}
+    LightBlock 03, {x:0.42, y:1.25, z:0.13}
+    FenceSticksEnd 01, {x:0.11, y:0.11, z:0.99}
+    Lantern 01, {x:0.34, y:0.34, z:0.58}
+    OrangeRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    Spotlight, {x:2.00, y:2.00, z:29.80}
+    M Red, {x:0.50, y:0.08, z:0.50}
+    OrangeRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    CorrugatedMetalCorner, {x:2.04, y:2.04, z:4.00}
+    LimeRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    OrangeRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    OrangeFloor, {x:4.00, y:4.00, z:0.01}
+    Mines Car Track Ramp 3M, {x:1.09, y:3.00, z:0.09}
+    Table 2, {x:1.21, y:2.47, z:0.97}
+    Cannonball 01, {x:0.34, y:0.35, z:0.35}
+    LightCorner 03, {x:1.25, y:1.25, z:0.15}
+    K Blue, {x:0.50, y:0.08, z:0.50}
+    Dock Straight 01, {x:3.00, y:3.00, z:0.36}
+    J Blue, {x:0.50, y:0.08, z:0.50}
+    ModernStool, {x:0.55, y:0.55, z:1.14}
+    TwoColouredWindow, {x:2.00, y:0.40, z:4.00}
+    WarmGridFloor Small, {x:2.00, y:2.00, z:0.02}
+    ConcreteFloor, {x:4.00, y:4.00, z:0.01}
+    Chest Box 01, {x:1.32, y:0.83, z:0.47}
+    PlantSF 12, {x:1.31, y:0.92, z:2.27}
+    Trash Can, {x:0.83, y:0.83, z:1.13}
+    CreamCushion, {x:0.63, y:0.13, z:0.63}
+    TreePine 01, {x:3.26, y:3.32, z:5.71}
+    Floor Tiles 2M 06, {x:2.00, y:2.00, z:0.06}
+    PlantSF 06, {x:1.18, y:1.32, z:0.76}
+    Mines Cart Coal, {x:0.84, y:1.28, z:1.14}
+    Fountain 02, {x:4.05, y:4.05, z:3.71}
+    Gear 8 Teeth, {x:1.93, y:1.93, z:0.50}
+    GlassCorner, {x:2.00, y:2.00, z:4.00}
+    LightCylinder 03, {x:0.62, y:0.62, z:0.75}
+    Deck 3M, {x:3.00, y:2.00, z:0.71}
+    PlantWindow, {x:2.00, y:0.40, z:4.00}
+    Vegetation Light Flowers, {x:1.00, y:1.00, z:1.00}
+    Barrel, {x:1.15, y:0.86, z:1.54}
+    Vitrola, {x:0.99, y:0.87, z:1.36}
+    CardboardBox 02, {x:0.96, y:0.96, z:0.96}
+    Raft 01, {x:3.93, y:3.77, z:4.51}
+    TreeFir 01, {x:2.14, y:4.94, z:2.16}
+    Bottle 02, {x:0.22, y:0.22, z:0.47}
+    RockLargeMoss 01, {x:1.92, y:1.57, z:4.02}
+    YellowRoof Small, {x:2.00, y:2.00, z:0.20}
+    GreyFloor Small, {x:2.00, y:2.00, z:0.01}
+    Window 2x4 V2 Frame, {x:1.42, y:0.36, z:2.05}
+    Mines Car Track Fork, {x:4.19, y:6.00, z:0.09}
+    Cactus 01, {x:0.51, y:1.79, z:1.03}
+    HWN20 Grave 28, {x:1.48, y:1.70, z:4.26}
+    Play, {x:0.45, y:0.07, z:0.42}
+    Poster1, {x:1.00, y:0.00, z:1.08}
+    NeonLight 01, {x:2.00, y:0.65, z:0.20}
+    HWN20 Grave 14, {x:0.99, y:2.20, z:1.59}
+    Cauldron 01, {x:0.47, y:0.55, z:0.59}
+    RoofVent 01, {x:0.83, y:0.83, z:1.08}
+    Deck Stairs, {x:1.73, y:7.61, z:4.74}
+    DecentralandLogo 01, {x:0.06, y:1.62, z:1.63}
+    Fence Stone Block 02, {x:0.21, y:0.21, z:0.55}
+    Horizontal Flying Taxi Available, {x:2.80, y:4.98, z:2.47}
+    Milk 1, {x:0.35, y:0.35, z:0.72}
+    Plant 06, {x:0.64, y:0.36, z:0.63}
+    Armchair A, {x:1.60, y:1.22, z:1.15}
+    X Red, {x:0.50, y:0.08, z:0.50}
+    GreenFloor, {x:4.00, y:4.00, z:0.01}
+    FloorBaseGrass 02, {x:16.00, y:16.00, z:0.02}
+    Crystal 04, {x:0.74, y:0.73, z:1.45}
+    HexagonGridWindow, {x:2.00, y:0.40, z:4.00}
+    Tree Forest Green 04, {x:4.26, y:3.92, z:7.90}
+    House 8 M Green, {x:8.86, y:9.39, z:9.13}
+    HWN20 Flower 01, {x:0.09, y:0.10, z:0.27}
+    ChineseLampRopeMedium 01, {x:3.00, y:0.09, z:0.37}
+    GreenRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    StonePath 03, {x:1.99, y:0.99, z:0.06}
+    Box, {x:0.63, y:0.43, z:0.29}
+    Horizontal Spaceship Orange, {x:3.51, y:5.06, z:1.87}
+    Big Table, {x:0.00, y:0.00, z:0.00}
+    Pebbles Yellow, {x:1.00, y:1.00, z:1.00}
+    Raft, {x:3.93, y:3.77, z:4.51}
+    ArrowBoardDoorframe, {x:2.00, y:0.36, z:4.00}
+    ThreeSeater Couch, {x:3.34, y:1.48, z:1.48}
+    Arthur Sword, {x:2.33, y:0.49, z:0.14}
+    Module Stair Stones 1M, {x:1.00, y:1.05, z:0.43}
+    Satellite 01, {x:1.26, y:3.75, z:2.69}
+    HWN20 ScaryTree 01, {x:4.63, y:3.71, z:4.61}
+    Window 2x4 V2 B Open, {x:1.42, y:0.36, z:2.05}
+    StonePath 02, {x:1.99, y:1.00, z:0.06}
+    CreamRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    Road Cobble T, {x:6.00, y:4.00, z:0.04}
+    RedRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    FireHydrant 01, {x:0.59, y:1.26, z:0.59}
+    Mines Car Track Curve, {x:4.17, y:4.17, z:0.09}
+    Red Chopsticks, {x:0.19, y:0.28, z:0.10}
+    Crystal 05, {x:0.48, y:0.41, z:1.36}
+    Chairwood 01, {x:0.61, y:0.62, z:0.52}
+    Brick White, {x:1.00, y:1.00, z:1.00}
+    BlackCorner, {x:2.00, y:2.00, z:4.00}
+    Drumm Chair, {x:0.53, y:0.52, z:0.81}
+    Plant 07, {x:0.09, y:0.87, z:0.55}
+    RockSmallMoss 01, {x:0.87, y:0.66, z:0.34}
+    HWN20 SkullChain 02, {x:0.39, y:0.37, z:1.58}
+    Garland Curve Blue Purple, {x:15.03, y:0.59, z:1.08}
+    Stalagmite 04, {x:0.71, y:0.68, z:1.65}
+    BeigeFloor Small, {x:2.00, y:2.00, z:0.01}
+    Gear Table, {x:1.74, y:1.77, z:1.14}
+    Mushroom 01, {x:0.21, y:0.22, z:0.20}
+    Unicorn Statue, {x:4.29, y:3.71, z:4.31}
+    Tree Forest Turquoise 01, {x:7.95, y:6.44, z:9.58}
+    Fence Stone Block 03, {x:0.21, y:0.21, z:0.98}
+    Rover 02, {x:4.83, y:4.83, z:5.26}
+    Seats 01, {x:3.60, y:1.01, z:1.04}
+    Horizontal Platform Scifi, {x:2.04, y:2.04, z:0.49}
+    HWN20 Grave 15, {x:0.99, y:0.46, z:1.44}
+    HWN20 Grave 01, {x:0.99, y:0.46, z:1.61}
+    CaseSciFi 01, {x:0.72, y:0.31, z:0.71}
+    HWN20 CoffinTop, {x:1.23, y:3.44, z:0.33}
+    Dirty Pillow, {x:1.22, y:1.65, z:1.09}
+    HWN20 Grave 29, {x:0.99, y:1.88, z:0.98}
+    NavyRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    Mines Cart Empty, {x:0.84, y:1.28, z:1.04}
+    PillarDog 01, {x:1.96, y:2.76, z:1.53}
+    Bottle 03, {x:0.42, y:0.42, z:0.53}
+    WoodFloor Small, {x:2.00, y:2.00, z:0.01}
+    FenceStoneSmall 01, {x:0.32, y:1.00, z:1.10}
+    Horizontal Spaceship Blue, {x:3.51, y:5.06, z:1.87}
+    PurpleRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    Street Light Small, {x:0.39, y:0.39, z:1.98}
+    Stone Magic 01, {x:2.57, y:2.36, z:2.45}
+    LightCylinder 02, {x:0.62, y:0.62, z:0.75}
+    Candle 04, {x:0.28, y:0.28, z:0.53}
+    Fountain 03, {x:4.48, y:4.48, z:3.02}
+    Glass Opaque Orange, {x:1.00, y:1.00, z:1.00}
+    PlantSF 07, {x:0.26, y:0.37, z:1.31}
+    HWN20 IronEntranceArch 02, {x:0.22, y:3.48, z:9.21}
+    PlantSF 13, {x:0.76, y:0.72, z:1.01}
+    Road Angle, {x:2.00, y:2.00, z:0.04}
+    PinkRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    WheelBarrow 01, {x:2.89, y:1.59, z:1.30}
+    FloorSciFiPanel 04, {x:2.00, y:2.00, z:0.01}
+    FloorFantasyRocks 01, {x:16.00, y:16.00, z:0.02}
+    Pond 01, {x:4.79, y:5.37, z:0.76}
+    Explore, {x:0.93, y:0.07, z:0.47}
+    FancyWindow, {x:2.00, y:0.40, z:4.00}
+    Big Tube Emissive, {x:9.02, y:9.64, z:14.32}
+    HWN20 Pumpkin 06, {x:0.73, y:0.72, z:0.59}
+    Table 3, {x:1.94, y:1.94, z:1.00}
+    LightCorner 02, {x:1.25, y:1.25, z:0.15}
+    SurfBoard 01, {x:0.37, y:2.80, z:0.86}
+    ConsoleSofaB, {x:3.84, y:2.63, z:0.87}
+    TreeRoundPine 01, {x:3.10, y:4.48, z:3.09}
+    PaintBucket 01, {x:0.58, y:0.60, z:0.52}
+    PlainPinkWall, {x:2.00, y:0.40, z:4.00}
+    MagnoliaFloor, {x:4.00, y:4.00, z:0.01}
+    HorizontalBoardWindow, {x:2.00, y:0.40, z:4.00}
+    ConsoleStool, {x:0.81, y:0.81, z:0.60}
+    Stone Emerald, {x:1.00, y:1.00, z:1.00}
+    SpaceRoom 01, {x:4.73, y:7.16, z:3.79}
+    GreenBoardsCorner, {x:2.03, y:2.03, z:4.00}
+    Red Scifi Button, {x:0.28, y:0.28, z:0.08}
+    Floor Wood Curve 02 4M, {x:4.04, y:3.41, z:0.05}
+    SandPatchSmall 01, {x:1.64, y:1.25, z:0.56}
+    Table 1, {x:0.81, y:2.26, z:0.95}
+    Cannonball 02, {x:0.96, y:0.85, z:0.63}
+    Brick Dark, {x:1.00, y:1.00, z:1.00}
+    PinkBoardsCorner, {x:2.03, y:2.03, z:4.00}
+    FencePicketWhiteDoor 01, {x:0.06, y:1.81, z:1.76}
+    TreeRoundPine 03, {x:3.10, y:4.48, z:3.09}
+    Mines Car Track 3M Jiggle, {x:1.38, y:3.00, z:0.09}
+    HWN20 Pumpkin 04, {x:0.56, y:0.50, z:0.44}
+    WoodRoundTable 01, {x:2.21, y:2.32, z:0.77}
+    Cracked Stones, {x:16.00, y:16.00, z:0.02}
+    Q Red, {x:0.50, y:0.08, z:0.50}
+    HWN20 VioletGhost, {x:0.14, y:0.77, z:1.02}
+    Chest Box 02, {x:0.70, y:0.50, z:0.42}
+    FloorFantasyRocks 03, {x:16.00, y:16.00, z:0.02}
+    ContainerSmall 01, {x:0.19, y:0.19, z:0.31}
+    TreePine 02, {x:3.26, y:3.32, z:5.71}
+    PinkRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    Floor Tiles 2M 05, {x:2.00, y:2.00, z:0.05}
+    PlantSF 05, {x:0.74, y:1.02, z:1.53}
+    PlantSF 11, {x:0.65, y:0.64, z:1.04}
+    WoodSpike 01, {x:0.49, y:0.43, z:2.04}
+    GreenRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    GreenRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    Tank, {x:1.85, y:1.80, z:3.48}
+    Fountain 01, {x:4.41, y:4.41, z:3.91}
+    KeyboardSciFi 01, {x:0.33, y:0.48, z:1.18}
+    House 6 M Yellow, {x:6.29, y:9.38, z:8.00}
+    BeigeWindow, {x:2.00, y:0.40, z:4.00}
+    Rope 1, {x:1.57, y:1.22, z:0.19}
+    Pipe Screen Emissive, {x:0.72, y:3.42, z:1.38}
+    Gear 5 Teeth, {x:1.29, y:1.35, z:0.59}
+    OrangeRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    LimeRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    Mines Model Entry, {x:10.65, y:6.71, z:4.85}
+    AncientEgiptianWall, {x:2.00, y:0.39, z:4.00}
+    Tree Lamp 01, {x:2.37, y:3.72, z:5.71}
+    Building Decor 03, {x:1.03, y:4.03, z:0.42}
+    CardboardBox 01, {x:0.84, y:1.38, z:0.62}
+    Bottle 01, {x:0.19, y:0.19, z:0.19}
+    TreeFir 02, {x:2.24, y:5.00, z:2.16}
+    Pebbles Golden, {x:1.00, y:1.00, z:1.00}
+    Tree Fence, {x:2.29, y:2.35, z:0.48}
+    SandPatchMedium 01, {x:2.64, y:2.73, z:0.70}
+    StreetClock 01, {x:0.84, y:0.86, z:2.91}
+    D Red, {x:0.50, y:0.08, z:0.50}
+    Teal Fantasy Button, {x:0.45, y:0.45, z:0.08}
+    HWN20 Grave 17, {x:0.99, y:0.46, z:1.82}
+    Poster2, {x:1.00, y:0.02, z:0.63}
+    NeonLight 02, {x:0.84, y:0.84, z:0.07}
+    Glass Black, {x:1.00, y:1.00, z:1.00}
+    HWN20 Grave 03, {x:1.46, y:0.46, z:1.40}
+    Fence Stone Block 01, {x:0.22, y:0.22, z:0.36}
+    Tree Forest Turquoise 03, {x:14.35, y:10.48, z:12.19}
+    Genesis Map, {x:0.25, y:3.09, z:1.90}
+    Welcome, {x:0.98, y:0.07, z:0.47}
+    Flying Taxi Occupied, {x:2.78, y:4.97, z:2.47}
+    BlackRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    StoneFloor Small, {x:2.00, y:2.00, z:0.01}
+    Bookshelf, {x:1.00, y:1.00, z:1.00}
+    Concre Tile 02, {x:1.00, y:1.00, z:1.00}
+    FloorBaseGrass 01, {x:16.00, y:16.00, z:0.02}
+    Black Oil Barrel, {x:0.78, y:0.78, z:1.17}
+    Plant 05, {x:0.26, y:1.42, z:0.31}
+    Armchair B, {x:1.40, y:1.28, z:1.48}
+    Milk 2, {x:0.28, y:0.29, z:0.60}
+    A Blue, {x:0.50, y:0.08, z:0.50}
+    Control Panel, {x:0.81, y:0.81, z:0.06}
+    MetalRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    BeerMug 01, {x:0.25, y:0.20, z:0.27}
+    Door Fantasy, {x:1.68, y:0.48, z:3.27}
+    Box Medium, {x:0.74, y:0.67, z:0.45}
+    HWN20 Flower 02, {x:0.19, y:0.26, z:0.30}
+    DarkGreyDoorframe, {x:2.00, y:0.30, z:4.00}
+    Crown 01, {x:0.43, y:0.43, z:0.21}
+    ArrowDoorframe, {x:2.00, y:0.38, z:4.00}
+    ChineseStatueLion 01, {x:1.34, y:1.89, z:3.03}
+    HWN20 ScaryTree 03, {x:2.82, y:2.45, z:4.92}
+    Cardboard Box Closed, {x:0.70, y:0.70, z:0.70}
+    WineBottle 01, {x:0.23, y:0.23, z:0.61}
+    Sand 02, {x:1.00, y:1.00, z:1.00}
+    Column Wood 1M, {x:1.02, y:0.27, z:0.27}
+    Window 1x2 Glass Panel, {x:0.51, y:0.11, z:1.41}
+    Gold, {x:1.00, y:1.00, z:1.00}
+    Hot Dog, {x:0.38, y:0.23, z:0.14}
+    Tin Can Black, {x:0.14, y:0.14, z:0.24}
+    Stone Trap Door, {x:1.86, y:0.00, z:0.94}
+    Big Tube, {x:9.02, y:9.64, z:14.32}
+    Sand 03, {x:1.00, y:1.00, z:1.00}
+    StonePath 01, {x:1.99, y:0.99, z:0.06}
+    Diamond Pattern Yellow, {x:1.00, y:1.00, z:1.00}
+    HWN20 ScaryTree 02, {x:3.31, y:3.61, z:4.89}
+    ChineseLampRopeSmall 01, {x:1.00, y:0.09, z:0.37}
+    TempleMoon 01, {x:6.24, y:3.81, z:4.99}
+    Log Large 01, {x:5.00, y:0.52, z:0.50}
+    GreenGreyCorner, {x:2.00, y:2.00, z:4.00}
+    Pipe Long B, {x:0.70, y:0.52, z:2.56}
+    DarkGreyFloor, {x:4.00, y:4.00, z:0.01}
+    PinkCushion, {x:0.63, y:0.13, z:0.63}
+    Outdoor Box Lamp 4, {x:0.58, y:0.83, z:1.26}
+    Deck 8M V1, {x:8.26, y:2.00, z:0.70}
+    Chairwood 02, {x:0.57, y:0.54, z:0.52}
+    PeachCushion, {x:0.63, y:0.13, z:0.63}
+    NavyRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    PeachWindow, {x:2.00, y:0.40, z:4.00}
+    HWN20 SkullChain 01, {x:0.36, y:0.39, z:2.71}
+    Chest Top Gold 01, {x:1.70, y:1.08, z:0.61}
+    FloatingStairs, {x:2.00, y:4.02, z:3.76}
+    VegetablesBox 01, {x:1.20, y:0.62, z:0.33}
+    Armchair C, {x:1.40, y:1.28, z:1.48}
+    Plant 04, {x:0.52, y:1.39, z:0.85}
+    Drinks Dispenser Black, {x:1.39, y:0.49, z:0.98}
+    HWN20 FenceWood, {x:0.22, y:2.34, z:1.11}
+    Rover 01, {x:3.03, y:3.84, z:2.57}
+    Mushroom 02, {x:0.23, y:0.33, z:0.24}
+    RedRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    Tree Forest Turquoise 02, {x:8.63, y:6.88, z:8.58}
+    ButtonPanel 01, {x:0.33, y:0.33, z:1.14}
+    PurpleTileRoof, {x:4.04, y:4.43, z:1.40}
+    HighBackChair, {x:0.63, y:0.63, z:1.42}
+    HWN20 Grave 02, {x:1.47, y:0.52, z:1.15}
+    Helipad, {x:19.23, y:19.73, z:3.58}
+    HWN20 Grave 16, {x:0.99, y:0.46, z:1.58}
+    BonesSkull 01, {x:0.46, y:0.59, z:0.45}
+    Module Stair Straight 3M, {x:3.00, y:1.00, z:0.50}
+    Poster3, {x:1.00, y:0.00, z:0.60}
+    FenceStoneSmall 02, {x:0.27, y:1.06, z:1.10}
+    Building Decor 02, {x:0.00, y:0.00, z:0.00}
+    TreeFir 03, {x:2.29, y:4.92, z:2.16}
+    PebbleFloor, {x:4.00, y:4.00, z:0.01}
+    Helicopter Red, {x:10.15, y:14.31, z:3.75}
+    HangingStructure 01, {x:1.19, y:1.05, z:2.33}
+    FireStructure 01, {x:1.47, y:1.26, z:0.59}
+    Stone Module 2M, {x:2.00, y:2.00, z:0.05}
+    FenceStoneTallLarge 01, {x:0.32, y:5.00, z:1.83}
+    NavyCorner, {x:2.00, y:2.00, z:4.00}
+    LightCylinder 01, {x:0.62, y:0.62, z:0.75}
+    Horizontal Flying Taxi Occupied, {x:2.78, y:4.97, z:2.47}
+    Lever Pirates, {x:0.15, y:0.13, z:1.17}
+    NavyDoorframe, {x:2.00, y:0.30, z:4.00}
+    Stone Magic 02, {x:3.59, y:4.05, z:2.12}
+    Mushroom Brown, {x:1.00, y:1.00, z:1.00}
+    Wheelbarrow 02, {x:2.45, y:1.05, z:1.01}
+    HWN20 IronEntranceArch 01, {x:0.20, y:3.09, z:9.21}
+    OrangeCushion, {x:0.63, y:0.13, z:0.63}
+    PlantSF 10, {x:0.54, y:0.47, z:1.68}
+    PlantSF 04, {x:1.16, y:0.86, z:0.90}
+    Floor Tiles 2M 04, {x:2.00, y:2.00, z:0.06}
+    GeckoStone 01, {x:0.58, y:1.04, z:1.16}
+    TreePine 03, {x:3.26, y:3.32, z:5.71}
+    Window 4x4 V3 Open, {x:2.79, y:0.95, z:2.28}
+    Pond 02, {x:4.84, y:7.43, z:1.04}
+    FloorFantasyRocks 02, {x:16.00, y:16.00, z:0.02}
+    Window 4x4 V2 Open, {x:2.79, y:0.95, z:2.06}
+    IceCreamTruck 01, {x:2.51, y:1.49, z:2.36}
+    HWN20 Pumpkin 05, {x:0.62, y:0.59, z:0.58}
+    Stone Iron, {x:1.00, y:1.00, z:1.00}
+    PlainWhiteFloor Small, {x:2.00, y:2.00, z:0.01}
+    Gear Angled 10 Teeth, {x:2.49, y:2.46, z:0.53}
+    Cart Medium, {x:1.80, y:4.56, z:1.96}
+    TreeRoundPine 02, {x:3.10, y:4.48, z:3.09}
+    Shield 01, {x:0.79, y:0.14, z:0.79}
+    Road T Short, {x:4.00, y:3.05, z:0.04}
+    Lamp, {x:0.79, y:0.74, z:4.00}
+    LightCorner 01, {x:1.25, y:1.25, z:0.15}
+    Cannonball 03, {x:1.32, y:0.67, z:0.50}
+    AirVent Straight Short 01, {x:2.02, y:1.04, z:1.04}
+    Chopsticks, {x:0.27, y:0.12, z:0.10}
+    BonesSmall 01, {x:0.19, y:0.74, z:0.09}
+    House 7 M Brown, {x:7.53, y:9.40, z:7.24}
+    PinkRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    Crater 02, {x:2.72, y:2.62, z:1.09}
+    Pillar Cylinder 03, {x:0.78, y:0.78, z:4.01}
+    Tree Dead 04, {x:7.40, y:3.60, z:7.55}
+    MetalRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    Fence Wood V4 2, {x:3.07, y:0.11, z:1.41}
+    HexagonGridDoorframe, {x:2.00, y:0.33, z:4.00}
+    Food Lids Sushi, {x:0.20, y:0.14, z:0.26}
+    MetalRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    Tree Leafs 01, {x:7.68, y:7.46, z:8.60}
+    FenceSticksLarge 01, {x:0.11, y:5.08, z:0.99}
+    HWN20 IronfFence 03, {x:0.16, y:2.74, z:4.04}
+    Lever Scifi, {x:0.73, y:0.93, z:0.27}
+    GreyRoof Corner, {x:4.00, y:4.00, z:0.70}
+    Solid Green Pattern, {x:1.00, y:1.00, z:1.00}
+    Furnace 6 Pipe, {x:1.04, y:0.41, z:1.05}
+    Pipe Short, {x:0.48, y:0.48, z:0.91}
+    PlantSF 09, {x:0.81, y:0.84, z:0.75}
+    Cactus 1, {x:2.30, y:1.83, z:4.24}
+    Glass Violet, {x:1.00, y:1.00, z:1.00}
+    RockArc 02, {x:11.57, y:2.82, z:7.54}
+    Book 02, {x:0.38, y:0.47, z:0.14}
+    ChineseLantern 05, {x:0.25, y:0.25, z:0.62}
+    Cart Small 1, {x:1.37, y:3.23, z:1.38}
+    Deck 7M V03, {x:7.00, y:2.20, z:3.72}
+    Glowing Stone 03, {x:0.19, y:0.18, z:0.22}
+    Table Wood 01, {x:3.41, y:1.77, z:0.99}
+    Cart Big Closed, {x:2.86, y:7.03, z:3.98}
+    Deck 6M V03, {x:6.01, y:2.20, z:3.71}
+    Rock 02, {x:1.32, y:1.64, z:2.49}
+    Window 4x4 Frame, {x:2.06, y:0.17, z:1.90}
+    Grass Module 4M, {x:4.00, y:4.00, z:0.08}
+    TubePiece 03, {x:2.27, y:0.43, z:1.11}
+    HWN20 Grave 33, {x:0.99, y:2.11, z:1.35}
+    FancyWall, {x:2.00, y:0.51, z:4.00}
+    HWN20 Grave 27, {x:1.14, y:1.36, z:1.65}
+    Stone 01, {x:2.33, y:2.41, z:1.56}
+    Wall Brick Red, {x:2.50, y:0.48, z:5.00}
+    Computer 01, {x:0.86, y:0.68, z:1.65}
+    WoodFloor, {x:4.00, y:4.00, z:0.01}
+    Pixel Critter F, {x:1.47, y:0.08, z:1.79}
+    FenceStoneMedium 02, {x:0.27, y:3.06, z:1.10}
+    RedRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    WoodenBoardCorner, {x:2.03, y:2.03, z:4.00}
+    Fence Stone 3M, {x:3.11, y:0.34, z:1.14}
+    Vase 1, {x:0.37, y:0.37, z:0.51}
+    Buy, {x:0.46, y:0.07, z:0.44}
+    PurpleRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    Store 02, {x:2.71, y:3.40, z:2.74}
+    Comet 03, {x:4.15, y:2.18, z:2.13}
+    HWN20 GreenGhost, {x:0.12, y:0.85, z:0.83}
+    Well Bucket, {x:0.46, y:0.48, z:0.67}
+    DiagonalBoardWindow, {x:2.00, y:0.40, z:4.00}
+    Mines Car Track Half Curve, {x:2.19, y:3.25, z:0.09}
+    BeigeRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    Dirt Snow, {x:1.00, y:1.00, z:1.00}
+    Tree Forest Pink 01, {x:7.95, y:6.44, z:9.58}
+    Cable 2M 02, {x:1.11, y:2.00, z:0.12}
+    Neon Curve Red, {x:0.17, y:0.08, z:0.76}
+    OpenChestTop 01, {x:1.47, y:0.68, z:0.33}
+    Mines Runway 3M V2, {x:1.09, y:2.99, z:0.11}
+    WoodBigChair 01, {x:0.73, y:0.70, z:1.57}
+    FenceWoodDoor 01, {x:0.22, y:1.21, z:0.96}
+    Knife 01, {x:0.05, y:0.40, z:0.02}
+    HWN20 Column 01, {x:0.81, y:0.81, z:2.85}
+    Window 2x2 Open V2, {x:1.15, y:1.00, z:1.65}
+    BlueRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    ChineseFountain 02, {x:0.73, y:0.73, z:1.83}
+    Decentral, {x:1.45, y:0.07, z:0.47}
+    ChineseFountain 03, {x:0.41, y:0.41, z:1.97}
+    Bench 1, {x:1.95, y:0.60, z:1.08}
+    BeigeRoof Corner, {x:4.00, y:4.00, z:0.70}
+    FenceWoodSmall 01, {x:0.17, y:1.00, z:2.01}
+    FenceWoodMedium 01, {x:0.17, y:3.00, z:2.08}
+    TurretBase 02, {x:3.18, y:3.18, z:1.50}
+    Furnit Bar 2 3M, {x:2.96, y:0.42, z:1.63}
+    Sign 01, {x:0.38, y:2.12, z:1.23}
+    TrainTrack Straight 01, {x:1.60, y:2.00, z:0.06}
+    T Red, {x:0.50, y:0.08, z:0.50}
+    NavyRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    Cable 2M 03, {x:0.27, y:2.00, z:0.12}
+    Mines Runway 3M V3, {x:1.09, y:3.03, z:1.10}
+    Camera 01, {x:0.22, y:0.96, z:0.31}
+    House 7 M Gray, {x:7.53, y:9.39, z:9.88}
+    Mines Tunel Curve Half, {x:4.58, y:5.86, z:3.42}
+    Comet 02, {x:1.02, y:0.97, z:0.81}
+    Pillar Top Stones Corner 01, {x:2.99, y:3.00, z:1.63}
+    AirVent Straight Long 01, {x:4.02, y:1.04, z:1.04}
+    Pipes C, {x:3.88, y:3.79, z:3.01}
+    Store 03, {x:1.54, y:2.74, z:2.52}
+    Module Stone Straight Window 02, {x:4.00, y:0.85, z:4.00}
+    TurquoiseCorner, {x:2.00, y:2.00, z:4.00}
+    BicycleParking 01, {x:0.86, y:2.42, z:0.43}
+    Garland, {x:15.03, y:0.38, z:0.39}
+    Q Blue, {x:0.50, y:0.08, z:0.50}
+    Brick Light Tile, {x:1.00, y:1.00, z:1.00}
+    Suitcase 01, {x:0.20, y:0.98, z:0.58}
+    CoinMana 01, {x:0.83, y:0.72, z:0.05}
+    FenceWood End 01, {x:0.27, y:0.27, z:1.11}
+    P Blue, {x:0.50, y:0.08, z:0.50}
+    HWN20 Grave 26, {x:1.09, y:1.29, z:2.07}
+    Pipe Holder, {x:0.91, y:0.26, z:0.73}
+    RockMedium 01, {x:1.32, y:1.21, z:0.60}
+    TubePiece 02, {x:3.87, y:0.61, z:1.10}
+    HWN20 Grave 32, {x:0.99, y:2.10, z:1.57}
+    Wood Plank, {x:1.00, y:1.00, z:1.00}
+    Rock 03, {x:2.55, y:1.06, z:1.03}
+    Stone Module 1M, {x:1.00, y:1.00, z:0.05}
+    ArrowBoardWall, {x:2.00, y:0.36, z:4.00}
+    Tree Forest Blue 01, {x:7.95, y:6.44, z:9.58}
+    Bike Rack, {x:5.07, y:1.95, z:0.90}
+    WhiteModernArmchair, {x:1.22, y:0.98, z:1.25}
+    Glowing Stone 02, {x:0.19, y:0.18, z:0.22}
+    Deck 6M V02, {x:6.01, y:2.19, z:3.71}
+    PurpleRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    Ring Green Light, {x:2.00, y:2.00, z:0.10}
+    ChineseLantern 04, {x:0.41, y:0.41, z:0.92}
+    Book 03, {x:0.38, y:0.47, z:0.15}
+    LimeRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    PurpleRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    Deck 7M V02, {x:7.00, y:2.19, z:3.72}
+    CreamRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    MailPost 01, {x:0.68, y:1.36, z:0.85}
+    A Red, {x:0.50, y:0.08, z:0.50}
+    Lava, {x:1.00, y:1.00, z:1.00}
+    Beam Interior 1, {x:4.19, y:0.48, z:3.23}
+    Tree 6, {x:1.55, y:2.05, z:1.37}
+    PlantSF 08, {x:1.11, y:0.98, z:1.10}
+    Awning 2M, {x:2.00, y:1.37, z:0.34}
+    Solid Red Pattern, {x:1.00, y:1.00, z:1.00}
+    Neon Hanging Sign, {x:1.00, y:0.04, z:0.52}
+    DarkGreyRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    HWN20 IronfFence 02, {x:0.18, y:3.39, z:4.01}
+    Soft Drink, {x:0.17, y:0.18, z:0.32}
+    Sushi Set 1, {x:0.61, y:0.33, z:0.08}
+    CommandControl 01, {x:5.70, y:2.90, z:1.92}
+    Pillar Cylinder 02, {x:0.76, y:0.76, z:4.00}
+    Crater 03, {x:1.75, y:1.79, z:0.60}
+    Traffic Post Blue, {x:0.27, y:0.27, z:1.12}
+    FoodWatermelon 01, {x:0.69, y:0.56, z:0.54}
+    BlackRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    Coin 01, {x:0.11, y:0.11, z:0.01}
+    TNT Detonator, {x:0.42, y:0.22, z:0.72}
+    Crater 01, {x:2.80, y:2.58, z:0.56}
+    Cracked Gold, {x:16.00, y:16.00, z:0.02}
+    Tree Leafs 02, {x:3.65, y:3.78, z:3.59}
+    Taxi, {x:2.51, y:6.49, z:2.21}
+    FenceIronDoor 01, {x:0.14, y:1.90, z:1.73}
+    Fence Wood V4 1, {x:2.99, y:0.11, z:1.52}
+    TurquoiseDoorframe, {x:2.00, y:0.30, z:4.00}
+    Vertical Platform Fantasy, {x:1.11, y:1.11, z:0.84}
+    HWN20 DragonBush, {x:2.01, y:19.57, z:5.31}
+    MagnoliaCorner, {x:2.00, y:2.00, z:4.00}
+    Cactus 2, {x:2.20, y:2.05, z:3.51}
+    PlainYellowWall, {x:2.00, y:0.40, z:4.00}
+    Chest Tube, {x:1.00, y:1.00, z:1.00}
+    Beam Interior 3, {x:4.04, y:0.49, z:3.23}
+    Tree 4, {x:1.94, y:2.28, z:3.42}
+    RockArc 01, {x:12.70, y:3.23, z:7.67}
+    WallCloths Red 01, {x:4.08, y:0.75, z:1.53}
+    BlueRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    Book 01, {x:0.38, y:0.47, z:0.09}
+    ChineseLantern 06, {x:0.57, y:0.54, z:1.41}
+    Cart Small 2, {x:1.37, y:3.23, z:1.02}
+    Rock 01, {x:2.29, y:2.53, z:3.73}
+    Tree Forest Blue 03, {x:14.35, y:10.48, z:12.19}
+    GlassRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    Box Big, {x:1.02, y:0.89, z:0.72}
+    HWN20 Pennants, {x:6.14, y:0.52, z:0.88}
+    DiscSciFi 01, {x:0.36, y:0.32, z:0.06}
+    RockMedium 03, {x:1.15, y:1.58, z:0.64}
+    BeigeRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    HWN20 Grave 24, {x:1.22, y:1.34, z:1.76}
+    LEDGridWindow, {x:2.00, y:0.40, z:4.00}
+    Stone 02, {x:1.68, y:1.58, z:1.10}
+    HWN20 Grave 30, {x:0.99, y:2.06, z:1.03}
+    FenceIronEnd 01, {x:0.13, y:0.17, z:1.55}
+    Mines Wood Fence Broken, {x:3.84, y:0.58, z:2.64}
+    RedTileRoof, {x:4.04, y:4.43, z:1.39}
+    HWN20 Grave 18, {x:1.47, y:1.56, z:2.42}
+    Computer 02, {x:1.46, y:0.69, z:1.61}
+    Pixel Critter E, {x:1.63, y:0.08, z:1.79}
+    Vase 2, {x:0.36, y:0.36, z:0.33}
+    Chest Top 01, {x:1.39, y:1.08, z:0.47}
+    FenceStoneMedium 01, {x:0.32, y:3.06, z:1.10}
+    NavyRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    BeigeRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    Sofa Black, {x:3.10, y:1.25, z:1.15}
+    AcousticPanelCorner, {x:2.03, y:2.03, z:4.00}
+    CrackedPillar, {x:0.60, y:0.50, z:4.00}
+    BlueRoof Small, {x:2.00, y:2.00, z:0.20}
+    Store 01, {x:2.93, y:3.48, z:2.59}
+    RedRoof, {x:4.00, y:4.00, z:0.20}
+    PurpleRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    BeigeWindowLarge, {x:2.00, y:0.40, z:4.00}
+    Mines Tunel 8M, {x:4.21, y:8.00, z:3.47}
+    Lamp Blue, {x:0.31, y:0.96, z:0.40}
+    Lever Genesis, {x:0.65, y:0.65, z:0.65}
+    Cable 2M 01, {x:0.18, y:2.00, z:0.12}
+    Tree Forest Pink 02, {x:8.63, y:6.88, z:8.58}
+    FullWallWindow, {x:2.00, y:0.40, z:4.00}
+    Sign 03, {x:0.32, y:0.91, z:1.25}
+    Wall Brick White, {x:2.50, y:0.48, z:5.00}
+    Stone With Cow Skull, {x:2.40, y:2.34, z:0.89}
+    PeachFloor, {x:4.00, y:4.00, z:0.01}
+    WhiteRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    FuturisticCorner, {x:2.03, y:2.02, z:4.00}
+    Bench 3, {x:2.26, y:0.65, z:0.53}
+    HWN20 HandBush, {x:4.63, y:5.26, z:7.55}
+    ChineseFountain 01, {x:1.61, y:1.61, z:1.69}
+    Window 1x2 V2 Closed, {x:1.42, y:0.35, z:1.82}
+    Window 2x2 Open V1, {x:1.74, y:0.58, z:1.65}
+    HWN20 Column 02, {x:1.23, y:1.23, z:6.03}
+    PeachDoorframe, {x:2.00, y:0.30, z:4.00}
+    TurretBase 01, {x:2.78, y:2.78, z:1.29}
+    Mines Car Track 1M, {x:1.05, y:1.00, z:0.09}
+    HWN20 Column 03, {x:1.28, y:1.28, z:3.19}
+    FenceWoodMedium 02, {x:0.17, y:3.00, z:2.07}
+    FenceWoodSmall 02, {x:0.17, y:1.01, z:2.06}
+    Bananas 01, {x:0.33, y:0.37, z:0.19}
+    Bench 2, {x:0.82, y:0.56, z:0.46}
+    Dock Ramp 01, {x:3.00, y:3.00, z:1.36}
+    Solid Orange, {x:1.00, y:1.00, z:1.00}
+    ModernSofa, {x:3.76, y:1.35, z:1.35}
+    GreyRoof Small, {x:2.00, y:2.00, z:0.20}
+    Sign 02, {x:0.63, y:1.68, z:0.92}
+    Tree Forest Pink 03, {x:14.35, y:10.48, z:12.19}
+    Stones Moss, {x:1.00, y:1.00, z:1.00}
+    FenceSticksMedium 01, {x:0.11, y:3.06, z:0.99}
+    H Red, {x:0.50, y:0.08, z:0.50}
+    Comet 01, {x:1.66, y:0.89, z:1.07}
+    CrateYellowBig 01, {x:1.80, y:0.94, z:0.82}
+    Theatre 01, {x:5.12, y:9.13, z:5.36}
+    CrackedWall, {x:2.00, y:0.30, z:4.00}
+    Sewer Cover, {x:1.41, y:1.41, z:0.05}
+    Danger Scifi Button, {x:0.39, y:0.45, z:0.20}
+    Cardboard Box Open, {x:0.92, y:0.71, z:1.05}
+    Solid Dirt, {x:1.00, y:1.00, z:1.00}
+    Module Stone Straight Window 01, {x:4.00, y:0.85, z:4.00}
+    Pergola 01, {x:5.27, y:5.27, z:4.65}
+    FoodLemon 01, {x:0.15, y:0.17, z:0.21}
+    LampPost 04, {x:1.50, y:2.43, z:0.50}
+    Pixel Critter D, {x:1.63, y:0.08, z:1.79}
+    Horizontal Flying Car Black, {x:2.79, y:4.98, z:2.22}
+    HWN20 Grave 19, {x:1.09, y:1.29, z:1.67}
+    HWN20 Grave 31, {x:0.99, y:2.05, z:1.19}
+    TubePiece 01, {x:0.30, y:0.43, z:3.00}
+    RockMedium 02, {x:1.45, y:1.06, z:0.69}
+    Stone 03, {x:1.02, y:1.06, z:0.88}
+    HWN20 Grave 25, {x:1.22, y:1.34, z:1.26}
+    Motorbike Grey, {x:0.79, y:3.90, z:1.21}
+    Tree Forest Blue 02, {x:8.63, y:6.88, z:8.58}
+    Cart Big Open, {x:2.86, y:7.04, z:3.96}
+    Grass03, {x:0.36, y:0.18, z:0.62}
+    Turtle, {x:1.51, y:1.77, z:0.36}
+    Z Blue, {x:0.50, y:0.08, z:0.50}
+    LimeRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    Deck 7M V01, {x:7.00, y:2.00, z:0.70}
+    DarkGreyRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    TwoColouredWall, {x:2.00, y:0.30, z:4.00}
+    Deck 6M V01, {x:6.00, y:2.00, z:0.71}
+    TurquoiseTileWindow, {x:2.00, y:0.40, z:4.00}
+    Glowing Stone 01, {x:0.19, y:0.18, z:0.22}
+    Billboard Explore Game, {x:4.09, y:0.59, z:5.00}
+    DarkGreyRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    Tree 5, {x:2.76, y:2.35, z:1.37}
+    PlainPeachWall, {x:2.00, y:0.40, z:4.00}
+    Beam Interior 2, {x:4.02, y:0.49, z:3.23}
+    BlueFloor, {x:4.00, y:4.00, z:0.01}
+    MailPost 02, {x:0.93, y:0.32, z:1.67}
+    Stone Dirt, {x:1.00, y:1.00, z:1.00}
+    Piano, {x:2.34, y:0.91, z:2.08}
+    Cactus 3, {x:2.68, y:1.84, z:4.46}
+    FloorBasePebbles 01, {x:16.00, y:16.00, z:0.02}
+    Window 2x2 V3 Closed, {x:1.41, y:0.48, z:1.79}
+    Deck 10M, {x:10.13, y:5.49, z:4.75}
+    HWN20 IronfFence 01, {x:0.36, y:3.47, z:4.50}
+    Window 1x2 Frame, {x:1.15, y:0.16, z:1.65}
+    YellowRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    Diamond Pattern Green, {x:1.00, y:1.00, z:1.00}
+    Vertical Purple Pad, {x:2.00, y:2.00, z:0.10}
+    Tree Leafs 03, {x:7.00, y:6.72, z:6.89}
+    CreamRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    FloorBaseTiles 01, {x:16.00, y:16.00, z:0.02}
+    Sushi Set 2, {x:0.48, y:0.48, z:0.15}
+    FoodApple 01, {x:0.16, y:0.17, z:0.17}
+    AncientEgyptianWindow, {x:2.00, y:0.40, z:4.00}
+    Anvil 01, {x:1.13, y:0.70, z:0.77}
+    Hidrant, {x:0.72, y:0.72, z:1.09}
+    Pillar Cylinder 01, {x:1.32, y:1.32, z:4.00}
+    Shop Emissive, {x:6.11, y:9.10, z:4.99}
+    RedWindow, {x:2.00, y:0.40, z:4.00}
+    GreyWindowLarge, {x:2.00, y:0.40, z:4.00}
+    Tree Dead 02, {x:4.54, y:4.37, z:5.73}
+    Aston Martin, {x:2.92, y:6.71, z:1.78}
+    Dirt, {x:1.00, y:1.00, z:1.00}
+    Traffic Light B, {x:0.96, y:0.88, z:4.87}
+    ForSaleSign 01, {x:0.14, y:1.86, z:1.32}
+    Tweezers 01, {x:0.34, y:0.70, z:0.05}
+    Vertical Black Pad, {x:2.00, y:2.00, z:0.10}
+    Stone Tile 02, {x:0.61, y:0.38, z:0.04}
+    Overhead Road Sign, {x:15.11, y:1.50, z:8.15}
+    Vertical Green Pad, {x:2.00, y:2.00, z:0.10}
+    Sandbag 01, {x:1.10, y:0.78, z:0.24}
+    Manhole Yellow, {x:1.80, y:0.07, z:1.79}
+    Tree 1, {x:2.97, y:3.14, z:7.72}
+    Train Track 11 M Fork, {x:9.39, y:11.00, z:0.34}
+    Cactus 7, {x:2.03, y:1.65, z:3.17}
+    Rock 04, {x:0.70, y:0.65, z:1.55}
+    LimeRoof Small, {x:2.00, y:2.00, z:0.20}
+    TreasureCoins 01, {x:0.37, y:0.29, z:0.03}
+    Traffic Cone Blue, {x:0.53, y:0.53, z:0.55}
+    Deck 6M V05, {x:6.00, y:2.03, z:4.74}
+    Book 04, {x:0.33, y:0.47, z:0.07}
+    ChineseLantern 03, {x:0.52, y:0.52, z:0.87}
+    TubeCurve 01, {x:0.50, y:1.24, z:2.25}
+    Deck 7M V05, {x:7.09, y:2.03, z:4.74}
+    CrackedCorner, {x:2.00, y:2.00, z:4.00}
+    Log Medium 01, {x:3.00, y:0.48, z:0.50}
+    Poster8, {x:1.00, y:0.00, z:1.66}
+    Chip 03, {x:0.12, y:0.05, z:0.28}
+    HWN20 Grave 09, {x:1.20, y:2.27, z:1.24}
+    High Building 3, {x:5.08, y:19.07, z:20.32}
+    HWN20 Grave 21, {x:1.66, y:1.61, z:2.03}
+    CreamRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    Stairs L 01, {x:5.00, y:2.00, z:4.05}
+    GreenGreyFloor, {x:4.00, y:4.00, z:0.01}
+    OrangeRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    Grafitti Wall I, {x:4.00, y:0.33, z:4.00}
+    E Blue, {x:0.50, y:0.08, z:0.50}
+    D Blue, {x:0.50, y:0.08, z:0.50}
+    SellingGoods 01, {x:1.77, y:1.04, z:1.28}
+    Window 01, {x:0.63, y:0.22, z:1.71}
+    Pipe Long, {x:0.48, y:0.48, z:2.32}
+    HWN20 ZombieHand 01, {x:0.42, y:0.83, z:0.21}
+    HWN20 IronDoor 01, {x:0.19, y:2.63, z:2.72}
+    Cable 2M 04, {x:0.85, y:2.00, z:0.18}
+    Pillar Top Stones Big 01, {x:4.00, y:3.02, z:1.64}
+    GreenGreyDoorframe, {x:2.00, y:0.30, z:4.00}
+    Game, {x:0.92, y:0.07, z:0.44}
+    Chair Rock 01, {x:1.07, y:0.78, z:0.59}
+    Tile Floor 02, {x:1.00, y:1.00, z:0.03}
+    NavyRoof Small, {x:2.00, y:2.00, z:0.20}
+    PlasmaGreen 01, {x:0.22, y:0.26, z:0.38}
+    BushPatch 02, {x:0.60, y:0.40, z:4.56}
+    Dock Column 01, {x:0.24, y:0.36, z:3.00}
+    Propellor, {x:0.92, y:0.92, z:0.38}
+    Basketball Hoop, {x:1.95, y:0.91, z:1.66}
+    DarkGreyRoof Corner, {x:4.00, y:4.00, z:0.70}
+    Fence Wood V2 2, {x:2.02, y:0.21, z:1.62}
+    Module Stair Stones 3M, {x:3.00, y:1.12, z:0.42}
+    Pillar Quad Half 01, {x:1.02, y:1.02, z:1.66}
+    Stone Ancient, {x:1.00, y:1.00, z:1.00}
+    FenceWoodLarge 02, {x:0.17, y:5.01, z:2.09}
+    Traffic Cone Red, {x:0.53, y:0.53, z:0.55}
+    Easel 01, {x:1.85, y:0.46, z:0.94}
+    PirateHat 02, {x:0.45, y:0.60, z:0.32}
+    Barrel Lid, {x:0.97, y:0.91, z:1.22}
+    DiagonalBoardDoorframe, {x:2.00, y:0.37, z:4.00}
+    Window 2x4 V3 Open, {x:1.74, y:0.55, z:2.23}
+    CrygenicChamberTop 01, {x:3.05, y:1.00, z:0.53}
+    Helicopter Pink, {x:10.22, y:14.32, z:3.75}
+    Helicopter Blue, {x:10.31, y:14.32, z:3.75}
+    Window 2x4 V2 Open, {x:1.74, y:0.55, z:2.05}
+    Dirt Red Sand, {x:1.00, y:1.00, z:1.00}
+    Comet 04, {x:2.45, y:1.72, z:1.94}
+    Stone Tile, {x:1.00, y:1.00, z:1.00}
+    Chest Plates, {x:1.47, y:0.76, z:0.89}
+    Tile Floor 03, {x:1.00, y:1.00, z:0.03}
+    PurpleWindowLarge, {x:2.00, y:0.40, z:4.00}
+    WineGlass 01, {x:0.15, y:0.15, z:0.23}
+    LightFloor 01, {x:0.26, y:0.27, z:0.53}
+    PurpleCushion, {x:0.63, y:0.13, z:0.63}
+    Bicycle 01, {x:1.86, y:1.20, z:0.88}
+    LimeRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    Grafitti Wall H, {x:4.00, y:0.33, z:4.00}
+    CyberPunkWindow, {x:2.00, y:0.40, z:4.00}
+    Glass Opaque Pink, {x:1.00, y:1.00, z:1.00}
+    Furnit 1, {x:0.86, y:0.84, z:0.86}
+    HWN20 Grave 34, {x:0.99, y:1.10, z:3.85}
+    ZigzagWall, {x:2.00, y:0.37, z:4.00}
+    HWN20 Grave 20, {x:0.99, y:0.46, z:1.45}
+    High Building 2, {x:5.08, y:5.33, z:28.31}
+    I Red, {x:0.50, y:0.08, z:0.50}
+    GreenFloor Small, {x:2.00, y:2.00, z:0.01}
+    LampPost 01, {x:0.62, y:0.71, z:3.32}
+    BenchSmall 01, {x:1.10, y:0.66, z:0.79}
+    HWN20 Grave 08, {x:1.46, y:2.39, z:0.99}
+    Chip 02, {x:0.16, y:0.21, z:0.01}
+    Pixel Critter A, {x:1.63, y:0.08, z:1.79}
+    Window 2x2 V2 Open V1, {x:1.74, y:0.60, z:1.82}
+    Poster9, {x:1.00, y:0.00, z:0.60}
+    OxygenStorage 01, {x:2.38, y:1.27, z:2.96}
+    ChineseLantern 02, {x:0.28, y:0.28, z:0.59}
+    Book 05, {x:0.65, y:0.49, z:0.10}
+    Deck 7M V04, {x:7.00, y:2.08, z:4.56}
+    PurpleRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    Glowing Stone 04, {x:0.19, y:0.18, z:0.22}
+    Deck 6M V04, {x:6.01, y:2.20, z:3.71}
+    Grey Trap Door, {x:3.00, y:1.50, z:0.00}
+    Rock 05, {x:1.37, y:1.71, z:3.57}
+    Tent 02, {x:3.34, y:2.49, z:2.88}
+    Train Track Crossover, {x:6.01, y:6.00, z:0.34}
+    FlagPole 02, {x:1.82, y:0.43, z:2.26}
+    SpiralFloatingStairs, {x:4.02, y:4.02, z:3.83}
+    Hallway Module Straight 02, {x:6.02, y:6.00, z:3.82}
+    Cactus 6, {x:1.90, y:1.79, z:2.67}
+    Vegetation, {x:1.00, y:1.00, z:1.00}
+    Street Signal, {x:1.95, y:1.36, z:4.36}
+    Bucket 02, {x:0.96, y:0.77, z:0.36}
+    YellowFloor, {x:4.00, y:4.00, z:0.01}
+    Traffic Cone Green, {x:0.53, y:0.53, z:0.55}
+    Stone Tile 03, {x:0.85, y:0.59, z:0.04}
+    Traffic Light C, {x:0.98, y:0.88, z:4.86}
+    HWN20 IronfFence 04, {x:0.16, y:3.35, z:4.02}
+    LimeRoof, {x:4.00, y:4.00, z:0.20}
+    Ring Red Light, {x:2.00, y:2.00, z:0.10}
+    Road Cobble Short, {x:1.00, y:2.00, z:0.04}
+    Tree 01, {x:4.70, y:4.45, z:5.43}
+    BeigeRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    Fireplace 01, {x:1.58, y:2.31, z:1.72}
+    PinkBoardsWall, {x:2.00, y:0.36, z:4.00}
+    Pillar Cylinder 04, {x:0.94, y:0.94, z:4.00}
+    PanelSciFi 01, {x:2.00, y:2.00, z:0.05}
+    HWN20 Skull&Candles 01, {x:0.71, y:0.54, z:0.57}
+    Sushi Display, {x:1.63, y:0.47, z:0.35}
+    BlueWindow, {x:2.00, y:0.40, z:4.00}
+    Tree Dead 03, {x:4.47, y:4.81, z:5.71}
+    Tree Dead 01, {x:5.19, y:6.03, z:6.40}
+    Boombox 01, {x:0.26, y:1.16, z:0.99}
+    Mines Car Track Crossover, {x:3.00, y:3.00, z:0.09}
+    HWN20 ScareCrow, {x:0.72, y:2.07, z:2.66}
+    Tree 03, {x:4.45, y:5.03, z:6.41}
+    PinkBoardsDoorframe, {x:2.00, y:0.36, z:4.00}
+    TrashCan 01, {x:0.79, y:1.28, z:0.79}
+    FenceIronMedium 01, {x:0.37, y:3.00, z:1.49}
+    FenceSticksSmall 01, {x:0.11, y:1.07, z:0.98}
+    Stone Tile 01, {x:0.58, y:1.09, z:0.04}
+    Traffic Light A, {x:1.05, y:0.88, z:4.87}
+    Flags 01, {x:0.00, y:0.00, z:0.00}
+    Tree 2, {x:2.51, y:2.73, z:5.54}
+    O Blue, {x:0.50, y:0.08, z:0.50}
+    N Blue, {x:0.50, y:0.08, z:0.50}
+    Brick Red, {x:1.00, y:1.00, z:1.00}
+    Cactus 4, {x:2.45, y:2.44, z:2.33}
+    Awning 3M, {x:3.00, y:2.19, z:3.71}
+    Bottle 08, {x:0.19, y:0.14, z:0.37}
+    BeigeRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    Grass04, {x:0.35, y:0.57, z:0.55}
+    LimeCorner, {x:2.00, y:2.00, z:4.00}
+    Rock 07, {x:0.45, y:0.44, z:0.76}
+    BeigeRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    DarkGreyCorner, {x:2.00, y:2.00, z:4.00}
+    Window 1x2 V4 Open, {x:1.42, y:0.35, z:2.02}
+    Door Genesis, {x:1.92, y:0.13, z:2.22}
+    Deck 6M V06, {x:6.00, y:2.03, z:4.74}
+    Graffiti 01, {x:0.00, y:0.00, z:0.00}
+    Neon MANA Sign, {x:1.20, y:0.04, z:0.50}
+    DiagonalTileWindow, {x:2.00, y:0.40, z:4.00}
+    LampPost 03, {x:0.42, y:3.19, z:0.42}
+    NavyRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    OrangeDoorframe, {x:2.00, y:0.30, z:4.00}
+    Fence Stone End, {x:0.33, y:0.33, z:1.14}
+    Pixel Critter C, {x:1.63, y:0.08, z:1.79}
+    Vertical Red Pad, {x:2.00, y:2.00, z:0.10}
+    Module Stair Straight 1M, {x:1.00, y:1.00, z:0.50}
+    Plastic Cups, {x:0.14, y:0.14, z:0.42}
+    BrickWindow, {x:2.00, y:0.40, z:4.00}
+    HWN20 Grave 22, {x:1.11, y:2.25, z:1.75}
+    Stone 04, {x:1.51, y:1.50, z:1.18}
+    SellingGoods 02, {x:1.76, y:1.08, z:1.28}
+    Cracked Sand, {x:16.00, y:16.00, z:0.02}
+    Window 02, {x:1.05, y:0.29, z:1.88}
+    Grafitti Wall J, {x:4.00, y:0.32, z:4.00}
+    Tile Border, {x:1.13, y:8.00, z:0.00}
+    Bed Gamer, {x:0.00, y:0.00, z:0.00}
+    HWN20 ZombieHand 02, {x:0.31, y:0.22, z:0.56}
+    House 5 M Blue, {x:5.73, y:9.59, z:8.00}
+    RedArmchair, {x:1.19, y:1.04, z:1.16}
+    Bicycle 03, {x:1.86, y:1.20, z:0.88}
+    Tree Forest Pink 04, {x:4.26, y:3.92, z:7.90}
+    Button Chest, {x:0.69, y:0.80, z:0.25}
+    GreyWindow, {x:2.00, y:0.40, z:4.00}
+    Vertical White Pad, {x:2.00, y:0.10, z:2.00}
+    Tile Floor 01, {x:1.00, y:1.00, z:0.03}
+    Garland Curve, {x:15.03, y:0.59, z:1.08}
+    Pond Stone 01, {x:2.80, y:2.76, z:0.36}
+    DiagonalTileDoorframe, {x:2.00, y:0.34, z:4.00}
+    Toggle Fantasy Button, {x:0.00, y:0.03, z:0.19}
+    Log Path 01, {x:1.92, y:1.71, z:0.47}
+    BlackDoorframe, {x:2.00, y:0.30, z:4.00}
+    HWN20 Mud, {x:1.01, y:0.67, z:0.13}
+    BushPatch 01, {x:0.60, y:0.24, z:4.56}
+    GreyRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    HWN20 Column 04, {x:1.35, y:1.35, z:3.85}
+    CreamRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    Road Cobble Cross Long, {x:6.00, y:6.00, z:0.05}
+    Window 4x4 V2 Closed, {x:2.35, y:0.35, z:2.06}
+    RockFloor Module 1M, {x:1.00, y:1.00, z:0.02}
+    Fence Wood V2 1, {x:2.00, y:0.20, z:1.56}
+    LampForest 01, {x:0.51, y:0.59, z:2.56}
+    PurpleRoof Corner, {x:4.00, y:4.00, z:0.70}
+    PirateHat 01, {x:0.72, y:0.42, z:0.20}
+    FenceWoodLarge 01, {x:0.17, y:5.00, z:2.10}
+    Sign 04, {x:0.16, y:1.62, z:1.13}
+    Window 1x2 Open, {x:1.15, y:0.16, z:1.65}
+    StreetCordMedium 01, {x:0.95, y:0.38, z:0.15}
+    Table With Chairs, {x:3.70, y:3.70, z:1.37}
+    Column Wood 3M, {x:3.03, y:0.29, z:0.28}
+    Floor Wood 4M, {x:4.00, y:4.00, z:0.04}
+    Bench 4, {x:0.52, y:0.51, z:0.36}
+    SpaceShipBase 01, {x:14.62, y:14.62, z:0.93}
+    OrangeFloor Small, {x:2.00, y:2.00, z:0.01}
+    Pipe Medium, {x:0.48, y:0.48, z:1.32}
+    Table Lamp, {x:0.40, y:0.59, z:1.12}
+    CreamFloor, {x:4.00, y:4.00, z:0.01}
+    ZigzagCorner, {x:2.03, y:2.03, z:4.00}
+    RedDoorframe, {x:2.00, y:0.30, z:4.00}
+    Ladder 5M, {x:4.34, y:0.97, z:0.55}
+    House 5 M Brown, {x:5.60, y:9.44, z:8.88}
+    DarkGreyWindowLarge, {x:2.00, y:0.40, z:4.00}
+    U Red, {x:0.50, y:0.08, z:0.50}
+    Bicycle 02, {x:1.83, y:1.04, z:0.24}
+    MetalRoof Corner, {x:4.00, y:4.00, z:0.70}
+    BlueRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    HWN20 ZombieHand 03, {x:0.32, y:0.24, z:0.53}
+    GreenBoardsWall, {x:2.00, y:0.30, z:4.00}
+    GreyRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    PlantWall, {x:2.00, y:0.48, z:4.00}
+    Window 03, {x:1.70, y:0.68, z:2.17}
+    SellingGoods 03, {x:1.77, y:1.04, z:1.31}
+    GreyRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    Steampunk Bench, {x:2.38, y:0.84, z:1.12}
+    Dock DoorAdapter 01, {x:4.00, y:3.00, z:0.36}
+    Stone 05, {x:0.73, y:1.01, z:0.60}
+    HWN20 Grave 23, {x:0.99, y:1.10, z:3.61}
+    High Building 1, {x:5.08, y:17.82, z:23.87}
+    Stone Light, {x:1.00, y:1.00, z:1.00}
+    Furnit 2, {x:1.59, y:0.84, z:1.10}
+    Window 2x2 V2 Open V2, {x:1.42, y:1.19, z:1.82}
+    Pixel Critter B, {x:1.79, y:0.08, z:1.79}
+    ArrowBoardWindow, {x:2.00, y:0.40, z:4.00}
+    Chip 01, {x:0.24, y:0.17, z:0.12}
+    LampPost 02, {x:0.55, y:0.55, z:3.55}
+    Deck 6M V07, {x:6.00, y:2.03, z:4.74}
+    StoneRandomBig 01, {x:1.98, y:1.98, z:0.04}
+    Fire Hydrant Red, {x:0.48, y:0.41, z:0.69}
+    FloorBaseDesert 01, {x:16.00, y:16.00, z:0.02}
+    Telescope, {x:1.39, y:1.44, z:2.06}
+    GlassRoof Small, {x:2.00, y:2.00, z:0.20}
+    ChineseLantern 01, {x:0.28, y:0.28, z:0.59}
+    Book 06, {x:0.59, y:0.52, z:0.11}
+    Tent 01, {x:3.00, y:1.86, z:2.20}
+    Rock 06, {x:0.81, y:0.95, z:1.08}
+    Bottle 09, {x:0.27, y:0.15, z:0.37}
+    Tree Forest Blue 04, {x:4.26, y:3.92, z:7.90}
+    ZigzagDoorframe, {x:2.00, y:0.37, z:4.00}
+    PlainGreyWall, {x:2.00, y:0.40, z:4.00}
+    Grass05, {x:0.73, y:0.48, z:0.89}
+    Fliptop Bin, {x:0.54, y:0.54, z:1.18}
+    Cactus 5, {x:2.84, y:2.35, z:4.33}
+    FlagPole 01, {x:1.89, y:0.47, z:2.91}
+    BeigeRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    Window 2x4 B Open, {x:1.15, y:0.16, z:1.94}
+    Hallway Module Straight 01, {x:6.02, y:6.00, z:3.82}
+    Traffic Cone Yellow, {x:0.53, y:0.53, z:0.55}
+    Coffee House, {x:5.12, y:6.22, z:5.13}
+    Tree 3, {x:3.53, y:4.65, z:5.62}
+    Bucket 01, {x:0.46, y:0.46, z:0.44}
+    Yellow Oil Barrel, {x:0.78, y:0.78, z:1.17}
+    PurpleRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    Cart Wheel, {x:1.02, y:0.91, z:0.87}
+    Mines Car Track Fork V2, {x:3.40, y:6.00, z:0.09}
+    Tube Blue, {x:0.53, y:0.34, z:5.04}
+    Mines Wood Fence2 4M, {x:3.84, y:0.19, z:2.64}
+    Desk 01, {x:2.00, y:1.07, z:1.03}
+    Tree 02, {x:4.14, y:4.41, z:5.32}
+    Vertical Platform Pirates, {x:2.22, y:2.25, z:2.50}
+    HWN20 Skull&Candles 02, {x:0.93, y:0.80, z:0.82}
+    OrangeCorner, {x:2.00, y:2.00, z:4.00}
+    PanelSciFi 02, {x:2.00, y:2.00, z:0.05}
+    Ship Wheel, {x:0.69, y:0.30, z:1.14}
+    Manhole Blue, {x:1.80, y:0.07, z:1.79}
+    OxygenTube 01, {x:0.35, y:0.34, z:1.57}
+    Hallway Module Cross 01, {x:6.03, y:6.03, z:3.80}
+    PetHouse 01, {x:1.93, y:1.85, z:1.90}
+    Wooden Trap Door, {x:3.00, y:1.50, z:0.00}
+    HWN20 FlowerPot 03, {x:0.20, y:0.21, z:0.47}
+    PinkDoorframe, {x:2.00, y:0.30, z:4.00}
+    Lab Sphere 01, {x:0.89, y:0.74, z:0.96}
+    Gear 10 Teeth, {x:2.44, y:2.47, z:0.50}
+    Banner Blue 01, {x:0.93, y:0.08, z:2.54}
+    PlanetFloorOrange 01, {x:16.00, y:16.00, z:0.24}
+    Drawer 02, {x:0.63, y:0.75, z:1.25}
+    HWN20 SmallFence 01, {x:0.15, y:0.72, z:0.51}
+    Deck Stairs 2, {x:1.71, y:5.62, z:4.74}
+    Paperlight 04, {x:1.31, y:0.48, z:1.58}
+    Books, {x:0.87, y:0.78, z:0.24}
+    Cracked, {x:16.00, y:16.00, z:0.02}
+    Door 3, {x:0.98, y:0.14, z:2.27}
+    HWN20 TreeBase&Knife, {x:1.68, y:1.86, z:1.58}
+    Woodplanks Dark, {x:1.00, y:1.00, z:1.00}
+    TurquoiseWindow, {x:2.00, y:0.40, z:4.00}
+    ConsoleSofa, {x:4.86, y:2.85, z:1.50}
+    Vegetation 04, {x:0.18, y:0.08, z:0.90}
+    DCL Map, {x:0.10, y:2.92, z:1.75}
+    RedWindowLarge, {x:2.00, y:0.40, z:4.00}
+    HAL9000 01, {x:0.72, y:0.72, z:0.13}
+    Vegetation 10, {x:0.50, y:0.34, z:0.22}
+    PlainDarkGreyWall, {x:2.00, y:0.40, z:4.00}
+    Mushrooms 05, {x:0.35, y:0.35, z:0.46}
+    HWN20 PetTomb 03, {x:2.57, y:2.04, z:1.93}
+    HWN20 Candle 11, {x:0.12, y:0.14, z:0.29}
+    Pebbles, {x:1.00, y:1.00, z:1.00}
+    StairFence 01, {x:0.20, y:1.00, z:0.85}
+    HWN20 Candle 05, {x:0.17, y:0.19, z:0.49}
+    PinkRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    BlueCushion, {x:0.63, y:0.13, z:0.63}
+    CorrugatedMetalRoof, {x:4.43, y:4.04, z:1.35}
+    Sword 01, {x:0.30, y:0.11, z:1.14}
+    Lever Console, {x:0.35, y:0.47, z:1.22}
+    Donut Counter, {x:2.17, y:0.86, z:0.73}
+    Ring Blue Light, {x:2.00, y:2.00, z:0.10}
+    HWN20 Lamp 01, {x:0.50, y:1.51, z:3.65}
+    Glass Pink, {x:1.00, y:1.00, z:1.00}
+    StreetFence 01, {x:2.20, y:0.29, z:1.15}
+    Glass Blue, {x:1.00, y:1.00, z:1.00}
+    WaterPatchCurve 01, {x:6.57, y:6.36, z:0.72}
+    RockBig 01, {x:5.51, y:6.11, z:6.32}
+    Floor Module 03, {x:3.00, y:3.00, z:0.08}
+    GreyFloor, {x:4.00, y:4.00, z:0.01}
+    GlassPanelStairs, {x:2.02, y:4.20, z:5.17}
+    Stool D, {x:0.63, y:0.69, z:1.60}
+    HealthBed 01, {x:2.59, y:3.40, z:2.45}
+    PlasmaBlue 01, {x:0.22, y:0.26, z:0.39}
+    Door Wood 01, {x:1.68, y:0.48, z:3.24}
+    House 6 M Brown, {x:6.33, y:9.28, z:8.43}
+    Bar Black, {x:6.13, y:1.34, z:1.54}
+    Stone Blocks End 01, {x:0.33, y:0.55, z:0.23}
+    Bush Fantasy 03, {x:1.87, y:0.75, z:1.26}
+    Hatch Anim, {x:2.34, y:2.50, z:0.67}
+    HWN20 SpiderTree 01, {x:3.15, y:4.23, z:4.61}
+    CryogenicChamberBase 01, {x:3.23, y:1.20, z:0.92}
+    DocksBridge 02, {x:1.96, y:4.14, z:1.83}
+    Bush 01, {x:1.84, y:1.80, z:0.79}
+    Beam Exterior 1, {x:3.97, y:0.69, z:4.05}
+    Peak, {x:0.90, y:0.12, z:0.89}
+    Helicopter Green, {x:10.19, y:14.31, z:3.75}
+    TurquoiseTileWall, {x:2.00, y:0.30, z:4.00}
+    Chalice 02, {x:0.08, y:0.09, z:0.30}
+    LimeRoof Corner, {x:4.00, y:4.00, z:0.70}
+    Light Decor7, {x:0.00, y:0.00, z:0.00}
+    Stone 3, {x:3.10, y:4.56, z:1.51}
+    Arcade Machine Red, {x:1.39, y:1.61, z:2.63}
+    PebbleFloor Small, {x:2.00, y:2.00, z:0.01}
+    Horizontal Platform Fantasy Alt, {x:1.42, y:1.42, z:0.56}
+    Antenna 03, {x:2.30, y:1.17, z:1.12}
+    Column Vertical Wood Small, {x:0.45, y:0.45, z:1.60}
+    Mines Car Track 3M V3, {x:1.07, y:3.05, z:1.11}
+    Flower 01, {x:0.67, y:0.22, z:0.61}
+    Pebble 02, {x:0.15, y:0.04, z:0.13}
+    SteamPunk Number 00, {x:0.42, y:0.41, z:0.92}
+    Fence Wood V5 1, {x:2.00, y:0.20, z:1.56}
+    Fence Wood V1 Entry, {x:2.94, y:0.15, z:1.63}
+    YellowRoof Corner, {x:4.00, y:4.00, z:0.70}
+    Grass Long, {x:1.00, y:1.00, z:1.00}
+    B Blue, {x:0.50, y:0.08, z:0.50}
+    C Blue, {x:0.50, y:0.08, z:0.50}
+    Stone Coal, {x:1.00, y:1.00, z:1.00}
+    Red Stone Emerald, {x:1.00, y:1.00, z:1.00}
+    Games Console, {x:0.86, y:0.47, z:0.35}
+    SimpleRoundPillar, {x:0.62, y:0.62, z:4.00}
+    BirdFountain 01, {x:0.98, y:1.17, z:0.90}
+    Mountain 6, {x:10.32, y:11.43, z:9.08}
+    Click Area, {x:1.00, y:1.00, z:1.00}
+    Drinks Dispenser Pink, {x:1.38, y:0.49, z:0.98}
+    Night Stand, {x:1.52, y:1.06, z:1.67}
+    Module Stone Curve 02, {x:4.07, y:4.07, z:3.99}
+    SteamPunk Number 01, {x:0.42, y:0.41, z:0.98}
+    Pebble 03, {x:0.40, y:0.02, z:0.31}
+    Window 2x4 Frame, {x:1.15, y:0.16, z:1.94}
+    MagnoliaWindowLarge, {x:2.00, y:0.40, z:4.00}
+    Mines Car Track 3M V2, {x:1.07, y:3.00, z:0.09}
+    Antenna 02, {x:1.35, y:1.60, z:1.50}
+    Horizontal Platform Fantasy, {x:1.11, y:1.11, z:0.84}
+    Vault 01, {x:1.71, y:1.72, z:2.60}
+    Stone 2, {x:4.05, y:3.48, z:2.33}
+    Ladder 01, {x:0.89, y:0.09, z:3.04}
+    HWN20 BearBush, {x:6.07, y:4.64, z:8.29}
+    Tint 01, {x:0.19, y:0.24, z:0.39}
+    Furnace 2, {x:0.95, y:1.72, z:1.64}
+    BlueRoof Corner, {x:4.00, y:4.00, z:0.70}
+    DarkGreyRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    Coffee Machine, {x:0.49, y:0.70, z:0.79}
+    Bread 01, {x:0.12, y:0.31, z:0.07}
+    BoatWheel 02, {x:1.04, y:0.15, z:1.04}
+    Black Pad, {x:2.00, y:2.00, z:0.10}
+    HWN20 Crow, {x:0.75, y:0.22, z:0.39}
+    Beanbag Pink, {x:1.82, y:1.73, z:0.99}
+    StoneSlabSmall 02, {x:0.99, y:0.98, z:0.03}
+    Dirt Dark, {x:1.00, y:1.00, z:1.00}
+    Volcan, {x:1.00, y:1.00, z:1.00}
+    Beanbag Blue, {x:1.81, y:1.73, z:0.99}
+    Bush Fantasy 02, {x:1.11, y:0.71, z:1.71}
+    ArchWay 02, {x:4.39, y:0.90, z:4.75}
+    Lamp 2, {x:0.29, y:0.22, z:0.66}
+    Cannon 02, {x:1.28, y:1.87, z:1.08}
+    PlainGlassWall, {x:2.00, y:0.40, z:4.00}
+    Floor Module 02, {x:3.00, y:3.00, z:0.06}
+    DocksModuleStairs 01, {x:1.60, y:2.04, z:0.92}
+    Table 06, {x:1.49, y:1.44, z:0.70}
+    ConstructionDebris 01, {x:2.67, y:2.68, z:0.48}
+    Stool E, {x:0.63, y:0.69, z:1.60}
+    NavyRoof Corner, {x:4.00, y:4.00, z:0.70}
+    Grass Stones, {x:16.00, y:16.00, z:0.02}
+    PlainWhiteWall, {x:2.00, y:0.30, z:4.00}
+    Blue Button, {x:0.27, y:0.27, z:0.06}
+    CyberpunkDoorframe, {x:2.00, y:0.34, z:4.00}
+    YellowRoof 4Edges Small, {x:2.00, y:2.00, z:0.70}
+    Ground Curve 10 M, {x:11.40, y:11.21, z:0.42}
+    Mines Runway Curve Half, {x:2.19, y:3.24, z:0.11}
+    BathroomTilesWall, {x:2.00, y:0.36, z:4.00}
+    Window 2x4 V3 B Open, {x:1.42, y:0.36, z:2.23}
+    FencePicketWhiteSmall 01, {x:0.05, y:1.11, z:1.21}
+    Bridge 06, {x:6.06, y:1.22, z:2.32}
+    Awning 8M, {x:8.00, y:2.19, z:3.71}
+    Street Loop, {x:2.42, y:0.58, z:3.70}
+    HWN20 Candle 04, {x:0.12, y:0.14, z:0.49}
+    HWN20 PetTomb 02, {x:2.62, y:2.52, z:1.93}
+    Street Scaffold, {x:4.73, y:3.89, z:1.27}
+    DiagonalBoardCorner, {x:2.04, y:2.04, z:4.00}
+    HWN20 Candle 10, {x:0.21, y:0.24, z:0.47}
+    FloorCorner 01, {x:4.00, y:4.00, z:0.06}
+    JungleLampPost 01, {x:2.04, y:0.40, z:2.80}
+    Mushrooms 04, {x:0.26, y:0.22, z:0.75}
+    MetalDoorframe, {x:2.00, y:0.30, z:4.00}
+    Yellow Fantasy Button, {x:0.45, y:0.45, z:0.08}
+    Vegetation 05, {x:0.52, y:0.74, z:1.27}
+    Door 2, {x:0.98, y:0.15, z:2.27}
+    HWN20 BatTrio UpsideDown, {x:0.20, y:0.79, z:0.61}
+    Solid Black, {x:1.00, y:1.00, z:1.00}
+    Star 01, {x:3.13, y:3.13, z:3.13}
+    K Red, {x:0.50, y:0.08, z:0.50}
+    Ring White Light, {x:2.00, y:2.00, z:0.10}
+    WoodenBoardWindow, {x:2.00, y:0.40, z:4.00}
+    Cup 01, {x:0.23, y:0.26, z:0.28}
+    Paperlight 05, {x:0.00, y:0.00, z:0.00}
+    GlowPillar, {x:0.50, y:0.50, z:4.00}
+    TNT Box Closed, {x:0.62, y:0.47, z:0.33}
+    Train Machine, {x:3.10, y:10.02, z:5.19}
+    WhiteRoof Corner, {x:4.00, y:4.00, z:0.70}
+    PlasmaPink 01, {x:0.22, y:0.26, z:0.39}
+    PlaygroundStructure 01, {x:3.86, y:3.76, z:2.36}
+    Gear Big, {x:1.19, y:1.19, z:0.30}
+    Pillar Fire 01, {x:0.94, y:0.94, z:1.50}
+    Drawer 03, {x:0.69, y:0.65, z:1.28}
+    Cable 1M Curve 01, {x:1.48, y:1.06, z:0.12}
+    Pipe Straight 1M 01, {x:0.35, y:0.35, z:1.50}
+    HWN20 FlowerPot 02, {x:0.24, y:0.35, z:0.60}
+    BeachWall, {x:2.00, y:0.36, z:4.00}
+    H Blue, {x:0.50, y:0.08, z:0.50}
+    Cable 1M Curve 03, {x:1.17, y:1.06, z:0.12}
+    Stone Diamond, {x:1.00, y:1.00, z:1.00}
+    I Blue, {x:0.50, y:0.08, z:0.50}
+    FenceIronSmall 01, {x:0.37, y:1.00, z:1.49}
+    PlainCreamWall, {x:2.00, y:0.40, z:4.00}
+    WhiteWindowLarge, {x:2.00, y:0.40, z:4.00}
+    HWN20 SmallFence 02, {x:0.18, y:0.69, z:0.54}
+    Banner Blue 02, {x:1.89, y:0.08, z:2.22}
+    Terrain 4, {x:8.60, y:4.71, z:0.95}
+    Drawer 01, {x:0.65, y:0.78, z:1.29}
+    MetalBoltsDoorframe, {x:2.00, y:0.42, z:4.00}
+    PlaygroundBall 01, {x:0.46, y:0.45, z:0.44}
+    BeigeRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    Window 1x2 V3 Open, {x:1.41, y:0.48, z:1.75}
+    YellowCushion, {x:0.63, y:0.13, z:0.63}
+    Window 1x2 V2 Open, {x:1.42, y:0.35, z:1.82}
+    MetalRoof, {x:4.00, y:4.00, z:0.20}
+    TraditionalPillar, {x:0.70, y:0.70, z:4.00}
+    CrossTable, {x:1.43, y:1.24, z:0.82}
+    ConcreteFloor Small, {x:2.00, y:2.00, z:0.01}
+    GlassPanelStairs Corner, {x:4.12, y:4.12, z:5.15}
+    HAL9000 02, {x:0.39, y:0.14, z:0.73}
+    Vegetation 07, {x:1.57, y:1.98, z:1.75}
+    NavyWindowLarge, {x:2.00, y:0.40, z:4.00}
+    FencePicketSmall 01, {x:0.13, y:1.20, z:1.11}
+    Module Stone Straight 01, {x:4.00, y:0.80, z:4.00}
+    HWN20 Candle 06, {x:0.18, y:0.18, z:0.42}
+    CrackedDoorframe, {x:2.00, y:0.30, z:4.00}
+    FoodPineapple 01, {x:0.29, y:0.30, z:0.54}
+    HWN20 Candle 12, {x:0.14, y:0.14, z:0.27}
+    Mines Model Curve Half, {x:17.06, y:14.31, z:4.79}
+    HWN20 Lamp 02, {x:0.37, y:0.37, z:0.82}
+    Safe, {x:0.97, y:1.03, z:1.36}
+    Bridge 04, {x:5.32, y:2.07, z:2.12}
+    Sword 02, {x:0.25, y:0.11, z:1.13}
+    PinkRoof, {x:4.00, y:4.00, z:0.20}
+    Stone Blocks 01, {x:3.00, y:1.16, z:0.24}
+    Table 04, {x:1.72, y:1.72, z:1.12}
+    RockBig 02, {x:7.21, y:6.84, z:9.03}
+    Grass Module 2M, {x:2.00, y:2.00, z:0.06}
+    StoneRandomSmall 01, {x:0.98, y:0.98, z:0.04}
+    Sand Gold, {x:16.00, y:16.00, z:0.02}
+    WaterPatchCurve 02, {x:7.04, y:6.70, z:0.72}
+    CreamFloor Small, {x:2.00, y:2.00, z:0.01}
+    AncientEgyptianCorner, {x:2.04, y:2.04, z:4.00}
+    JunglePlant 08, {x:0.87, y:1.05, z:0.70}
+    BlueWindowLarge, {x:2.00, y:0.40, z:4.00}
+    DocksBridge 01, {x:1.96, y:4.13, z:1.83}
+    Tin Can Yellow, {x:0.13, y:0.13, z:0.24}
+    RedCorner, {x:2.00, y:2.00, z:4.00}
+    Cryptocurrency, {x:1.84, y:0.07, z:0.44}
+    AirVent Cap 01, {x:0.26, y:1.17, z:1.17}
+    Beam Exterior 2, {x:3.66, y:2.02, z:4.05}
+    Gem 09, {x:0.39, y:0.16, z:0.34}
+    Bush 02, {x:2.10, y:1.99, z:0.70}
+    Empty Foodbox, {x:0.21, y:0.35, z:0.11}
+    CreamDoorframe, {x:2.00, y:0.30, z:4.00}
+    Window 2x4 Broken, {x:1.27, y:0.19, z:2.03}
+    Fence Iron 1M, {x:1.13, y:0.26, z:1.14}
+    RockMediumMoss 01, {x:1.39, y:1.75, z:0.64}
+    Chalice 01, {x:0.17, y:0.17, z:0.23}
+    Ladder 2M, {x:1.78, y:0.97, z:0.55}
+    Flower 02, {x:0.65, y:0.40, z:0.66}
+    Pebble 01, {x:0.19, y:0.06, z:0.19}
+    SteamPunk Number 03, {x:0.42, y:0.42, z:0.89}
+    Floating Decor, {x:0.00, y:0.00, z:0.00}
+    YellowDoorframe, {x:2.00, y:0.30, z:4.00}
+    Boat 01, {x:5.66, y:2.07, z:0.97}
+    Mountain 4, {x:14.19, y:12.97, z:9.82}
+    WritenStone 01, {x:1.97, y:1.86, z:0.29}
+    House 8 M Gray, {x:8.67, y:9.38, z:9.13}
+    Fence Wood V5 2, {x:2.02, y:0.21, z:1.62}
+    Fence Blue, {x:22.70, y:0.23, z:3.96}
+    PlainTurquoiseWall, {x:2.00, y:0.40, z:4.00}
+    FloatingUShapeStairs, {x:4.02, y:4.03, z:3.76}
+    TurquoiseTileCorner, {x:2.02, y:2.02, z:4.00}
+    Diamond Pattern Blue, {x:1.00, y:1.00, z:1.00}
+    BruteRoundPillar, {x:0.50, y:0.50, z:4.00}
+    PlainGreenWall, {x:2.00, y:0.40, z:4.00}
+    BeigeRoof Small, {x:2.00, y:2.00, z:0.20}
+    Two Boxes Sushi, {x:0.46, y:0.49, z:0.17}
+    Mountain 5, {x:15.16, y:13.56, z:9.44}
+    GreyRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    WarmGridFloor, {x:4.00, y:4.00, z:0.02}
+    Bar Stool, {x:0.67, y:0.66, z:0.82}
+    Mines Car Track 3M V1, {x:1.07, y:3.00, z:0.09}
+    Blue Scifi Button, {x:0.62, y:0.62, z:0.15}
+    MagnoliaWindow, {x:2.00, y:0.40, z:4.00}
+    SteamPunk Number 02, {x:0.44, y:0.41, z:0.92}
+    HexagonGridWall, {x:2.00, y:0.33, z:4.00}
+    YellowWindowLarge, {x:2.00, y:0.40, z:4.00}
+    Flower 03, {x:0.42, y:0.36, z:1.00}
+    Module Stone Curve 01, {x:4.09, y:4.07, z:4.00}
+    Stone Snow, {x:1.00, y:1.00, z:1.00}
+    Furnace 1, {x:1.03, y:1.62, z:1.64}
+    Stone 1, {x:2.82, y:3.10, z:2.31}
+    Antenna 01, {x:0.91, y:0.80, z:1.22}
+    Cyberpunk Door Anim, {x:2.00, y:0.26, z:4.00}
+    Bread 02, {x:0.12, y:0.18, z:0.07}
+    BoatWheel 01, {x:1.07, y:0.25, z:1.07}
+    B Red, {x:0.50, y:0.08, z:0.50}
+    FencePicketWhiteMedium 01, {x:0.05, y:3.11, z:1.21}
+    MetalRailStairs, {x:2.00, y:4.20, z:4.89}
+    Light Decor5, {x:0.00, y:0.00, z:0.00}
+    AirVent Union 01, {x:1.11, y:1.11, z:1.03}
+    Bush 03, {x:1.53, y:2.29, z:0.86}
+    StoneSlabSmall 01, {x:0.99, y:0.99, z:0.03}
+    Box Small, {x:0.48, y:0.46, z:0.45}
+    Gem 08, {x:0.34, y:0.32, z:0.28}
+    Beam Exterior 3, {x:4.00, y:0.69, z:4.05}
+    Bush Fantasy 01, {x:1.14, y:0.68, z:1.29}
+    Vertical Platform Pirates Alt, {x:2.10, y:2.01, z:1.26}
+    Dirt Grass, {x:1.00, y:1.00, z:1.00}
+    Horizontal Platform Scifi Alt, {x:2.61, y:2.61, z:0.47}
+    JunglePlant 09, {x:2.46, y:2.57, z:1.22}
+    LimeWindowLarge, {x:2.00, y:0.40, z:4.00}
+    Cannon 01, {x:1.47, y:2.20, z:1.51}
+    Sushi Bar, {x:10.31, y:9.46, z:5.09}
+    Lever, {x:0.49, y:0.31, z:1.21}
+    Lamp 1, {x:0.29, y:0.22, z:0.66}
+    ModernStoolLow, {x:0.73, y:0.73, z:0.88}
+    Cactus, {x:1.00, y:1.00, z:1.00}
+    PlainBlackWall, {x:2.00, y:0.40, z:4.00}
+    ArchWay 01, {x:4.46, y:1.22, z:5.38}
+    Furnit Bar 3 1M, {x:1.02, y:0.46, z:1.46}
+    Trap Door, {x:1.87, y:0.00, z:1.87}
+    CrateOrange 01, {x:0.73, y:0.41, z:0.33}
+    RedRoof 1Edge Small, {x:2.00, y:2.00, z:0.70}
+    Stool F, {x:0.63, y:0.69, z:1.60}
+    RedRoof Corner, {x:4.00, y:4.00, z:0.70}
+    Floor Module 01, {x:3.00, y:3.00, z:0.09}
+    RockBig 03, {x:6.15, y:6.43, z:7.81}
+    DocksModuleStairs 02, {x:1.83, y:2.01, z:0.98}
+    Table 05, {x:1.42, y:1.42, z:1.05}
+    Bridge 05, {x:5.56, y:1.50, z:1.70}
+    FuturisticWindow, {x:2.00, y:0.40, z:4.00}
+    HWN20 Candle 13, {x:0.14, y:0.14, z:0.42}
+    FloorCorner 02, {x:4.00, y:4.00, z:0.05}
+    HWN20 PetTomb 01, {x:3.22, y:3.21, z:1.93}
+    Floor Wood Curve 01 4M, {x:4.04, y:4.02, z:0.12}
+    HWN20 Candle 07, {x:0.17, y:0.24, z:0.22}
+    Concrete, {x:1.00, y:1.00, z:1.00}
+    Vegetation 06, {x:0.83, y:0.92, z:2.01}
+    Flying Car Blue, {x:2.78, y:4.97, z:2.22}
+    GoldBar 01, {x:0.16, y:0.40, z:0.05}
+    Fish 04, {x:0.66, y:0.21, z:0.06}
+    Door 1, {x:0.98, y:0.15, z:2.27}
+    TNT Box Open, {x:0.62, y:0.47, z:0.32}
+    Cobber Vase, {x:0.56, y:0.59, z:0.80}
+    AcousticPanelWindow, {x:2.00, y:0.40, z:4.00}
+    Paperlight 06, {x:0.00, y:0.00, z:0.00}
+    LEDGridCorner, {x:2.00, y:2.00, z:4.00}
+    Pillar Fire 02, {x:0.85, y:0.83, z:0.99}
+    YellowRoof 3Edges Small, {x:2.00, y:2.00, z:0.70}
+    Windmill, {x:2.43, y:1.49, z:7.38}
+    FencePicketWhiteEnd 01, {x:0.05, y:0.23, z:1.21}
+    PlaygroundHammock 01, {x:2.49, y:3.54, z:2.49}
+    W Red, {x:0.50, y:0.08, z:0.50}
+    Cable 1M Curve 02, {x:1.06, y:1.06, z:0.12}
+    HWN20 FlowerPot 01, {x:0.16, y:0.20, z:0.55}
+    PeachWindowLarge, {x:2.00, y:0.40, z:4.00}
+    Terrain 1, {x:13.80, y:14.16, z:3.78}
+    Window 2x2 Closed, {x:1.15, y:0.16, z:1.65}
+    HWN20 FlowerPot 05, {x:0.33, y:0.33, z:0.36}
+    FenceIronLarge 01, {x:0.13, y:5.09, z:1.55}
+    Road Cobble T Short, {x:3.00, y:3.99, z:0.04}
+    Log Bridge 01, {x:4.00, y:1.75, z:1.41}
+    Door 5, {x:0.98, y:0.14, z:2.27}
+    HWN20 SkullDeco DDLM 01, {x:0.25, y:0.21, z:0.05}
+    PinkFloor Small, {x:2.00, y:2.00, z:0.01}
+    Dock Curve 01, {x:4.00, y:4.00, z:0.36}
+    Window 2x2 V4 Open V1, {x:1.74, y:0.60, z:2.02}
+    Sushi Box 1, {x:1.13, y:0.38, z:0.24}
+    Dirt Volcan, {x:1.00, y:1.00, z:1.00}
+    Fence Wood V3 1, {x:2.04, y:0.21, z:1.52}
+    Paperlight 02, {x:0.64, y:0.64, z:0.49}
+    CrateBlueBig 01, {x:1.80, y:0.94, z:0.82}
+    CyberpunkCorner, {x:2.05, y:2.05, z:4.00}
+    Grass Medium, {x:1.00, y:1.00, z:1.00}
+    HWN20 Candle 03, {x:0.17, y:0.23, z:0.45}
+    HWN20 Tree 08, {x:4.18, y:4.17, z:6.63}
+    Wire Loop, {x:0.67, y:0.37, z:0.73}
+    HWN20 Candle 17, {x:0.11, y:0.13, z:0.32}
+    Hallway Module StraightHalf 01, {x:6.03, y:3.10, z:3.82}
+    Awning 5M, {x:5.00, y:2.19, z:3.71}
+    FencePicketLarge 01, {x:0.05, y:5.11, z:1.21}
+    Mushrooms 03, {x:0.77, y:0.79, z:0.79}
+    Hallway Module Curve 01, {x:6.03, y:6.03, z:3.82}
+    TreeTall 02, {x:4.22, y:3.37, z:6.15}
+    CorrugatedMetalDoorframe, {x:2.00, y:0.37, z:4.00}
+    HWN20 TreeBase 01, {x:1.62, y:2.04, z:1.47}
+    Vegetation 02, {x:1.32, y:1.35, z:0.23}
+    Table 01, {x:1.20, y:2.48, z:1.03}
+    RockBig 07, {x:7.21, y:6.84, z:8.07}
+    Floor Module 05, {x:3.00, y:3.00, z:0.07}
+    Solid Blue, {x:1.00, y:1.00, z:1.00}
+    CrateLong 01, {x:1.99, y:0.78, z:0.53}
+    Stool B, {x:0.62, y:0.60, z:1.00}
+    Roof 01, {x:8.30, y:8.24, z:7.86}
+    Window 2x2 V4 Closed, {x:1.42, y:0.35, z:2.02}
+    MetalRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    Potion 03, {x:0.28, y:0.32, z:0.59}
+    Cable 2M Curve 03, {x:2.06, y:2.06, z:0.12}
+    Bridge 01, {x:5.54, y:1.99, z:2.41}
+    Shelf 01, {x:1.19, y:0.72, z:2.41}
+    Barbacue 01, {x:0.85, y:1.06, z:0.79}
+    SpiralStone 03, {x:1.26, y:0.88, z:1.01}
+    OrangeRoof, {x:4.00, y:4.00, z:0.20}
+    ChineseGate 03, {x:8.67, y:2.76, z:5.64}
+    FencePicketMedium 01, {x:0.13, y:1.20, z:3.10}
+    BlueCorner, {x:2.00, y:2.00, z:4.00}
+    PapyrusOpen 01, {x:0.60, y:0.57, z:0.10}
+    YellowRoof 2Edges Small, {x:2.00, y:2.00, z:0.70}
+    Chest, {x:1.27, y:0.63, z:0.88}
+    UShapeStairs, {x:4.02, y:4.11, z:5.13}
+    Vertical Yellow Pad, {x:2.00, y:2.00, z:0.10}
+    Snow, {x:1.00, y:1.00, z:1.00}
+    BrickWall, {x:2.00, y:0.42, z:4.00}
+    DarkGreyRoof Small, {x:2.00, y:2.00, z:0.20}
+    Torch 01, {x:0.24, y:0.24, z:1.58}
+    Mines Runway 1M, {x:1.04, y:1.00, z:0.11}
+    SteamPunk Number 06, {x:0.40, y:0.42, z:0.96}
+    Ground 7 M V01, {x:3.70, y:7.10, z:0.43}
+    Cistern, {x:1.79, y:2.52, z:8.08}
+    Concrete Tile, {x:1.00, y:1.00, z:1.00}
+    Stone 5, {x:2.32, y:2.37, z:0.32}
+    WizardStaff 02, {x:0.34, y:0.12, z:2.07}
+    Bed Single, {x:1.20, y:2.58, z:0.95}
+    Multicolor Pattern, {x:1.00, y:1.00, z:1.00}
+    Street Straw, {x:1.01, y:1.12, z:0.92}
+    AirVent Curve 01, {x:3.52, y:3.52, z:1.04}
+    Deck Big L, {x:10.32, y:11.18, z:4.76}
+    RedRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    Road T, {x:6.00, y:4.09, z:0.04}
+    RedRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    StonePathBroken 03, {x:1.99, y:0.99, z:0.05}
+    Horizontal Platform Pirates, {x:2.22, y:2.25, z:2.50}
+    Stick, {x:1.92, y:0.20, z:1.09}
+    Mountain 01, {x:15.90, y:10.26, z:4.51}
+    Mountain 1, {x:13.49, y:14.90, z:9.56}
+    Stone Blocks Curve 01, {x:4.70, y:4.71, z:0.31}
+    Column Wood 5M, {x:5.01, y:0.27, z:0.30}
+    BlueRoof, {x:4.00, y:4.00, z:0.20}
+    StonePathBroken 02, {x:2.00, y:0.99, z:0.06}
+    CrackedWindow, {x:2.00, y:0.40, z:4.00}
+    Chandelier 01, {x:0.35, y:0.15, z:0.41}
+    C Red, {x:0.50, y:0.08, z:0.50}
+    PlainPurpleWall, {x:2.00, y:0.40, z:4.00}
+    Stone 4, {x:2.49, y:2.06, z:0.40}
+    Ladder 3M, {x:2.86, y:0.97, z:0.55}
+    V Blue, {x:0.50, y:0.08, z:0.50}
+    Factory Tube 02, {x:1.05, y:1.16, z:15.52}
+    Ground 10 M Square, {x:9.85, y:9.98, z:0.66}
+    W Blue, {x:0.50, y:0.08, z:0.50}
+    Lamp Street 01, {x:1.42, y:0.68, z:3.00}
+    Pipe Cap Emissive, {x:0.74, y:0.26, z:0.74}
+    ChineseFlag 02, {x:0.69, y:0.25, z:2.10}
+    SteamPunk Number 07, {x:0.44, y:0.44, z:0.92}
+    FoodTomato 01, {x:0.32, y:0.33, z:0.27}
+    NavyFloor, {x:4.00, y:4.00, z:0.01}
+    TreeSycamore 01, {x:3.70, y:5.75, z:3.22}
+    Beanbag Cream, {x:1.81, y:1.73, z:0.99}
+    BrutePillar, {x:0.50, y:0.50, z:4.00}
+    HWN20 FenceStick 01, {x:0.27, y:0.22, z:1.63}
+    Umbrella, {x:0.39, y:0.23, z:1.59}
+    NavyRoof, {x:4.00, y:4.00, z:0.20}
+    Monitor 01, {x:0.89, y:0.30, z:0.68}
+    ChineseGate 02, {x:5.62, y:3.22, z:5.35}
+    HWN20 Skeleton, {x:0.55, y:1.92, z:0.36}
+    FencePicketEnd 01, {x:0.05, y:0.23, z:1.21}
+    Bush Fantasy 04, {x:1.52, y:0.96, z:1.32}
+    SpiralStone 02, {x:1.27, y:1.44, z:1.32}
+    Furnit Bar 4 2M, {x:1.96, y:0.42, z:1.49}
+    Mines Tunel End, {x:4.54, y:6.96, z:1.01}
+    Shop, {x:0.50, y:0.07, z:0.51}
+    TableWood 01, {x:3.20, y:1.28, z:1.08}
+    Dome 01, {x:8.65, y:8.22, z:4.33}
+    Cable 2M Curve 02, {x:2.49, y:2.06, z:0.18}
+    Fence Wood V1 2, {x:3.07, y:0.11, z:1.41}
+    Fence Small Blue, {x:12.05, y:0.23, z:3.96}
+    Potion 02, {x:0.25, y:0.25, z:0.57}
+    Railing Straight, {x:5.11, y:0.52, z:0.86}
+    Hook 01, {x:0.36, y:0.34, z:0.56}
+    Rock Patch 01, {x:1.15, y:1.51, z:0.03}
+    Window 2x4 V2 Closed, {x:1.42, y:0.36, z:2.05}
+    RockBig 06, {x:6.04, y:5.00, z:4.12}
+    Floor Module 04, {x:3.00, y:3.00, z:0.07}
+    Stool C, {x:0.62, y:0.60, z:1.00}
+    Outdoor Box Lamp3, {x:0.58, y:0.83, z:1.26}
+    V Red, {x:0.50, y:0.08, z:0.50}
+    BlackFloor Small, {x:2.00, y:2.00, z:0.01}
+    Vegetation 03, {x:0.42, y:0.33, z:1.13}
+    Snow White, {x:1.00, y:1.00, z:1.00}
+    TreeTall 03, {x:4.22, y:3.37, z:6.15}
+    Mushrooms 02, {x:0.44, y:0.48, z:0.46}
+    HWN20 PetTomb 04, {x:4.37, y:3.81, z:2.39}
+    FloorSquare 02, {x:4.00, y:4.00, z:0.05}
+    Pillar Magic 01, {x:1.39, y:1.39, z:2.74}
+    Road Cross, {x:6.00, y:5.99, z:0.04}
+    HWN20 Candle 16, {x:0.13, y:0.13, z:0.22}
+    TileFloor, {x:4.00, y:4.00, z:0.01}
+    HWN20 Tree 09, {x:5.78, y:5.93, z:6.26}
+    Mines Model 16 M Big, {x:17.20, y:17.43, z:4.91}
+    HWN20 Candle 02, {x:0.17, y:0.22, z:0.38}
+    Paperlight 03, {x:0.64, y:0.64, z:0.49}
+    Narrow Flags 01, {x:0.00, y:0.00, z:0.00}
+    DocksModuleCurve 02, {x:2.68, y:2.65, z:1.03}
+    PurpleRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    Battery 01, {x:0.11, y:0.11, z:0.33}
+    Door 4, {x:0.98, y:0.14, z:2.27}
+    Mines Cart Gold, {x:0.84, y:1.28, z:1.14}
+    Fish 01, {x:0.37, y:0.19, z:0.06}
+    Dirt Light Sand, {x:1.00, y:1.00, z:1.00}
+    Traffic Post Yellow, {x:0.27, y:0.27, z:1.12}
+    HWN20 FlowerPot 04, {x:0.38, y:0.33, z:0.36}
+    Trigger Area, {x:1.00, y:1.00, z:1.00}
+    Solid Blue Pattern, {x:1.00, y:1.00, z:1.00}
+    Window 4x4 Open, {x:2.66, y:0.95, z:1.90}
+    Typewriter, {x:0.77, y:0.59, z:0.54}
+    Fire Hydrant Yellow, {x:0.48, y:0.41, z:0.69}
+    Terrain 2, {x:14.15, y:13.91, z:5.52}
+    Chest Plates Key, {x:0.98, y:0.29, z:0.09}
+    HWN20 SmallIronfFence 01, {x:0.06, y:0.71, z:3.93}
+    ArrowBoardCorner, {x:2.04, y:2.04, z:4.00}
+    Stone Black Snow, {x:1.00, y:1.00, z:1.00}
+    HWN20 FlowerPot 06, {x:0.34, y:0.32, z:0.57}
+    Window 2x2 V4 Open V2, {x:1.42, y:1.19, z:2.02}
+    BlueRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    PlainBeigeWall, {x:2.00, y:0.40, z:4.00}
+    HWN20 SkullDeco DDLM 02, {x:0.25, y:0.21, z:0.05}
+    BlueRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    Fish 03, {x:0.39, y:0.27, z:0.06}
+    StatueOwl 01, {x:1.04, y:1.16, z:1.49}
+    Door 6, {x:0.98, y:0.14, z:2.27}
+    Chest Base 01, {x:1.40, y:1.10, z:0.28}
+    Battery 03, {x:0.48, y:1.07, z:0.37}
+    AncientEgyptianDoorframe, {x:2.00, y:0.39, z:4.00}
+    Train Track 10 M, {x:2.46, y:9.99, z:0.34}
+    Pipe Curve 05M 01, {x:0.47, y:0.35, z:0.92}
+    Fence Wood V3 2, {x:2.03, y:0.21, z:1.52}
+    Paperlight 01, {x:0.45, y:0.45, z:0.61}
+    HWN20 Candle 14, {x:0.18, y:0.19, z:0.39}
+    Spring, {x:2.66, y:0.28, z:0.26}
+    Pipe Tip Emissive, {x:0.48, y:2.59, z:0.48}
+    ZigzagWindow, {x:2.00, y:0.40, z:4.00}
+    Sensor 01, {x:1.00, y:0.95, z:2.23}
+    FloorBaseConcrete 01, {x:16.00, y:16.00, z:0.02}
+    Vegetation 01, {x:0.42, y:0.47, z:0.04}
+    TreeTall 01, {x:4.22, y:3.37, z:6.15}
+    Ladder, {x:0.74, y:0.31, z:3.13}
+    CrateLong 02, {x:1.99, y:0.75, z:0.46}
+    Stool A, {x:0.62, y:0.60, z:1.00}
+    Lamp Green, {x:0.31, y:0.96, z:0.40}
+    Table 02, {x:1.28, y:2.56, z:0.98}
+    Floor Module 06, {x:3.00, y:3.00, z:0.05}
+    RockBig 04, {x:5.18, y:5.34, z:7.82}
+    Rock Patch 03, {x:1.94, y:1.45, z:0.04}
+    Bridge 02, {x:5.54, y:1.99, z:2.41}
+    Shelf 02, {x:1.71, y:0.78, z:2.11}
+    Solid Light Brown, {x:1.00, y:1.00, z:1.00}
+    Solid Red, {x:1.00, y:1.00, z:1.00}
+    Outdoor Box Lamp, {x:0.56, y:0.51, z:0.95}
+    Traffic Post Red, {x:0.27, y:0.27, z:1.12}
+    Straw, {x:1.34, y:2.69, z:0.82}
+    CorrugatedMetalWall, {x:2.00, y:0.37, z:4.00}
+    OrangeWindow, {x:2.00, y:0.40, z:4.00}
+    Arcade Machine Green, {x:1.39, y:1.61, z:2.63}
+    Chair 08, {x:0.75, y:0.66, z:0.71}
+    FuturisticDoorframe, {x:2.00, y:0.35, z:4.00}
+    ElectricTower 01, {x:0.17, y:0.16, z:4.84}
+    DarkGreyRoof, {x:4.00, y:4.00, z:0.20}
+    Woodplanks Light, {x:1.00, y:1.00, z:1.00}
+    TreeSycamore 03, {x:3.70, y:5.75, z:3.22}
+    Flower Red, {x:1.00, y:1.00, z:1.00}
+    Light Decor2, {x:0.00, y:0.00, z:0.00}
+    GreyGreenWindowLarge, {x:2.00, y:0.40, z:4.00}
+    WhiteRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    AirVent Hang 01, {x:0.08, y:1.08, z:1.82}
+    Pistol, {x:0.24, y:0.63, z:0.07}
+    WhiteRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    Flower 04, {x:0.37, y:0.49, z:0.32}
+    BonesChest 01, {x:0.62, y:0.88, z:0.48}
+    SteamPunk Number 05, {x:0.43, y:0.42, z:0.92}
+    Pipe Holder Emissive, {x:0.91, y:0.26, z:0.74}
+    Stone 6, {x:1.91, y:2.52, z:0.83}
+    WizardStaff 01, {x:0.18, y:0.23, z:2.01}
+    YellowRoof Corner Small, {x:2.00, y:2.00, z:0.70}
+    NavyRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    AirVent Curve 02, {x:1.52, y:1.55, z:1.04}
+    NavyRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    BeigeRoof 1Edge, {x:4.00, y:4.00, z:0.70}
+    Module Stair Stones 5M, {x:5.00, y:1.15, z:0.42}
+    Mountain 02, {x:14.96, y:8.42, z:3.55}
+    Mountain 2, {x:13.79, y:13.96, z:7.26}
+    Mountain 3, {x:16.73, y:6.12, z:13.52}
+    TwoColouredDoorframe, {x:2.00, y:0.30, z:4.00}
+    Sushi Shelf 2, {x:1.63, y:0.62, z:3.85}
+    Mountain 03, {x:19.03, y:13.20, z:6.66}
+    Vase 08, {x:0.17, y:0.21, z:0.44}
+    DarkGreyWindow, {x:2.00, y:0.40, z:4.00}
+    LimeWindow, {x:2.00, y:0.40, z:4.00}
+    StreetCordSmall 01, {x:0.38, y:0.38, z:0.16}
+    Chandelier 02, {x:0.84, y:0.77, z:1.92}
+    FullHeightStairs Corner, {x:4.01, y:4.03, z:4.00}
+    DiagonalTileCorner, {x:2.03, y:2.03, z:4.00}
+    StonePathBroken 01, {x:1.99, y:0.99, z:0.06}
+    Drink Lids, {x:0.14, y:0.14, z:0.14}
+    Stop Sign, {x:0.88, y:0.12, z:2.46}
+    Dumpster, {x:2.72, y:1.78, z:2.37}
+    Factory Tube 01, {x:1.05, y:1.16, z:15.52}
+    House 5 M Green, {x:5.44, y:9.47, z:8.87}
+    Stone 7, {x:2.18, y:2.15, z:1.39}
+    SteamPunk Number 04, {x:0.42, y:0.42, z:0.93}
+    Fridge Counter, {x:3.13, y:1.29, z:1.01}
+    Train Car, {x:3.10, y:10.13, z:4.30}
+    ChineseFlag 01, {x:0.67, y:0.02, z:1.60}
+    HWN20 TreeBase&Axe, {x:2.16, y:2.35, z:1.81}
+    ConsoleTable, {x:4.11, y:1.68, z:0.60}
+    Display Monitor, {x:0.74, y:0.28, z:0.80}
+    Light Decor3, {x:0.00, y:0.00, z:0.00}
+    HWN20 FenceStick 02, {x:0.21, y:0.20, z:1.50}
+    TreeSycamore 02, {x:3.70, y:5.75, z:3.22}
+    ArtworkInfo SmartItem, {x:0.50, y:0.05, z:0.30}
+    Black Fantasy Button, {x:0.63, y:0.63, z:0.13}
+    ChineseGate 01, {x:4.53, y:1.90, z:3.75}
+    ChineseStatueDragon 01, {x:0.80, y:2.99, z:1.86}
+    Mines Car Track 3M Jiggle V2, {x:1.15, y:3.00, z:0.09}
+    Ornament Stone 01, {x:1.25, y:1.25, z:0.99}
+    SpiralStone 01, {x:1.14, y:1.04, z:1.32}
+    GlassFloor Small, {x:2.00, y:2.00, z:0.01}
+    Fence Wood V1 1, {x:2.99, y:0.11, z:1.52}
+    Column Vertical Wood Large, {x:0.45, y:0.45, z:3.03}
+    Train Track 6 M Jiggle V02, {x:2.50, y:6.00, z:0.34}
+    FuturisticWall, {x:2.00, y:0.35, z:4.00}
+    Cable 2M Curve 01, {x:2.26, y:2.07, z:0.12}
+    YellowRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    Shelf 03, {x:1.98, y:1.03, z:0.75}
+    Bridge 03, {x:5.32, y:2.07, z:2.12}
+    TableWood 02, {x:1.96, y:1.94, z:1.03}
+    YellowRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    Piano Chair, {x:0.62, y:0.65, z:0.69}
+    Pebbles Color, {x:1.00, y:1.00, z:1.00}
+    Bottle Sake, {x:0.10, y:0.10, z:0.32}
+    Rock Patch 02, {x:1.56, y:1.53, z:0.03}
+    RockBig 05, {x:3.45, y:3.65, z:5.57}
+    Table 03, {x:1.27, y:1.27, z:0.99}
+    J Red, {x:0.50, y:0.08, z:0.50}
+    FencePicketWhiteLarge 01, {x:0.05, y:5.11, z:1.21}
+    Potion 01, {x:0.21, y:0.21, z:0.47}
+    GreyCorner, {x:2.00, y:2.00, z:4.00}
+    Mushrooms 01, {x:0.22, y:0.23, z:0.22}
+    House 7 M Blue, {x:7.83, y:9.38, z:5.79}
+    Lamp Purple, {x:0.31, y:0.96, z:0.40}
+    Ring Black, {x:2.00, y:2.00, z:0.10}
+    HWN20 Candle 01, {x:0.15, y:0.17, z:0.38}
+    Microwave Open, {x:0.94, y:1.04, z:0.45}
+    HWN20 Candle 15, {x:0.17, y:0.19, z:0.43}
+    Cart 01, {x:1.08, y:1.32, z:1.00}
+    FloorSquare 01, {x:4.00, y:4.00, z:0.05}
+    Narrow Flags 02, {x:0.00, y:0.00, z:0.00}
+    GreenBoardsDoorframe, {x:2.00, y:0.30, z:4.00}
+    TurquoiseFloor Small, {x:2.00, y:2.00, z:0.01}
+    Fish 02, {x:0.42, y:0.23, z:0.06}
+    LimeRoof 3Edges, {x:4.00, y:4.00, z:0.70}
+    HWN20 SkullDeco DDLM 03, {x:0.25, y:0.21, z:0.05}
+    Battery 02, {x:1.17, y:0.53, z:0.54}
+    MagnoliaDoorframe, {x:2.00, y:0.30, z:4.00}
+    Door 7, {x:0.98, y:0.09, z:2.27}
+    Sushi Box 3, {x:0.38, y:0.38, z:0.22}
+    DocksModuleCurve 01, {x:2.68, y:2.68, z:1.03}
+    LimeRoof 2Edges, {x:4.00, y:4.00, z:0.70}
+    DarkGreyRoof 4Edges, {x:4.00, y:4.00, z:0.70}
+    Cog, {x:0.99, y:0.99, z:0.11}
+    FloorModuleSciFi 01, {x:2.00, y:2.00, z:0.06}
+    Dock Stair 01, {x:3.00, y:3.00, z:2.36}
+    MetalFloor, {x:4.00, y:4.00, z:0.01}
+    HWN20 FlowerPot 07, {x:0.34, y:0.33, z:0.14}
+    Rubbish Bag, {x:1.38, y:1.38, z:1.17}
+    WaterPatchCornerOutside 01, {x:6.92, y:7.48, z:0.38}
+    BrickCorner, {x:2.06, y:2.06, z:4.00}
+    Small Table, {x:0.00, y:0.00, z:0.00}
+    Terrain 3, {x:7.09, y:7.12, z:1.57}

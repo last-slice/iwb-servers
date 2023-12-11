@@ -80,6 +80,7 @@ export class Scene extends Schema {
     @type("string") cat: string
     @type("string") bpcl: string
     @type("string") w: string
+    @type("string") im: string
 
     @type(['string']) bps = new ArraySchema<string>();
     @type(['string']) rat = new ArraySchema<string>();
@@ -97,6 +98,7 @@ export class Scene extends Schema {
 
     @type("boolean") isdl: boolean
     @type("boolean") e: boolean
+    @type("boolean") priv: boolean
 
 
     constructor(data?: any) {
@@ -124,6 +126,8 @@ export class Scene extends Schema {
             this.isdl = data.isdl
             this.e = data.e
             this.w = data.w
+            this.priv = data.priv
+            this.im = data.im ? data.im : ""
 
             if (data.ass) {
                 data.ass.forEach((asset: any) => {

@@ -15,6 +15,7 @@ export enum SERVER_MESSAGE_TYPES {
     PLACE_SELECTED_ASSET = 'place_asset',
     SELECT_CATALOG_ASSET = 'select_catalog_asset',
     PLAYER_CANCELED_CATALOG_ASSET = 'player_canceled_catalog',
+    ASSET_OVER_SCENE_LIMIT = 'asset_over_scene_limit',
 
     // Catalog and Assets
     CATALOG_UPDATED = 'catalog_updated',
@@ -37,6 +38,10 @@ export enum SERVER_MESSAGE_TYPES {
     SCENE_ADD_BP = 'add_build_permissions',
     SCENE_DELETE_BP = 'delete_build_permissions',
     SCENE_DELETE = 'delete_scene',
+    SCENE_UPDATE_PARCELS = 'scene_update_parcels',
+    SCENE_SAVE_EDITS = 'scene_save_edits',
+    SCENE_UPDATE_ENABLED = 'scene_update_enabled',
+    SCENE_UPDATE_PRIVACY = 'scene_update_privacy',
 
     //World
     INIT_WORLD = "init_world",
