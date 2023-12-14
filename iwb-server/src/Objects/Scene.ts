@@ -180,6 +180,9 @@ export class Scene extends Schema {
                 case COMPONENT_TYPES.VIDEO_COMPONENT:
                     item.vidComp = new VideoComponent()
                     item.vidComp.url = asset.vidComp?.url || ''
+                    item.vidComp.volume = asset.vidComp?.volume || 0.5
+                    item.vidComp.autostart = asset.vidComp?.autostart || true
+                    item.vidComp.loop = asset.vidComp?.loop || false
                     break;
 
                 case COMPONENT_TYPES.VISBILITY_COMPONENT:

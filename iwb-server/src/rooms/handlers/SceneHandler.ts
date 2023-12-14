@@ -398,7 +398,7 @@ export class RoomSceneHandler {
                         this.addMaterialComponent(item)
                         break;
                     case 'Video':
-                        this.addVideoComponent(item)
+                        this.addVideoComponent(item, selectedAsset ? selectedAsset.vidComp : null)
                         break;
                 }
                 break;
@@ -429,9 +429,15 @@ export class RoomSceneHandler {
         item.imgComp.url = url
     }
 
-    addVideoComponent(item:SceneItem){
+    addVideoComponent(item:SceneItem, data:any){
         item.comps.push(COMPONENT_TYPES.VIDEO_COMPONENT)
         item.vidComp = new VideoComponent()
+        if(data !== null){
+            item.vidComp.url = data.url
+            item.vidComp.autostart = data.autostart
+            item.vidComp.loop = data.loop
+            item.vidComp.volume = data.volume
+        }
     }
 
     addMaterialComponent(item:SceneItem){
