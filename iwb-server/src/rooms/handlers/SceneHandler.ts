@@ -1,6 +1,7 @@
 import {Client} from "@colyseus/core";
 import { Player } from "../../Objects/Player"
 import {
+    CollisionComponent,
     ImageComponent,
     MaterialComponent,
     Quaternion,
@@ -109,7 +110,6 @@ export class RoomSceneHandler {
                 const {item} = info
 
                 let scene = this.room.state.scenes.get(info.item.sceneId)
-                console.log('scene to edit item in is', scene)
                 if(scene){
                     if(this.checkSceneLimits(scene, itemManager.items.get(item.id))){
                         const newItem = new SceneItem()
@@ -119,9 +119,9 @@ export class RoomSceneHandler {
                         newItem.r = new Quaternion(item.rotation)
                         newItem.s = new Vector3(item.scale)
                         newItem.type = itemManager.items.get(item.id).ty
-    
-                        this.addItemComponents(newItem, itemManager.items.get(item.id).n)
-    
+
+                        this.addItemComponents(newItem, itemManager.items.get(item.id).n, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
+   
                         scene.ass.push(newItem)
                         scene.pc += itemManager.items.get(item.id).pc
                         scene.si += itemManager.items.get(item.id).si
@@ -195,7 +195,18 @@ export class RoomSceneHandler {
             let player:Player = room.state.players.get(client.userData.userId)
 
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
-                player.addSelectedAsset(info)
+                let data:any = {
+                    catalogId: info.catalogId,
+                    assetId: info.assetId,
+                }
+                let scene = this.room.state.scenes.get(info.sceneId)
+                if(scene){
+                    let sceneAsset = scene.ass.find((asset:any)=> asset.aid === info.assetId)
+                    if(sceneAsset){
+                        data.componentData = sceneAsset
+                    }
+                }
+                player.addSelectedAsset(data)
                 this.deleteSceneItem(player, info)
             }
         })
@@ -206,8 +217,8 @@ export class RoomSceneHandler {
             let player:Player = room.state.players.get(client.userData.userId)
 
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
-                this.room.broadcast(SERVER_MESSAGE_TYPES.PLACE_SELECTED_ASSET, info)
-                player.removeSelectedAsset()
+                this.room.broadcast(SERVER_MESSAGE_TYPES.PLACE_SELECTED_ASSET, info, )
+                // player.removeSelectedAsset()
             }else{
                 console.log('player is not in create scene mode')
             }
@@ -370,20 +381,20 @@ export class RoomSceneHandler {
         }
     }
 
-    addItemComponents(item:SceneItem, name:string){
+    addItemComponents(item:SceneItem, name:string, selectedAsset?:any){
         item.comps.push(COMPONENT_TYPES.TRANSFORM_COMPONENT)
 
-        this.addVisibilityComponent(item)
+        this.addVisibilityComponent(item, selectedAsset ? selectedAsset.visComp.visible : true)
 
         switch(item.type){
             case '3D':
-                item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
                 break;
 
             case '2D':
                 switch(name){
                     case 'Image':        
-                        this.addImageComponent(item)                
+                        console.log('selected ass', selectedAsset)
+                        this.addImageComponent(item, selectedAsset ? selectedAsset.imgComp.url : "")                
                         this.addMaterialComponent(item)
                         break;
                     case 'Video':
@@ -392,17 +403,30 @@ export class RoomSceneHandler {
                 }
                 break;
         }
+
+        this.addCollisionComponent(item, selectedAsset ? selectedAsset.colComp : null)
     }
 
-    addVisibilityComponent(item:SceneItem){
+    addCollisionComponent(item:SceneItem, collision:any){
+        item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
+        item.colComp = new CollisionComponent()
+
+        if(collision !== null){
+            item.colComp.iMask = collision.iMask
+            item.colComp.vMask = collision.vMask
+        }
+    }
+
+    addVisibilityComponent(item:SceneItem, selectedVisibility:boolean){
         item.comps.push(COMPONENT_TYPES.VISBILITY_COMPONENT)
         item.visComp = new VisibilityComponent()
-        item.visComp.visible = true
+        item.visComp.visible = selectedVisibility
     }
 
-    addImageComponent(item:SceneItem){
+    addImageComponent(item:SceneItem, url:string){
         item.comps.push(COMPONENT_TYPES.IMAGE_COMPONENT)
         item.imgComp = new ImageComponent()
+        item.imgComp.url = url
     }
 
     addVideoComponent(item:SceneItem){

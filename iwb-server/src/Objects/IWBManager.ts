@@ -78,7 +78,7 @@ export class IWBManager{
 
     incrementVersion(updates?:string[]){
         console.log('increment version request verified, updating iwb version from ' + this.version + " to " + (this.version + 1))
-        this.version++
+        this.version += 1
         this.configModified = true
 
         if(updates){
@@ -198,13 +198,13 @@ export class IWBManager{
 
         if(world.init){
             delete world.init
-            this.createRealmLobby(world)
+            this.createRealmLobby(world, true)
         }else{
             delete world.init
             let cachedWorld = this.worlds.find((w)=> w.ens === world.ens)
             if(cachedWorld){
                 cachedWorld.updated = world.updated
-                cachedWorld.v = world.v
+                cachedWorld.v = this.version
             }
         }
         this.worldsModified = true
@@ -226,7 +226,7 @@ export class IWBManager{
         }
     }
 
-    async createRealmLobby(world:any){
+    async createRealmLobby(world:any, newWorld:boolean){
         this.initiateRealm(world.owner)
         .then((realmData)=>{           
             let realmToken = realmData.EntityToken.EntityToken
@@ -239,19 +239,25 @@ export class IWBManager{
                 this.fetchRealmScenes(realmScenes)
                 .then((sceneData)=>{
                     let scenes = sceneData.filter((scene:any)=> scene.w === world.ens)
-                    scenes.push(this.createLobbyScene(world))
 
-                    world.builds = 1
-                    world.updated = Math.floor(Date.now()/1000)
-        
-                    this.backupScene(world.ens, realmToken, realmTokenType, realmId, scenes)
-                    .then(()=>{
-                        this.worlds.push(world)
-                    })
-                    .catch((e)=>{
-                        console.log('error backing up lobby scene', world.ens, e)
-                    })
+                    if(!scenes.find((scene:any)=> scene.n === "Realm Lobby")){
+                        scenes.push(this.createLobbyScene(world))
 
+                        if(newWorld){
+                            world.builds = 1
+                            world.updated = Math.floor(Date.now()/1000)    
+                        } 
+
+                        this.backupScene(world.ens, realmToken, realmTokenType, realmId, scenes)
+                        .then(()=>{
+                            if(newWorld){
+                                this.worlds.push(world)  
+                            }
+                        })
+                        .catch((e)=>{
+                            console.log('error backing up lobby scene', world.ens, e)
+                        })
+                    }
                 })
             })  
         })
@@ -305,8 +311,8 @@ export class IWBManager{
 
     async fetchRealmScenes(realmScenes:any){
         if(realmScenes.code === 200){
-            this.version = realmScenes.data.ProfileVersion
-            if(this.version > 0){
+            let version = realmScenes.data.ProfileVersion
+            if(version > 0){
                 let metadata = realmScenes.data.Metadata
                 let count = 0
                 for (const key in metadata) {
@@ -412,11 +418,8 @@ export class IWBManager{
                 Entity: {Id: realmId, Type: type},
                 FileNames:[this.realmFileKey]
             })
-            console.log('init res is', initres)
-            console.log('init upload url is', initres.UploadDetails[0])
     
             let uploadres = await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(scenes))
-            console.log('upload res is', uploadres)
     
             let finalres = await finalizeUploadFiles(token,
                 {
@@ -424,7 +427,6 @@ export class IWBManager{
                 FileNames:[this.realmFileKey],
                 ProfileVersion:initres.ProfileVersion,
             })
-            console.log('final res upload is', finalres)
             this.removeWorldPendingSave(world)
         }
         catch(e){

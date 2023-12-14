@@ -146,6 +146,14 @@ export class RoomSceneItemHandler {
             case COMPONENT_TYPES.VIDEO_COMPONENT:
                 asset.vidComp.url = info.data.url
                 break;
+
+            case COMPONENT_TYPES.COLLISION_COMPONENT:
+                if(info.data.layer === 'iMask'){
+                    asset.colComp.iMask = info.data.value
+                }else{
+                    asset.colComp.vMask = info.data.value
+                }
+                break;
         }
     }
 }

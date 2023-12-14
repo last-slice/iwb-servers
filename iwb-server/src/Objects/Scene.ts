@@ -132,7 +132,6 @@ export class Scene extends Schema {
             if (data.ass) {
                 data.ass.forEach((asset: any) => {
                     try {
-                        // console.log('asset is ', asset)
                         let item = new SceneItem()
                         item.id = asset.id
                         item.ent = asset.ent
@@ -186,6 +185,12 @@ export class Scene extends Schema {
                 case COMPONENT_TYPES.VISBILITY_COMPONENT:
                     item.visComp = new VisibilityComponent()
                     item.visComp.visible = asset.visComp.visible
+                    break;
+
+                 case COMPONENT_TYPES.COLLISION_COMPONENT:
+                    item.colComp = new CollisionComponent()
+                    item.colComp.iMask = asset.colComp ? asset.colComp.iMask : 2
+                    item.colComp.vMask = asset.colComp ? asset.colComp.vMask : 1
                     break;
 
 

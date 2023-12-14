@@ -52,7 +52,13 @@ router.post(
 
 router.post("/lobby/create", async (req: any, res: any) => {
     console.log('creating lobby for world', req.body.world)
-    iwbManager.createRealmLobby(req.body.world)
+    try{
+        iwbManager.createRealmLobby(req.body.world, false)
+        return res.status(200).json({valid:true});
+    }
+    catch(e){
+        return res.status(200).json({valid:false});
+    }
 });
 
 router.post("/user/message", async (req: any, res: any) => {

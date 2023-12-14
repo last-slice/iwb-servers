@@ -9,8 +9,11 @@ import { generateId } from "colyseus";
 export class SelectedAsset extends Schema {
   @type("string") catalogId: string
   @type("string") assetId: string
+  componentData:any
+
   constructor(info:any){
     super()
+    this.componentData = info.componentData
     this.catalogId = info.catalogId
     this.assetId = info.assetId
   }
