@@ -12,6 +12,7 @@ export enum SERVER_MESSAGE_TYPES {
     PLAY_MODE_CHANGED = 'play_mode_changed',
     SELECTED_SCENE_ASSET = 'selected_scene_asset',
     EDIT_SCENE_ASSET = 'edit_scene_asset',
+    EDIT_SCENE_ASSET_DONE = 'edit_scene_asset_done',
     PLACE_SELECTED_ASSET = 'place_asset',
     SELECT_CATALOG_ASSET = 'select_catalog_asset',
     PLAYER_CANCELED_CATALOG_ASSET = 'player_canceled_catalog',
@@ -26,7 +27,7 @@ export enum SERVER_MESSAGE_TYPES {
     PLAYER_SCENES_CATALOG = 'player_scenes_catalog',
     PLAYER_JOINED_USER_WORLD = 'player_joined_private_world',
     PLAYER_EDIT_ASSET = 'player_edit_asset',
-    UPDATE_ITEM_COMPONENT = "update_component",//
+    UPDATE_ITEM_COMPONENT = "update_component",
 
     // Scene
     SCENE_SAVE_NEW = "scene_save_new",
@@ -42,6 +43,7 @@ export enum SERVER_MESSAGE_TYPES {
     SCENE_SAVE_EDITS = 'scene_save_edits',
     SCENE_UPDATE_ENABLED = 'scene_update_enabled',
     SCENE_UPDATE_PRIVACY = 'scene_update_privacy',
+    SCENE_DOWNLOAD = 'scene_download',
 
     //World
     INIT_WORLD = "init_world",
@@ -79,7 +81,18 @@ export enum COMPONENT_TYPES {
     VIDEO_COMPONENT = 'Video',
     MATERIAL_COMPONENT = "Material",
     COLLISION_COMPONENT = "Collision",
-    TRANSFORM_COMPONENT = "Transform"
+    TRANSFORM_COMPONENT = "Transform",
+    NFT_COMPONENT = "NFT"
+}
+
+export enum COLLISION_LAYERS {
+    INVISIBLE = "invisible",
+    VISIBLE = "visible"
+}
+
+export enum BLOCKCHAINS {
+    ETH = "eth",
+    POLYGON = "polygon"
 }
 
 // export type SceneData = {

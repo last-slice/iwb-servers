@@ -131,10 +131,13 @@ export class IWBManager{
         }
     }
 
-    sendAllMessage(type:SERVER_MESSAGE_TYPES, data:any){
-        this.rooms.forEach((room)=>{
-            room.broadcast(type,data)
-        })
+    sendAllMessage(body:any){
+        console.log('body to send is', body)
+        if(body && body.message){
+            this.rooms.forEach((room)=>{
+                room.broadcast(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, body.message)
+            })
+        }
     }
 
     sendUserMessage(user:string, type:SERVER_MESSAGE_TYPES, data:any){

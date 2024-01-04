@@ -38,6 +38,13 @@ export class ImageComponent extends Schema {
     @type("string") url: string = ""
 }
 
+export class NFTComponent extends Schema {
+    @type("string") contract: string = "0xf23e1aa97de9ca4fb76d2fa3fafcf4414b2afed0"
+    @type("string") tokenId: string = "1"
+    @type("string") chain: string = "eth"
+    @type("number") style: number = 22
+}
+
 export class VideoComponent extends Schema {
     @type("string") url: string = ""
     @type("number") volume: number = .5
@@ -51,6 +58,7 @@ export class SceneItem extends Schema {
     @type('string') aid: string
     @type("string") n: string
     @type("string") type: string
+    @type("boolean") editing:boolean = false
     @type(Vector3) p: Vector3 = new Vector3()
     @type(Quaternion) r: Vector3 = new Vector3()
     @type(Vector3) s: Vector3 = new Vector3()
@@ -60,6 +68,7 @@ export class SceneItem extends Schema {
     @type(CollisionComponent) colComp: CollisionComponent
     @type(ImageComponent) imgComp: ImageComponent
     @type(VideoComponent) vidComp: VideoComponent
+    @type(NFTComponent) nftComp: NFTComponent
 }
 
 export class TempScene extends Schema {
@@ -169,7 +178,6 @@ export class Scene extends Schema {
                     item.matComp.emissInt = asset.matComp.emissInt
                     item.matComp.textPath = asset.matComp.textPath
                     item.matComp.color = asset.matComp.color
-
                     break;
 
                 case COMPONENT_TYPES.IMAGE_COMPONENT:
@@ -196,10 +204,14 @@ export class Scene extends Schema {
                     item.colComp.vMask = asset.colComp ? asset.colComp.vMask : 1
                     break;
 
-
+                case COMPONENT_TYPES.NFT_COMPONENT:
+                    item.nftComp = new NFTComponent()
+                    item.nftComp.contract = asset.nftComp ? asset.nftComp.contract : ""
+                    item.nftComp.tokenId = asset.nftComp ? asset.nftComp.tokenId : ""
+                    item.nftComp.chain = asset.nftComp ? asset.nftComp.chain : "eth"
+                    item.nftComp.style = asset.nftComp ? asset.nftComp.style : "none"
+                    break;
             }
         })
-        // item.colComp = asset.colComp
-        // item.vidComp = asset.vidComp
     }
 }

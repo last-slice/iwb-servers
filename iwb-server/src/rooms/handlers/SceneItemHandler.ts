@@ -154,6 +154,26 @@ export class RoomSceneItemHandler {
                     asset.colComp.vMask = info.data.value
                 }
                 break;
+
+            case COMPONENT_TYPES.NFT_COMPONENT:
+                switch(info.data.type){
+                    case 'chain':
+                        asset.nftComp.chain = info.data.value
+                        break;
+
+                    case 'style':
+                        asset.nftComp.style = info.data.value
+                        break;
+
+                    case 'contract':
+                        asset.nftComp.contract = info.data.value
+                        break;
+
+                    case 'tokenId':
+                        asset.nftComp.tokenId = info.data.value
+                        break;
+                }
+                break;
         }
     }
 }

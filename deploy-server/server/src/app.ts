@@ -2,14 +2,8 @@ import express from "express";
 import cors from 'cors'
 import bodyParser from "body-parser";
 import requestIp from "request-ip";
-import * as dotenv from "dotenv";
-import 'dotenv/config'
 import { router } from "./api/api.router";
 
-dotenv.config({ path: '../.env', });
- 
-const deployAuth = process.env.DEPLOY_AUTH
-const queueTimer = 30000 ///30 seconds to check deployment queue
 
 const app = express();
 // const sse = require('sse-express');

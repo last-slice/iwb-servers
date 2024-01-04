@@ -1,0 +1,13 @@
+import { handlBulkWorldsDeployments, handleWorldDeployment } from "../Service";
+
+export function deployRouter(router:any){
+    router.post("/deployment/worlds/bulk/:auth", async (req: any, res: any) => {
+        console.log('received bulk deployment request', req.body)
+        handlBulkWorldsDeployments(req, res)
+    });
+
+    router.post("/deployment/success", async (req: any, res: any) => {
+        console.log('received world deployment success', req.body)
+        handleWorldDeployment(req, res)
+    });
+}

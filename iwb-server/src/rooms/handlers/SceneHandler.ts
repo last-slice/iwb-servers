@@ -4,6 +4,7 @@ import {
     CollisionComponent,
     ImageComponent,
     MaterialComponent,
+    NFTComponent,
     Quaternion,
     Scene,
     SceneItem,
@@ -20,6 +21,37 @@ export class RoomSceneHandler {
 
     constructor(room:IWBRoom) {
         this.room = room
+
+        room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player){//} && (player.mode === SCENE_MODES.BUILD_MODE)){
+                let scene = this.room.state.scenes.get(info.sceneId)
+                if(scene){
+                    for(let i = 0; i < scene.ass.length; i++){
+                        let asset = scene.ass[i]
+                        if(asset.type === "2D"){
+                            let itemConfig = itemManager.items.get(asset.id)
+                            asset.n = itemConfig.n
+                        }   
+                    }
+
+                    try{
+                        let res = await fetch(process.env.DEPLOYMENT_SERVER + "scene/download", {
+                            method:"POST",
+                            headers:{"Content-type": "application/json"},
+                            body: JSON.stringify({scene:scene})
+                        })
+                        console.log('deployment ping', await res.json())
+                    }
+                    catch(e){
+                        console.log('error pinging download server for zip file', player.address, e)
+                        player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "There was an error initiating your download. Please try again.")
+                    }
+                }
+            }
+        })
 
         room.onMessage(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT, async(client, info)=>{
             console.log(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT + " message", info)
@@ -137,6 +169,36 @@ export class RoomSceneHandler {
             }
         })
 
+        room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_DONE, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_DONE + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
+                let scene = this.room.state.scenes.get(info.item.sceneId)
+                if(scene){
+                    let sceneItem = scene.ass.find((as)=> as.aid === info.item.aid)
+                    if(sceneItem && sceneItem.editing){
+                        sceneItem.editing = false
+                    }
+                }
+            }
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
+                let scene = this.room.state.scenes.get(info.item.sceneId)
+                if(scene){
+                    let sceneItem = scene.ass.find((as)=> as.aid === info.item.aid)
+                    if(sceneItem && !sceneItem.editing){
+                        sceneItem.editing = true
+                    }
+                }
+            }
+        })
+
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_UPDATE_ITEM, async(client, info)=>{
             console.log(SERVER_MESSAGE_TYPES.SCENE_UPDATE_ITEM + " message", info)
     
@@ -145,12 +207,9 @@ export class RoomSceneHandler {
                 const {item} = info
 
                 let scene = this.room.state.scenes.get(info.item.sceneId)
-                console.log('scene to edit item in is', scene)
                 if(scene){
-                    console.log('we have scene for asset edit')
                     let sceneItem = scene.ass.find((as)=> as.aid === info.item.aid)
-                    console.log('scene item is ', sceneItem)
-                    if(sceneItem){
+                    if(sceneItem && !sceneItem.editing){
                         sceneItem.p.x = item.position.x
                         sceneItem.p.y = item.position.y
                         sceneItem.p.z = item.position.z
@@ -202,7 +261,8 @@ export class RoomSceneHandler {
                 let scene = this.room.state.scenes.get(info.sceneId)
                 if(scene){
                     let sceneAsset = scene.ass.find((asset:any)=> asset.aid === info.assetId)
-                    if(sceneAsset){
+                    if(sceneAsset && !sceneAsset.editing){
+                        sceneAsset.editing = true
                         data.componentData = sceneAsset
                     }
                 }
@@ -218,7 +278,7 @@ export class RoomSceneHandler {
 
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
                 this.room.broadcast(SERVER_MESSAGE_TYPES.PLACE_SELECTED_ASSET, info, )
-                // player.removeSelectedAsset()
+                player.removeSelectedAsset()
             }else{
                 console.log('player is not in create scene mode')
             }
@@ -323,6 +383,7 @@ export class RoomSceneHandler {
                 let assetIndex = scene.ass.findIndex((ass)=> ass.aid === info.assetId)
                 if(assetIndex >= 0){
                     scene.pc -= itemManager.items.get(scene.ass.find((a)=>a.aid === info.assetId).id).pc
+                    scene.si -= itemManager.items.get(scene.ass.find((a)=>a.aid === info.assetId).id).si
                     scene.ass.splice(assetIndex,1)
                 }
             }
@@ -370,9 +431,6 @@ export class RoomSceneHandler {
     }
 
     canBuild(user:string, sceneId:any){
-        console.log('can build world is', this.room.state.world)
-        console.log('can build user ens is', iwbManager.worlds.find((w)=>w.owner === user).ens)
-    
         let scene:Scene = this.room.state.scenes.get(sceneId)
         if(scene){
             return scene.bps.includes(user) || user === iwbManager.worlds.find((w) => w.ens === this.room.state.world).owner;
@@ -400,11 +458,26 @@ export class RoomSceneHandler {
                     case 'Video':
                         this.addVideoComponent(item, selectedAsset ? selectedAsset.vidComp : null)
                         break;
+                    case 'NFT Frame':
+                        this.addNFTComponent(item, selectedAsset ? selectedAsset.nftComp : null)
+                        break;
                 }
                 break;
         }
 
         this.addCollisionComponent(item, selectedAsset ? selectedAsset.colComp : null)
+    }
+
+    addNFTComponent(item:SceneItem, nft:any){
+        item.comps.push(COMPONENT_TYPES.NFT_COMPONENT)
+        item.nftComp = new NFTComponent()
+
+        if(nft !== null){
+            item.nftComp.chain = nft.chain
+            item.nftComp.contract = nft.contract
+            item.nftComp.tokenId = nft.tokenId
+            item.nftComp.style = nft.style
+        }
     }
 
     addCollisionComponent(item:SceneItem, collision:any){

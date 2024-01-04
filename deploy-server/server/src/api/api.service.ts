@@ -1,6 +1,6 @@
 import Axios from "axios";
 import { deployIWB, newAssetsReady } from "../deploy/iwb-deployment";
-import { addDeployment, resetBucket } from "../deploy/scene-deployment";
+import { addDeployment, queue, resetBucket } from "../deploy/scene-deployment";
 import { status } from "../config/config";
 import { buckets } from "../deploy/buckets";
 const jwt = require("jsonwebtoken");
@@ -233,4 +233,262 @@ export async function postNewAssetData(req:any, res:any){
             console.log('new asset not pinged on iwb server')
             res.status(200).send({valid: false})
         }
+}
+
+export function returnBuckets(res:any){
+    let bucks:any[] = [...buckets.values()]
+
+  const table = `
+  <table style="width: 100%; border: 1px solid black;">
+  <thead>
+      <tr>
+        <th>Id</th>
+        <th>Enabled</th>
+        <th>Available</th>
+        <th>Status</th>
+        <th>World</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${bucks.map(item => `
+        <tr>
+        <td style="text-align: left;">${item.id}</td>
+        <td style="text-align: left;">${item.enabled ? "Enabled" : "Disabled"}</td>
+        <td style="text-align: left;">${item.available ?  item.enabled ? "Free" : "Occupied" : ""}</td>
+        <td style="text-align: left;">${item.status}</td>
+        <td style="text-align: left;">${item.owner}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+`;
+
+// Create a complete HTML page with the table
+const html = `
+  <!DOCTYPE html>
+  <html>
+    <head>
+    <link rel="icon" href="https://bafkreigfd6u2qwzcllnw4jmivk25e5z7f5kqtvzslb4jmlxeut2ccg6ns4.ipfs.nftstorage.link/" type="image/x-icon">
+
+      <title>IWB Deployment Buckets</title>
+      <style>
+      body {
+        background-color: black;
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+      table {
+        width: 100%;
+        border: 1px solid white;
+      }
+      th, td {
+        text-align: left;
+        padding: 8px;
+      }
+      th {
+        background-color: #333;
+        color: white;
+      }
+      /* Set the percentage height for table rows */
+      tr:nth-child(odd) {
+        height: 10%;
+      }
+      tr:nth-child(even) {
+        height: 10%;
+      }
+    </style>
+    </head>
+    <body>
+    <img src="https://bafkreids4czeoymh6wmb6rgzvq6oeul7k6mttwa6utb2g6m7qctdqbd6ae.ipfs.nftstorage.link/" alt="Your Logo" style="max-width: 50%;">
+      <h1>IWB Deployment Buckets</h1>
+      ${table}
+    </body>
+  </html>
+`;
+
+res.send(html);
+}
+
+export function returnStatus(res:any){
+    let bucks:any[] = [...buckets.values()]
+
+    const table = `
+    <table style="width: 100%; border: 1px solid black;">
+    <thead>
+        <tr>
+          <th>Id</th>
+          <th>Enabled</th>
+          <th>Available</th>
+          <th>Status</th>
+          <th>World</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${bucks.map(item => `
+          <tr>
+          <td style="text-align: left;">${item.id}</td>
+          <td style="text-align: left;">${item.enabled ? "Enabled" : "Disabled"}</td>
+          <td style="text-align: left;">${item.available ?  item.enabled ? "Free" : "" : item.enabled ? "Occupied" : ""}</td>
+          <td style="text-align: left;">${item.status}</td>
+          <td style="text-align: left;">${item.owner}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+  
+  const queueTable = `
+  <table style="width: 100%; border: 1px solid black;">
+  <thead>
+      <tr>
+        <th>ENS</th>
+        <th>Owner</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${queue.map(item => `
+        <tr>
+        <td style="text-align: left;">${item.ens}</td>
+        <td style="text-align: left;">${item.owner}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+  `;
+  
+  // Create a complete HTML page with the table
+  const html = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+      <meta charset="UTF-8">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/css/bootstrap.min.css" rel="stylesheet">
+      <link rel="icon" href="https://bafkreigfd6u2qwzcllnw4jmivk25e5z7f5kqtvzslb4jmlxeut2ccg6ns4.ipfs.nftstorage.link/" type="image/x-icon">
+  
+        <title>IWB Deployment Buckets</title>
+        <style>
+        body {
+          background-color: black;
+          color: white;
+          font-family: Arial, sans-serif;
+        }
+        table {
+          width: 100%;
+          border: 1px solid white;
+        }
+        th, td {
+          text-align: left;
+          padding: 8px;
+        }
+        th {
+          background-color: #333;
+          color: white;
+        }
+        /* Set the percentage height for table rows */
+        tr:nth-child(odd) {
+          height: 10%;
+        }
+        tr:nth-child(even) {
+          height: 10%;
+        }
+      </style>
+      </head>
+      <body>
+      <div class="container">
+      <div class="row">
+      <div class="col-md-12">
+      <img src="https://bafkreids4czeoymh6wmb6rgzvq6oeul7k6mttwa6utb2g6m7qctdqbd6ae.ipfs.nftstorage.link/" alt="Your Logo" style="max-width: 50%;">
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-6">
+        <h1>IWB Deployment Queue</h1>
+        ${queueTable}
+        </div>
+  
+  
+        <div class="col-md-6">
+        <h1>IWB Deployment Buckets</h1>
+        ${table}
+        </div>
+  
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/js/bootstrap.min.js"></script>
+  
+      </body>
+    </html>
+  `;
+  
+  res.send(html);
+}
+
+export function returnQueue(res:any){
+    // res.status(200).json({result: "success", queue: queue})
+   // Create an HTML table from the JSON data
+   const table = `
+   <table style="width: 100%; border: 1px solid black;">
+   <thead>
+       <tr>
+         <th>Name</th>
+         <th>ENS</th>
+         <th>Owner</th>
+       </tr>
+     </thead>
+     <tbody>
+       ${queue.map(item => `
+         <tr>
+         <td style="text-align: left;">${item.worldName}</td>
+         <td style="text-align: left;">${item.ens}</td>
+         <td style="text-align: left;">${item.owner}</td>
+         </tr>
+       `).join('')}
+     </tbody>
+   </table>
+ `;
+
+ // Create a complete HTML page with the table
+ const html = `
+   <!DOCTYPE html>
+   <html>
+     <head>
+     <link rel="icon" href="https://bafkreigfd6u2qwzcllnw4jmivk25e5z7f5kqtvzslb4jmlxeut2ccg6ns4.ipfs.nftstorage.link/" type="image/x-icon">
+
+       <title>IWB Deployment Queue</title>
+       <style>
+       body {
+         background-color: black;
+         color: white;
+         font-family: Arial, sans-serif;
+       }
+       table {
+         width: 100%;
+         border: 1px solid white;
+       }
+       th, td {
+         text-align: left;
+         padding: 8px;
+       }
+       th {
+         background-color: #333;
+         color: white;
+       }
+       /* Set the percentage height for table rows */
+       tr:nth-child(odd) {
+         height: 10%;
+       }
+       tr:nth-child(even) {
+         height: 10%;
+       }
+     </style>
+     </head>
+     <body>
+     <img src="https://bafkreids4czeoymh6wmb6rgzvq6oeul7k6mttwa6utb2g6m7qctdqbd6ae.ipfs.nftstorage.link/" alt="Your Logo" style="max-width: 50%;">
+       <h1>IWB Deployment Queue</h1>
+       ${table}
+     </body>
+   </html>
+ `;
+
+ res.send(html);
 }

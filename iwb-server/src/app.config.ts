@@ -7,10 +7,10 @@ import cors from 'cors'
 import bodyParser from "body-parser";
 import express from 'express';
 import path from 'path';
-import {router} from "./Objects/Router";
 import { IWBManager } from "./Objects/IWBManager";
 import { PlayerManager } from "./Objects/PlayerManager";
 import { playground } from "@colyseus/playground";
+import { router } from "./Objects/Routers/Router";
 
 export let itemManager: ItemManager
 export let iwbManager: IWBManager
