@@ -1,6 +1,6 @@
 import {ArraySchema, Schema, type} from "@colyseus/schema";
 import {COMPONENT_TYPES} from "../utils/types";
-import { CollisionComponent, Color4, ImageComponent, MaterialComponent, NFTComponent, Quaternion, TextComponent, Vector3, VideoComponent, VisibilityComponent } from "./Components";
+import { ActionComponent, Actions, CollisionComponent, Color4, ImageComponent, MaterialComponent, NFTComponent, Quaternion, TextComponent, TriggerComponent, Triggers, Vector3, VideoComponent, VisibilityComponent } from "./Components";
 
 export class SceneItem extends Schema {
     @type("string") id: string
@@ -21,6 +21,9 @@ export class SceneItem extends Schema {
     @type(VideoComponent) vidComp: VideoComponent
     @type(NFTComponent) nftComp: NFTComponent
     @type(TextComponent) textComp: TextComponent
+    @type(TriggerComponent) trigComp: TriggerComponent
+    @type(ActionComponent) actComp: ActionComponent
+    // @type(ClickComponent) clickComp: ClickComponent
 }
 
 export class TempScene extends Schema {
@@ -61,7 +64,6 @@ export class Scene extends Schema {
     @type("boolean") priv: boolean
 
     @type([SceneItem]) ass = new ArraySchema<SceneItem>();
-
 
     constructor(data?: any) {
         super()
@@ -118,6 +120,14 @@ export class Scene extends Schema {
     addItemComponents(item: SceneItem, asset: any) {
         item.comps = asset.comps
 
+        if(!item.comps.includes(COMPONENT_TYPES.TRIGGER_COMPONENT)){
+            item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
+        }
+
+        if(!item.comps.includes(COMPONENT_TYPES.ACTION_COMPONENT)){
+            item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
+        }
+
         item.comps.forEach((component: string) => {
             switch (component) {
                 case COMPONENT_TYPES.MATERIAL_COMPONENT:
@@ -165,7 +175,6 @@ export class Scene extends Schema {
                     break;
 
                 case COMPONENT_TYPES.TEXT_COMPONENT:
-                    console.log('addint text component', asset.textComp)
                     item.textComp = new TextComponent()
                     if(asset.textComp){
                         item.textComp.text = asset.textComp.text
@@ -181,6 +190,62 @@ export class Scene extends Schema {
                         item.textComp.align = asset.textComp.align
                         item.textComp.outlineWidth = asset.textComp.outlineWidth
                         item.textComp.outlineColor = new Color4(asset.textComp.outlineColor)
+                    }
+                    break;
+
+                // case COMPONENT_TYPES.CLICK_COMPONENT:
+                //     item.clickComp = new ClickComponent()
+                //     if(asset.clickComp){
+                //         item.clickComp.url = asset.clickComp.url
+                //         item.clickComp.type = asset.clickComp.type
+                //         item.clickComp.enabled = asset.clickComp.enabled
+                //         item.clickComp.hoverText = asset.clickComp.hoverText
+                //     }
+                //     break;
+
+                case COMPONENT_TYPES.TRIGGER_COMPONENT:
+                    item.trigComp = new TriggerComponent()
+                    if(asset.trigComp){
+                        item.trigComp.enabled = asset.trigComp.enabled             
+
+                        asset.trigComp.triggers.forEach((data:any)=>{
+                            console.log('triggers are ', data)
+                                                    
+                            let trigger = new Triggers()
+                            trigger.type = data.type
+
+                            for(let key in data.actions){
+                                console.log('action is', data.actions[key])
+                                let action = new Actions()
+                                action.name = data.actions[key].name
+                                action.url = data.actions[key].url
+                                action.type = data.actions[key].type
+                                action.hoverText = data.actions[key].hoverText
+
+                                trigger.actions.set(action.name, action)
+                            }
+                            
+                            item.trigComp.triggers.push(trigger)
+                        })
+                    }
+                    break;
+
+                case COMPONENT_TYPES.ACTION_COMPONENT:
+                    item.actComp = new ActionComponent()
+                    if(asset.actComp){
+                        for(let key in asset.actComp.actions){
+                            let action = new Actions()
+                            action.name = asset.actComp.actions[key].name
+                            action.url = asset.actComp.actions[key].url
+                            action.type = asset.actComp.actions[key].type
+                            action.hoverText = asset.actComp.actions[key].hoverText
+
+                            item.actComp.actions.set(key, action)
+                        }
+                        // console.log('asset actions are a', asset.actComp.actions)
+                        // asset.actComp.actions.forEach((action:any, key:any)=>{
+                        //     item.actComp.actions.set(key, action)
+                        // })
                     }
                     break;
             }

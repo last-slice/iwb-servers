@@ -1,4 +1,4 @@
-import {ArraySchema, Schema, type} from "@colyseus/schema";
+import {ArraySchema, Schema, type, MapSchema} from "@colyseus/schema";
 import {COMPONENT_TYPES} from "../utils/types";
 import { SceneItem } from "./Scene";
 
@@ -8,7 +8,6 @@ export class Color4 extends Schema {
     @type("number") b: number = 1
     @type("number") a: number = 1
 }
-
 
 export class Vector3 extends Schema {
     @type("number") x: number
@@ -69,6 +68,28 @@ export class TextComponent extends Schema {
     @type("number") outlineWidth: number = 0
     @type(Color4) outlineColor: Color4 = new Color4(1,1,1,1)
     @type(Color4) color: Color4 = new Color4(1,1,1,1)
+}
+
+export class Actions extends Schema {
+    @type("string") name: string = "Open Link"
+    @type("number") entity: number = -500
+    @type("string") url: string = "https://decentraland.org/play"
+    @type("string") type: string = "open_link"
+    @type("string") hoverText: string = "Click here"
+}
+
+export class ActionComponent extends Schema {
+    @type({map:Actions}) actions = new MapSchema<Actions>()
+}
+
+export class Triggers extends Schema {
+    @type({map:Actions}) actions = new MapSchema<Actions>()
+    @type("string") type: string = "on_click"
+}
+
+export class TriggerComponent extends Schema {
+    @type("boolean") enabled: boolean = false
+    @type([Triggers]) triggers = new ArraySchema<Triggers>()
 }
 
 export function addNFTComponent(item:SceneItem, nft:NFTComponent){
@@ -144,3 +165,36 @@ export function addTextComponent(item:SceneItem, textComp:TextComponent){
         item.textComp.outlineColor = textComp.outlineColor
     }
 }
+
+export function addTriggerComponent(item:SceneItem, trigComp:TriggerComponent){
+    item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
+    item.trigComp = new TriggerComponent()
+    if(trigComp){
+        item.trigComp.enabled = trigComp.enabled
+        trigComp.triggers.forEach((trigger:any)=>{
+            item.trigComp.triggers.push(trigger)
+        })
+    }
+}
+
+export function addActionComponent(item:SceneItem, actComp:ActionComponent){
+    item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
+    item.actComp = new ActionComponent()
+    if(actComp){
+        actComp.actions.forEach((action, key)=>{
+            item.actComp.actions.set(key, action)
+        })
+    }
+}
+
+// export function addClickComponent(item:SceneItem, clickComp:ClickComponent){
+//     item.comps.push(COMPONENT_TYPES.CLICK_COMPONENT)
+//     item.clickComp = new ClickComponent()
+//     if(clickComp){
+//         item.clickComp.url = clickComp.url
+//         item.clickComp.type = clickComp.type
+//         item.clickComp.enabled = clickComp.enabled
+//         item.clickComp.hoverText = clickComp.hoverText
+//     }
+// }
+

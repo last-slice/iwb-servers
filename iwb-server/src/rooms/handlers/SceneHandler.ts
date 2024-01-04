@@ -1,26 +1,8 @@
-import {Client} from "@colyseus/core";
 import { Player } from "../../Objects/Player"
-import {
-    CollisionComponent,
-    ImageComponent,
-    MaterialComponent,
-    NFTComponent,
-    Quaternion,
-    Vector3,
-    VideoComponent,
-    VisibilityComponent,
-    addCollisionComponent,
-    addImageComponent,
-    addMaterialComponent,
-    addNFTComponent,
-    addTextComponent,
-    addVideoComponent,
-    addVisibilityComponent
-} from "../../Objects/Components"
 import { itemManager, iwbManager } from "../../app.config"
-import { COMPONENT_TYPES, SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types"
+import { SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types"
 import { IWBRoom } from "../IWBRoom"
-import { Scene, SceneItem } from "../../Objects/Scene";
+import { Scene } from "../../Objects/Scene";
 
 export class RoomSceneHandler {
     room:IWBRoom
@@ -133,164 +115,6 @@ export class RoomSceneHandler {
             }
         })
 
-        room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM + " message", info)
-
-            let player:Player = room.state.players.get(client.userData.userId)
-            this.deleteSceneItem(player, info)
-        })
-    
-        room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM + " message", info)
-    
-            let player:Player = room.state.players.get(client.userData.userId)
-            if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
-                const {item} = info
-
-                let scene = this.room.state.scenes.get(info.item.sceneId)
-                if(scene){
-                    if(this.checkSceneLimits(scene, itemManager.items.get(item.id))){
-                        const newItem = new SceneItem()
-                        newItem.id = item.id
-                        newItem.aid = item.aid
-                        newItem.p = new Vector3(item.position)
-                        newItem.r = new Quaternion(item.rotation)
-                        newItem.s = new Vector3(item.scale)
-                        newItem.type = itemManager.items.get(item.id).ty
-
-                        this.addItemComponents(newItem, itemManager.items.get(item.id).n, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
-   
-                        scene.ass.push(newItem)
-                        scene.pc += itemManager.items.get(item.id).pc
-                        scene.si += itemManager.items.get(item.id).si
-                    }else{
-                        player.sendPlayerMessage(SERVER_MESSAGE_TYPES.ASSET_OVER_SCENE_LIMIT, {})
-                    }
-                }
-
-                info.user = client.userData.userId
-                room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, info)
-
-                player.removeSelectedAsset()
-            }
-        })
-
-        room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_DONE, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_DONE + " message", info)
-    
-            let player:Player = room.state.players.get(client.userData.userId)
-            if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
-                let scene = this.room.state.scenes.get(info.item.sceneId)
-                if(scene){
-                    let sceneItem = scene.ass.find((as)=> as.aid === info.item.aid)
-                    if(sceneItem && sceneItem.editing){
-                        sceneItem.editing = false
-                    }
-                }
-            }
-        })
-
-        room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET + " message", info)
-    
-            let player:Player = room.state.players.get(client.userData.userId)
-            if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
-                let scene = this.room.state.scenes.get(info.item.sceneId)
-                if(scene){
-                    let sceneItem = scene.ass.find((as)=> as.aid === info.item.aid)
-                    if(sceneItem && !sceneItem.editing){
-                        sceneItem.editing = true
-                        sceneItem.editor = client.userData.userId
-                    }
-                }
-            }
-        })
-
-        room.onMessage(SERVER_MESSAGE_TYPES.SCENE_UPDATE_ITEM, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_UPDATE_ITEM + " message", info)
-    
-            let player:Player = room.state.players.get(client.userData.userId)
-            if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
-                const {item} = info
-
-                let scene = this.room.state.scenes.get(info.item.sceneId)
-                if(scene){
-                    let sceneItem = scene.ass.find((as)=> as.aid === info.item.aid)
-                    if(sceneItem && !sceneItem.editing){
-                        sceneItem.p.x = item.position.x
-                        sceneItem.p.y = item.position.y
-                        sceneItem.p.z = item.position.z
-
-                        sceneItem.r.x = item.rotation.x
-                        sceneItem.r.y = item.rotation.y
-                        sceneItem.r.z = item.rotation.z
-                    }
-                }
-            }
-        })
-
-        room.onMessage(SERVER_MESSAGE_TYPES.PLAYER_CANCELED_CATALOG_ASSET, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.PLAYER_CANCELED_CATALOG_ASSET + " message", info)
-    
-            let player:Player = room.state.players.get(client.userData.userId)
-
-            if(player && player.mode === SCENE_MODES.BUILD_MODE){
-                player.removeSelectedAsset()
-                // this.room.broadcast(SERVER_MESSAGE_TYPES.SELECT_NEW_ASSET, info)
-            }else{
-                console.log('player is not in create scene mode')
-            }
-        })
-
-        room.onMessage(SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET + " message", info)
-    
-            let player:Player = room.state.players.get(client.userData.userId)
-
-            if(player && player.mode === SCENE_MODES.BUILD_MODE){
-                player.addSelectedAsset(info)
-                // this.room.broadcast(SERVER_MESSAGE_TYPES.SELECT_NEW_ASSET, info)
-            }else{
-                console.log('player is not in create scene mode')
-            }
-        })
-
-        room.onMessage(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET + " message", info)
-    
-            let player:Player = room.state.players.get(client.userData.userId)
-
-            if(player && player.mode === SCENE_MODES.BUILD_MODE){
-                let data:any = {
-                    catalogId: info.catalogId,
-                    assetId: info.assetId,
-                }
-                let scene = this.room.state.scenes.get(info.sceneId)
-                if(scene){
-                    let sceneAsset = scene.ass.find((asset:any)=> asset.aid === info.assetId)
-                    if(sceneAsset && !sceneAsset.editing){
-                        sceneAsset.editing = true
-                        data.componentData = sceneAsset
-                    }
-                }
-                player.addSelectedAsset(data)
-                this.deleteSceneItem(player, info)
-            }
-        })
-
-        room.onMessage(SERVER_MESSAGE_TYPES.PLACE_SELECTED_ASSET, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.PLACE_SELECTED_ASSET + " message", info)
-    
-            let player:Player = room.state.players.get(client.userData.userId)
-
-            if(player && player.mode === SCENE_MODES.BUILD_MODE){
-                this.room.broadcast(SERVER_MESSAGE_TYPES.PLACE_SELECTED_ASSET, info, )
-                player.removeSelectedAsset()
-            }else{
-                console.log('player is not in create scene mode')
-            }
-        })
-
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADD_BP, async(client, info)=>{
             console.log(SERVER_MESSAGE_TYPES.SCENE_ADD_BP + " message", info)
     
@@ -383,20 +207,6 @@ export class RoomSceneHandler {
         })
     }
 
-    deleteSceneItem(player:Player, info:any){
-        if(player && player.mode === SCENE_MODES.BUILD_MODE){
-            let scene = this.room.state.scenes.get(info.sceneId)
-            if(scene){
-                let assetIndex = scene.ass.findIndex((ass)=> ass.aid === info.assetId)
-                if(assetIndex >= 0){
-                    scene.pc -= itemManager.items.get(scene.ass.find((a)=>a.aid === info.assetId).id).pc
-                    scene.si -= itemManager.items.get(scene.ass.find((a)=>a.aid === info.assetId).id).si
-                    scene.ass.splice(assetIndex,1)
-                }
-            }
-        }
-    }
-
     removeParcel(scene:Scene, parcel: any) {
         let parcelIndex = scene.pcls.findIndex((p) => p === parcel)
         if (parcelIndex >= 0) {
@@ -435,61 +245,6 @@ export class RoomSceneHandler {
     hasTemporaryParcel(parcel: any) {
         return [...this.room.state.temporaryParcels]
             .find((p) => p === parcel) || this.isOccupied(parcel)
-    }
-
-    canBuild(user:string, sceneId:any){
-        let scene:Scene = this.room.state.scenes.get(sceneId)
-        if(scene){
-            return scene.bps.includes(user) || user === iwbManager.worlds.find((w) => w.ens === this.room.state.world).owner;
-        }else{
-            return false
-        }
-    }
-
-    addItemComponents(item:SceneItem, name:string, selectedAsset?:any){
-        item.comps.push(COMPONENT_TYPES.TRANSFORM_COMPONENT)
-
-        addVisibilityComponent(item, selectedAsset ? selectedAsset.visComp.visible : true)
-
-        switch(item.type){
-            case '3D':
-                break;
-
-            case '2D':
-                switch(name){
-                    case 'Image':        
-                        console.log('selected ass', selectedAsset)
-                        addImageComponent(item, selectedAsset ? selectedAsset.imgComp.url : "")                
-                        addMaterialComponent(item)
-                        break;
-                    case 'Video':
-                        addVideoComponent(item, selectedAsset ? selectedAsset.vidComp : null)
-                        break;
-                    case 'NFT Frame':
-                        addNFTComponent(item, selectedAsset ? selectedAsset.nftComp : null)
-                        break;
-
-                    case 'Text':
-                        addTextComponent(item, selectedAsset ? selectedAsset.textComp : null)
-                        break;
-                }
-                break;
-        }
-
-        addCollisionComponent(item, selectedAsset ? selectedAsset.colComp : null)
-    }
-
-    checkSceneLimits(scene:Scene, item:SceneItem){
-        let totalSize = (scene.pcnt > 20 ? 300 : scene.pcnt * 15) * (1024 ** 2)
-        let totalPoly = scene.pcnt * 10000
-
-        if(scene.si > totalSize || scene.pc > totalPoly){
-            console.log('scene is over limitations')
-            return false
-        }else{
-            console.log('scene is within limitations')
-            return true
-        }
     }
 
     checkAssetsForEditByPlayer(user:string){

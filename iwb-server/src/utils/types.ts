@@ -83,7 +83,10 @@ export enum COMPONENT_TYPES {
     COLLISION_COMPONENT = "Collision",
     TRANSFORM_COMPONENT = "Transform",
     NFT_COMPONENT = "NFT",
-    TEXT_COMPONENT = "Text"
+    TEXT_COMPONENT = "Text",
+    TRIGGER_COMPONENT = "Trigger",
+    ACTION_COMPONENT = 'Action'
+    // CLICK_COMPONENT = "Click",
 }
 
 export enum COLLISION_LAYERS {
