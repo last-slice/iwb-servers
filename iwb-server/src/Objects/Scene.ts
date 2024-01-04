@@ -1,56 +1,6 @@
 import {ArraySchema, Schema, type} from "@colyseus/schema";
 import {COMPONENT_TYPES} from "../utils/types";
-
-export class Vector3 extends Schema {
-    @type("number") x: number
-    @type("number") y: number
-    @type("number") z: number
-}
-
-export class Quaternion extends Schema {
-    @type("number") x: number
-    @type("number") y: number
-    @type("number") z: number
-    @type("number") w: number
-}
-
-export class CollisionComponent extends Schema {
-    @type("number") vMask: number = 1
-    @type("number") iMask: number = 2
-}
-
-export class MaterialComponent extends Schema {
-    @type("boolean") shadows: boolean = true
-    @type("number") metallic: number = 0
-    @type("number") roughness: number = 1
-    @type("number") intensity: number = 0
-    @type("string") emissPath: string = ""
-    @type('number') emissInt: number = 0
-    @type("string") textPath: string = ""
-    @type(['string']) color: ArraySchema = new ArraySchema<string>()
-}
-
-export class VisibilityComponent extends Schema {
-    @type("boolean") visible: boolean = true
-}
-
-export class ImageComponent extends Schema {
-    @type("string") url: string = ""
-}
-
-export class NFTComponent extends Schema {
-    @type("string") contract: string = "0xf23e1aa97de9ca4fb76d2fa3fafcf4414b2afed0"
-    @type("string") tokenId: string = "1"
-    @type("string") chain: string = "eth"
-    @type("number") style: number = 22
-}
-
-export class VideoComponent extends Schema {
-    @type("string") url: string = ""
-    @type("number") volume: number = .5
-    @type("boolean") autostart: boolean = true
-    @type("boolean") loop: boolean = false
-}
+import { CollisionComponent, Color4, ImageComponent, MaterialComponent, NFTComponent, Quaternion, TextComponent, Vector3, VideoComponent, VisibilityComponent } from "./Components";
 
 export class SceneItem extends Schema {
     @type("string") id: string
@@ -59,6 +9,7 @@ export class SceneItem extends Schema {
     @type("string") n: string
     @type("string") type: string
     @type("boolean") editing:boolean = false
+    @type("string") editor:string = ""
     @type(Vector3) p: Vector3 = new Vector3()
     @type(Quaternion) r: Vector3 = new Vector3()
     @type(Vector3) s: Vector3 = new Vector3()
@@ -69,6 +20,7 @@ export class SceneItem extends Schema {
     @type(ImageComponent) imgComp: ImageComponent
     @type(VideoComponent) vidComp: VideoComponent
     @type(NFTComponent) nftComp: NFTComponent
+    @type(TextComponent) textComp: TextComponent
 }
 
 export class TempScene extends Schema {
@@ -96,7 +48,6 @@ export class Scene extends Schema {
     @type(['string']) rev = new ArraySchema<string>();
     @type(['string']) pcls = new ArraySchema<string>();
     @type(['string']) sp = new ArraySchema<string>();
-    @type([SceneItem]) ass = new ArraySchema<SceneItem>();
 
     @type("number") cd: number
     @type("number") upd: number
@@ -108,6 +59,8 @@ export class Scene extends Schema {
     @type("boolean") isdl: boolean
     @type("boolean") e: boolean
     @type("boolean") priv: boolean
+
+    @type([SceneItem]) ass = new ArraySchema<SceneItem>();
 
 
     constructor(data?: any) {
@@ -149,7 +102,6 @@ export class Scene extends Schema {
                         item.s = new Vector3(asset.s)
                         item.aid = asset.aid
                         item.type = asset.type
-
 
                         //add components
                         this.addItemComponents(item, asset)
@@ -210,6 +162,26 @@ export class Scene extends Schema {
                     item.nftComp.tokenId = asset.nftComp ? asset.nftComp.tokenId : ""
                     item.nftComp.chain = asset.nftComp ? asset.nftComp.chain : "eth"
                     item.nftComp.style = asset.nftComp ? asset.nftComp.style : "none"
+                    break;
+
+                case COMPONENT_TYPES.TEXT_COMPONENT:
+                    console.log('addint text component', asset.textComp)
+                    item.textComp = new TextComponent()
+                    if(asset.textComp){
+                        item.textComp.text = asset.textComp.text
+                        item.textComp.font = asset.textComp.font
+                        item.textComp.fontSize = asset.textComp.fontSize
+
+                        item.textComp.color = new Color4()
+                        item.textComp.color.r = asset.textComp.color.r
+                        item.textComp.color.g = asset.textComp.color.g
+                        item.textComp.color.b = asset.textComp.color.b
+                        item.textComp.color.a = asset.textComp.color.a
+
+                        item.textComp.align = asset.textComp.align
+                        item.textComp.outlineWidth = asset.textComp.outlineWidth
+                        item.textComp.outlineColor = new Color4(asset.textComp.outlineColor)
+                    }
                     break;
             }
         })

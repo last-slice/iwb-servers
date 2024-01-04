@@ -73,6 +73,8 @@ export class IWBRoom extends Room<IWBRoomState> {
         if(player){
             this.state.players.delete(client.userData.userId)
 
+            this.state.messageHandler.sceneHandler.checkAssetsForEditByPlayer(client.userData.userid)
+
           setTimeout(()=>{
             console.log('player is not in another world, need to remove them from server')
             playerManager.removePlayer(player.dclData.userId)

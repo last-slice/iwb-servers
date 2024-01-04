@@ -6,15 +6,21 @@ import {
     MaterialComponent,
     NFTComponent,
     Quaternion,
-    Scene,
-    SceneItem,
     Vector3,
     VideoComponent,
-    VisibilityComponent
-} from "../../Objects/Scene"
+    VisibilityComponent,
+    addCollisionComponent,
+    addImageComponent,
+    addMaterialComponent,
+    addNFTComponent,
+    addTextComponent,
+    addVideoComponent,
+    addVisibilityComponent
+} from "../../Objects/Components"
 import { itemManager, iwbManager } from "../../app.config"
 import { COMPONENT_TYPES, SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types"
 import { IWBRoom } from "../IWBRoom"
+import { Scene, SceneItem } from "../../Objects/Scene";
 
 export class RoomSceneHandler {
     room:IWBRoom
@@ -194,6 +200,7 @@ export class RoomSceneHandler {
                     let sceneItem = scene.ass.find((as)=> as.aid === info.item.aid)
                     if(sceneItem && !sceneItem.editing){
                         sceneItem.editing = true
+                        sceneItem.editor = client.userData.userId
                     }
                 }
             }
@@ -442,7 +449,7 @@ export class RoomSceneHandler {
     addItemComponents(item:SceneItem, name:string, selectedAsset?:any){
         item.comps.push(COMPONENT_TYPES.TRANSFORM_COMPONENT)
 
-        this.addVisibilityComponent(item, selectedAsset ? selectedAsset.visComp.visible : true)
+        addVisibilityComponent(item, selectedAsset ? selectedAsset.visComp.visible : true)
 
         switch(item.type){
             case '3D':
@@ -452,74 +459,24 @@ export class RoomSceneHandler {
                 switch(name){
                     case 'Image':        
                         console.log('selected ass', selectedAsset)
-                        this.addImageComponent(item, selectedAsset ? selectedAsset.imgComp.url : "")                
-                        this.addMaterialComponent(item)
+                        addImageComponent(item, selectedAsset ? selectedAsset.imgComp.url : "")                
+                        addMaterialComponent(item)
                         break;
                     case 'Video':
-                        this.addVideoComponent(item, selectedAsset ? selectedAsset.vidComp : null)
+                        addVideoComponent(item, selectedAsset ? selectedAsset.vidComp : null)
                         break;
                     case 'NFT Frame':
-                        this.addNFTComponent(item, selectedAsset ? selectedAsset.nftComp : null)
+                        addNFTComponent(item, selectedAsset ? selectedAsset.nftComp : null)
+                        break;
+
+                    case 'Text':
+                        addTextComponent(item, selectedAsset ? selectedAsset.textComp : null)
                         break;
                 }
                 break;
         }
 
-        this.addCollisionComponent(item, selectedAsset ? selectedAsset.colComp : null)
-    }
-
-    addNFTComponent(item:SceneItem, nft:any){
-        item.comps.push(COMPONENT_TYPES.NFT_COMPONENT)
-        item.nftComp = new NFTComponent()
-
-        if(nft !== null){
-            item.nftComp.chain = nft.chain
-            item.nftComp.contract = nft.contract
-            item.nftComp.tokenId = nft.tokenId
-            item.nftComp.style = nft.style
-        }
-    }
-
-    addCollisionComponent(item:SceneItem, collision:any){
-        item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
-        item.colComp = new CollisionComponent()
-
-        if(collision !== null){
-            item.colComp.iMask = collision.iMask
-            item.colComp.vMask = collision.vMask
-        }
-    }
-
-    addVisibilityComponent(item:SceneItem, selectedVisibility:boolean){
-        item.comps.push(COMPONENT_TYPES.VISBILITY_COMPONENT)
-        item.visComp = new VisibilityComponent()
-        item.visComp.visible = selectedVisibility
-    }
-
-    addImageComponent(item:SceneItem, url:string){
-        item.comps.push(COMPONENT_TYPES.IMAGE_COMPONENT)
-        item.imgComp = new ImageComponent()
-        item.imgComp.url = url
-    }
-
-    addVideoComponent(item:SceneItem, data:any){
-        item.comps.push(COMPONENT_TYPES.VIDEO_COMPONENT)
-        item.vidComp = new VideoComponent()
-        if(data !== null){
-            item.vidComp.url = data.url
-            item.vidComp.autostart = data.autostart
-            item.vidComp.loop = data.loop
-            item.vidComp.volume = data.volume
-        }
-    }
-
-    addMaterialComponent(item:SceneItem){
-        item.comps.push(COMPONENT_TYPES.MATERIAL_COMPONENT)
-        item.matComp = new MaterialComponent()
-        item.matComp.color.push("1")
-        item.matComp.color.push("1")
-        item.matComp.color.push("1")
-        item.matComp.color.push("1")
+        addCollisionComponent(item, selectedAsset ? selectedAsset.colComp : null)
     }
 
     checkSceneLimits(scene:Scene, item:SceneItem){
@@ -534,4 +491,16 @@ export class RoomSceneHandler {
             return true
         }
     }
+
+    checkAssetsForEditByPlayer(user:string){
+        this.room.state.scenes.forEach((scene, key)=>{
+            scene.ass.forEach((asset, assetKey)=>{
+                if(asset.editing && asset.editor === user){
+                    asset.editing = false
+                    asset.editor = ""
+                }
+            })
+        })
+    }
 }
+

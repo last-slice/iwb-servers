@@ -82,7 +82,8 @@ export enum COMPONENT_TYPES {
     MATERIAL_COMPONENT = "Material",
     COLLISION_COMPONENT = "Collision",
     TRANSFORM_COMPONENT = "Transform",
-    NFT_COMPONENT = "NFT"
+    NFT_COMPONENT = "NFT",
+    TEXT_COMPONENT = "Text"
 }
 
 export enum COLLISION_LAYERS {

@@ -1,5 +1,6 @@
+import { Color4 } from "../../Objects/Components";
 import { Player } from "../../Objects/Player";
-import { Scene, SceneItem, Vector3 } from "../../Objects/Scene";
+import { Scene, SceneItem } from "../../Objects/Scene";
 import { COMPONENT_TYPES, EDIT_MODIFIERS, SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types";
 import { IWBRoom } from "../IWBRoom";
 
@@ -171,6 +172,34 @@ export class RoomSceneItemHandler {
 
                     case 'tokenId':
                         asset.nftComp.tokenId = info.data.value
+                        break;
+                }
+                break;
+
+            case COMPONENT_TYPES.TEXT_COMPONENT:
+                switch(info.data.type){
+                    case 'text':
+                        asset.textComp.text = info.data.value
+                        break;
+
+                    case 'font':
+                        asset.textComp.font = info.data.value
+                        break;
+                        
+                    case 'fontSize':
+                        asset.textComp.fontSize = parseInt(info.data.value)
+                        break;
+
+                    case 'color':
+                        asset.textComp.color = new Color4()
+                        asset.textComp.color.r = info.data.value.r
+                        asset.textComp.color.g = info.data.value.g
+                        asset.textComp.color.b = info.data.value.b
+                        asset.textComp.color.a = info.data.value.a
+                        break;
+
+                    case 'align':
+                        asset.textComp.align = info.data.value
                         break;
                 }
                 break;

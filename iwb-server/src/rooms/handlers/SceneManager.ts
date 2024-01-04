@@ -80,7 +80,10 @@ export class RoomSceneManager {
     async saveRealmScenes(){
         let scenes:Scene[] = []
         this.room.state.scenes.forEach((scene)=>{
-            console.log('scene is', scene)
+            scene.ass.forEach((asset)=>{
+                asset.editing = false
+                asset.editor = ""
+            })
             scenes.push(scene)
         })
 
