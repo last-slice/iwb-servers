@@ -1,3 +1,5 @@
+export let DEBUG = true
+
 export let airdropServer = ""
 export let airdropAuth = ""
 
