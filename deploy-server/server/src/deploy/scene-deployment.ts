@@ -55,6 +55,10 @@ async function deploy(key:string, data:DeploymentData){
                 successIWBServer(key, data).then(()=>{
                     resetBucket(key)
                 })
+                .catch((e)=>{
+                    console.log("error pinging iwb-server")
+                    resetBucket(key)
+                })
               } else {
                 console.error(`Child process exited with code ${code}.`);
                 throw new Error("DCL Deployment Error")

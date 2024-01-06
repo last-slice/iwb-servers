@@ -18,6 +18,7 @@ export function iwbRouter(router:any){
         console.log('receive ping to update iwb catalog')
         updateCatalogAssets(req, res)
     });
+
     
     router.get("/update/version", async (req: any, res: any) => {
         console.log('receive ping to update iwb version')
@@ -29,6 +30,16 @@ export function iwbRouter(router:any){
         updateIWBVersion(req, res, true)
     });
 
+    router.post("/catalog/backup", async (req: any, res: any) => {
+        console.log('receive ping to update backup catalog')
+        try{
+            await itemManager.backupCatalog()
+            return res.status(200).json({valid:true});
+        }
+        catch(e){
+            return res.status(200).json({valid:false});
+        }
+    });
 
     router.get("/catalog/refresh", (req: any, res: any) => {
         console.log('refresh cached items on server')

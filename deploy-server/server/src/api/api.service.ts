@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+
 import Axios from "axios";
 import { deployIWB, newAssetsReady } from "../deploy/iwb-deployment";
 import { addDeployment, queue, resetBucket } from "../deploy/scene-deployment";
@@ -71,6 +74,48 @@ export function handleWorldDeploy(req:any, res:any){
   
     addDeployment(req.body.world)
     res.status(200).json({result: "success", msg:"deployment added to queue"})
+}
+
+
+export function forceCopyAssets(req:any, res:any){
+      if(!req.body){
+          res.status(200).json({result: "failure", msg:"invalid api call"})
+          return
+      }
+  
+      if(!req.body.auth){
+          res.status(200).json({result: "failure", msg:"invalid auth"})
+          return
+      }
+
+  //more error checking for scene data
+
+  console.log("need to copy assets to template directory")
+
+  copyDirectorySync(process.env.PROD_DOWNLOAD_ASSET_DIRECTORY, process.env.PROD_TEMPLATE_ASSET_DIRECTORY, res);
+
+  res.status(200).json({result: "success", msg:"asset copy success"})
+}
+
+function copyDirectorySync(source: string, target: string, res:any) {
+  if (!fs.existsSync(target)) {
+    console.log("no directory")
+    res.status(200).json({result: "success", msg:"asset copy success"})
+    return
+  }
+
+  const files = fs.readdirSync(source);
+
+  files.forEach((file) => {
+    const sourcePath = path.join(source, file);
+    const targetPath = path.join(target, file);
+
+    if (fs.statSync(sourcePath).isDirectory()) {
+      copyDirectorySync(sourcePath, targetPath, res);
+    } else {
+      fs.copyFileSync(sourcePath, targetPath);
+    }
+  });
 }
 
 export function handleIWBDeploy(req:any, res:any, fromGithub?:boolean, override?:boolean){

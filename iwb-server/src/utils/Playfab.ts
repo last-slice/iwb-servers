@@ -1,12 +1,17 @@
 import axios from "axios";
 import { PlayFabClient, PlayFabServer, PlayFabAdmin } from "playfab-sdk";
+import { DEBUG } from "./config";
+
+export let PlayfabId = DEBUG ? process.env.PLAYFAB_ID_QA : process.env.PLAYFAB_ID;
+export let PlayfabKey = DEBUG ? process.env.PLAYFAB_KEY_QA : process.env.PLAYFAB_KEY;
+export let PLAYFAB_DATA_ACCOUNT = process.env.PLAYFAB_DATA_ACCOUNT;
 
 export function initPlayFab(){
-  PlayFabServer.settings.titleId = process.env.PLAYFAB_ID;
-  PlayFabServer.settings.developerSecretKey = process.env.PLAYFAB_KEY;
+  PlayFabServer.settings.titleId = PlayfabId
+  PlayFabServer.settings.developerSecretKey = PlayfabKey
 
-  PlayFabAdmin.settings.titleId = process.env.PLAYFAB_ID;
-  PlayFabAdmin.settings.developerSecretKey = process.env.PLAYFAB_KEY;
+  PlayFabAdmin.settings.titleId = PlayfabId
+  PlayFabAdmin.settings.developerSecretKey = PlayfabKey
 }
 
 const c = (resolve:any, reject:any) => {
@@ -199,7 +204,7 @@ export const getLeaderboard = (request:PlayFabServerModels.GetLeaderboardRequest
 
 export const initializeUploadPlayerFiles = (entityToken:string, request:PlayFabDataModels.InitiateFileUploadsRequest):Promise<PlayFabDataModels.InitiateFileUploadsResponse> =>{
   return new Promise((resolve, reject)=>{
-    axios.post("https://"+process.env.PLAYFAB_ID+".playfabapi.com/File/InitiateFileUploads",
+    axios.post("https://"+PlayfabId+".playfabapi.com/File/InitiateFileUploads",
     request,
     {
         headers:{
@@ -237,7 +242,7 @@ export const uploadPlayerFiles = (url:string, request:any):Promise<any> =>{
 }
 export const finalizeUploadFiles = (entityToken:string, request:PlayFabDataModels.FinalizeFileUploadsRequest):Promise<PlayFabDataModels.FinalizeFileUploadsResponse> =>{
   return new Promise((resolve, reject)=>{
-    axios.post("https://"+process.env.PLAYFAB_ID+".playfabapi.com/File/FinalizeFileUploads",
+    axios.post("https://"+PlayfabId+".playfabapi.com/File/FinalizeFileUploads",
     request,
     {
         headers:{
@@ -257,7 +262,7 @@ export const finalizeUploadFiles = (entityToken:string, request:PlayFabDataModel
 
 export const abortFileUploads = (entityToken:string, request:PlayFabDataModels.AbortFileUploadsRequest):Promise<PlayFabDataModels.AbortFileUploadsResponse> =>{
   return new Promise((resolve, reject)=>{
-    axios.post("https://"+process.env.PLAYFAB_ID+".playfabapi.com/File/AbortFileUploads",
+    axios.post("https://"+PlayfabId+".playfabapi.com/File/AbortFileUploads",
     request,
     {
         headers:{
@@ -273,4 +278,87 @@ export const abortFileUploads = (entityToken:string, request:PlayFabDataModels.A
       reject(error)
     });
   })
+}
+
+export async function fetchPlayfabMetadata(user:string){
+  try{
+    let userData = await playfabLogin(user)
+    return await fetchMetaData(userData)
+  }
+  catch(e){
+    console.log("error logging into playfab", e)
+  }
+}
+
+export async function playfabLogin(user:string){
+  try{
+    const playfabInfo = await playerLogin(
+      {
+        CreateAccount: true, 
+        ServerCustomId: user,
+        InfoRequestParameters:{
+          "UserDataKeys":[], "UserReadOnlyDataKeys":[],
+          "GetUserReadOnlyData":false,
+          "GetUserInventory":false,
+          "GetUserVirtualCurrency":true,
+          "GetPlayerStatistics":false,
+          "GetCharacterInventories":false,
+          "GetCharacterList":false,
+          "GetPlayerProfile":true,
+          "GetTitleData":false,
+          "GetUserAccountInfo":true,
+          "GetUserData":false,
+      }
+      })
+
+    if(playfabInfo.error){
+      console.log('playfab login error => ', playfabInfo.error)
+      return null
+    }
+    else{
+      console.log('playfab login success, initiate realm')
+      return playfabInfo
+    }
+  }
+  catch(e){
+    console.log('playfab connection error', e)
+    return null
+  }
+}
+
+async function fetchMetaData(realmData:any){
+  let response = await axios.post("https://" + PlayfabId + ".playfabapi.com/File/GetFiles", 
+  {Entity: {Id: realmData.EntityToken.Entity.Id, Type: realmData.EntityToken.Entity.Type}},
+  {headers:{
+      'content-type': 'application/json',
+      'X-EntityToken': realmData.EntityToken.EntityToken}}
+  )
+  return response.data
+}
+
+export async function fetchPlayfabFile(metadata:any, fileKey:string){
+  if(metadata.code === 200){
+      let version = metadata.data.ProfileVersion
+      if(version > 0){
+          let data = metadata.data.Metadata
+          let count = 0
+          for (const key in data) {
+              if (data.hasOwnProperty(key)) {
+                  count++
+              }
+          }
+
+          if(count > 0){
+              let res = await fetch(data[fileKey].DownloadUrl)
+              let json = await res.json()
+              return json
+          }else{
+              return []
+          }
+          
+      }else{
+        console.log('no profile')
+          return []
+      }
+  }
 }

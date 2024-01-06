@@ -1,7 +1,7 @@
 import { iwbManager } from "../app.config"
 import { IWBRoom } from "../rooms/IWBRoom"
 import { RoomMessageHandler } from "../rooms/handlers/MessageHandler"
-import { getTitleData, setTitleData } from "../utils/Playfab"
+import { PLAYFAB_DATA_ACCOUNT, abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playfabLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
 
@@ -16,15 +16,20 @@ export class ItemManager{
         // this.getServerItems(true)
     }
 
-    initServerItems(serverItems:any[]){
-        serverItems.forEach((items:any)=>{
-            let data = JSON.parse(items)
-            data.forEach((item:any, i:number)=>{
+    async initServerItems(){
+        try{
+            let metadata = await fetchPlayfabMetadata(PLAYFAB_DATA_ACCOUNT)
+            let catalogData = await fetchPlayfabFile(metadata, "catalog.json")
+            catalogData.forEach((item:any)=>{
                 if(!this.items.has(item.id)){
                     this.items.set(item.id, item)
                 }
             })
-        })
+            console.log('catalog size is', this.items.size)
+        }
+        catch(e){
+            console.log('error fetching data account')
+        }
     }
 
     async getServerItems(init?:boolean){
@@ -54,8 +59,33 @@ export class ItemManager{
         this.items.forEach((item,key)=>{
             items.push(item)
         })
-        await setTitleData({Key:"Catalog1", Value:JSON.stringify(items)})
-        console.log('catalog backup success')
+
+        let user:any
+        try{
+            user = await playfabLogin(PLAYFAB_DATA_ACCOUNT)
+
+            let initres = await initializeUploadPlayerFiles(user.EntityToken.EntityToken,{
+                Entity: {Id: user.EntityToken.Entity.Id, Type: user.EntityToken.Entity.Type},
+                FileNames:['catalog.json']
+            })
+
+            await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(items))
+            await finalizeUploadFiles(user.EntityToken.EntityToken,
+                {
+                    Entity: {Id: user.EntityToken.Entity.Id, Type: user.EntityToken.Entity.Type},
+                    FileNames:['catalog.json'],
+                    ProfileVersion:initres.ProfileVersion,
+            })
+
+            console.log('catalog backup success')
+        }
+        catch(e){
+            console.log('backup error')
+            await abortFileUploads(user.EntityToken.EntityToken,{
+                Entity: {Id: user.EntityToken.Entity.Id, Type: user.EntityToken.Entity.Type},
+                FileNames:['catalog.json'],
+              })
+        }
     }
 
     async saveNewCatalogAssets(data:any){
@@ -97,6 +127,7 @@ export class ItemManager{
             pc: data.pc,
             si: data.fs,
             tag:data.tag,
+            bb:data.bb,
             v: iwbManager.version + 1
         }
         if(data.scale){
@@ -120,5 +151,11 @@ export class ItemManager{
         })
         this.newItemsToDeploy.length = 0
     }
+
+
+
+
 }
+
+
 

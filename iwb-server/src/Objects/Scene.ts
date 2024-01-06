@@ -120,6 +120,10 @@ export class Scene extends Schema {
     addItemComponents(item: SceneItem, asset: any) {
         item.comps = asset.comps
 
+        if(!item.comps.includes(COMPONENT_TYPES.COLLISION_COMPONENT)){
+            item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
+        }
+
         if(!item.comps.includes(COMPONENT_TYPES.TRIGGER_COMPONENT)){
             item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
         }
@@ -224,7 +228,7 @@ export class Scene extends Schema {
 
                                 trigger.actions.set(action.name, action)
                             }
-                            
+
                             item.trigComp.triggers.push(trigger)
                         })
                     }

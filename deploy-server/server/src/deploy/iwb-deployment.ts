@@ -15,6 +15,10 @@ let redeployInterval = setInterval(()=>{
   }
 }, 1000 * 20)
 
+export function checkDeploymentQueue(){
+  
+}
+
 export function newAssetsReady(value:string){
   newAssets.push(value)
 }

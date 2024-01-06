@@ -1,11 +1,12 @@
 import axios from "axios"
 import { itemManager } from "../app.config"
 import { IWBRoom } from "../rooms/IWBRoom"
-import { abortFileUploads, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playerLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
+import { PlayfabId, abortFileUploads, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playerLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
 import { Scene } from "./Scene"
 import { generateId } from "colyseus"
+import { DEBUG } from "../utils/config"
 
 export class IWBManager{
     
@@ -90,7 +91,7 @@ export class IWBManager{
 
     async getServerConfigurations(init?:boolean){
         try{
-            let response = await await getTitleData({Keys: ["Builder Items", "Catalog1", "Config", "Scenes", "Worlds"]})
+            let response = await await getTitleData({Keys: ["Config", "Scenes", "Worlds"]})
             
             let config = JSON.parse(response.Data['Config'])
             this.version = config.v
@@ -103,7 +104,7 @@ export class IWBManager{
             let worlds = JSON.parse(response.Data['Worlds'])
             this.worlds = worlds
 
-            itemManager.initServerItems([response.Data['Builder Items'], response.Data['Catalog1']])
+            await itemManager.initServerItems()
         }
         catch(e){
             console.log('error getting server items', e)
@@ -303,7 +304,7 @@ export class IWBManager{
     }
 
     async fetchRealmData(realmData:any){
-        let response = await axios.post("https://" + process.env.PLAYFAB_ID + ".playfabapi.com/File/GetFiles", 
+        let response = await axios.post("https://" + PlayfabId + ".playfabapi.com/File/GetFiles", 
         {Entity: {Id: realmData.EntityToken.Entity.Id, Type: realmData.EntityToken.Entity.Type}},
         {headers:{
             'content-type': 'application/json',
@@ -382,7 +383,7 @@ export class IWBManager{
                     "Transform",
                     "Visibility",
                     "Image",
-                    "Material"
+                    "Material",
                   ],
                   "visComp": {
                     "visible": true
@@ -444,6 +445,6 @@ export class IWBManager{
             FileNames:[this.realmFileKey]
           })
         this.removeWorldPendingSave(world)
-    }
+    }//
 
 }

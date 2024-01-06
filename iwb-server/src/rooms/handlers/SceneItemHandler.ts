@@ -37,7 +37,17 @@ export class RoomSceneItemHandler {
                         newItem.s = new Vector3(item.scale)
                         newItem.type = itemManager.items.get(item.id).ty
 
-                        this.addItemComponents(newItem, itemManager.items.get(item.id).n, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
+                        if(item.duplicate !== null){
+                            let serverItem = scene.ass.find((as)=> as.aid === item.duplicate)
+                            if(serverItem){
+                                this.addItemComponents(newItem, itemManager.items.get(item.id).n, serverItem)
+                            }else{
+
+                                this.addItemComponents(newItem, itemManager.items.get(item.id).n, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
+                            }
+                        }else{
+                            this.addItemComponents(newItem, itemManager.items.get(item.id).n, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
+                        }
    
                         scene.ass.push(newItem)
                         scene.pc += itemManager.items.get(item.id).pc
@@ -51,6 +61,8 @@ export class RoomSceneItemHandler {
                 room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, info)
 
                 player.removeSelectedAsset()
+            }else{
+                console.log('something wrong here')
             }
         })
 
@@ -127,8 +139,8 @@ export class RoomSceneItemHandler {
             let player:Player = room.state.players.get(client.userData.userId)
 
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
+                info.catalogAsset = true
                 player.addSelectedAsset(info)
-                // this.room.broadcast(SERVER_MESSAGE_TYPES.SELECT_NEW_ASSET, info)
             }else{
                 console.log('player is not in create scene mode')
             }
@@ -153,6 +165,8 @@ export class RoomSceneItemHandler {
                     }
                 }
                 player.addSelectedAsset(data)
+                player.selectedAsset.componentData.comps.includes(COMPONENT_TYPES.IMAGE_COMPONENT) ? addImageComponent(player.selectedAsset.componentData, player.selectedAsset.componentData.imgComp.url) : null
+                player.selectedAsset.componentData.comps.includes(COMPONENT_TYPES.NFT_COMPONENT) ? addNFTComponent(player.selectedAsset.componentData, player.selectedAsset.componentData.nftComp) : null
                 this.deleteSceneItem(player, info)
             }
         })
@@ -199,6 +213,11 @@ export class RoomSceneItemHandler {
                     }
                 }
             }
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS + " message", info)
+            room.broadcast(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, {user:client.userData.userId, y:info.y, aid:info.aid})
         })
     }
 
@@ -290,7 +309,7 @@ export class RoomSceneItemHandler {
 
                         case 'y':
                             if(data.manual){
-                                asset.s.y = data.value === "" ? 0 : data.valuee
+                                asset.s.y = data.value === "" ? 0 : data.value
                             }else{
                                 asset.s.y += (data.direction * data.factor)
                             }
@@ -444,8 +463,10 @@ export class RoomSceneItemHandler {
     canBuild(user:string, sceneId:any){
         let scene:Scene = this.room.state.scenes.get(sceneId)
         if(scene){
+            console.log('can build')
             return scene.bps.includes(user) || user === iwbManager.worlds.find((w) => w.ens === this.room.state.world).owner;
         }else{
+            console.log('cannot build')
             return false
         }
     }

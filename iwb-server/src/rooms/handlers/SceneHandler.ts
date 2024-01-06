@@ -59,7 +59,7 @@ export class RoomSceneHandler {
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && (player.mode === SCENE_MODES.CREATE_SCENE_MODE || info.current)){
 
-                if(info.current){
+                if(info.current !== 0){
                     let scene = this.room.state.scenes.get(info.current)
                     if(scene){
                         if(this.isOccupied(info.parcel)){

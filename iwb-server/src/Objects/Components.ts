@@ -108,7 +108,7 @@ export function addCollisionComponent(item:SceneItem, collision:CollisionCompone
     item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
     item.colComp = new CollisionComponent()
 
-    if(collision !== null){
+    if(collision){
         item.colComp.iMask = collision.iMask
         item.colComp.vMask = collision.vMask
     }

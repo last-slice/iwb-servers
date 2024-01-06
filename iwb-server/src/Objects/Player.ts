@@ -3,19 +3,22 @@ import {IWBRoom} from "../rooms/IWBRoom";
 import {Client} from "@colyseus/core";
 import {SCENE_MODES, SERVER_MESSAGE_TYPES} from "../utils/types";
 import {updatePlayerData} from "../utils/Playfab";
-import {Scene} from "./Scene";
+import {Scene, SceneItem} from "./Scene";
 import { generateId } from "colyseus";
+import { ImageComponent, MaterialComponent, NFTComponent } from "./Components";
 
 export class SelectedAsset extends Schema {
   @type("string") catalogId: string
   @type("string") assetId: string
-  componentData:any
+  @type("boolean") catalogAsset:boolean = false
+  @type(SceneItem) componentData:SceneItem
 
   constructor(info:any){
     super()
     this.componentData = info.componentData
     this.catalogId = info.catalogId
     this.assetId = info.assetId
+    this.catalogAsset = info.catalogAsset
   }
 }
 

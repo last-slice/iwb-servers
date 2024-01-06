@@ -1,4 +1,3 @@
-import axios from "axios"
 import { IWBRoom } from "../IWBRoom"
 import { abortFileUploads, finalizeUploadFiles, initializeUploadPlayerFiles, playerLogin, uploadPlayerFiles } from "../../utils/Playfab"
 import { Scene } from "../../Objects/Scene"
