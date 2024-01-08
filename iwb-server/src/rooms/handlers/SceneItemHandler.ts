@@ -1,5 +1,23 @@
 import { generateId } from "colyseus";
-import { ActionComponent, Actions, Color4, Quaternion, TriggerComponent, Triggers, Vector3, addActionComponent, addCollisionComponent, addImageComponent, addMaterialComponent, addNFTComponent, addTextComponent, addTriggerComponent, addVideoComponent, addVisibilityComponent } from "../../Objects/Components";
+import {
+    ActionComponent,
+    Actions,
+    Color4,
+    Quaternion,
+    TriggerComponent,
+    Triggers,
+    Vector3,
+    addActionComponent,
+    addCollisionComponent,
+    addImageComponent,
+    addMaterialComponent,
+    addNFTComponent,
+    addTextComponent,
+    addTriggerComponent,
+    addVideoComponent,
+    addVisibilityComponent,
+    addAudioComponent
+} from "../../Objects/Components";
 import { Player } from "../../Objects/Player";
 import { Scene, SceneItem } from "../../Objects/Scene";
 import { itemManager, iwbManager } from "../../app.config";
@@ -342,6 +360,10 @@ export class RoomSceneItemHandler {
                 asset.vidComp.url = info.data.url
                 break;
 
+            case COMPONENT_TYPES.AUDIO_COMPONENT:
+                asset.audComp.url = info.data.url
+                break;
+
             case COMPONENT_TYPES.COLLISION_COMPONENT:
                 if(info.data.layer === 'iMask'){
                     asset.colComp.iMask = info.data.value
@@ -515,6 +537,10 @@ export class RoomSceneItemHandler {
                         addTextComponent(item, selectedAsset ? selectedAsset.textComp : null)
                         break;
                 }
+                break;
+
+            case 'Audio':
+                addAudioComponent(item, selectedAsset ? selectedAsset.audComp : null)
                 break;
         }
     }

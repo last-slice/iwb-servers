@@ -1,6 +1,22 @@
 import {ArraySchema, Schema, type} from "@colyseus/schema";
 import {COMPONENT_TYPES} from "../utils/types";
-import { ActionComponent, Actions, CollisionComponent, Color4, ImageComponent, MaterialComponent, NFTComponent, Quaternion, TextComponent, TriggerComponent, Triggers, Vector3, VideoComponent, VisibilityComponent } from "./Components";
+import {
+    ActionComponent,
+    Actions,
+    AudioComponent,
+    CollisionComponent,
+    Color4,
+    ImageComponent,
+    MaterialComponent,
+    NFTComponent,
+    Quaternion,
+    TextComponent,
+    TriggerComponent,
+    Triggers,
+    Vector3,
+    VideoComponent,
+    VisibilityComponent
+} from "./Components";
 
 export class SceneItem extends Schema {
     @type("string") id: string
@@ -21,6 +37,7 @@ export class SceneItem extends Schema {
     @type(VideoComponent) vidComp: VideoComponent
     @type(NFTComponent) nftComp: NFTComponent
     @type(TextComponent) textComp: TextComponent
+    @type(AudioComponent) audComp: AudioComponent
     @type(TriggerComponent) trigComp: TriggerComponent
     @type(ActionComponent) actComp: ActionComponent
     // @type(ClickComponent) clickComp: ClickComponent
@@ -157,6 +174,14 @@ export class Scene extends Schema {
                     item.vidComp.volume = asset.vidComp?.volume || 0.5
                     item.vidComp.autostart = asset.vidComp?.autostart || true
                     item.vidComp.loop = asset.vidComp?.loop || false
+                    break;
+
+                case COMPONENT_TYPES.AUDIO_COMPONENT:
+                    item.audComp = new AudioComponent()
+                    item.audComp.url = asset.audComp?.url || ''
+                    item.audComp.volume = asset.audComp?.volume || 0.5
+                    item.audComp.autostart = asset.audComp?.autostart || true
+                    item.audComp.loop = asset.audComp?.loop || false
                     break;
 
                 case COMPONENT_TYPES.VISBILITY_COMPONENT:

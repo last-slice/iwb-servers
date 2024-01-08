@@ -60,6 +60,14 @@ export class VideoComponent extends Schema {
     @type("boolean") loop: boolean = false
 }
 
+export class AudioComponent extends Schema {
+    @type("string") url: string = ""
+    @type("number") volume: number = .5
+    @type("boolean") autostart: boolean = true
+    @type("boolean") loop: boolean = false
+}
+
+
 export class TextComponent extends Schema {
     @type("string") text: string = "Text"
     @type("number") font: number = 2
@@ -134,6 +142,17 @@ export function addVideoComponent(item:SceneItem, data:VideoComponent){
         item.vidComp.autostart = data.autostart
         item.vidComp.loop = data.loop
         item.vidComp.volume = data.volume
+    }
+}
+
+export function addAudioComponent(item:SceneItem, data:any){
+    item.comps.push(COMPONENT_TYPES.AUDIO_COMPONENT)
+    item.audComp = new AudioComponent()
+    if(data !== null){
+        item.audComp.url = data.url
+        item.audComp.autostart = data.autostart
+        item.audComp.loop = data.loop
+        item.audComp.volume = data.volume
     }
 }
 
