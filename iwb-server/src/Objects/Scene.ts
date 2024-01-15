@@ -25,6 +25,7 @@ export class SceneItem extends Schema {
     @type('string') aid: string
     @type("string") n: string
     @type("string") type: string
+    @type("string") sty: string
     @type("boolean") editing:boolean = false
     @type("boolean") ugc:boolean = false
     @type("boolean") pending:boolean = false
@@ -124,6 +125,7 @@ export class Scene extends Schema {
                         item.s = new Vector3(asset.s)
                         item.aid = asset.aid
                         item.type = asset.type
+                        item.sty = asset.sty
                         item.ugc = asset.hasOwnProperty("ugc") ? asset.ugc : false
                         item.pending = asset.hasOwnProperty("pending") ? asset.pending : false
 
@@ -134,7 +136,7 @@ export class Scene extends Schema {
                             }
                         }
 
-                        console.log('asset is pending', asset)
+                        // console.log('asset is pending', asset)
 
                         //add components
                         addItemComponents(item, asset)
@@ -195,9 +197,9 @@ export function     addItemComponents(item: SceneItem, asset: any) {
                 break;
 
             case COMPONENT_TYPES.AUDIO_COMPONENT:
-                console.log('audio component is', asset.audComp)
+                console.log('audio component is', asset)
                 item.audComp = new AudioComponent()
-                item.audComp.url = asset.audComp ? asset.ugc ? "assets/" + asset.id + ".mp3" : asset.audComp.url :""
+                item.audComp.url = asset.audComp ? (asset.ugc ? "assets/" + asset.id + ".mp3" : asset.audComp.url) :""
                 item.audComp.volume = asset.audComp?.volume || 0.5
                 item.audComp.autostart = asset.audComp?.autostart
                 item.audComp.loop = asset.audComp?.loop || false

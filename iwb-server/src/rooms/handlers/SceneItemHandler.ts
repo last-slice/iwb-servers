@@ -250,18 +250,29 @@ export class RoomSceneItemHandler {
         if(player && player.mode === SCENE_MODES.BUILD_MODE){
             let scene = this.room.state.scenes.get(info.sceneId)
             if(scene){
-                let assetIndex = scene.ass.findIndex((ass)=> ass.aid === info.assetId)
-                if(assetIndex >= 0){
-                    if(scene.ass[assetIndex].ugc){
-                        scene.pc -= this.room.state.realmAssets.get(scene.ass.find((a)=>a.id === scene.ass[assetIndex].id).id).pc
-                        scene.si -= this.room.state.realmAssets.get(scene.ass.find((a)=>a.id === scene.ass[assetIndex].id).id).si
-                        scene.ass.splice(assetIndex,1)
+                let sceneItem = scene.ass.find((asset)=> asset.aid === info.assetId)
+                if(sceneItem){
+                    // console.log('found scene item to delete', sceneItem.id, sceneItem.ugc)
+                    let pc:any
+                    let si:any
+                    if(sceneItem.ugc){
+                        console.log('ugc asset to delete')
+                        let realmAsset = this.room.state.realmAssets.get(sceneItem.id)
+                        // console.log('realm asset is', realmAsset)
+                        pc = realmAsset ? realmAsset.pc : undefined
+                        si = realmAsset ? realmAsset.si : undefined
                     }
                     else{
-                        scene.pc -= itemManager.items.get(scene.ass.find((a)=>a.aid === info.assetId).id).pc
-                        scene.si -= itemManager.items.get(scene.ass.find((a)=>a.aid === info.assetId).id).si
-                        scene.ass.splice(assetIndex,1)
+                        console.log('catalog asset to delete')
+                        let item = itemManager.items.get(sceneItem.id)
+                        // console.log('catalog item to delete is', item)
+                        pc = item ? item.pc : undefined
+                        si = item ? item.si : undefined
                     }
+
+                    scene.pc -= pc ? pc : 0
+                    scene.si -= si ? si : 0
+                    scene.ass.splice(scene.ass.findIndex((asset)=> asset.aid === info.assetId),1)
                 }
             }
         }
