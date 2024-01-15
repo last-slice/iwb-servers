@@ -36,7 +36,7 @@ export default config({
 
         app.use(cors({origin: true}))
         app.options('*', cors());
-        app.use(bodyParser.urlencoded({limit: '10mb', extended: true,  parameterLimit: 50000 }));
+        app.use(bodyParser.urlencoded({limit: '50mb', extended: true,  parameterLimit: 50000 }));
         app.use(express.static('public'));
         app.use(express.static(path.join(__dirname, '..', 'public')));
         app.use("/", router);

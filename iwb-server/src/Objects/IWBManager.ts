@@ -1,7 +1,7 @@
 import axios from "axios"
 import { itemManager } from "../app.config"
 import { IWBRoom } from "../rooms/IWBRoom"
-import { PlayfabId, abortFileUploads, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playerLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
+import { PlayfabId, abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playerLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
 import { Scene } from "./Scene"
@@ -17,7 +17,6 @@ export class IWBManager{
     worldsModified:boolean = false
     configModified:boolean = false
     backingUp:boolean = false
-    scenes:any[] = []
     worlds:any[] = []
     pendingSaves:any[] = []
 
@@ -98,9 +97,6 @@ export class IWBManager{
             this.versionUpdates = config.updates
             this.styles = config.styles
 
-            let scenes = JSON.parse(response.Data['Scenes'])
-            this.scenes = scenes
-
             let worlds = JSON.parse(response.Data['Worlds'])
             this.worlds = worlds
 
@@ -111,13 +107,6 @@ export class IWBManager{
         }
     }
 
-    getScenes(){
-        let serverScenes:any[] = []
-        this.scenes.forEach((scene)=>{
-            serverScenes.push({id:scene.id, scna:scene.n, owner:scene.o, updated: scene.upd, name: scene.ona})
-        })
-        return serverScenes
-    }
 
     attemptUserMessage(req:any, res:any){
         if(req.body){
@@ -209,6 +198,8 @@ export class IWBManager{
             if(cachedWorld){
                 cachedWorld.updated = world.updated
                 cachedWorld.v = this.version
+                cachedWorld.cv += 1
+                this.updateRealmPendingAssets(cachedWorld.owner)
             }
         }
         this.worldsModified = true
@@ -445,6 +436,36 @@ export class IWBManager{
             FileNames:[this.realmFileKey]
           })
         this.removeWorldPendingSave(world)
-    }//
+    }
 
+    async updateRealmPendingAssets(world:string){
+        console.log("updating realm assets for world", world)
+        let found = false
+        let assets:any[] = []
+        if(this.rooms.length > 0){
+            this.rooms.forEach(async (room, key)=>{
+                if(room.state.world === world){
+                    room.state.realmAssets.forEach((asset,key)=>{
+                        asset.pending = false
+                        assets.push(asset)
+                    })
+                    found = true
+                    return
+                }
+            })
+        }
+
+        if(found){
+            await itemManager.uploadFile(world, "catalogs.json", [...assets])
+            console.log('finished updating realm assets')
+        }else{
+            console.log('player not on, need to log in first and get catalog before saving')
+            let metadata = await fetchPlayfabMetadata(world)
+            let catalog = await fetchPlayfabFile(metadata, "catalogs.json")
+            catalog.forEach((asset:any)=>{
+                asset.pending = false
+            })
+            await itemManager.uploadFile(world, "catalogs.json", [...catalog])
+        }
+    }
 }

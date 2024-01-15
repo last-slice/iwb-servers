@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import * as fs from 'fs';
 import { deleteUserDownload, findUserDownload, getDownloadQueue } from "../download";
-import { temporaryDirectory } from "../download/scripts";
+import { initDownload, temporaryDirectory } from "../download/scripts";
 
 export function downloadRouter(router:any){
     router.get("/download/delete/:user/:id", async function(req: express.Request, res: express.Response) {
@@ -52,4 +52,9 @@ export function downloadRouter(router:any){
             res.status(200).json({result: "failure"})
         }
     })
+
+  router.post("/scene/download", (req: any, res: any) => {
+    console.log('trying to download scene', req.body)
+    initDownload(req, res)
+  });
 }

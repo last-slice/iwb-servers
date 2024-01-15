@@ -1,14 +1,16 @@
 import { Schema, MapSchema,ArraySchema, type } from "@colyseus/schema";
 import { Player } from "../../Objects/Player";
-import { Scene, TempScene } from "../../Objects/Scene";
+import { Scene, SceneItem, TempScene } from "../../Objects/Scene";
 import { RoomMessageHandler } from "../handlers/MessageHandler";
 import { RoomSceneManager } from "../handlers/SceneManager";
 
 export class IWBRoomState extends Schema {
 
   @type("string") world:string
+  cv:number = 0 
   messageHandler:RoomMessageHandler
   sceneManager:RoomSceneManager
+  realmAssets:Map<string,any> = new Map()
 
   @type(TempScene) tempScene:TempScene
 

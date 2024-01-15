@@ -21,6 +21,7 @@ async function deploy(key:string, data:DeploymentData){
         let b = buckets.get(key)
         b.status = "Deploying"
         b.owner = data.ens
+        b.address = data.owner
 
         let temp = command + " " + key + " " + process.env.DEPLOY_KEY
 
@@ -85,6 +86,7 @@ export function resetBucket(key:string){
         b.status = "free"
         b.available = true
         b.owner = ""
+        b.address = ""
         checkDeploymentQueue()
     })
     .catch((error:any) => {
@@ -94,6 +96,7 @@ export function resetBucket(key:string){
         b.reason = "Error Removing Bucket"
         b.available = false
         b.owner = ""
+        b.address = ""
         checkDeploymentQueue()
     });
 }
@@ -107,7 +110,7 @@ export function checkDeploymentQueue(){
                 console.log('bucket ' + key + " is available")
                 bucket.available = false
                 try{
-                    buildBucket(key, bucket).then(()=>{
+                    buildBucket(key, bucket, tempData.owner).then(()=>{
                       modifyScene(key, tempData).then(()=>{
                              deploy(key, tempData)
                          })
@@ -140,8 +143,8 @@ async function modifyScene(key:string, data:DeploymentData){
     }
 }
 
-async function buildBucket(key:string, bucket:any){
-    console.log("building temp deploy bucket", key)
+async function buildBucket(key:string, bucket:any, world:string){
+    console.log("building temp deploy bucket", world, key)
     try {
         bucket.status = "Building"
 
@@ -154,10 +157,38 @@ async function buildBucket(key:string, bucket:any){
         await fs.mkdir(dep1FolderPath, {recursive: true});
         await copyFolder(templateFolderPath, dep1FolderPath);
 
+        try {
+            let ugcPath = path.join('/root', 'ugc-assets', world)
+            console.log('ugc path is', ugcPath)
+
+            await fs.access(ugcPath, fs.constants.F_OK);
+            console.log('World contains UGC content')
+
+            await copyFiles(ugcPath, path.join(dep1FolderPath, "assets"))
+        } catch (err) {
+            console.log('World does not contain UGC content')
+        }
+
     } catch (error:any) {
         console.error("error building deployment bucket", error);
         throw new Error("Error Building Bucket")
       }
+}
+
+async function copyFiles(sourceFolder:string, destinationFolder:string) {
+    try {
+        const files = await fs.readdir(sourceFolder);
+
+        for (const file of files) {
+            const sourceFilePath = path.join(sourceFolder, file);
+            const destinationFilePath = path.join(destinationFolder, file);
+            await fs.copy(sourceFilePath, destinationFilePath);
+        }
+
+        console.log(`Files copied from ${sourceFolder} to ${destinationFolder}`);
+    } catch (err) {
+        console.error(`Error copying files: ${err}`);
+    }
 }
 
 function failBucket(key:any){
@@ -166,7 +197,6 @@ function failBucket(key:any){
     bucket.available = false
 }
 
-// Create a function to promisify the ncp operation
 function copyFolder(source:string, destination:string) {
     return new Promise((resolve, reject) => {
       ncp(source, destination, (err:any) => {

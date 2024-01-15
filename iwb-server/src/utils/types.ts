@@ -29,6 +29,7 @@ export enum SERVER_MESSAGE_TYPES {
     PLAYER_EDIT_ASSET = 'player_edit_asset',
     UPDATE_ITEM_COMPONENT = "update_component",
     UPDATE_GRAB_Y_AXIS = 'update_grab_y_axix',
+    PLAYER_ASSET_PENDING = 'player_asset_pending',
 
     // Scene
     SCENE_SAVE_NEW = "scene_save_new",

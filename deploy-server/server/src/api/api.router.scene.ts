@@ -12,9 +12,4 @@ export function sceneRouter(router:any){
     console.log('validate scene jwt and return iwb jwt')
     await validateSceneToken(req, res)
   });
-
-  router.post("/scene/download", (req: any, res: any) => {
-    console.log('trying to download scene', req.body)
-    initDownload(req, res)
-  });
 }

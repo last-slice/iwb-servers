@@ -5,21 +5,24 @@ buckets.set("dep1", {
     available:true,
     status: "",
     owner:"",
-    id:"bucket1"
+    id:"bucket1",
+    address:""
 })
 buckets.set("dep2", {
     enabled: false,
     available:true,
     status: "",
     owner:"",
-    id:"bucket2"
+    id:"bucket2",
+    address:""
 })
 buckets.set("dep3", {
     enabled: false,
     available:true,
     status: "",
     owner:"",
-    id:"bucket3"
+    id:"bucket3",
+    address:""
 })
 // buckets.set("dep4", {
 //     enabled: false,

@@ -35,7 +35,8 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         // // return auth data so we can read in onJoin
         // return {...decodedToken, ...await this.doLogin(client, options, req)}
-        return await this.doLogin(client, options, req)//
+
+        return await this.doLogin(client, options, req)//        
     }
 
     onCreate(options: any) {
@@ -94,8 +95,8 @@ export class IWBRoom extends Room<IWBRoomState> {
     async getPlayerInfo(client: Client, options: any) {
         client.send(SERVER_MESSAGE_TYPES.INIT, {
             catalog: itemManager.items,
+            realmAssets: this.state.realmAssets,
             styles: iwbManager.styles,
-            scenes: iwbManager.getScenes(),
             worlds: iwbManager.worlds,
             iwb: {v: iwbManager.version, updates:iwbManager.versionUpdates},
         })
@@ -117,60 +118,64 @@ export class IWBRoom extends Room<IWBRoomState> {
     }
 
     async doLogin(client: any, options: any, request: any) {
+        return new Promise((resolve) => {
+            setTimeout(async() => {
+                console.log('Timeout finished!');
+                let info:any = false
+                try {
 
-        const ipAddress = request.headers['x-forwarded-for'] || request.socket.address().address;
-        console.log(`Client IP address: ${ipAddress}`);
-
-        try {
-            const playfabInfo = await playerLogin(
-                {
-                    CreateAccount: true,
-                    ServerCustomId: options.userData.userId,
-                    InfoRequestParameters: {
-                        "UserDataKeys": [], "UserReadOnlyDataKeys": [],
-                        "GetUserReadOnlyData": true,
-                        "GetUserInventory": false,
-                        "GetUserVirtualCurrency": false,
-                        "GetPlayerStatistics": true,
-                        "GetCharacterInventories": false,
-                        "GetCharacterList": false,
-                        "GetPlayerProfile": true,
-                        "GetTitleData": false,
-                        "GetUserAccountInfo": true,
-                        "GetUserData": true,
-                    },
-                    CustomTags: {
-                        ipAddress: ipAddress
+                    const ipAddress = request.headers['x-forwarded-for'] || request.socket.address().address;
+                    console.log(`Client IP address: ${ipAddress}`);
+                    const playfabInfo = await playerLogin(
+                        {
+                            CreateAccount: true,
+                            ServerCustomId: options.userData.userId,
+                            InfoRequestParameters: {
+                                "UserDataKeys": [], "UserReadOnlyDataKeys": [],
+                                "GetUserReadOnlyData": true,
+                                "GetUserInventory": false,
+                                "GetUserVirtualCurrency": false,
+                                "GetPlayerStatistics": true,
+                                "GetCharacterInventories": false,
+                                "GetCharacterList": false,
+                                "GetPlayerProfile": true,
+                                "GetTitleData": false,
+                                "GetUserAccountInfo": true,
+                                "GetUserData": true,
+                            },
+                            CustomTags: {
+                                ipAddress: ipAddress
+                            }
+                        })
+        
+                    if (playfabInfo.error) {
+                        console.log('playfab login error => ', playfabInfo.error)
+                    } else {
+                        console.log('playfab login success')
+                        client.auth = {}
+                        client.auth.playfab = playfabInfo
+                        client.auth.ip = ipAddress
+                        // console.log('playfab info', playfabInfo)
+        
+                        if (playfabInfo.NewlyCreated) {
+                            let [data, stats] = await this.initializeServerPlayerData(options, client.auth)
+                            client.auth.playfab.InfoResultPayload.PlayerStatistics = stats
+                            client.auth.playfab.InfoResultPayload.UserData = data
+                            info = client.auth
+                        } else {
+                            //to do
+                            // we have no stats yet
+                            //   let stats = await this.checkInitStats(client.auth)
+                            //   client.auth.InfoResultPayload.PlayerStatistics = stats
+                            info = client.auth
+                        }
                     }
-                })
-
-            if (playfabInfo.error) {
-                console.log('playfab login error => ', playfabInfo.error)
-                return false
-            } else {
-                console.log('playfab login success')
-                client.auth = {}
-                client.auth.playfab = playfabInfo
-                client.auth.ip = ipAddress
-                // console.log('playfab info', playfabInfo)
-
-                if (playfabInfo.NewlyCreated) {
-                    let [data, stats] = await this.initializeServerPlayerData(options, client.auth)
-                    client.auth.playfab.InfoResultPayload.PlayerStatistics = stats
-                    client.auth.playfab.InfoResultPayload.UserData = data
-                    return client.auth
-                } else {
-                    //to do
-                    // we have no stats yet
-                    //   let stats = await this.checkInitStats(client.auth)
-                    //   client.auth.InfoResultPayload.PlayerStatistics = stats
-                    return client.auth
+                } catch (e) {
+                    console.log('playfab connection error', e)
                 }
-            }
-        } catch (e) {
-            console.log('playfab connection error', e)
-        }
-
+                resolve(info); // Resolve the Promise with the data
+              }, 2000); // Adjust the timeout duration as needed
+            });
     }
 
     async initializeServerPlayerData(options: any, auth: any) {
@@ -213,5 +218,4 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         return [data, stats]
     }
-
 }

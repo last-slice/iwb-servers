@@ -283,7 +283,7 @@ export const abortFileUploads = (entityToken:string, request:PlayFabDataModels.A
 export async function fetchPlayfabMetadata(user:string){
   try{
     let userData = await playfabLogin(user)
-    return await fetchMetaData(userData)
+    return await fetchUserMetaData(userData)
   }
   catch(e){
     console.log("error logging into playfab", e)
@@ -294,7 +294,7 @@ export async function playfabLogin(user:string){
   try{
     const playfabInfo = await playerLogin(
       {
-        CreateAccount: true, 
+        CreateAccount: false, 
         ServerCustomId: user,
         InfoRequestParameters:{
           "UserDataKeys":[], "UserReadOnlyDataKeys":[],
@@ -326,14 +326,20 @@ export async function playfabLogin(user:string){
   }
 }
 
-async function fetchMetaData(realmData:any){
-  let response = await axios.post("https://" + PlayfabId + ".playfabapi.com/File/GetFiles", 
-  {Entity: {Id: realmData.EntityToken.Entity.Id, Type: realmData.EntityToken.Entity.Type}},
-  {headers:{
-      'content-type': 'application/json',
-      'X-EntityToken': realmData.EntityToken.EntityToken}}
-  )
-  return response.data
+export async function fetchUserMetaData(realmData:any){
+  try{
+    let response = await axios.post("https://" + PlayfabId + ".playfabapi.com/File/GetFiles", 
+    {Entity: {Id: realmData.EntityToken.Entity.Id, Type: realmData.EntityToken.Entity.Type}},
+    {headers:{
+        'content-type': 'application/json',
+        'X-EntityToken': realmData.EntityToken.EntityToken}}
+    )
+    return response.data
+  }
+  catch(e){
+    console.log('error fetching user metadata, maybe they dont have the file? ')
+    return null
+  }
 }
 
 export async function fetchPlayfabFile(metadata:any, fileKey:string){
@@ -349,9 +355,14 @@ export async function fetchPlayfabFile(metadata:any, fileKey:string){
           }
 
           if(count > 0){
+            if(data[fileKey]){
               let res = await fetch(data[fileKey].DownloadUrl)
               let json = await res.json()
               return json
+            }else{
+              return []
+            }
+
           }else{
               return []
           }
@@ -360,5 +371,7 @@ export async function fetchPlayfabFile(metadata:any, fileKey:string){
         console.log('no profile')
           return []
       }
+  }else{
+    return []
   }
 }

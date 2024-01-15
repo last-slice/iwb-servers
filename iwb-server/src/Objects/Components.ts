@@ -33,9 +33,12 @@ export class MaterialComponent extends Schema {
     @type("number") roughness: number = 1
     @type("number") intensity: number = 0
     @type("string") emissPath: string = ""
+    @type("boolean") emiss: boolean = true
     @type('number') emissInt: number = 0
     @type("string") textPath: string = ""
-    @type(['string']) color: ArraySchema = new ArraySchema<string>()
+    @type("string") type: string = "PBR"
+    @type(['string']) color: ArraySchema = new ArraySchema<string>("1", "1", "1", "1")
+    @type(['string']) emissColor: ArraySchema = new ArraySchema<string>("1", "1", "1", "1")
 }
 
 export class VisibilityComponent extends Schema {
@@ -65,6 +68,7 @@ export class AudioComponent extends Schema {
     @type("number") volume: number = .5
     @type("boolean") autostart: boolean = true
     @type("boolean") loop: boolean = false
+    @type("boolean") attachedPlayer: boolean = false
 }
 
 
@@ -153,16 +157,29 @@ export function addAudioComponent(item:SceneItem, data:any){
         item.audComp.autostart = data.autostart
         item.audComp.loop = data.loop
         item.audComp.volume = data.volume
+        item.audComp.attachedPlayer = data.attachedPlayer
     }
 }
 
-export function addMaterialComponent(item:SceneItem){
+export function addMaterialComponent(item:SceneItem, data:any){
     item.comps.push(COMPONENT_TYPES.MATERIAL_COMPONENT)
     item.matComp = new MaterialComponent()
-    item.matComp.color.push("1")
-    item.matComp.color.push("1")
-    item.matComp.color.push("1")
-    item.matComp.color.push("1")
+    if(data !== null){
+        console.log('maerial component is not null')
+    
+    }
+
+
+    // @type("boolean") shadows: boolean = true
+    // @type("number") metallic: number = 0
+    // @type("number") roughness: number = 1
+    // @type("number") intensity: number = 0
+    // @type("string") emissPath: string = ""
+    // @type('number') emissInt: number = 0
+    // @type("string") textPath: string = ""
+    // @type("string") type: string = "pbr"
+
+    
 }
 
 export function addTextComponent(item:SceneItem, textComp:TextComponent){

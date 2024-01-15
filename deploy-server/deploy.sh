@@ -1,12 +1,17 @@
 # deploy.sh
 
+debug=false
+
 # Access the arguments passed from the Node.js application
 bucket="$1"
 PRIVATE_KEY="$2"
 
 #change directory to available deployment bucket
-cd /Users/lastraum/Desktop/Programming/Decentraland/Lastslice/sdk7/iwb/servers/buckets/$bucket
-# cd /root/deployment/buckets/$bucket
+#if# [ "$debug" = true ]; then
+ # cd /Users/lastraum/Desktop/Programming/Decentraland/Lastslice/sdk7/iwb/servers/buckets/$bucket
+#else
+cd /root/deployment/buckets/$bucket
+#fi
 
 #make sure to install latest modules
 npm install

@@ -11,10 +11,10 @@ const app = express();
 app.set("port", process.env.NODE_ENV === 'production' ? process.env.PROD_SERVER_PORT  : process.env.DEV_SERVER_PORT);
 app.use(requestIp.mw());
 
-app.use((req:any, res:any, next:any) => {
-  const clientIp = requestIp.getClientIp(req);
-  next();
-});
+// app.use((req:any, res:any, next:any) => {
+//   const clientIp = requestIp.getClientIp(req);
+//   next();
+// });
 
 
 // app.use(sse());

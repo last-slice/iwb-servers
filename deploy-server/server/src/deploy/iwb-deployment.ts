@@ -7,13 +7,19 @@ const { exec } = require('child_process');
 const command = '../../iwb-deploy.sh';
 let newAssets:any[]= []
 let deploying:boolean = false
+let redeployTime = 20
 
 let redeployInterval = setInterval(()=>{
   if(newAssets.length > 0 && !deploying){
     console.log('new assets available, need to deploy iwb scene')
-    deployIWB()
+    if(process.env.NODE_ENV === "Development"){
+      newAssets.shift()
+    }else{
+      deployIWB()
+    }
+
   }
-}, 1000 * 20)
+}, 1000 * redeployTime)
 
 export function checkDeploymentQueue(){
   

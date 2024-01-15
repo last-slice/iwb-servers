@@ -17,6 +17,7 @@ import {
     VideoComponent,
     VisibilityComponent
 } from "./Components";
+import { IWBRoom } from "../rooms/IWBRoom";
 
 export class SceneItem extends Schema {
     @type("string") id: string
@@ -25,6 +26,8 @@ export class SceneItem extends Schema {
     @type("string") n: string
     @type("string") type: string
     @type("boolean") editing:boolean = false
+    @type("boolean") ugc:boolean = false
+    @type("boolean") pending:boolean = false
     @type("string") editor:string = ""
     @type(Vector3) p: Vector3 = new Vector3()
     @type(Quaternion) r: Vector3 = new Vector3()
@@ -82,7 +85,7 @@ export class Scene extends Schema {
 
     @type([SceneItem]) ass = new ArraySchema<SceneItem>();
 
-    constructor(data?: any) {
+    constructor(data?: any, room?:IWBRoom) {
         super()
         if (data) {
             // console.log('creating new scene', data)
@@ -121,9 +124,20 @@ export class Scene extends Schema {
                         item.s = new Vector3(asset.s)
                         item.aid = asset.aid
                         item.type = asset.type
+                        item.ugc = asset.hasOwnProperty("ugc") ? asset.ugc : false
+                        item.pending = asset.hasOwnProperty("pending") ? asset.pending : false
+
+                        if(item.ugc && room){
+                            let ugcItem = room.state.realmAssets.get(item.id)
+                            if(ugcItem){
+                                item.pending = ugcItem.pending
+                            }
+                        }
+
+                        console.log('asset is pending', asset)
 
                         //add components
-                        this.addItemComponents(item, asset)
+                        addItemComponents(item, asset)
 
                         this.ass.push(item)
                     } catch (e) {
@@ -133,151 +147,156 @@ export class Scene extends Schema {
             }
         }
     }
+}
 
-    addItemComponents(item: SceneItem, asset: any) {
-        item.comps = asset.comps
+export function     addItemComponents(item: SceneItem, asset: any) {
+    item.comps = asset.comps
 
-        if(!item.comps.includes(COMPONENT_TYPES.COLLISION_COMPONENT)){
-            item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
-        }
-
-        if(!item.comps.includes(COMPONENT_TYPES.TRIGGER_COMPONENT)){
-            item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
-        }
-
-        if(!item.comps.includes(COMPONENT_TYPES.ACTION_COMPONENT)){
-            item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
-        }
-
-        item.comps.forEach((component: string) => {
-            switch (component) {
-                case COMPONENT_TYPES.MATERIAL_COMPONENT:
-                    item.matComp = new MaterialComponent()
-                    item.matComp.shadows = asset.matComp.shadows
-                    item.matComp.metallic = asset.matComp.metallic
-                    item.matComp.roughness = asset.matComp.roughness
-                    item.matComp.intensity = asset.matComp.intensity
-                    item.matComp.emissPath = asset.matComp.emissPath
-                    item.matComp.emissInt = asset.matComp.emissInt
-                    item.matComp.textPath = asset.matComp.textPath
-                    item.matComp.color = asset.matComp.color
-                    break;
-
-                case COMPONENT_TYPES.IMAGE_COMPONENT:
-                    item.imgComp = new ImageComponent()
-                    item.imgComp.url = asset.imgComp.url
-                    break;
-
-                case COMPONENT_TYPES.VIDEO_COMPONENT:
-                    item.vidComp = new VideoComponent()
-                    item.vidComp.url = asset.vidComp?.url || ''
-                    item.vidComp.volume = asset.vidComp?.volume || 0.5
-                    item.vidComp.autostart = asset.vidComp?.autostart || true
-                    item.vidComp.loop = asset.vidComp?.loop || false
-                    break;
-
-                case COMPONENT_TYPES.AUDIO_COMPONENT:
-                    item.audComp = new AudioComponent()
-                    item.audComp.url = asset.audComp?.url || ''
-                    item.audComp.volume = asset.audComp?.volume || 0.5
-                    item.audComp.autostart = asset.audComp?.autostart || true
-                    item.audComp.loop = asset.audComp?.loop || false
-                    break;
-
-                case COMPONENT_TYPES.VISBILITY_COMPONENT:
-                    item.visComp = new VisibilityComponent()
-                    item.visComp.visible = asset.visComp.visible
-                    break;
-
-                 case COMPONENT_TYPES.COLLISION_COMPONENT:
-                    item.colComp = new CollisionComponent()
-                    item.colComp.iMask = asset.colComp ? asset.colComp.iMask : 2
-                    item.colComp.vMask = asset.colComp ? asset.colComp.vMask : 1
-                    break;
-
-                case COMPONENT_TYPES.NFT_COMPONENT:
-                    item.nftComp = new NFTComponent()
-                    item.nftComp.contract = asset.nftComp ? asset.nftComp.contract : ""
-                    item.nftComp.tokenId = asset.nftComp ? asset.nftComp.tokenId : ""
-                    item.nftComp.chain = asset.nftComp ? asset.nftComp.chain : "eth"
-                    item.nftComp.style = asset.nftComp ? asset.nftComp.style : "none"
-                    break;
-
-                case COMPONENT_TYPES.TEXT_COMPONENT:
-                    item.textComp = new TextComponent()
-                    if(asset.textComp){
-                        item.textComp.text = asset.textComp.text
-                        item.textComp.font = asset.textComp.font
-                        item.textComp.fontSize = asset.textComp.fontSize
-
-                        item.textComp.color = new Color4()
-                        item.textComp.color.r = asset.textComp.color.r
-                        item.textComp.color.g = asset.textComp.color.g
-                        item.textComp.color.b = asset.textComp.color.b
-                        item.textComp.color.a = asset.textComp.color.a
-
-                        item.textComp.align = asset.textComp.align
-                        item.textComp.outlineWidth = asset.textComp.outlineWidth
-                        item.textComp.outlineColor = new Color4(asset.textComp.outlineColor)
-                    }
-                    break;
-
-                // case COMPONENT_TYPES.CLICK_COMPONENT:
-                //     item.clickComp = new ClickComponent()
-                //     if(asset.clickComp){
-                //         item.clickComp.url = asset.clickComp.url
-                //         item.clickComp.type = asset.clickComp.type
-                //         item.clickComp.enabled = asset.clickComp.enabled
-                //         item.clickComp.hoverText = asset.clickComp.hoverText
-                //     }
-                //     break;
-
-                case COMPONENT_TYPES.TRIGGER_COMPONENT:
-                    item.trigComp = new TriggerComponent()
-                    if(asset.trigComp){
-                        item.trigComp.enabled = asset.trigComp.enabled             
-
-                        asset.trigComp.triggers.forEach((data:any)=>{
-                            console.log('triggers are ', data)
-                                                    
-                            let trigger = new Triggers()
-                            trigger.type = data.type
-
-                            for(let key in data.actions){
-                                console.log('action is', data.actions[key])
-                                let action = new Actions()
-                                action.name = data.actions[key].name
-                                action.url = data.actions[key].url
-                                action.type = data.actions[key].type
-                                action.hoverText = data.actions[key].hoverText
-
-                                trigger.actions.set(action.name, action)
-                            }
-
-                            item.trigComp.triggers.push(trigger)
-                        })
-                    }
-                    break;
-
-                case COMPONENT_TYPES.ACTION_COMPONENT:
-                    item.actComp = new ActionComponent()
-                    if(asset.actComp){
-                        for(let key in asset.actComp.actions){
-                            let action = new Actions()
-                            action.name = asset.actComp.actions[key].name
-                            action.url = asset.actComp.actions[key].url
-                            action.type = asset.actComp.actions[key].type
-                            action.hoverText = asset.actComp.actions[key].hoverText
-
-                            item.actComp.actions.set(key, action)
-                        }
-                        // console.log('asset actions are a', asset.actComp.actions)
-                        // asset.actComp.actions.forEach((action:any, key:any)=>{
-                        //     item.actComp.actions.set(key, action)
-                        // })
-                    }
-                    break;
-            }
-        })
+    if(!item.comps.includes(COMPONENT_TYPES.COLLISION_COMPONENT)){
+        item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
     }
+
+    if(!item.comps.includes(COMPONENT_TYPES.TRIGGER_COMPONENT)){
+        item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
+    }
+
+    if(!item.comps.includes(COMPONENT_TYPES.ACTION_COMPONENT)){
+        item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
+    }
+
+    item.comps.forEach((component: string) => {
+        switch (component) {
+            case COMPONENT_TYPES.MATERIAL_COMPONENT:
+                item.matComp = new MaterialComponent()
+                item.matComp.shadows = asset.matComp.shadows
+                item.matComp.metallic = asset.matComp.metallic
+                item.matComp.roughness = asset.matComp.roughness
+                item.matComp.intensity = asset.matComp.intensity
+                item.matComp.emissPath = asset.matComp.emissPath
+                item.matComp.emissInt = asset.matComp.emissInt
+                item.matComp.textPath = asset.matComp.textPath
+                item.matComp.color = asset.matComp.color
+                item.matComp.emiss = asset.matComp.emiss
+                item.matComp.type = asset.matComp.type  ? asset.matComp.type : "PBR"
+                item.matComp.emissColor = asset.matComp.emissColor ? asset.matComp.emissColor : ["1", "1", "1", "1"]
+                break;
+
+            case COMPONENT_TYPES.IMAGE_COMPONENT:
+                item.imgComp = new ImageComponent()
+                item.imgComp.url = asset.imgComp.url
+                break;
+
+            case COMPONENT_TYPES.VIDEO_COMPONENT:
+                item.vidComp = new VideoComponent()
+                item.vidComp.url = asset.vidComp?.url || ''
+                item.vidComp.volume = asset.vidComp?.volume || 0.5
+                item.vidComp.autostart = asset.vidComp?.autostart || true
+                item.vidComp.loop = asset.vidComp?.loop || false
+                break;
+
+            case COMPONENT_TYPES.AUDIO_COMPONENT:
+                console.log('audio component is', asset.audComp)
+                item.audComp = new AudioComponent()
+                item.audComp.url = asset.audComp ? asset.ugc ? "assets/" + asset.id + ".mp3" : asset.audComp.url :""
+                item.audComp.volume = asset.audComp?.volume || 0.5
+                item.audComp.autostart = asset.audComp?.autostart
+                item.audComp.loop = asset.audComp?.loop || false
+                item.audComp.attachedPlayer = asset.audComp?.attachedPlayer || false
+                break;
+
+            case COMPONENT_TYPES.VISBILITY_COMPONENT:
+                item.visComp = new VisibilityComponent()
+                item.visComp.visible = asset.visComp.visible
+                break;
+
+             case COMPONENT_TYPES.COLLISION_COMPONENT:
+                item.colComp = new CollisionComponent()
+                item.colComp.iMask = asset.colComp ? asset.colComp.iMask : 2
+                item.colComp.vMask = asset.colComp ? asset.colComp.vMask : 1
+                break;
+
+            case COMPONENT_TYPES.NFT_COMPONENT:
+                item.nftComp = new NFTComponent()
+                item.nftComp.contract = asset.nftComp ? asset.nftComp.contract : ""
+                item.nftComp.tokenId = asset.nftComp ? asset.nftComp.tokenId : ""
+                item.nftComp.chain = asset.nftComp ? asset.nftComp.chain : "eth"
+                item.nftComp.style = asset.nftComp ? asset.nftComp.style : "none"
+                break;
+
+            case COMPONENT_TYPES.TEXT_COMPONENT:
+                item.textComp = new TextComponent()
+                if(asset.textComp){
+                    item.textComp.text = asset.textComp.text
+                    item.textComp.font = asset.textComp.font
+                    item.textComp.fontSize = asset.textComp.fontSize
+
+                    item.textComp.color = new Color4()
+                    item.textComp.color.r = asset.textComp.color.r
+                    item.textComp.color.g = asset.textComp.color.g
+                    item.textComp.color.b = asset.textComp.color.b
+                    item.textComp.color.a = asset.textComp.color.a
+
+                    item.textComp.align = asset.textComp.align
+                    item.textComp.outlineWidth = asset.textComp.outlineWidth
+                    item.textComp.outlineColor = new Color4(asset.textComp.outlineColor)
+                }
+                break;
+
+            // case COMPONENT_TYPES.CLICK_COMPONENT:
+            //     item.clickComp = new ClickComponent()
+            //     if(asset.clickComp){
+            //         item.clickComp.url = asset.clickComp.url
+            //         item.clickComp.type = asset.clickComp.type
+            //         item.clickComp.enabled = asset.clickComp.enabled
+            //         item.clickComp.hoverText = asset.clickComp.hoverText
+            //     }
+            //     break;
+
+            case COMPONENT_TYPES.TRIGGER_COMPONENT:
+                item.trigComp = new TriggerComponent()
+                if(asset.trigComp){
+                    item.trigComp.enabled = asset.trigComp.enabled             
+
+                    asset.trigComp.triggers.forEach((data:any)=>{
+                        console.log('triggers are ', data)
+                                                
+                        let trigger = new Triggers()
+                        trigger.type = data.type
+
+                        for(let key in data.actions){
+                            console.log('action is', data.actions[key])
+                            let action = new Actions()
+                            action.name = data.actions[key].name
+                            action.url = data.actions[key].url
+                            action.type = data.actions[key].type
+                            action.hoverText = data.actions[key].hoverText
+
+                            trigger.actions.set(action.name, action)
+                        }
+
+                        item.trigComp.triggers.push(trigger)
+                    })
+                }
+                break;
+
+            case COMPONENT_TYPES.ACTION_COMPONENT:
+                item.actComp = new ActionComponent()
+                if(asset.actComp){
+                    for(let key in asset.actComp.actions){
+                        let action = new Actions()
+                        action.name = asset.actComp.actions[key].name
+                        action.url = asset.actComp.actions[key].url
+                        action.type = asset.actComp.actions[key].type
+                        action.hoverText = asset.actComp.actions[key].hoverText
+
+                        item.actComp.actions.set(key, action)
+                    }
+                    // console.log('asset actions are a', asset.actComp.actions)
+                    // asset.actComp.actions.forEach((action:any, key:any)=>{
+                    //     item.actComp.actions.set(key, action)
+                    // })
+                }
+                break;
+        }
+    })
 }

@@ -23,6 +23,7 @@ import { Scene, SceneItem } from "../../Objects/Scene";
 import { itemManager, iwbManager } from "../../app.config";
 import { COMPONENT_TYPES, EDIT_MODIFIERS, SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types";
 import { IWBRoom } from "../IWBRoom";
+import { updateItemComponentFunctions } from "./ItemComponentUpdates";
 
 export class RoomSceneItemHandler {
     room:IWBRoom
@@ -46,32 +47,38 @@ export class RoomSceneItemHandler {
 
                 let scene = this.room.state.scenes.get(info.item.sceneId)
                 if(scene){
-                    if(this.checkSceneLimits(scene, itemManager.items.get(item.id))){
-                        const newItem = new SceneItem()
-                        newItem.id = item.id
-                        newItem.aid = item.aid
-                        newItem.p = new Vector3(item.position)
-                        newItem.r = new Quaternion(item.rotation)
-                        newItem.s = new Vector3(item.scale)
-                        newItem.type = itemManager.items.get(item.id).ty
-
-                        if(item.duplicate !== null){
-                            let serverItem = scene.ass.find((as)=> as.aid === item.duplicate)
-                            if(serverItem){
-                                this.addItemComponents(newItem, itemManager.items.get(item.id).n, serverItem)
+                    let sceneItem = item.ugc ? this.room.state.realmAssets.get(item.id) : itemManager.items.get(item.id)
+                    console.log('scene item is', sceneItem)
+                    if(sceneItem){
+                        if(this.checkSceneLimits(scene, sceneItem)){
+                            const newItem = new SceneItem()
+                            newItem.id = item.id
+                            newItem.aid = item.aid
+                            newItem.p = new Vector3(item.position)
+                            newItem.r = new Quaternion(item.rotation)
+                            newItem.s = new Vector3(item.scale)
+                            newItem.type = sceneItem.ty
+                            newItem.ugc = sceneItem.ugc
+                            newItem.pending = sceneItem.pending
+    
+                            if(item.duplicate !== null){
+                                let serverItem = scene.ass.find((as)=> as.aid === item.duplicate)
+                                if(serverItem){
+                                    this.addItemComponents(newItem, sceneItem.n, serverItem)
+                                }else{
+    
+                                    this.addItemComponents(newItem, sceneItem.n, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
+                                }
                             }else{
-
-                                this.addItemComponents(newItem, itemManager.items.get(item.id).n, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
+                                this.addItemComponents(newItem, sceneItem.n, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
                             }
+       
+                            scene.ass.push(newItem)
+                            scene.pc += sceneItem.pc
+                            scene.si += sceneItem.si
                         }else{
-                            this.addItemComponents(newItem, itemManager.items.get(item.id).n, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
+                            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.ASSET_OVER_SCENE_LIMIT, {})
                         }
-   
-                        scene.ass.push(newItem)
-                        scene.pc += itemManager.items.get(item.id).pc
-                        scene.si += itemManager.items.get(item.id).si
-                    }else{
-                        player.sendPlayerMessage(SERVER_MESSAGE_TYPES.ASSET_OVER_SCENE_LIMIT, {})
                     }
                 }
 
@@ -211,7 +218,7 @@ export class RoomSceneItemHandler {
                 if(scene){
                     let asset = scene.ass.find((a)=> a.aid === info.data.aid)
                     if(asset){
-                        this.updateComponent(asset, info)
+                        updateItemComponentFunctions[info.component](asset, info)
                     }
                 }
             }
@@ -245,14 +252,20 @@ export class RoomSceneItemHandler {
             if(scene){
                 let assetIndex = scene.ass.findIndex((ass)=> ass.aid === info.assetId)
                 if(assetIndex >= 0){
-                    scene.pc -= itemManager.items.get(scene.ass.find((a)=>a.aid === info.assetId).id).pc
-                    scene.si -= itemManager.items.get(scene.ass.find((a)=>a.aid === info.assetId).id).si
-                    scene.ass.splice(assetIndex,1)
+                    if(scene.ass[assetIndex].ugc){
+                        scene.pc -= this.room.state.realmAssets.get(scene.ass.find((a)=>a.id === scene.ass[assetIndex].id).id).pc
+                        scene.si -= this.room.state.realmAssets.get(scene.ass.find((a)=>a.id === scene.ass[assetIndex].id).id).si
+                        scene.ass.splice(assetIndex,1)
+                    }
+                    else{
+                        scene.pc -= itemManager.items.get(scene.ass.find((a)=>a.aid === info.assetId).id).pc
+                        scene.si -= itemManager.items.get(scene.ass.find((a)=>a.aid === info.assetId).id).si
+                        scene.ass.splice(assetIndex,1)
+                    }
                 }
             }
         }
     }
-
 
     transformAsset(scene:Scene, data:any){
         console.log('need to get asset to update scene')
@@ -346,142 +359,6 @@ export class RoomSceneItemHandler {
         }
     }
 
-    updateComponent(asset:SceneItem, info:any){
-        switch(info.component){
-            case COMPONENT_TYPES.VISBILITY_COMPONENT:
-                asset.visComp.visible = !asset.visComp.visible
-                break;
-
-            case COMPONENT_TYPES.IMAGE_COMPONENT:
-                asset.imgComp.url = info.data.url
-                break;
-
-            case COMPONENT_TYPES.VIDEO_COMPONENT:
-                asset.vidComp.url = info.data.url
-                break;
-
-            case COMPONENT_TYPES.AUDIO_COMPONENT:
-                asset.audComp.url = info.data.url
-                break;
-
-            case COMPONENT_TYPES.COLLISION_COMPONENT:
-                if(info.data.layer === 'iMask'){
-                    asset.colComp.iMask = info.data.value
-                }else{
-                    asset.colComp.vMask = info.data.value
-                }
-                break;
-
-            case COMPONENT_TYPES.NFT_COMPONENT:
-                switch(info.data.type){
-                    case 'chain':
-                        asset.nftComp.chain = info.data.value
-                        break;
-
-                    case 'style':
-                        asset.nftComp.style = info.data.value
-                        break;
-
-                    case 'contract':
-                        asset.nftComp.contract = info.data.value
-                        break;
-
-                    case 'tokenId':
-                        asset.nftComp.tokenId = info.data.value
-                        break;
-                }
-                break;
-
-            case COMPONENT_TYPES.TEXT_COMPONENT:
-                switch(info.data.type){
-                    case 'text':
-                        asset.textComp.text = info.data.value
-                        break;
-
-                    case 'font':
-                        asset.textComp.font = info.data.value
-                        break;
-                        
-                    case 'fontSize':
-                        asset.textComp.fontSize = parseInt(info.data.value)
-                        break;
-
-                    case 'color':
-                        asset.textComp.color = new Color4()
-                        asset.textComp.color.r = info.data.value.r
-                        asset.textComp.color.g = info.data.value.g
-                        asset.textComp.color.b = info.data.value.b
-                        asset.textComp.color.a = info.data.value.a
-                        break;
-
-                    case 'align':
-                        asset.textComp.align = info.data.value
-                        break;
-                }
-                break;
-
-            case COMPONENT_TYPES.TRIGGER_COMPONENT:
-                switch(info.data.type){
-                    case 'enabled':
-                        asset.trigComp.enabled = info.data.value
-                        break;
-
-                    case 'new':
-                        console.log('need to add new trigger', info.data.value)
-                        let action = new Actions()
-                        action.name = info.data.value.name
-                        action.type = info.data.value.type
-                        action.url = info.data.value.url
-
-                        let trigger = new Triggers()
-                        trigger.actions.set(info.data.value.name, action)
-
-                        if(!asset.trigComp){
-                            asset.trigComp = new TriggerComponent()
-                        }
-                        asset.trigComp.triggers.push(trigger)
-                        break;
-
-                    case 'remove':
-                        if(asset.trigComp){
-                            asset.trigComp.triggers.splice(info.data.value, 1)
-                        }
-                        break;
-                }
-                break;
-
-            case COMPONENT_TYPES.ACTION_COMPONENT:
-                switch(info.action){
-                    case 'add':
-                        console.log('adding new action action', info.data.value)
-                        if(!asset.actComp){
-                            asset.actComp = new ActionComponent()
-                        }
-                        let action = new Actions()
-                        action.name = info.data.value.name
-                        action.type = info.data.value.action.type
-                        action.url = info.data.value.action.url
-
-                        console.log('new action to save is', action.name, action.url)
-
-                        asset.actComp.actions.set(generateId(5), action)
-                        break;
-
-                    case 'delete':
-                        console.log('deleting action', info.data.value)
-                        if(asset.actComp){
-                            asset.actComp.actions.forEach((action, key)=>{
-                                if(action.name === info.data.value.name){
-                                    asset.actComp.actions.delete(key)
-                                }
-                            })
-                        }
-                        break;
-                }
-                break;
-        }
-    }
-
     canBuild(user:string, sceneId:any){
         let scene:Scene = this.room.state.scenes.get(sceneId)
         if(scene){
@@ -524,7 +401,7 @@ export class RoomSceneItemHandler {
                     case 'Image':        
                         console.log('selected ass', selectedAsset)
                         addImageComponent(item, selectedAsset ? selectedAsset.imgComp.url : "")                
-                        addMaterialComponent(item)
+                        addMaterialComponent(item, selectedAsset ? selectedAsset.matComp : null)
                         break;
                     case 'Video':
                         addVideoComponent(item, selectedAsset ? selectedAsset.vidComp : null)

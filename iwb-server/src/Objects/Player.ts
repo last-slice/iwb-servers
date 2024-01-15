@@ -2,10 +2,11 @@ import {MapSchema, Schema, type} from "@colyseus/schema";
 import {IWBRoom} from "../rooms/IWBRoom";
 import {Client} from "@colyseus/core";
 import {SCENE_MODES, SERVER_MESSAGE_TYPES} from "../utils/types";
-import {updatePlayerData} from "../utils/Playfab";
+import {abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, initializeUploadPlayerFiles, playfabLogin, updatePlayerData, uploadPlayerFiles} from "../utils/Playfab";
 import {Scene, SceneItem} from "./Scene";
 import { generateId } from "colyseus";
 import { ImageComponent, MaterialComponent, NFTComponent } from "./Components";
+import { itemManager, iwbManager } from "../app.config";
 
 export class SelectedAsset extends Schema {
   @type("string") catalogId: string
@@ -45,11 +46,13 @@ export class Player extends Schema {
 
   stats = new MapSchema<number>()
   settings: Map<string,any> = new Map()
-  assets: Map<string,any> = new Map()
+  // assets: Map<string,SceneItem> = new Map()
+  catalog:Map<string,any> = new Map()
+  pendingAssets:any[] = []
 
   constructor(room:IWBRoom, client:Client){
     super()
-    // this.room = room
+    this.room = room
     this.client = client
 
     this.playFabData = client.auth.playfab
@@ -59,9 +62,6 @@ export class Player extends Schema {
     this.name = client.userData.displayName
 
     this.mode = SCENE_MODES.PLAYMODE
-
-    this.setAssets(this.playFabData.InfoResultPayload.UserData)
-    // this.setScenes(this.playFabData.InfoResultPayload.UserData)
   }
 
   // setScenes(){
@@ -88,18 +88,6 @@ export class Player extends Schema {
   //     this.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_SCENES_CATALOG, {scenes:scenes, user:this.dclData.userId})
   //   }
   // }
-
-  setAssets(data:any){
-    if(data.hasOwnProperty("Assets")){
-      let assets = JSON.parse(data.Assets.Value)
-      assets.forEach((asset:any)=>{
-        this.assets.set(asset.id, asset)
-      })
-      if(assets.length > 0){
-        this.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_ASSET_CATALOG, assets)
-      }
-    }
-  }
 
   updatePlayMode(mode:SCENE_MODES){
     this.mode = mode
@@ -183,14 +171,35 @@ export class Player extends Schema {
     }
   }
 
-  uploadAsset(asset:any, notify?:boolean){
-    this.assets.set(asset.id, asset)
-
+  async uploadAsset(asset:any, notify?:boolean){
     console.log('asset to save is', asset)
-    this.saveToDB()
 
-    if(notify){
-      this.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, asset)
+    //to do
+    //check if already upload and wait before uploading another to the file
+
+    let filename = "catalogs.json"
+    let catalog:any[] = []
+
+    asset.on = this.dclData.displayName
+    asset.pending = true
+    asset.ugc = true
+
+    try{
+      let metadata = await fetchUserMetaData(this.playFabData)
+      if(metadata !== null){
+        catalog = await fetchPlayfabFile(metadata, filename)
+      }
+
+      catalog.push(asset)
+
+      await itemManager.uploadFile(this.address, "catalogs.json", catalog)
+
+      if(notify){
+        this.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, asset)
+      }
+    }
+    catch(e){
+      console.log('there was an error saving the uploaded asset', e) 
     }
   }
 
@@ -226,40 +235,40 @@ export class Player extends Schema {
     //   stats.push({StatisticName:initManager.pDefaultStats.filter((stat)=> stat.pKey === key)[0].StatisticName, Value:stat})
     // })
 
-    try{
-      // const chunkSize = 10;
-      // const chunks = [];
-      // for (let i = 0; i < stats.length; i += chunkSize) {
-      //   chunks.push(stats.slice(i, i + chunkSize));
-      // }
+    // try{
+    //   // const chunkSize = 10;
+    //   // const chunks = [];
+    //   // for (let i = 0; i < stats.length; i += chunkSize) {
+    //   //   chunks.push(stats.slice(i, i + chunkSize));
+    //   // }
   
-      // chunks.forEach(async (chunk) => {
-      //   await updatePlayerStatistic({
-      //     PlayFabId: this.playFabData.PlayFabId,
-      //     Statistics: chunk
-      //   })
-      // });
+    //   // chunks.forEach(async (chunk) => {
+    //   //   await updatePlayerStatistic({
+    //   //     PlayFabId: this.playFabData.PlayFabId,
+    //   //     Statistics: chunk
+    //   //   })
+    //   // });
 
-      let assets:any[] = []
-      this.assets.forEach((value,key)=>{
-        assets.push(value)
-      })
+    //   let assets:any[] = []
+    //   this.assets.forEach((value,key)=>{
+    //     assets.push(value)
+    //   })
 
-      const playerData:any = {
-        "Settings":JSON.stringify(this.settings),
-        "Scenes":JSON.stringify(assets)
-      }
+    //   const playerData:any = {
+    //     "Settings":JSON.stringify(this.settings),
+    //     "Scenes":JSON.stringify(assets)
+    //   }
 
-      console.log('player data to save is' ,playerData)
+    //   console.log('player data to save is' ,playerData)
   
-      await updatePlayerData({
-        PlayFabId: this.playFabData.PlayFabId,
-        Data: playerData
-      })
-    }
-    catch(e){
-      console.log('saving player info to db error ->', e)
-    }
+    //   await updatePlayerData({
+    //     PlayFabId: this.playFabData.PlayFabId,
+    //     Data: playerData
+    //   })
+    // }
+    // catch(e){
+    //   console.log('saving player info to db error ->', e)
+    // }
   }
 
 }

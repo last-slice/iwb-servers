@@ -1,7 +1,16 @@
 import express, { Request, Response } from "express";
 import { forceCopyAssets, handleIWBDeploy, handleWorldDeploy } from "./api.service";
+import { handleGenesisCityDeployment, pingCatalyst } from "../deploy/gc-deployment";
 
 export function deployRouter(router:any){
+    router.post("/gc-deploy", async function(req: express.Request, res: express.Response) {
+      handleGenesisCityDeployment(req,res)
+    })
+
+    router.post("/gc-deploy/two", async function(req: express.Request, res: express.Response) {
+      pingCatalyst(req,res)
+    })
+
     router.post("/world-deploy", async function(req: express.Request, res: express.Response) {
         handleWorldDeploy(req,res)
       })

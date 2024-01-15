@@ -189,8 +189,16 @@ export function handleSceneSigning(req:any, res:any){
 }
 
 export function authenticateToken(req:any, res:any, next:any) {
-    if(status.DEBUG){}
-    if(req.header('SceneAuth')){
+  console.log('authenticate body is', req.body)
+  // next(req, res)
+    if(status.DEBUG){
+      req.user = '0x3edfae1ce7aeb54ed6e171c4b13e343ba81669b6'
+      req.key = 'key'
+      req.pending = {name: 'audio file', type:'Audio'}
+      next();
+    }
+    else{
+      if(req.header('SceneAuth')){
         const token = req.header('SceneAuth').replace('Bearer ', '').trim();
         const uploadAuth = req.header('UploadAuth').replace('Bearer ', '').trim();
 
@@ -205,10 +213,12 @@ export function authenticateToken(req:any, res:any, next:any) {
             console.log('asset upload token verified')
             req.user = info.userId;
             req.key = uploadAuth
+            req.pending = {name: req.body.name, type:req.body.type}
             next();
         });
     }else{
         return res.status(200).json({valid:false, message: 'Invalid Authorization' });
+    }
     }
 }
 
@@ -251,14 +261,23 @@ export function validateSceneToken(req:any, res:any){
 }
 
 export async function postNewAssetData(req:any, res:any){
-    const {name, polycount, image, scale} = req.body
+    const {name, polycount, image, scale, type, category, description, style} = req.body
 
     let assetData:any = {
-        name:name,
-        polycount:polycount,
-        scale: scale,
-        image:image,
-        file: req.file.filename.split('.')[0],
+        n:name,
+        fs:req.file.size,
+        tag:[],
+        ty:type,
+        pc:parseInt(polycount),
+        bb: scale,
+        im:image,
+        id:req.file.filename.split('.')[0],
+        m:name,
+        o:req.user,
+        isdl:false,
+        cat:category,
+        d:description,
+        style:style,
         user: req.user
     }
 
@@ -272,7 +291,7 @@ export async function postNewAssetData(req:any, res:any){
         );
         if(result.data.valid){
             console.log('new asset successfully pinged on iwb server')
-            newAssetsReady(req.user)
+            // newAssetsReady(req.user)
             res.status(200).send({valid: true, token: result.data.token})
         }else{
             console.log('new asset not pinged on iwb server')

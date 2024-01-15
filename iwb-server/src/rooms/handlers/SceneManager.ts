@@ -1,5 +1,5 @@
 import { IWBRoom } from "../IWBRoom"
-import { abortFileUploads, finalizeUploadFiles, initializeUploadPlayerFiles, playerLogin, uploadPlayerFiles } from "../../utils/Playfab"
+import { abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, finalizeUploadFiles, initializeUploadPlayerFiles, playerLogin, playfabLogin, uploadPlayerFiles } from "../../utils/Playfab"
 import { Scene } from "../../Objects/Scene"
 import { iwbManager } from "../../app.config"
 
@@ -31,7 +31,13 @@ export class RoomSceneManager {
         //     }
         // }, 1000 * 30)
 
+        this.room.state.cv = iwbManager.worlds.find((w:any)=> w.ens === this.room.state.world).cv
+
+        console.log('room cv is', this.room.state.cv)
+        console.log('world cv is', iwbManager.worlds.find((w:any)=> w.ens === this.room.state.world).cv)
+
         this.initServerScenes()
+        this.initServerAssets()
     }
 
     initServerScenes(){
@@ -69,10 +75,22 @@ export class RoomSceneManager {
         }
     }
 
+    async initServerAssets(){
+        let metadata = await fetchPlayfabMetadata(iwbManager.worlds.find((w:any)=> w.ens === this.room.state.world).owner)
+
+        let catalog = await fetchPlayfabFile(metadata, "catalogs.json")
+        catalog.forEach((item:any)=>{
+        //   if(item.v > this.room.state.cv){
+        //     item.pending = true
+        //   }
+          this.room.state.realmAssets.set(item.id, item)
+        })
+    }
+
     loadRealmScenes(scenes:any[]){
         let filter = scenes.filter((scene)=> scene.w === this.room.state.world)
         filter.forEach((scene)=>{
-            this.room.state.scenes.set(scene.id, new Scene(scene))
+            this.room.state.scenes.set(scene.id, new Scene(scene, this.room))
         })
     }
 

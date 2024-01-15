@@ -2,27 +2,32 @@ import * as fs from 'fs';
 import * as fsExtra from 'fs-extra';
 import { temporaryDirectory } from '.';
 import { addDownloadQueue } from '..';
+import { fail } from 'assert';
 const fsp = require('fs/promises');
 const path = require('path');
 const JSZip = require('jszip');
 
 export async function zipScene(data:any){
-  let user = data.o
-  let sceneId = data.id
-  try {
-    const zip = await createZipFromFolder(temporaryDirectory + data.o + "-" + data.id);
-    let now = Math.floor(Date.now()/1000)
-    zip
-      .generateNodeStream({ streamFiles: true, compression: 'DEFLATE' })
-      .pipe(fs.createWriteStream(temporaryDirectory + data.o + "-" + data.id + '.zip'))
-      .on('error', (err:any) => console.error('Error writing file', err.stack))
-      .on('finish', async () => {
-        await fsExtra.remove(temporaryDirectory + data.o + "-" + data.id)
-        addDownloadQueue(sceneId, user, now)
-      });
-  } catch (ex) {
-    console.error('Error creating zip', ex);
-  }
+  return new Promise(async (resolve) => {
+    let user = data.o
+    let sceneId = data.id
+    try {
+      const zip = await createZipFromFolder(temporaryDirectory + data.o + "-" + data.id);
+      let now = Math.floor(Date.now()/1000)
+      zip
+        .generateNodeStream({ streamFiles: true, compression: 'DEFLATE' })
+        .pipe(fs.createWriteStream(temporaryDirectory + data.o + "-" + data.id + '.zip'))
+        .on('error', (err:any) => console.error('Error writing file', err.stack))
+        .on('finish', async () => {
+          await fsExtra.remove(temporaryDirectory + data.o + "-" + data.id)
+          addDownloadQueue(sceneId, user, now)
+          resolve(data)
+        });
+    } catch (ex) {
+      console.error('Error creating zip', ex);
+      fail()
+    }
+  });
 }
 
 const createZipFromFolder = async (dir:any) => {

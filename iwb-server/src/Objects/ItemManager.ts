@@ -1,7 +1,7 @@
 import { iwbManager } from "../app.config"
 import { IWBRoom } from "../rooms/IWBRoom"
 import { RoomMessageHandler } from "../rooms/handlers/MessageHandler"
-import { PLAYFAB_DATA_ACCOUNT, abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playfabLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
+import { PLAYFAB_DATA_ACCOUNT, abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playfabLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
 
@@ -60,32 +60,7 @@ export class ItemManager{
             items.push(item)
         })
 
-        let user:any
-        try{
-            user = await playfabLogin(PLAYFAB_DATA_ACCOUNT)
-
-            let initres = await initializeUploadPlayerFiles(user.EntityToken.EntityToken,{
-                Entity: {Id: user.EntityToken.Entity.Id, Type: user.EntityToken.Entity.Type},
-                FileNames:['catalog.json']
-            })
-
-            await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(items))
-            await finalizeUploadFiles(user.EntityToken.EntityToken,
-                {
-                    Entity: {Id: user.EntityToken.Entity.Id, Type: user.EntityToken.Entity.Type},
-                    FileNames:['catalog.json'],
-                    ProfileVersion:initres.ProfileVersion,
-            })
-
-            console.log('catalog backup success')
-        }
-        catch(e){
-            console.log('backup error')
-            await abortFileUploads(user.EntityToken.EntityToken,{
-                Entity: {Id: user.EntityToken.Entity.Id, Type: user.EntityToken.Entity.Type},
-                FileNames:['catalog.json'],
-              })
-        }
+        this.uploadFile(PLAYFAB_DATA_ACCOUNT, 'catalog.json', items)
     }
 
     async saveNewCatalogAssets(data:any){
@@ -102,13 +77,26 @@ export class ItemManager{
     async saveNewAsset(user:string, data:any){
         console.log('saving new asset', user, data)
         let asset = await this.createNewAsset(data)
-        this.newItemsToDeploy.push(asset)
+        // this.newItemsToDeploy.push(asset)
     
-        this.items.set(asset.id, asset)
+        // this.items.set(asset.id, asset)
 
         let player:Player = iwbManager.findUser(user)
         if(player){
+            console.log('we have player, get their info')
+            asset.on = "" + player.dclData.displayName
             player.uploadAsset(asset, true)
+        }else{
+            asset.on = "" + iwbManager.worlds.find((w)=> w.owner === user).worldName
+            console.log("player no longer here, need to add to their profile")
+            let metadata = await fetchPlayfabMetadata(user)
+            let catalog = await fetchPlayfabFile(metadata, 'catalogs.json')
+
+            asset.pending = true
+            asset.ugc = true
+            
+            catalog.push(asset)
+            await this.uploadFile(data.o, "catalogs.json", catalog)
         }
     }
 
@@ -128,12 +116,13 @@ export class ItemManager{
             si: data.fs,
             tag:data.tag,
             bb:data.bb,
-            v: iwbManager.version + 1
+            sty:data.style,
+            v: iwbManager.worlds.find((w)=> w.owner === data.o).cv + 1
         }
-        if(data.scale){
-            let size = JSON.parse(data.scale)
+        if(data.bb){
+            let size = JSON.parse(data.bb)
             console.log('size is', size)
-            asset.si = {x:parseFloat(size.x.toFixed(2)), y:parseFloat(size.y.toFixed(2)), z:parseFloat(size.z.toFixed(2))  }    
+            asset.bb = {x:parseFloat(size.x.toFixed(2)), y:parseFloat(size.y.toFixed(2)), z:parseFloat(size.z.toFixed(2))  }    
         }
 
         console.log('new asset uploaded is', asset)
@@ -150,6 +139,36 @@ export class ItemManager{
             iwbManager.sendUserMessage(item.o, SERVER_MESSAGE_TYPES.PLAYER_CATALOG_DEPLOYED, {})
         })
         this.newItemsToDeploy.length = 0
+    }
+
+
+    async uploadFile(customLogin:any, filename:string, file:any){
+        let user:any
+        try{
+            user = await playfabLogin(customLogin)
+
+            let initres = await initializeUploadPlayerFiles(user.EntityToken.EntityToken,{
+                Entity: {Id: user.EntityToken.Entity.Id, Type: user.EntityToken.Entity.Type},
+                FileNames:[filename]
+            })
+
+            await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(file))
+            await finalizeUploadFiles(user.EntityToken.EntityToken,
+                {
+                    Entity: {Id: user.EntityToken.Entity.Id, Type: user.EntityToken.Entity.Type},
+                    FileNames:[filename],
+                    ProfileVersion:initres.ProfileVersion,
+            })
+
+            console.log('file upload success')
+        }
+        catch(e){
+            console.log('upload error')
+            await abortFileUploads(user.EntityToken.EntityToken,{
+                Entity: {Id: user.EntityToken.Entity.Id, Type: user.EntityToken.Entity.Type},
+                FileNames:[filename],
+              })
+        }
     }
 
 

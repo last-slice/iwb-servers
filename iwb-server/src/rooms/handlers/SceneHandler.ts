@@ -3,6 +3,9 @@ import { itemManager, iwbManager } from "../../app.config"
 import { SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types"
 import { IWBRoom } from "../IWBRoom"
 import { Scene } from "../../Objects/Scene";
+import { DEBUG } from "../../utils/config";
+
+let deploymentServer:any = DEBUG ? process.env.DEPLOYMENT_SERVER_DEV : process.env.DEPLOYMENT_SERVER_PROD
 
 export class RoomSceneHandler {
     room:IWBRoom
@@ -26,7 +29,7 @@ export class RoomSceneHandler {
                     }
 
                     try{
-                        let res = await fetch(process.env.DEPLOYMENT_SERVER + "scene/download", {
+                        let res = await fetch(deploymentServer + "scene/download", {
                             method:"POST",
                             headers:{"Content-type": "application/json"},
                             body: JSON.stringify({scene:scene})
