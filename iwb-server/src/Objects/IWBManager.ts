@@ -351,54 +351,7 @@ export class IWBManager{
             e:true,
             pcls:["0,0", "1,0", "1,1", "0,1"],
             sp:["16,16"],
-            ass:[            
-                {"id": "e6991f31-4b1e-4c17-82c2-2e484f53a123",
-                "aid": "vBXS97",
-                "type": "2D",
-                "p": {
-                "x": 16,
-                "y": 0,
-                "z": 16
-                },
-                "r": {
-                "x": 90,
-                "y": 0,
-                "z": 0
-                },
-                "s": {
-                "x": 32,
-                "y": 32,
-                "z": 1
-                },
-                "comps": [
-                    "Transform",
-                    "Visibility",
-                    "Image",
-                    "Material",
-                  ],
-                  "visComp": {
-                    "visible": true
-                  },
-                  "matComp": {
-                    "shadows": true,
-                    "metallic": 0,
-                    "roughness": 1,
-                    "intensity": 0,
-                    "emissPath": "",
-                    "emissInt": 0,
-                    "textPath": "",
-                    "color": [
-                      "1",
-                      "1",
-                      "1",
-                      "1"
-                    ]
-                  },
-                  "imgComp": {
-                    "url": "https://bafkreihxmbloqwqgjljwtq4wzhmo5pclxavyedugdafn2dhuzghgpszuim.ipfs.nftstorage.link/"
-                  }
-            }
-            ]
+            ass:[]
           })
 
         return lobby

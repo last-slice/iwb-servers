@@ -35,7 +35,7 @@ scene/bin
 bin/
 server/bin
 server/lib
-*.js
+
 scene/package-lock.json
 server/package-lock.json
 *dist/
