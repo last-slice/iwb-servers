@@ -9,8 +9,8 @@ export function main() {
 }
 `
 
-export async function writeIndexFile(data:any){
-    fs.writeFileSync(temporaryDirectory + data.o + "-" + data.id + "/src/index.ts", index);
+export async function writeIndexFile(location:any){
+    fs.writeFileSync(location, index);
 }
 
 

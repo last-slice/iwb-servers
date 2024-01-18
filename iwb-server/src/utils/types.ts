@@ -46,6 +46,10 @@ export enum SERVER_MESSAGE_TYPES {
     SCENE_UPDATE_ENABLED = 'scene_update_enabled',
     SCENE_UPDATE_PRIVACY = 'scene_update_privacy',
     SCENE_DOWNLOAD = 'scene_download',
+    SCENE_DEPLOY = 'scene_deploy',
+    SCENE_DEPLOY_READY = 'scene_deploy_ready',
+    SCENE_ADDED_SPAWN = "scene_added_spawn",
+    SCENE_DELETE_SPAWN = "scene_delete_spawn",
 
     //World
     INIT_WORLD = "init_world",

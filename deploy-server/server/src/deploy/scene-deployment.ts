@@ -1,124 +1,40 @@
 import { DeploymentData } from "src/utils/types";
-import { buckets } from "./buckets";
+import { iwbBuckets } from "./buckets";
 import { updateSceneMetadata } from "./sceneData";
+import { buildTypescript } from "./helpers";
+import { status } from "../config/config";
 
 const fs = require('fs-extra');
 const ncp = require('ncp').ncp;
 const path = require('path');
 const { exec } = require('child_process');
 
-const command = '../deploy.sh';
+const command = status.DEBUG ? '/Users/lastraum/desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/deploy.sh' : '../deploy.sh';
 
-export let queue:DeploymentData[] = []
+export let iwbDeploymentQueue:DeploymentData[] = []
+let worldBucketDirectory = status.DEBUG ? "/Users/lastraum/Desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/buckets/iwb/" : "/root/deployment/buckets/iwb/"
 
-export function addDeployment(data:DeploymentData){
-    queue.push(data)
-    checkDeploymentQueue()
-}
+////cp -r /root/deployment/iwb-template/* /root/deployment/buckets/iwb/bucket1/  need to expose an endpoint so i can copy the template into all of the buckets
 
-async function deploy(key:string, data:DeploymentData){
-    try {
-        let b = buckets.get(key)
-        b.status = "Deploying"
-        b.owner = data.ens
-        b.address = data.owner
-
-        let temp = command + " " + key + " " + process.env.DEPLOY_KEY
-
-        // Execute the shell command
-        b.process = exec(temp)
-  
-        // Listen for stdout data events
-        b.process.stdout.on('data', (data:any) => {
-            // console.log(`stdout: ${data}`);
-        });
-            
-        // Listen for stderr data events
-        b.process.stderr.on('data', (data:any) => {
-            console.error(`stderr: ${data}`);
-
-            if(data.substring(0,5) === "Error"){
-                console.log('we have an error with deployment')
-            }
-            
-            if(data === "Content uploaded successfully"){
-                console.log('we finished deploying')
-            }
-        });
-
-        // You can also listen for the child process to exit
-        b.process.on('exit', (code:any, signal:any) => {
-            console.log('deploy bucket process exited with code', key, code)
-            if (code === 0) {
-                console.log('Child process exited successfully.');
-                b.status = "Deployed"
-                b.process = null
-                successIWBServer(key, data).then(()=>{
-                    resetBucket(key)
-                })
-                .catch((e)=>{
-                    console.log("error pinging iwb-server")
-                    resetBucket(key)
-                })
-              } else {
-                console.error(`Child process exited with code ${code}.`);
-                throw new Error("DCL Deployment Error")
-              }        
-        });//
-
-      } catch (error) {
-        console.error(error);
-        throw new Error("DCL Deployment Error")
-      }
-}
-
-export function resetBucket(key:string){
-    console.log('resetting bucket', key)
-    const projectRoot = "../../"
-    const bucketsFolderPath = path.join(projectRoot, 'buckets'); // Path to the "buckets" folder
-    const dep1FolderPath = path.join(bucketsFolderPath, key); // Path to the "dep1" folder inside "buckets"
-
-    // Remove the folder and its contents
-    fs.remove(dep1FolderPath)
-    .then(() => {
-        console.log(`Removed folder: ${dep1FolderPath}`);
-        let b = buckets.get(key)
-        b.status = "free"
-        b.available = true
-        b.owner = ""
-        b.address = ""
-        checkDeploymentQueue()
-    })
-    .catch((error:any) => {
-    console.error(`Error removing folder: ${dep1FolderPath}`, error);
-        let b = buckets.get(key)
-        b.status = "Bucket Failure"
-        b.reason = "Error Removing Bucket"
-        b.available = false
-        b.owner = ""
-        b.address = ""
-        checkDeploymentQueue()
-    });
-}
-
-export function checkDeploymentQueue(){
-    if(queue.length > 0){
+export async function checkDeploymentQueue(){
+    if(iwbDeploymentQueue.length > 0){
         console.log('deployment queue greater than 0')
-        outerLoop: for (const [key, bucket] of buckets) {
+        outerLoop: for (const [key, bucket] of iwbBuckets) {
             if(bucket.available && bucket.enabled){
-                let tempData:DeploymentData = queue.shift()
+                let tempData:DeploymentData = iwbDeploymentQueue.shift()
                 console.log('bucket ' + key + " is available")
                 bucket.available = false
+                bucket.directory = path.join(worldBucketDirectory, key)
+
                 try{
-                    buildBucket(key, bucket, tempData.owner).then(()=>{
-                      modifyScene(key, tempData).then(()=>{
-                             deploy(key, tempData)
-                         })
-                    })
+                    await buildBucket(key, bucket, tempData.owner)
+                    await modifyScene(key, tempData)
+                    await deploy(key, tempData)
                 }
                 catch(e){
                     console.log("bucket for each error", e)
                     failBucket(key)
+                    resetBucket(key)
                 }
                 break outerLoop;
             }
@@ -129,13 +45,195 @@ export function checkDeploymentQueue(){
     }
 }
 
+export function addDeployment(data:DeploymentData){
+    iwbDeploymentQueue.push(data)
+    checkDeploymentQueue()
+}
+
+async function deploy(key:string, data:DeploymentData){
+    try{
+        let b = iwbBuckets.get(key)
+        b.status = "Building"
+        b.owner = data.ens
+        b.address = data.owner
+
+        console.log('directory is', b.directory)
+    
+        await buildTypescript({
+            workingDir: b.directory, 
+            watch:false, 
+            production: true
+          })
+        
+        await deployBucket(key)
+    
+          successIWBServer(key, data)
+          .then(()=>{
+            resetBucket(key)
+        })
+    }
+    catch(e){
+        console.log('iwb world deployment error', e);
+        throw new Error("DCL Deployment Error")
+    }
+}
+
+async function deployBucket(key:string){
+    return new Promise((resolve, reject) => {
+    try {
+        let bucket = iwbBuckets.get(key)
+        bucket.status = "Deploying"
+
+        let temp = command + " " + key + " " + process.env.DEPLOY_KEY
+        let deployProcess:any = exec(temp)
+
+        deployProcess.stdout.on('data', (data:any) => {
+            console.log(`stdout: ${data}`);
+        });
+
+        deployProcess.stderr.on('data', (data:any) => {
+            console.log(`stdout: ${data}`);
+        });
+
+        deployProcess.on('exit', (code:any, signal:any) => {
+            console.log('deploy bucket process exited with code', code)
+            if (code === 0) {
+                console.log('Child process exited successfully.');
+                resolve({})
+              } else {
+                console.error(`Child process exited with code ${code}.`);
+                reject()
+                throw new Error("DCL Deployment Error")
+              }        
+        });
+
+      } catch (error) {
+        console.error(error);
+        reject()
+        throw new Error("DCL Deployment Error")
+      }
+    })
+}
+
+// async function deploy2(key:string, data:DeploymentData){
+//     try {
+//         let b = iwbBuckets.get(key)
+//         b.status = "Deploying"
+//         b.owner = data.ens
+//         b.address = data.owner
+
+//         let temp = command + " " + key + " " + process.env.DEPLOY_KEY
+
+//         // Execute the shell command
+//         b.process = exec(temp)
+  
+//         // Listen for stdout data events
+//         b.process.stdout.on('data', (data:any) => {
+//             // console.log(`stdout: ${data}`);
+//         });
+            
+//         // Listen for stderr data events
+//         b.process.stderr.on('data', (data:any) => {
+//             console.error(`stderr: ${data}`);
+
+//             if(data.substring(0,5) === "Error"){
+//                 console.log('we have an error with deployment')
+//             }
+            
+//             if(data === "Content uploaded successfully"){
+//                 console.log('we finished deploying')
+//             }
+//         });
+
+//         // You can also listen for the child process to exit
+//         b.process.on('exit', (code:any, signal:any) => {
+//             console.log('deploy bucket process exited with code', key, code)
+//             if (code === 0) {
+//                 console.log('Child process exited successfully.');
+//                 b.status = "Deployed"
+//                 b.process = null
+//                 successIWBServer(key, data).then(()=>{
+//                     resetBucket(key)
+//                 })
+//                 .catch((e)=>{
+//                     console.log("error pinging iwb-server")
+//                     resetBucket(key)
+//                 })
+//               } else {
+//                 console.error(`Child process exited with code ${code}.`);
+//                 throw new Error("DCL Deployment Error")
+//               }        
+//         });
+
+//       } catch (error) {
+//         console.error(error);
+//         throw new Error("DCL Deployment Error")
+//       }
+// }
+
+export async function resetBucket(key:string){
+    console.log('resetting iwb world bucket', key)
+    // const projectRoot = "../../"
+    // const bucketsFolderPath = path.join(projectRoot, 'buckets'); // Path to the "buckets" folder
+    // const dep1FolderPath = path.join(bucketsFolderPath, key); // Path to the "dep1" folder inside "buckets"
+
+    // Remove the folder and its contents
+    // fs.remove(dep1FolderPath)
+    // .then(() => {
+    //     console.log(`Removed folder: ${dep1FolderPath}`);
+    //     let b = buckets.get(key)
+    //     b.status = "free"
+    //     b.available = true
+    //     b.owner = ""
+    //     b.address = ""
+    //     checkDeploymentQueue()
+    // })
+    // .catch((error:any) => {
+    // console.error(`Error removing folder: ${dep1FolderPath}`, error);
+    //     let b = buckets.get(key)
+    //     b.status = "Bucket Failure"
+    //     b.reason = "Error Removing Bucket"
+    //     b.available = false
+    //     b.owner = ""
+    //     b.address = ""
+    //     checkDeploymentQueue()
+    // });
+    try{
+        //remove assets files
+        await fs.emptyDir(path.join(worldBucketDirectory, key, "assets"))
+        // await fs.emptyDir(path.join(worldBucketDirectory, key, "src", "iwb"))
+
+        let b = iwbBuckets.get(key)
+        b.status = "free"
+        b.available = true
+        b.owner = ""
+        b.address = ""
+        b.directory = ""
+        checkDeploymentQueue()
+
+   }
+   catch(e){
+       console.log('error resetting dcl bucket', key)
+       let b = iwbBuckets.get(key)
+       b.status = "Bucket Failure"
+       b.reason = "Error Removing Bucket"
+       b.available = false
+       b.owner = ""
+       b.address = ""
+       checkDeploymentQueue()
+   }
+}
+
 async function modifyScene(key:string, data:DeploymentData){
-    const projectRoot = "../../"
-    const bucketsFolderPath = path.join(projectRoot, 'buckets'); // Path to the "buckets" folder
-    const dep1FolderPath = path.join(bucketsFolderPath, key); // Path to the "dep1" folder inside "buckets"
+    // const projectRoot = "../../"
+    // const bucketsFolderPath = path.join(projectRoot, 'buckets'); // Path to the "buckets" folder
+    // const dep1FolderPath = path.join(bucketsFolderPath, key); // Path to the "dep1" folder inside "buckets"
+
+    let bucket = iwbBuckets.get(key)
+    let directory = bucket.directory
 
     try{
-        await updateSceneMetadata(dep1FolderPath, data)
+        await updateSceneMetadata(directory, data)
     }
     catch(e){
         console.log('error modifying scene')
@@ -146,16 +244,15 @@ async function modifyScene(key:string, data:DeploymentData){
 async function buildBucket(key:string, bucket:any, world:string){
     console.log("building temp deploy bucket", world, key)
     try {
-        bucket.status = "Building"
+        bucket.status = "Creating"
 
-        const projectRoot = "../../"
-        const bucketsFolderPath = path.join(projectRoot, 'buckets'); // Path to the "buckets" folder
-        const dep1FolderPath = path.join(bucketsFolderPath, key); // Path to the "dep1" folder inside "buckets"
-        console.log('dep1 folder path is', dep1FolderPath)
-        const templateFolderPath = path.join(projectRoot, 'iwb-template'); // Path to the "template" folder
+        const bucketPath = path.join(worldBucketDirectory, key)
+
+        // const dep1FolderPath = path.join(worldBucketDirectory, key); // Path to the "dep1" folder inside "buckets"
+        // const templateFolderPath = path.join(projectRoot, 'iwb-template'); // Path to the "template" folder
     
-        await fs.mkdir(dep1FolderPath, {recursive: true});
-        await copyFolder(templateFolderPath, dep1FolderPath);
+        // await fs.mkdir(dep1FolderPath, {recursive: true});
+        // await copyFolder(templateFolderPath, dep1FolderPath);
 
         try {
             let ugcPath = path.join('/root', 'ugc-assets', world)
@@ -164,7 +261,7 @@ async function buildBucket(key:string, bucket:any, world:string){
             await fs.access(ugcPath, fs.constants.F_OK);
             console.log('World contains UGC content')
 
-            await copyFiles(ugcPath, path.join(dep1FolderPath, "assets"))
+            await copyFiles(ugcPath, path.join(bucketPath, "assets"))
         } catch (err) {
             console.log('World does not contain UGC content')
         }
@@ -192,7 +289,7 @@ async function copyFiles(sourceFolder:string, destinationFolder:string) {
 }
 
 function failBucket(key:any){
-    let bucket = buckets.get(key)
+    let bucket = iwbBuckets.get(key)
     bucket.status = "failed"
     bucket.available = false
 }

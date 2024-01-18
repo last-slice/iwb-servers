@@ -3,17 +3,18 @@ import path from 'path';
 
 import Axios from "axios";
 import { deployIWB, newAssetsReady } from "../deploy/iwb-deployment";
-import { addDeployment, queue, resetBucket } from "../deploy/scene-deployment";
+import { addDeployment, iwbDeploymentQueue, resetBucket } from "../deploy/scene-deployment";
 import { status } from "../config/config";
-import { buckets } from "../deploy/buckets";
+import { deployBuckets, iwbBuckets } from "../deploy/buckets";
+import { dclDeploymentQueue } from '../deploy';
 const jwt = require("jsonwebtoken");
 
-export function handleBucketEnable(req:any, res:any){
+export function handleBucketEnable(req:any, res:any, type:string){
     if(!req.params.auth || !req.params.bucket || req.params.auth !== process.env.DEPLOY_AUTH){
         res.status(200).json({result: "failure", msg:"invalid auth"})
         return
     }
-    let bucket = buckets.get(req.params.bucket)
+    let bucket = type === "iwb" ? iwbBuckets.get(req.params.bucket) : deployBuckets.get(req.params.bucket)
     if(bucket){
         if(bucket.available){
             try{
@@ -35,7 +36,7 @@ export function handleBucketReset(req:any, res:any){
         res.status(200).json({result: "failure", msg:"invalid auth"})
         return
     }
-    let bucket = buckets.get(req.params.bucket)
+    let bucket = iwbBuckets.get(req.params.bucket)
     if(bucket){
         try{
             if(bucket.process && bucket.process !== null){
@@ -300,7 +301,7 @@ export async function postNewAssetData(req:any, res:any){
 }
 
 export function returnBuckets(res:any){
-    let bucks:any[] = [...buckets.values()]
+    let bucks:any[] = [...iwbBuckets.values()]
 
   const table = `
   <table style="width: 100%; border: 1px solid black;">
@@ -374,9 +375,10 @@ res.send(html);
 }
 
 export function returnStatus(res:any){
-    let bucks:any[] = [...buckets.values()]
+    let iwb:any[] = [...iwbBuckets.values()]
+    let dclDeploy:any[] = [...deployBuckets.values()]
 
-    const table = `
+    const iwbTable = `
     <table style="width: 100%; border: 1px solid black;">
     <thead>
         <tr>
@@ -388,7 +390,7 @@ export function returnStatus(res:any){
         </tr>
       </thead>
       <tbody>
-        ${bucks.map(item => `
+        ${iwb.map(item => `
           <tr>
           <td style="text-align: left;">${item.id}</td>
           <td style="text-align: left;">${item.enabled ? "Enabled" : "Disabled"}</td>
@@ -401,7 +403,7 @@ export function returnStatus(res:any){
     </table>
   `;
   
-  const queueTable = `
+  const iwbQueueTable = `
   <table style="width: 100%; border: 1px solid black;">
   <thead>
       <tr>
@@ -410,7 +412,7 @@ export function returnStatus(res:any){
       </tr>
     </thead>
     <tbody>
-      ${queue.map(item => `
+      ${iwbDeploymentQueue.map(item => `
         <tr>
         <td style="text-align: left;">${item.ens}</td>
         <td style="text-align: left;">${item.owner}</td>
@@ -419,6 +421,51 @@ export function returnStatus(res:any){
     </tbody>
   </table>
   `;
+
+  const dclTable = `
+  <table style="width: 100%; border: 1px solid black;">
+  <thead>
+      <tr>
+        <th>Id</th>
+        <th>Enabled</th>
+        <th>Available</th>
+        <th>Status</th>
+        <th>World</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${dclDeploy.map(item => `
+        <tr>
+        <td style="text-align: left;">${item.id}</td>
+        <td style="text-align: left;">${item.enabled ? "Enabled" : "Disabled"}</td>
+        <td style="text-align: left;">${item.available ?  item.enabled ? "Free" : "" : item.enabled ? "Occupied" : ""}</td>
+        <td style="text-align: left;">${item.status}</td>
+        <td style="text-align: left;">${item.owner}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+`;
+
+const dclQueueTable = `
+<table style="width: 100%; border: 1px solid black;">
+<thead>
+    <tr>
+      <th>ENS</th>
+      <th>Owner</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${dclDeploymentQueue.map((item:any) => `
+      <tr>
+      <td style="text-align: left;">${item.ens}</td>
+      <td style="text-align: left;">${item.owner}</td>
+      </tr>
+    `).join('')}
+  </tbody>
+</table>
+`;
+
   
   // Create a complete HTML page with the table
   const html = `
@@ -468,16 +515,30 @@ export function returnStatus(res:any){
       <div class="row">
         <div class="col-md-6">
         <h1>IWB Deployment Queue</h1>
-        ${queueTable}
+        ${iwbQueueTable}
         </div>
   
   
         <div class="col-md-6">
         <h1>IWB Deployment Buckets</h1>
-        ${table}
+        ${iwbTable}
         </div>
   
-        </div>
+      </div>
+
+      <div class="row">
+      <div class="col-md-6">
+      <h1>Genesis City Deployment Queue</h1>
+      ${dclQueueTable}
+      </div>
+
+
+      <div class="col-md-6">
+      <h1>Genesis City Deployment Buckets</h1>
+      ${dclTable}
+      </div>
+
+    </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/js/bootstrap.min.js"></script>
   
       </body>
@@ -500,7 +561,7 @@ export function returnQueue(res:any){
        </tr>
      </thead>
      <tbody>
-       ${queue.map(item => `
+       ${iwbDeploymentQueue.map(item => `
          <tr>
          <td style="text-align: left;">${item.worldName}</td>
          <td style="text-align: left;">${item.ens}</td>

@@ -7,6 +7,7 @@ import {Scene, SceneItem} from "./Scene";
 import { generateId } from "colyseus";
 import { ImageComponent, MaterialComponent, NFTComponent } from "./Components";
 import { itemManager, iwbManager } from "../app.config";
+import axios from "axios";
 
 export class SelectedAsset extends Schema {
   @type("string") catalogId: string
@@ -49,6 +50,7 @@ export class Player extends Schema {
   // assets: Map<string,SceneItem> = new Map()
   catalog:Map<string,any> = new Map()
   pendingAssets:any[] = []
+  pendingDeployment:any = false
 
   constructor(room:IWBRoom, client:Client){
     super()
@@ -127,7 +129,8 @@ export class Player extends Schema {
       isdl: false,
       e:info.enabled,
       pcls:parcels,
-      sp:["0,0"],
+      sp:["0,0,0"],
+      cp:["0,0,0"],
       priv:info.private
     }
 
@@ -270,5 +273,19 @@ export class Player extends Schema {
     //   console.log('saving player info to db error ->', e)
     // }
   }
+
+  async cancelPendingDeployment(){
+    try{
+        const result = await axios.post("http://localhost:3525/scene/deployment/cancel", { user:this.address, auth: this.pendingDeployment},
+        // {headers: {
+        //   'Authorization': `Bearer ${value2}`,
+        // }},
+        );
+        console.log('validation data', result.data)
+      }
+      catch(e){
+        console.log('error validating deployment')
+      }
+}
 
 }

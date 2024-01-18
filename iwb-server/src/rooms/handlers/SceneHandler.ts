@@ -208,6 +208,62 @@ export class RoomSceneHandler {
                 }
             }
         })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.SCENE_DEPLOY + " message", info)
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player){
+                let scene:Scene = this.room.state.scenes.get(info.sceneId)
+                if(scene && scene.o === player.address){
+                    console.log('owner is requesting deployment')
+
+                    try{
+                        let res = await fetch(deploymentServer + "scene/deploy", {
+                            method:"POST",
+                            headers:{"Content-type": "application/json"},
+                            body: JSON.stringify({
+                                scene:scene,
+                                dest:info.dest,
+                                name: info.name,
+                                worldName:info.worldName,
+                                user: scene.o,
+                                parcel: info.parcel,
+                                tokenId: info.tokenId,
+                                target: 'interconnected.online'
+                            })
+                        })
+                        let json = await res.json()
+                        player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:json.valid, msg:json.valid ? "Your deployment is pending!...Please wait for a link to sign the deployment. This could take a couple minutes." : "Error with your deployment request. Please try again."})
+                    }
+                    catch(e){
+                        console.log('error pinging deploy server', player.address, e)
+                        player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_READY, {valid:false, msg:"Error pinging the deploy server"})
+                    }
+                }else{
+                    console.log('someone else requesting deployment access')
+                }
+            }
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN + " message", info)
+            let player:Player = room.state.players.get(client.userData.userId)
+            let scene: Scene = room.state.scenes.get(info.sceneId)
+            if(player && scene && scene.o === player.address){
+                scene.sp.push("" + info.sp.x.toFixed(0) + "," + info.sp.y.toFixed(0) + "," + info.sp.z.toFixed(0))
+                scene.cp.push("" + info.cp.x.toFixed(0) + "," + info.cp.y.toFixed(0) + "," + info.cp.z.toFixed(0))
+            }
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE_SPAWN, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_SPAWN + " message", info)
+            let player:Player = room.state.players.get(client.userData.userId)
+            let scene: Scene = room.state.scenes.get(info.sceneId)
+            if(player && scene && scene.o === player.address){
+                scene.sp.splice(info.index, 1)
+                scene.cp.splice(info.index, 1)
+            }
+        })
     }
 
     removeParcel(scene:Scene, parcel: any) {

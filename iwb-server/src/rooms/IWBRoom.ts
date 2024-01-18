@@ -75,6 +75,12 @@ export class IWBRoom extends Room<IWBRoomState> {
             this.state.players.delete(client.userData.userId)
 
             this.state.messageHandler.sceneHandler.checkAssetsForEditByPlayer(client.userData.userid)
+            
+            if(!player.pendingDeployment){}
+            else{
+                console.log('need to cancel pending deployment')
+                player.cancelPendingDeployment()
+            }
 
           setTimeout(()=>{
             console.log('player is not in another world, need to remove them from server')

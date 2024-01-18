@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import { handleSceneSigning, validateSceneToken } from "./api.service";
-import { initDownload } from "../download/scripts";
 
 export function sceneRouter(router:any){
   router.get("/scene/sign/:user", (req: any, res: any) => {

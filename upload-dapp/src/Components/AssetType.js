@@ -1,7 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Container, Button, Row, Col, Table } from 'react-bootstrap'; // Import Bootstrap components
 
-import uploadbg from "../img/uploadbg.png";
+import glbpng from "../img/3dfile.png";
+import imagepng from "../img/2dfile.png";
+import audiopng from "../img/audio.png";
+import bg from "../img/popupwide.png";
 import {useNavigate} from "react-router-dom"
 
 function AssetType({onClick}) {
@@ -12,7 +15,10 @@ function AssetType({onClick}) {
         justifyContent:'center',
         alignItems:'center',
         height: '100vh',
-        backgroundColor:"black"
+        backgroundColor:'black',
+        backgroundImage: `url(${bg})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize:'100vw 100vh'
       };
 
       const data = [
@@ -26,9 +32,9 @@ function AssetType({onClick}) {
       
   return (
         <div style={centerDivStyle} >
-      <img src={uploadbg} onClick={()=>{onClick('3D')}} width={'20%'}/>
-      <img src={uploadbg} onClick={()=>{onClick('Audio')}} width={'20%'}/>
-      <img src={uploadbg} width={'20%'}/>
+      <img src={glbpng} onClick={()=>{onClick('3D')}} width={'20%'}/>
+      <img src={audiopng} onClick={()=>{onClick('Audio')}} width={'20%'}/>
+      <img src={imagepng} width={'20%'}/>
       </div>
   );
 }

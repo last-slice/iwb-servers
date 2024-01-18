@@ -1,14 +1,23 @@
 import express, { Request, Response } from "express";
 import { forceCopyAssets, handleIWBDeploy, handleWorldDeploy } from "./api.service";
-import { handleGenesisCityDeployment, pingCatalyst } from "../deploy/gc-deployment";
+import { pingCatalyst } from "../deploy/gc-deployment";
+import { cancelPendingDeployment, handleDeploymentRequest, validateDeployment } from "../deploy/index"
 
 export function deployRouter(router:any){
-    router.post("/gc-deploy", async function(req: express.Request, res: express.Response) {
-      handleGenesisCityDeployment(req,res)
-    })
+  router.post("/scene/deployment/cancel", async function(req: express.Request, res: express.Response) {
+    cancelPendingDeployment(req, res)
+  })
 
-    router.post("/gc-deploy/two", async function(req: express.Request, res: express.Response) {
-      pingCatalyst(req,res)
+  router.post("/scene/deployment/verify", async function(req: express.Request, res: express.Response) {
+    validateDeployment(req, res)
+  })
+
+  router.post("/scene/deployment/signature", async function(req: express.Request, res: express.Response) {
+    pingCatalyst(req,res)
+  })
+
+    router.post("/scene/deploy", async function(req: express.Request, res: express.Response) {
+      handleDeploymentRequest(req, res)
     })
 
     router.post("/world-deploy", async function(req: express.Request, res: express.Response) {

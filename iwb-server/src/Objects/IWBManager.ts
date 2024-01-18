@@ -1,5 +1,5 @@
 import axios from "axios"
-import { itemManager } from "../app.config"
+import { itemManager, iwbManager } from "../app.config"
 import { IWBRoom } from "../rooms/IWBRoom"
 import { PlayfabId, abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playerLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
@@ -420,5 +420,31 @@ export class IWBManager{
             })
             await itemManager.uploadFile(world, "catalogs.json", [...catalog])
         }
+    }
+
+    async sceneReady(body:any){
+        let player:any = false
+
+        iwbManager.rooms.forEach((room)=>{
+            if(room.state.players.has(body.user)){
+                player = room.state.players.get(body.user)
+                return
+            }
+        })
+
+        if(!player){
+            console.log('user not online anymore, delete deployment and free up bucket')
+        }else{
+            console.log('found user, notify them of their deployment', body)
+            player.pendingDeployment = body.data.auth
+
+            let link = this.buildDeployLink(body)
+            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_READY, {link:link})
+        }
+    }
+
+    buildDeployLink(body:any){
+        let link = (DEBUG ? "http://localhost:3000/" : "") + "deploy/" + body.user + "/" + body.data.dest + "/" + (body.data.tokenId === "" ? "parcel" : "estate") + "/" + body.bucket + "/" + body.data.name + "/" + (body.data.dest === "gc" ? (body.data.parcel.split(",")[0] + "/" + body.data.parcel.split(",")[1]) : body.data.tokenId) + "/" + body.auth
+        return link
     }
 }

@@ -1,26 +1,28 @@
 import * as fs from 'fs-extra';
 import { assetDirectory, temporaryDirectory, ugcDirectory } from '.';
 
-export async function copyAssets(data:any){
+export async function copyAssets(location:string, data:any){
     let alreaadyCopied:string[] = []
 
     for(let i = 0; i < data.ass.length; i++){
         let asset = data.ass[i]
-        if(asset.type === "3D" && !alreaadyCopied.includes(asset.id)){
-            let location = temporaryDirectory + data.o + "-" + data.id + "/assets/"
+        if(!alreaadyCopied.includes(asset.id)){
             let file = asset.id
 
             let catalogDirectory:string = asset.ugc ? (ugcDirectory + data.o + "/") : assetDirectory
-                        
+            
+            console.log('copying asset', asset)
             switch(asset.type){
                 case '2D':
-                    location += '2D/'
                     file += ".png"
                     break;
     
                 case '3D':
-                    location += '3D/'
                     file += ".glb"
+                    break;
+
+                 case 'Audio':
+                    file += ".mp3"
                     break;
             }
 

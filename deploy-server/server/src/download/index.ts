@@ -1,5 +1,6 @@
 import * as fsExtra from 'fs-extra';
-import { temporaryDirectory } from './scripts';
+import { buildScene, temporaryDirectory } from './scripts';
+import { zipScene } from './scripts/zip';
 const { v4: uuidv4 } = require('uuid');
 
 let downloadQueue:any[] = []
@@ -48,6 +49,20 @@ export function getDownloadQueue(){
 
 export function findUserDownload(user:string, sceneId:string){
     return downloadQueue.find((d)=> d.user === user)
+}
+
+export async function handleSceneDownload(req:any, res:any){
+    try{
+        await buildScene(req.body.scene, "download")
+        await zipScene(req.body.scene)
+        
+        res.status(200).send({valid: true})
+    }
+    catch(e){
+        console.log('error handling scene download', e)
+        res.status(200).send({valid: false})
+    }
+
 }
 
 export async function addDownloadQueue(sceneId:string, user:string, time:number){

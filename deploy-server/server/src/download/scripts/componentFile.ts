@@ -1,17 +1,29 @@
 import * as fs from 'fs';
 import { temporaryDirectory } from './index';
 
-export async function writeComponentFile(data:any){
+export async function writeComponentFile(location:string, data:any){
     let template = await writeComponentFunctions()
-    await fs.writeFileSync(temporaryDirectory + data.o + "-" + data.id + '/src/iwb/components.ts', template);
+    await fs.writeFileSync(location, template);
 }
 
 export async function writeComponentFunctions(){
     let scene = `
-import { Entity, GltfContainer, Material, NftShape, TextShape, VideoPlayer } from "@dcl/sdk/ecs"
+import { AudioSource, AudioStream, Entity, GltfContainer, Material, NftShape, TextShape, Transform, VideoPlayer, engine } from "@dcl/sdk/ecs"
 import { Color4 } from "@dcl/sdk/math"
+`
 
-export function updateTextComponent(entity:Entity, item:any){
+    scene = await writeTextComponent(scene)
+    scene = await writeGLTFComponent(scene)
+    scene = await writeImageComponent(scene)
+    scene = await writeVideoComponent(scene)
+    scene = await writeNFTComponent(scene)
+    scene = await writeAudioComponent(scene)
+    scene = await writeExports(scene)
+    return scene
+}
+async function writeTextComponent(scene:any){
+    scene += `
+function updateTextComponent(entity:Entity, item:any){
     TextShape.createOrReplace(entity,{
         text: item.textComp.text,
         textColor: item.textComp.color,
@@ -22,18 +34,27 @@ export function updateTextComponent(entity:Entity, item:any){
         outlineColor: item.textComp.outlineWidth > 0 ? item.textComp.outlineColor : undefined
     })
 }
+`
+    return scene
+}
 
-export function createGltfComponent(entity:Entity, item:any){
+async function writeGLTFComponent(scene:any){
+    scene +=`
+function createGltfComponent(entity:Entity, item:any){
     let gltf:any = {
-        src:"assets/3D/" + item.id + ".glb",
+        src:"assets/" + item.id + ".glb",
         invisibleMeshesCollisionMask: item.colComp && item.colComp.iMask ? item.colComp && item.colComp.iMask : undefined,
         visibleMeshesCollisionMask: item.colComp && item.colComp.vMask ? item.colComp && item.colComp.vMask : undefined
     }
     GltfContainer.create(entity, gltf)
 }
+`
+    return scene
+}
 
-
-export function updateImageUrl(entity:Entity, item:any){
+async function writeImageComponent(scene:any){
+    scene +=`
+function updateImageUrl(entity:Entity, item:any){
     let texture = Material.Texture.Common({
         src: "" + item.imgComp.url
     })
@@ -53,8 +74,13 @@ export function updateImageUrl(entity:Entity, item:any){
             })
     }
 }
+`
+    return scene
+}
 
-export function createVideoComponent(entity:Entity, item:any){
+async function writeVideoComponent(scene:any){
+    scene +=`
+function createVideoComponent(entity:Entity, item:any){
     VideoPlayer.create(entity, {
         src: item.vidComp.url,
         playing: item.vidComp.autostart,
@@ -73,13 +99,60 @@ export function createVideoComponent(entity:Entity, item:any){
         emissiveIntensity: 1,
         emissiveTexture: videoTexture
     })
+    item.videoTexture = videoTexture
+}
+`
+    return scene
 }
 
-export function updateNFTFrame(entity:Entity, item:any){
+async function writeNFTComponent(scene:any){
+    scene +=`
+function updateNFTFrame(entity:Entity, item:any){
     NftShape.createOrReplace(entity, {
         urn: 'urn:decentraland:ethereum:erc721:' + item.nftComp.contract + ':' + item.nftComp.tokenId,
         style: item.nftComp.style
         })
+}
+`
+    return scene
+}
+
+async function writeAudioComponent(scene:any){
+    scene +=`
+function updateAudioComponent(entity:Entity, item:any){
+    if(item.stream){
+        AudioStream.create(entity, {
+            url: item.audComp.url,
+            playing: item.audComp.autostart,
+            volume: item.audComp.volume,
+        })
+    }else{
+        console.log('here')
+        AudioSource.create(entity, {
+            audioClipUrl: item.audComp.url,
+            playing: item.audComp.autostart,
+            volume: item.audComp.volume,
+            loop: item.audComp.loop
+        })
+    }
+
+    if(item.audComp.attachedPlayer){
+        Transform.createOrReplace(entity, {parent:engine.PlayerEntity})
+    }
+}
+`
+    return scene
+}
+
+async function writeExports(scene:any){
+    scene +=`
+export {
+    createGltfComponent, 
+    updateTextComponent, 
+    updateImageUrl, 
+    createVideoComponent, 
+    updateNFTFrame, 
+    updateAudioComponent
 }
 `
     return scene

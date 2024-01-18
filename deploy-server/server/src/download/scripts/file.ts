@@ -1,13 +1,13 @@
 import * as fs from 'fs';
 import { temporaryDirectory } from './index';
 
-export async function writeIWBFile(data:any){
+export async function writeIWBFile(location:string, data:any){
     let template = await writeImports()
     template = await writeParent(template)
     template = await writeItems(template)
     template = await writeComponents(template)
 
-    await fs.writeFileSync(temporaryDirectory + data.o + "-" + data.id + '/src/iwb/iwb.ts', template);
+    await fs.writeFileSync(location, template);
 }
 
 export async function writeImports(){
@@ -15,8 +15,7 @@ export async function writeImports(){
 import { Entity, GltfContainer, Material, MeshCollider, MeshRenderer, Transform, VideoPlayer, engine } from "@dcl/sdk/ecs"
 import { Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { scene } from "./config"
-import { createGltfComponent, createVideoComponent, updateImageUrl, updateNFTFrame, updateTextComponent } from "./components"
-
+import * as IWB from './components'
 `
     return scene
 }
@@ -24,6 +23,7 @@ import { createGltfComponent, createVideoComponent, updateImageUrl, updateNFTFra
 export async function writeParent(template:any){
     template += `
 export let sceneParent:Entity
+export let iwbAssets:any[] = []
 
 export function initIWBScene(){
     createParent()
@@ -50,55 +50,81 @@ function createSceneItems(){
         Transform.create(entity, {parent:sceneParent, position:item.p, rotation:Quaternion.fromEulerDegrees(item.r.x, item.r.y, item.r.z), scale:item.s})
         addAssetComponents(entity, item, item.type, item.n)
     })
+    console.log(iwbAssets)
 }
 `
 return template
 }
 
 export async function writeComponents(template:any){
-    template += `
-    function addAssetComponents(entity:Entity, item:any, type:string, name:string){
 
-        switch(type){
-            case '3D':
-                createGltfComponent(entity, item)
-                break;
+    template += `
+function addAssetComponents(entity:Entity, item:any, type:string, name:string){
+    switch(type){
+`
+    template = await writeGLTFComponent(template)
+    template = await write2DComponent(template)
+    template = await writeAudioComponent(template)
     
-            case '2D':
-                if(item.colComp.vMask === 1){
-                    MeshCollider.setPlane(entity)
-                }
+
+    //end of addAssetComponents function
+    template += `
+    }
+    iwbAssets.push({entity:entity, data:item})
+}`
+
+    return template
+}
+
+async function writeGLTFComponent(template:any){
+    template += `
+    case '3D':
+        IWB.createGltfComponent(entity, item)
+        break;
+`
+    return template
+}
+async function write2DComponent(template:any){
+    template +=`
+    case '2D':
+        if(item.colComp.vMask === 1){
+            MeshCollider.setPlane(entity)
+        }
+        
+        switch(name){
+            case 'Image':
+                MeshRenderer.setPlane(entity)
+                IWB.updateImageUrl(entity, item)
+                break;
+
+            case 'Video':
+                MeshRenderer.setPlane(entity)
+                IWB.createVideoComponent(entity, item)
+                break;
+
+            case 'NFT Frame':
+                IWB.updateNFTFrame(entity, item)
+                break;
+
+                case 'Text':
+                IWB.updateTextComponent(entity, item)
+                break;
                 
-                switch(name){
-                    case 'Image':
-                        MeshRenderer.setPlane(entity)
-                        updateImageUrl(entity, item)
-                        break;
-    
-                    case 'Video':
-                        MeshRenderer.setPlane(entity)
-                        createVideoComponent(entity, item)
-                        break;
-    
-                    case 'NFT Frame':
-                        updateNFTFrame(entity, item)
-                        break;
-    
-                     case 'Text':
-                        updateTextComponent(entity, item)
-                        break;
-                        
-                    case 'Plane':
-                        MeshRenderer.setPlane(entity)
-                        // updateMaterialComponent(item.aid, item.matComp)
-                        break;
-                }
-                break;
-    
-            case 'Audio':
+            case 'Plane':
+                MeshRenderer.setPlane(entity)
+                // updateMaterialComponent(item.aid, item.matComp)
                 break;
         }
-    }
+        break;
 `
-return template
+
+    return template
+}
+async function writeAudioComponent(template:any){
+    template += `
+    case 'Audio':
+        IWB.updateAudioComponent(entity, item)
+        break;
+`
+    return template
 }

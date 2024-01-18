@@ -6,3 +6,13 @@ export type DeploymentData = {
     ens:string
     init:boolean   
 }
+
+export type DCLDeploymentData = {
+    scene:any,
+    dest:string,
+    name: string,
+    worldName:string,
+    user: string,
+    parcel: string,
+    tokenId: string
+}

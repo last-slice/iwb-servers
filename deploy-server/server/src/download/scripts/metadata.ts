@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import { temporaryDirectory } from '.';
 
-export async function writeSceneMetadata(data:any){
-    let fileData = await fs.promises.readFile(temporaryDirectory + data.o + "-" + data.id + '/scene.json')
+export async function writeSceneMetadata(location:string, data:any, parcels?:any){
+    let fileData = await fs.promises.readFile(location)
     let metadata = JSON.parse(fileData.toString())
     
     metadata.display.title = data.n
@@ -11,6 +11,12 @@ export async function writeSceneMetadata(data:any){
     metadata.scene.base = data.bpcl
     metadata.scene.parcels = data.pcls
     metadata.spawnPoints = []
+
+    if(parcels){
+        metadata.scene.base = parcels
+        metadata.scene.parcels = [parcels]
+    }
+
 
     data.sp.forEach((sp:any, index:number)=>{
         const [x1, z1] = sp.split(",")
@@ -26,5 +32,5 @@ export async function writeSceneMetadata(data:any){
         metadata.spawnPoints.push(spawn)
     })
 
-    await fs.promises.writeFile(temporaryDirectory + data.o + "-" + data.id + '/scene.json', JSON.stringify(metadata,null, 2));
+    await fs.promises.writeFile(location, JSON.stringify(metadata,null, 2));
 }

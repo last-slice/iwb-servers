@@ -66,7 +66,7 @@ export class VideoComponent extends Schema {
 export class AudioComponent extends Schema {
     @type("string") url: string = ""
     @type("number") volume: number = .5
-    @type("boolean") autostart: boolean = true
+    @type("boolean") autostart: boolean = false
     @type("boolean") loop: boolean = false
     @type("boolean") attachedPlayer: boolean = false
 }
@@ -150,15 +150,19 @@ export function addVideoComponent(item:SceneItem, data:VideoComponent){
 }
 
 export function addAudioComponent(item:SceneItem, data:any){
+    console.log('adding audio data', item.ugc, data)
     item.comps.push(COMPONENT_TYPES.AUDIO_COMPONENT)
     item.audComp = new AudioComponent()
+    item.audComp.url = "" + (item.ugc ? "assets/" + item.id + ".mp3" : "")
+
     if(data !== null){
-        item.audComp.url = data.url
+        item.audComp.url = "" + (item.ugc ? "assets/" + item.id + ".mp3" : data.url)
         item.audComp.autostart = data.autostart
         item.audComp.loop = data.loop
         item.audComp.volume = data.volume
         item.audComp.attachedPlayer = data.attachedPlayer
     }
+    console.log('new audio asset is', item.audComp.url)
 }
 
 export function addMaterialComponent(item:SceneItem, data:any){

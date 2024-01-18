@@ -155,3 +155,18 @@ export function handlBulkWorldsDeployments(req:any, res:any){
         iwbManager.updateAllWorlds()
     }
 }
+
+export function handleSceneDeploymentReady(req:any, res:any){
+    if(DEBUG){
+        res.status(200).send({valid: true})
+        iwbManager.sceneReady(req.body)
+    }else{
+        if (!req.header("Authorization") || req.header("Authorization") !== process.env.IWB_DEPLOYMENT_AUTH || !req.body) {
+            console.log('invalid auth key')
+            return res.status(200).json({valid:false, message: 'Unauthorized' });
+        }else{
+            res.status(200).send({valid: true})
+            iwbManager.sceneReady(req.body)
+        }
+    }
+}

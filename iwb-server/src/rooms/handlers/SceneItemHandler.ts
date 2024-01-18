@@ -242,48 +242,60 @@ export class RoomSceneItemHandler {
 
         room.onMessage(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, async(client, info)=>{
             console.log(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS + " message", info)
-            room.broadcast(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, {user:client.userData.userId, y:info.y, aid:info.aid})
+            // room.broadcast(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, {user:client.userData.userId, y:info.y, aid:info.aid})
         })
     }
 
     deleteSceneItem(player:Player, info:any){
-        if(player && player.mode === SCENE_MODES.BUILD_MODE){
-            let scene = this.room.state.scenes.get(info.sceneId)
-            if(scene){
-                let sceneItem = scene.ass.find((asset)=> asset.aid === info.assetId)
-                if(sceneItem){
-                    // console.log('found scene item to delete', sceneItem.id, sceneItem.ugc)
-                    let pc:any
-                    let si:any
-                    if(sceneItem.ugc){
-                        console.log('ugc asset to delete')
-                        let realmAsset = this.room.state.realmAssets.get(sceneItem.id)
-                        // console.log('realm asset is', realmAsset)
-                        pc = realmAsset ? realmAsset.pc : undefined
-                        si = realmAsset ? realmAsset.si : undefined
+        try{
+            if(player && player.mode === SCENE_MODES.BUILD_MODE){
+                let scene = this.room.state.scenes.get(info.sceneId)
+                if(scene){
+                    let sceneItem = scene.ass.find((asset)=> asset.aid === info.assetId)
+                    if(sceneItem){
+                        // console.log('found scene item to delete', sceneItem.id, sceneItem.ugc)
+                        let pc:any
+                        let si:any
+                        if(sceneItem.ugc){
+                            console.log('ugc asset to delete')
+                            let realmAsset = this.room.state.realmAssets.get(sceneItem.id)
+                            // console.log('realm asset is', realmAsset)
+                            pc = realmAsset ? realmAsset.pc : undefined
+                            si = realmAsset ? realmAsset.si : undefined
+                        }
+                        else{
+                            console.log('catalog asset to delete')
+                            let item = itemManager.items.get(sceneItem.id)
+                            // console.log('catalog item to delete is', item)
+                            pc = item ? item.pc : undefined
+                            si = item ? item.si : undefined
+                        }
+    
+                        scene.pc -= pc ? pc : 0
+                        scene.si -= si ? si : 0
+                        let index = scene.ass.findIndex((asset)=> asset.aid === info.assetId)
+                        if(index >= 0){
+                            scene.ass.splice(index,1)
+                        }
                     }
-                    else{
-                        console.log('catalog asset to delete')
-                        let item = itemManager.items.get(sceneItem.id)
-                        // console.log('catalog item to delete is', item)
-                        pc = item ? item.pc : undefined
-                        si = item ? item.si : undefined
-                    }
-
-                    scene.pc -= pc ? pc : 0
-                    scene.si -= si ? si : 0
-                    scene.ass.splice(scene.ass.findIndex((asset)=> asset.aid === info.assetId),1)
                 }
             }
         }
+        catch(e){
+            console.log('error deleting scene item', info)
+        }
+
     }
 
     transformAsset(scene:Scene, data:any){
         console.log('need to get asset to update scene')
         let asset = scene.ass.find((asset)=> asset.aid === data.aid)
         if(asset){
+            console.log('asset to transform is', asset.aid)
+            console.log(data.modifier)
             switch(data.modifier){
                 case EDIT_MODIFIERS.POSITION:
+                    console.log('editing position')
                     switch(data.axis){
                         case 'x':
                             if(data.manual){

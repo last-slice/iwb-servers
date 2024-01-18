@@ -1,14 +1,15 @@
-export let buckets:Map<string,any> = new Map()
+export let iwbBuckets:Map<string,any> = new Map()
+export let deployBuckets:Map<string,any> = new Map()
 
-buckets.set("dep1", {
-    enabled: false,
+iwbBuckets.set("bucket1", {
+    enabled: true,
     available:true,
     status: "",
     owner:"",
     id:"bucket1",
     address:""
 })
-buckets.set("dep2", {
+iwbBuckets.set("bucket2", {
     enabled: false,
     available:true,
     status: "",
@@ -16,7 +17,7 @@ buckets.set("dep2", {
     id:"bucket2",
     address:""
 })
-buckets.set("dep3", {
+iwbBuckets.set("bucket3", {
     enabled: false,
     available:true,
     status: "",
@@ -24,17 +25,29 @@ buckets.set("dep3", {
     id:"bucket3",
     address:""
 })
-// buckets.set("dep4", {
-//     enabled: false,
-//     available:true,
-//     status: "",
-//     owner:"",
-//     id:""
-// })
-// buckets.set("dep5", {
-//     enabled: false,
-//     available:true,
-//     status: "",
-//     owner:"",
-//     id:""
-// })
+
+
+deployBuckets.set("bucket1", {
+    enabled: true,
+    available:true,
+    status: "",
+    owner:"",
+    id:"bucket1",
+    address:""
+})
+deployBuckets.set("bucket2", {
+    enabled: true,
+    available:true,
+    status: "",
+    owner:"",
+    id:"bucket2",
+    address:""
+})
+deployBuckets.set("bucket3", {
+    enabled: true,
+    available:true,
+    status: "",
+    owner:"",
+    id:"bucket3",
+    address:""
+})

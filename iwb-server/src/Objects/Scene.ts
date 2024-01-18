@@ -27,7 +27,7 @@ export class SceneItem extends Schema {
     @type("string") type: string
     @type("string") sty: string
     @type("boolean") editing:boolean = false
-    @type("boolean") ugc:boolean = false
+    @type("boolean") ugc:boolean
     @type("boolean") pending:boolean = false
     @type("string") editor:string = ""
     @type(Vector3) p: Vector3 = new Vector3()
@@ -72,6 +72,7 @@ export class Scene extends Schema {
     @type(['string']) rev = new ArraySchema<string>();
     @type(['string']) pcls = new ArraySchema<string>();
     @type(['string']) sp = new ArraySchema<string>();
+    @type(['string']) cp = new ArraySchema<string>();
 
     @type("number") cd: number
     @type("number") upd: number
@@ -104,7 +105,9 @@ export class Scene extends Schema {
             this.rat = data.rat
             this.rev = data.rev
             this.pcls = data.pcls
-            this.sp = data.sp
+            console.log('spawn point length is', data.sp[0].split(",").length)
+            this.sp = data.sp[0].split(",").length === 2 ? [data.sp[0].split(",")[0] + ",0," + data.sp[0].split(",")[1]] : data.sp
+            this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"]
             this.si = data.si
             this.toc = data.toc
             this.pc = data.pc
@@ -199,11 +202,13 @@ export function     addItemComponents(item: SceneItem, asset: any) {
             case COMPONENT_TYPES.AUDIO_COMPONENT:
                 console.log('audio component is', asset)
                 item.audComp = new AudioComponent()
-                item.audComp.url = asset.audComp ? (asset.ugc ? "assets/" + asset.id + ".mp3" : asset.audComp.url) :""
+                item.audComp.url = asset.hasOwnProperty("audComp") ? (asset.ugc ? "assets/" + asset.id + ".mp3" : asset.audComp.url) :""
                 item.audComp.volume = asset.audComp?.volume || 0.5
                 item.audComp.autostart = asset.audComp?.autostart
                 item.audComp.loop = asset.audComp?.loop || false
                 item.audComp.attachedPlayer = asset.audComp?.attachedPlayer || false
+
+                console.log('audio component loaded is', item.audComp.url)
                 break;
 
             case COMPONENT_TYPES.VISBILITY_COMPONENT:

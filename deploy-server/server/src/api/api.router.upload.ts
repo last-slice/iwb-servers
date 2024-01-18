@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import fs from 'fs';
+import { promises as fsPromises } from 'fs';
 import { authenticateToken, handleAssetSigning, postNewAssetData } from "./api.service";
 import { postPendingAsset } from "../upload";
 
@@ -16,7 +17,9 @@ const storage = multer.diskStorage({
         cb(null, dest);
     },
     filename: function (req:any, file:any, cb:any) {
-      cb(null, uuidv4() + getType(req.pending.type));
+      let id = uuidv4()
+      req.fileId = id
+      cb(null, id);
     },
   });
 
@@ -41,6 +44,11 @@ export function uploadRouter(router:any){
   
   router.post('/upload', authenticateToken, upload.single('file'), async (req:any, res:any) => {
       try {
+        let dest = (process.env.NODE_ENV === "Development" ?
+        process.env.DEV_UPLOAD_DIRECTORY : 
+        process.env.PROD_UPLOAD_DIRECTORY) + req.user 
+
+        await fsPromises.rename(dest +  "/" + req.fileId, dest + "/" + req.fileId + getType(req.body.type))
         console.log('upload asset complete!, pinging toolset server with configuration')
         await postNewAssetData(req, res)
       } catch (error) {
