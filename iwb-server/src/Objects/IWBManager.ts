@@ -29,7 +29,7 @@ export class IWBManager{
     realmFileKey:string = 'scenes.json'
 
     constructor(){
-        this.getServerConfigurations()
+        this.getServerConfigurations(true)
 
         this.backupInterval = setInterval(async ()=>{
             if(this.configModified && !this.backingUp){
@@ -100,7 +100,7 @@ export class IWBManager{
             let worlds = JSON.parse(response.Data['Worlds'])
             this.worlds = worlds
 
-            await itemManager.initServerItems()
+            init ? await itemManager.initServerItems() : null
         }
         catch(e){
             console.log('error getting server items', e)
@@ -240,7 +240,8 @@ export class IWBManager{
 
                         if(newWorld){
                             world.builds = 1
-                            world.updated = Math.floor(Date.now()/1000)    
+                            world.updated = Math.floor(Date.now()/1000)
+                            world.cv = 1    
                         } 
 
                         this.backupScene(world.ens, realmToken, realmTokenType, realmId, scenes)

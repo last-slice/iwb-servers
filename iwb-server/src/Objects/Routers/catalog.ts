@@ -49,4 +49,10 @@ export function iwbRouter(router:any){
         itemManager.getServerItems()
         res.status(200).send({valid: true, msg: "refreshing server items"})
     });
+
+    router.get("/refresh/config", (req: any, res: any) => {
+        console.log('refresh cached config on server')
+        iwbManager.getServerConfigurations()
+        res.status(200).send({valid: true, msg: "refreshing server config"})
+    });
 }

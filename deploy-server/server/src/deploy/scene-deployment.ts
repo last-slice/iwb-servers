@@ -13,6 +13,7 @@ const command = status.DEBUG ? '/Users/lastraum/desktop/programming/decentraland
 
 export let iwbDeploymentQueue:DeploymentData[] = []
 let worldBucketDirectory = status.DEBUG ? "/Users/lastraum/Desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/buckets/iwb/" : "/root/deployment/buckets/iwb/"
+let assetDirectory = status.DEBUG ? "/Users/lastraum/Desktop/programming/decentraland/lastslice/sdk7/iwb/toolset/" : "/root/iwb-assets/"
 
 ////cp -r /root/deployment/iwb-template/* /root/deployment/buckets/iwb/bucket1/  need to expose an endpoint so i can copy the template into all of the buckets
 
@@ -252,7 +253,7 @@ async function buildBucket(key:string, bucket:any, world:string){
         // const templateFolderPath = path.join(projectRoot, 'iwb-template'); // Path to the "template" folder
     
         // await fs.mkdir(dep1FolderPath, {recursive: true});
-        // await copyFolder(templateFolderPath, dep1FolderPath);
+        await copyFiles(assetDirectory, path.join(bucketPath, "assets"));
 
         try {
             let ugcPath = path.join('/root', 'ugc-assets', world)
