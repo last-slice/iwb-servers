@@ -14,7 +14,7 @@ export let temporaryDirectory = process.env.NODE_ENV === "Development" ? process
 export let assetDirectory = process.env.NODE_ENV === "Development" ? process.env.DEV_DOWNLOAD_ASSET_DIRECTORY : process.env.PROD_DOWNLOAD_ASSET_DIRECTORY
 export let ugcDirectory = process.env.NODE_ENV === "Development" ? process.env.DEV_DOWNLOAD_UGC_DIRECTORY : process.env.PROD_DOWNLOAD_UGC_DIRECTORY
 
-export async function buildScene(data:any, type:string, bucketDirectory?:string, parcels?:any){
+export async function buildScene(data:any, type:string, bucketDirectory?:string, parcels?:any, worldName?:string){
 
     let directory = type === "download" ? path.join(temporaryDirectory, data.o + "-" + data.id) : bucketDirectory
 
@@ -23,7 +23,7 @@ export async function buildScene(data:any, type:string, bucketDirectory?:string,
             await copyTemplate(directory, data)
         }
         await writeIndexFile(path.join(directory, "src/index.ts"))
-        await writeSceneMetadata(path.join(directory, 'scene.json'), data , parcels ? parcels : undefined)
+        await writeSceneMetadata(path.join(directory, 'scene.json'), data , parcels ? parcels : undefined, worldName ? worldName : undefined)
         await writeSceneTemplate(path.join(directory, "src/iwb/config.ts"), data)
         await writeIWBFile(path.join(directory, 'src/iwb/iwb.ts'), data)
         await writeComponentFile(path.join(directory, 'src/iwb/components.ts'), data)

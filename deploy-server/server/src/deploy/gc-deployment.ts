@@ -44,7 +44,7 @@ export async function handleGenesisCityDeployment(key:string, data:any){
           data: data
         }
 
-        await buildScene(data.scene, "deploy", bucketDirectory, data.parcel)
+        await buildScene(data.scene, "deploy", bucketDirectory, data.parcel !== null ? data.parcel : undefined, data.worldName !== null ? data.worldName : undefined)
 
           await buildTypescript({
             workingDir: bucketDirectory, 
@@ -127,9 +127,19 @@ export function resetDeployment(key:string){
 
 export async function pingCatalyst(req:any, res:any){//entityId:any, address:any, signature:any){
     if(validateSignature(req)){
+      console.log('valid signature, pinging catalyst for upload', req.body)
       let entityId = pendingDeployments[req.body.user.toLowerCase()].entityId
       let address = req.body.user.toLowerCase()
       let signature = req.body.signature
+      let target:any
+      if(req.body.target){
+        target = req.body.target
+        if(req.body.dest === "worlds"){
+          target += "/world/" + req.body.world
+        }
+
+        console.log("target is", target)
+      }
   
       const authChain = Authenticator.createSimpleAuthChain(
           entityId,
@@ -165,9 +175,10 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
   //     }).getContentClient()
   //     url = 'peer.decentraland.zone'
   //   } else {
-      if(req.body.target){
+
+      if(target){
           catalyst = await createCatalystClient({
-              url: req.body.target,
+              url: target,
               fetcher: createFetchComponent()
             }).getContentClient()
       }else{
@@ -200,11 +211,11 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
     console.log(`Uploading data to: ${url}`)
   
     const deployData = { entityId, files: pendingDeployments[req.body.user].entityFiles, authChain }
-    const position = pendingDeployments[req.body.user].sceneJSON .scene.base
-    const network = 'mainnet'
-    const worldName = pendingDeployments[req.body.user].sceneJSON.worldConfiguration?.name
-    const worldNameParam = worldName ? `&realm=${worldName}` : ''
-    const sceneUrl = `https://play.decentraland.org/?NETWORK=${network}&position=${position}&${worldNameParam}`
+    // const position = pendingDeployments[req.body.user].sceneJSON.scene.base
+    // const network = 'mainnet'
+    // const worldName = pendingDeployments[req.body.user].sceneJSON.worldConfiguration?.name
+    // const worldNameParam = worldName ? `&realm=${worldName}` : ''
+    // const sceneUrl = `https://play.decentraland.org/?NETWORK=${network}&position=${position}&${worldNameParam}`
   
     try {
       const response = (await catalyst.deploy(deployData, {
@@ -226,6 +237,7 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
 
       res.status(200).json({valid: false, msg:"invalid api call"})
     }
+    resetDeployment(req.body.key)
     }else{
       console.log('cannot validate message from signature request')
       resetDeployment(req.body.key)

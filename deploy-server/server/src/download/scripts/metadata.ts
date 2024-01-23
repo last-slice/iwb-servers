@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { temporaryDirectory } from '.';
 
-export async function writeSceneMetadata(location:string, data:any, parcels?:any){
+export async function writeSceneMetadata(location:string, data:any, parcels?:any, world?:string){
     let fileData = await fs.promises.readFile(location)
     let metadata = JSON.parse(fileData.toString())
     
@@ -17,6 +17,12 @@ export async function writeSceneMetadata(location:string, data:any, parcels?:any
         metadata.scene.parcels = [parcels]
     }
 
+
+    if(world){
+        metadata['worldConfiguration'] = {
+            name: world
+        }
+    }
 
     data.sp.forEach((sp:any, index:number)=>{
         const [x1, z1] = sp.split(",")

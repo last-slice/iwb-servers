@@ -237,7 +237,7 @@ export class RoomSceneHandler {
                     }
                     catch(e){
                         console.log('error pinging deploy server', player.address, e)
-                        player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_READY, {valid:false, msg:"Error pinging the deploy server"})
+                        player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:false, msg:"Error pinging the deploy server"})
                     }
                 }else{
                     console.log('someone else requesting deployment access')

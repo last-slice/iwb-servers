@@ -439,13 +439,44 @@ export class IWBManager{
             console.log('found user, notify them of their deployment', body)
             player.pendingDeployment = body.data.auth
 
-            let link = this.buildDeployLink(body)
+            let link = "http://localhost:3000/" + "deploy/" + body.user + "/" + body.data.dest + "/"
+            if(body.data.dest === "gc"){
+
+            }else{
+                link += body.bucket + "/" + body.data.name +"/" + body.data.worldName
+            }
+
+            link += "/" + body.auth
+
             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_READY, {link:link})
         }
     }
 
-    buildDeployLink(body:any){
-        let link = (DEBUG ? "http://localhost:3000/" : "") + "deploy/" + body.user + "/" + body.data.dest + "/" + (body.data.tokenId === "" ? "parcel" : "estate") + "/" + body.bucket + "/" + body.data.name + "/" + (body.data.dest === "gc" ? (body.data.parcel.split(",")[0] + "/" + body.data.parcel.split(",")[1]) : body.data.tokenId) + "/" + body.auth
+    async buildDeployLink(body:any){
+        let link = "http://localhost:3000/" + 
+        "deploy/" + body.user + 
+        "/" + body.data.dest + "/" + 
+        (body.data.dest === "gc" ? await this.buildGCLink(body) : await this.buildWorldLink(body)) + 
+         "/" + body.auth
         return link
+    }
+
+    async buildWorldLink(body:any){
+        let link = body.bucket + 
+        "/" + 
+        body.data.name +
+        "/" +
+        body.data.worldName
+        return link
+    }
+
+    async buildGCLink(body:any){
+        let link = (body.data.tokenId === "" ? "parcel" : "estate") +
+         "/" + body.bucket + 
+         "/" + body.data.name + 
+         "/" + 
+         (body.data.dest === "gc" ? (body.data.parcel.split(",")[0] + 
+         "/" + body.data.parcel.split(",")[1]) : body.data.tokenId)
+         return link
     }
 }
