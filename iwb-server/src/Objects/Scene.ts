@@ -1,5 +1,5 @@
 import {ArraySchema, Schema, type} from "@colyseus/schema";
-import {COMPONENT_TYPES} from "../utils/types";
+import {ACTIONS, COMPONENT_TYPES} from "../utils/types";
 import {
     ActionComponent,
     Actions,
@@ -44,8 +44,7 @@ export class SceneItem extends Schema {
     @type(AudioComponent) audComp: AudioComponent
     @type(TriggerComponent) trigComp: TriggerComponent
     @type(ActionComponent) actComp: ActionComponent
-    // @type(ClickComponent) clickComp: ClickComponent
-}
+ }
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -105,7 +104,6 @@ export class Scene extends Schema {
             this.rat = data.rat
             this.rev = data.rev
             this.pcls = data.pcls
-            console.log('spawn point length is', data.sp[0].split(",").length)
             this.sp = data.sp[0].split(",").length === 2 ? [data.sp[0].split(",")[0] + ",0," + data.sp[0].split(",")[1]] : data.sp
             this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"]
             this.si = data.si
@@ -128,7 +126,7 @@ export class Scene extends Schema {
                         item.s = new Vector3(asset.s)
                         item.aid = asset.aid
                         item.type = asset.type
-                        item.sty = asset.sty
+                        item.sty = asset.sty || asset.sty !== "Stream" ? "Local" : "Stream"
                         item.ugc = asset.hasOwnProperty("ugc") ? asset.ugc : false
                         item.pending = asset.hasOwnProperty("pending") ? asset.pending : false
 
@@ -154,7 +152,7 @@ export class Scene extends Schema {
     }
 }
 
-export function     addItemComponents(item: SceneItem, asset: any) {
+export function  addItemComponents(item: SceneItem, asset: any) {
     item.comps = asset.comps
 
     if(!item.comps.includes(COMPONENT_TYPES.COLLISION_COMPONENT)){
@@ -195,14 +193,14 @@ export function     addItemComponents(item: SceneItem, asset: any) {
                 item.vidComp = new VideoComponent()
                 item.vidComp.url = asset.vidComp?.url || ''
                 item.vidComp.volume = asset.vidComp?.volume || 0.5
-                item.vidComp.autostart = asset.vidComp?.autostart || true
+                item.vidComp.autostart = false // asset.vidComp?.autostart || true
                 item.vidComp.loop = asset.vidComp?.loop || false
                 break;
 
             case COMPONENT_TYPES.AUDIO_COMPONENT:
                 console.log('audio component is', asset)
                 item.audComp = new AudioComponent()
-                item.audComp.url = asset.hasOwnProperty("audComp") ? (asset.ugc ? "assets/" + asset.id + ".mp3" : asset.audComp.url) :""
+                item.audComp.url = asset.hasOwnProperty("audComp") ? (asset.sty !== "Stream" ? "assets/" + asset.id + ".mp3" : asset.audComp.url) :""
                 item.audComp.volume = asset.audComp?.volume || 0.5
                 item.audComp.autostart = asset.audComp?.autostart
                 item.audComp.loop = asset.audComp?.loop || false
@@ -249,16 +247,6 @@ export function     addItemComponents(item: SceneItem, asset: any) {
                 }
                 break;
 
-            // case COMPONENT_TYPES.CLICK_COMPONENT:
-            //     item.clickComp = new ClickComponent()
-            //     if(asset.clickComp){
-            //         item.clickComp.url = asset.clickComp.url
-            //         item.clickComp.type = asset.clickComp.type
-            //         item.clickComp.enabled = asset.clickComp.enabled
-            //         item.clickComp.hoverText = asset.clickComp.hoverText
-            //     }
-            //     break;
-
             case COMPONENT_TYPES.TRIGGER_COMPONENT:
                 item.trigComp = new TriggerComponent()
                 if(asset.trigComp){
@@ -270,16 +258,9 @@ export function     addItemComponents(item: SceneItem, asset: any) {
                         let trigger = new Triggers()
                         trigger.type = data.type
 
-                        for(let key in data.actions){
-                            console.log('action is', data.actions[key])
-                            let action = new Actions()
-                            action.name = data.actions[key].name
-                            action.url = data.actions[key].url
-                            action.type = data.actions[key].type
-                            action.hoverText = data.actions[key].hoverText
-
-                            trigger.actions.set(action.name, action)
-                        }
+                        data.actions.forEach((action:any)=>{
+                            trigger.actions.push(action)
+                        })
 
                         item.trigComp.triggers.push(trigger)
                     })
@@ -292,9 +273,19 @@ export function     addItemComponents(item: SceneItem, asset: any) {
                     for(let key in asset.actComp.actions){
                         let action = new Actions()
                         action.name = asset.actComp.actions[key].name
-                        action.url = asset.actComp.actions[key].url
                         action.type = asset.actComp.actions[key].type
-                        action.hoverText = asset.actComp.actions[key].hoverText
+
+                        switch(asset.actComp.actions[key].type){
+                            case ACTIONS.OPEN_LINK:
+                                action.url = asset.actComp.actions[key].url
+                                break;
+
+                            case ACTIONS.PLAY_AUDIO:
+                            case ACTIONS.PLAY_VIDEO:
+                            case ACTIONS.TOGGLE_VIDEO:
+                                action.aid = asset.actComp.actions[key].aid
+                                break;
+                        }
 
                         item.actComp.actions.set(key, action)
                     }

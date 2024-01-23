@@ -76,7 +76,7 @@ export class ItemManager{
 
     async saveNewAsset(user:string, data:any){
         console.log('saving new asset', user, data)
-        let asset = await this.createNewAsset(data)
+        let asset = await this.createNewAsset(data, true)
         // this.newItemsToDeploy.push(asset)
     
         // this.items.set(asset.id, asset)
@@ -100,7 +100,7 @@ export class ItemManager{
         }
     }
 
-    async createNewAsset(data:any){
+    async createNewAsset(data:any, ugc?:boolean){
         let asset:any = {
             id: data.id,
             m: data.m,
@@ -117,11 +117,11 @@ export class ItemManager{
             tag:data.tag,
             bb:data.bb,
             sty:data.style,
-            v: iwbManager.worlds.find((w)=> w.owner === data.o).cv + 1
+            v: ugc ? iwbManager.worlds.find((w)=> w.owner === data.o).cv + 1 : iwbManager.version + 1
         }
         if(data.bb){
             let size = JSON.parse(data.bb)
-            console.log('size is', size)
+
             asset.bb = {x:parseFloat(size.x.toFixed(2)), y:parseFloat(size.y.toFixed(2)), z:parseFloat(size.z.toFixed(2))  }    
         }
 

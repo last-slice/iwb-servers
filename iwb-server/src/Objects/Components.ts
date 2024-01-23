@@ -83,11 +83,12 @@ export class TextComponent extends Schema {
 }
 
 export class Actions extends Schema {
-    @type("string") name: string = "Open Link"
-    @type("number") entity: number = -500
-    @type("string") url: string = "https://decentraland.org/play"
-    @type("string") type: string = "open_link"
-    @type("string") hoverText: string = "Click here"
+    @type("string") name: string
+    @type("number") entity: number
+    @type("string") url: string
+    @type("string") type: string
+    @type("string") hoverText: string
+    @type("string") aid: string
 }
 
 export class ActionComponent extends Schema {
@@ -95,8 +96,10 @@ export class ActionComponent extends Schema {
 }
 
 export class Triggers extends Schema {
-    @type({map:Actions}) actions = new MapSchema<Actions>()
+    @type(["string"]) actions = new ArraySchema<string>()
     @type("string") type: string = "on_click"
+    @type("string") hoverText: string = "Click here"
+    @type("boolean") showHover: boolean = true
 }
 
 export class TriggerComponent extends Schema {
@@ -150,13 +153,13 @@ export function addVideoComponent(item:SceneItem, data:VideoComponent){
 }
 
 export function addAudioComponent(item:SceneItem, data:any){
-    console.log('adding audio data', item.ugc, data)
+    console.log('adding audio data', item.sty, data)
     item.comps.push(COMPONENT_TYPES.AUDIO_COMPONENT)
     item.audComp = new AudioComponent()
-    item.audComp.url = "" + (item.ugc ? "assets/" + item.id + ".mp3" : "")
+    item.audComp.url = "" + (item.sty !== "stream" ? "assets/" + item.id + ".mp3" : "")
 
     if(data !== null){
-        item.audComp.url = "" + (item.ugc ? "assets/" + item.id + ".mp3" : data.url)
+        item.audComp.url = "" + (item.sty !== "stream" ? "assets/" + item.id + ".mp3" : data.url)
         item.audComp.autostart = data.autostart
         item.audComp.loop = data.loop
         item.audComp.volume = data.volume

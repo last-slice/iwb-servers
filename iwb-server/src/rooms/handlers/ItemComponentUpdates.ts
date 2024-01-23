@@ -1,6 +1,6 @@
 import { generateId } from "colyseus";
 import { ActionComponent, Actions, Color4, TriggerComponent, Triggers } from "../../Objects/Components";
-import { COMPONENT_TYPES } from "../../utils/types";
+import { ACTIONS, COMPONENT_TYPES } from "../../utils/types";
 
 export let updateItemComponentFunctions:any = {
     [COMPONENT_TYPES.VISBILITY_COMPONENT]:(asset:any, info:any)=>{updateVisiblityComponent(asset, info)},
@@ -148,13 +148,8 @@ function updateTriggerComponent(asset:any, info:any){
 
         case 'new':
             console.log('need to add new trigger', info.data.value)
-            let action = new Actions()
-            action.name = info.data.value.name
-            action.type = info.data.value.type
-            action.url = info.data.value.url
-
             let trigger = new Triggers()
-            trigger.actions.set(info.data.value.name, action)
+            trigger.actions.push(info.data.value)
 
             if(!asset.trigComp){
                 asset.trigComp = new TriggerComponent()
@@ -174,16 +169,25 @@ function updateActionComponent(asset:any, info:any){
     switch(info.action){
         case 'add':
             console.log('adding new action action', info.data.value)
-            if(!asset.actComp){
-                asset.actComp = new ActionComponent()
-            }
             let action = new Actions()
-            action.name = info.data.value.name
-            action.type = info.data.value.action.type
-            action.url = info.data.value.action.url
+
+            switch(info.data.value.action.type){
+                case ACTIONS.OPEN_LINK:
+                    action.name = info.data.value.name
+                    action.type = info.data.value.action.type
+                    action.url = info.data.value.action.url
+                    break;
+
+                case ACTIONS.PLAY_AUDIO:
+                case ACTIONS.PLAY_VIDEO:
+                case ACTIONS.TOGGLE_VIDEO:
+                    action.name = info.data.value.name
+                    action.aid = info.data.value.action.aid
+                    action.type = info.data.value.action.type
+                break;
+            }
 
             console.log('new action to save is', action.name, action.url)
-
             asset.actComp.actions.set(generateId(5), action)
             break;
 

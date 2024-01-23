@@ -10,7 +10,7 @@ export async function bulkUpload(req:any, res:any, builder?:boolean, skip?:boole
         if(builder){
             await modifyBuilderAssets()
         }else{
-            await handleBulkUpload(skip)
+            await handleBulkUpload(req.body, skip)
         }
 
         res.status(200).send({valid: true})

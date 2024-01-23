@@ -129,3 +129,34 @@ export enum BLOCKCHAINS {
 //     isdl:boolean,
 //     e:boolean
 // }
+
+export enum ACTIONS {
+    START_TWEEN = "start_tween",
+    PLAY_SOUND = "play_sound",
+    STOP_SOUND = "stop_sound",
+    SET_VISIBILITY = "set_vis",
+    ATTACH_PLAYER = "attach_player",
+    DETACH_PLAYER = "detach_player",
+    PLAY_VIDEO = 'play_video',
+    TOGGLE_VIDEO = 'toggle_video',
+    PLAYER_VIDEO_STREAM = 'play_video_stream',
+    STOP_VIDEO = 'stop_video',
+    STOP_VIDEO_STREAM = 'stop_video_stream',
+    PLAY_AUDIO = 'play_audio',
+    PLAY_AUDIO_STREAM = 'play_audio_stream',
+    STOP_AUDIO = 'stop_audio',
+    STOP_AUDIO_STREAM = 'stop_audio_stream',
+    TELEPORT_PLAYER = 'telport',
+    EMOTE = 'emote',
+    OPEN_LINK = 'open_link',
+    SHOW_TOAST = 'show_toast',
+    HIDE_TOAS = 'hide_toast',
+    START_DELAY = 'start_delay',
+    STOP_DELAY = 'stop_delay',
+    START_LOOP = 'start_loop',
+    STOP_LOOP = 'stop_loop',
+    CLONE = 'clone',
+    REMOVE = 'remove',
+    SHOW_IMAGE = 'show_image',
+    HIDE_IMAGE = 'hide_image'
+}

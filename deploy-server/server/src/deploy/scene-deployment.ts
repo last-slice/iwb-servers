@@ -9,7 +9,7 @@ const ncp = require('ncp').ncp;
 const path = require('path');
 const { exec } = require('child_process');
 
-const command = status.DEBUG ? '/Users/lastraum/desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/deploy.sh' : '../deploy.sh';
+const command = status.DEBUG ? '/Users/lastraum/desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/deploy.sh' : '/root/deployment/server/deploy.sh';
 
 export let iwbDeploymentQueue:DeploymentData[] = []
 let worldBucketDirectory = status.DEBUG ? "/Users/lastraum/Desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/buckets/iwb/" : "/root/deployment/buckets/iwb/"

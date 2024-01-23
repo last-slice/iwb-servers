@@ -9,6 +9,9 @@ branch_name="main"
 rm -r /root/deployment/asset-git/*
 cd /root/deployment/asset-git
 
+# rm -r /Users/lastraum/Desktop/Programming/Decentraland/LastSlice/sdk7/iwb/iwb-assets/*
+# cd /Users/lastraum/Desktop/Programming/Decentraland/LastSlice/sdk7/iwb/iwb-assets/
+
 # Clone or update the repository
 if [ -d "$branch_name" ]; then
   # If the repository already exists, pull the latest changes

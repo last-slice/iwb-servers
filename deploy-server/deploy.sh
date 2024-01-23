@@ -6,6 +6,8 @@ debug=false
 bucket="$1"
 PRIVATE_KEY="$2"
 
+echo "deploy bucket is $bucket"
+
 # #change directory to available deployment bucket
 if [ "$debug" = true ]; then
     cd /Users/lastraum/Desktop/Programming/Decentraland/Lastslice/sdk7/iwb/servers/deploy-server/buckets/iwb/$bucket

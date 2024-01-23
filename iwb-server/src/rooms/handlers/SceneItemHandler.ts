@@ -60,6 +60,7 @@ export class RoomSceneItemHandler {
                             newItem.type = sceneItem.ty
                             newItem.ugc = sceneItem.ugc
                             newItem.pending = sceneItem.pending
+                            newItem.sty = sceneItem.sty
     
                             if(item.duplicate !== null){
                                 let serverItem = scene.ass.find((as)=> as.aid === item.duplicate)
