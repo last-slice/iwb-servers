@@ -24,7 +24,25 @@ function updateImageComponent(asset:any, info:any){
 }
 
 function updateVideoComponent(asset:any, info:any){
-    asset.vidComp.url = info.data.url
+    console.log('updating video component', info);
+
+    switch(info.data.type){
+        case 'url':
+            asset.vidComp.url = info.data.value
+            break;
+
+        case 'loop':
+            asset.vidComp.loop = info.data.value
+            break;
+
+        case 'autostart':
+            asset.vidComp.autostart = info.data.value
+            break;
+
+        case 'volume':
+            asset.vidComp.volume = info.data.value
+            break;
+    }
 }
 
 function updateAudioComponent(asset:any, info:any){
@@ -45,6 +63,10 @@ function updateAudioComponent(asset:any, info:any){
 
         case 'autostart':
             asset.audComp.autostart = info.data.value
+            break;
+
+        case 'volume':
+            asset.audComp.volume = info.data.value
             break;
     }
     
