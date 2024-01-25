@@ -11,6 +11,7 @@ import {
     NFTComponent,
     Quaternion,
     TextComponent,
+    TriggerAreaComponent,
     TriggerComponent,
     Triggers,
     Vector3,
@@ -44,6 +45,7 @@ export class SceneItem extends Schema {
     @type(AudioComponent) audComp: AudioComponent
     @type(TriggerComponent) trigComp: TriggerComponent
     @type(ActionComponent) actComp: ActionComponent
+    @type(TriggerAreaComponent) trigArComp: TriggerAreaComponent
  }
 
 export class TempScene extends Schema {
@@ -155,16 +157,18 @@ export class Scene extends Schema {
 export function  addItemComponents(item: SceneItem, asset: any) {
     item.comps = asset.comps
 
-    if(!item.comps.includes(COMPONENT_TYPES.COLLISION_COMPONENT)){
-        item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
-    }
-
-    if(!item.comps.includes(COMPONENT_TYPES.TRIGGER_COMPONENT)){
-        item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
-    }
-
-    if(!item.comps.includes(COMPONENT_TYPES.ACTION_COMPONENT)){
-        item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
+    if(item.type !== "SM"){
+        if(!item.comps.includes(COMPONENT_TYPES.COLLISION_COMPONENT)){
+            item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
+        }
+    
+        if(!item.comps.includes(COMPONENT_TYPES.TRIGGER_COMPONENT)){
+            item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
+        }
+    
+        if(!item.comps.includes(COMPONENT_TYPES.ACTION_COMPONENT)){
+            item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
+        }
     }
 
     item.comps.forEach((component: string) => {
@@ -274,6 +278,7 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                         let action = new Actions()
                         action.name = asset.actComp.actions[key].name
                         action.type = asset.actComp.actions[key].type
+                        action.aid = asset.actComp.actions[key].aid
 
                         switch(asset.actComp.actions[key].type){
                             case ACTIONS.OPEN_LINK:
@@ -283,7 +288,6 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                             case ACTIONS.PLAY_AUDIO:
                             case ACTIONS.PLAY_VIDEO:
                             case ACTIONS.TOGGLE_VIDEO:
-                                action.aid = asset.actComp.actions[key].aid
                                 break;
                         }
 
@@ -293,6 +297,22 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                     // asset.actComp.actions.forEach((action:any, key:any)=>{
                     //     item.actComp.actions.set(key, action)
                     // })
+                }
+                break;
+
+
+            case COMPONENT_TYPES.TRIGGER_AREA_COMPONENT:
+                item.trigArComp = new TriggerAreaComponent()
+                if(asset.trigArComp){
+                    item.trigArComp.enabled = asset.trigArComp.enabled             
+
+                    asset.trigArComp.eActions.forEach((action:any)=>{
+                        item.trigArComp.eActions.push(action)
+                    })
+
+                    asset.trigArComp.lActions.forEach((action:any)=>{
+                        item.trigArComp.lActions.push(action)
+                    })
                 }
                 break;
         }

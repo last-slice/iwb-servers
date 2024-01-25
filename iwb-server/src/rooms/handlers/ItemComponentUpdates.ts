@@ -13,6 +13,7 @@ export let updateItemComponentFunctions:any = {
     [COMPONENT_TYPES.TEXT_COMPONENT]:(asset:any, info:any)=>{updateTextComponent(asset, info)},
     [COMPONENT_TYPES.TRIGGER_COMPONENT]:(asset:any, info:any)=>{updateTriggerComponent(asset, info)},
     [COMPONENT_TYPES.ACTION_COMPONENT]:(asset:any, info:any)=>{updateActionComponent(asset, info)},
+    [COMPONENT_TYPES.TRIGGER_AREA_COMPONENT]:(asset:any, info:any)=>{updateTriggerAreaComponent(asset, info)},
 }
 
 function updateVisiblityComponent(asset:any, info:any){
@@ -192,25 +193,55 @@ function updateActionComponent(asset:any, info:any){
         case 'add':
             console.log('adding new action action', info.data.value)
             let action = new Actions()
+            action.aid = info.data.value.action.aid
+            action.name = info.data.value.name
+            action.type = info.data.value.action.type
 
             switch(info.data.value.action.type){
                 case ACTIONS.OPEN_LINK:
-                    action.name = info.data.value.name
-                    action.type = info.data.value.action.type
                     action.url = info.data.value.action.url
                     break;
 
                 case ACTIONS.PLAY_AUDIO:
                 case ACTIONS.PLAY_VIDEO:
                 case ACTIONS.TOGGLE_VIDEO:
-                    action.name = info.data.value.name
-                    action.aid = info.data.value.action.aid
-                    action.type = info.data.value.action.type
                 break;
             }
 
             console.log('new action to save is', action.name, action.url)
             asset.actComp.actions.set(generateId(5), action)
+            break;
+
+        case 'delete':
+            console.log('deleting action', info.data.value)
+            if(asset.actComp){
+                asset.actComp.actions.forEach((action:any, key:any)=>{
+                    if(action.name === info.data.value.name){
+                        asset.actComp.actions.delete(key)
+                    }
+                })
+            }
+            break;
+    }
+}
+
+function updateTriggerAreaComponent(asset:any, info:any){
+    switch(info.action){
+        case 'add':
+            console.log('adding new trigger area action', info.data.value)
+            let action = new Actions()
+
+            switch(info.data.value.type){
+                case 'eActions':
+                    asset.trigArComp.eActions.push(info.data.value.action)
+                    break;
+
+                case 'lActions':
+                    asset.trigArComp.lActions.push(info.data.value.action)
+                    break;
+            }
+
+            console.log('new action to save is', action.name, action.url)
             break;
 
         case 'delete':

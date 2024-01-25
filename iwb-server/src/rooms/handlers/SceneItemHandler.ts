@@ -16,7 +16,8 @@ import {
     addTriggerComponent,
     addVideoComponent,
     addVisibilityComponent,
-    addAudioComponent
+    addAudioComponent,
+    addTriggerAreaComponent
 } from "../../Objects/Components";
 import { Player } from "../../Objects/Player";
 import { Scene, SceneItem } from "../../Objects/Scene";
@@ -77,7 +78,8 @@ export class RoomSceneItemHandler {
                             scene.ass.push(newItem)
                             scene.pc += sceneItem.pc
                             scene.si += sceneItem.si
-                        }else{
+                        }
+                        else{
                             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.ASSET_OVER_SCENE_LIMIT, {})
                         }
                     }
@@ -409,12 +411,42 @@ export class RoomSceneItemHandler {
 
     addItemComponents(item:SceneItem, name:string, selectedAsset?:any){
         item.comps.push(COMPONENT_TYPES.TRANSFORM_COMPONENT)
+        item.comps.push(COMPONENT_TYPES.VISBILITY_COMPONENT)
 
-        addTriggerComponent(item, selectedAsset ? selectedAsset.trigComp : undefined)
-        addActionComponent(item, selectedAsset ? selectedAsset.actComp : undefined)
-        // addClickComponent(item, selectedAsset ? selectedAsset.clickComp : undefined)        
-        addVisibilityComponent(item, selectedAsset ? selectedAsset.visComp.visible : true)
-        addCollisionComponent(item, selectedAsset ? selectedAsset.colComp : undefined)
+        console.log('adding item components to item', item.n)
+
+        if(item.type === "SM"){
+            switch(name){
+                case 'Trigger Area':
+                    console.log('need to add trigger component things')
+                    item.comps.push(COMPONENT_TYPES.TRIGGER_AREA_COMPONENT)
+                    break;
+            }
+        }else{
+            item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
+            item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
+            item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
+        }
+
+        item.comps.forEach((component)=>{
+            switch(component){
+                case COMPONENT_TYPES.TRIGGER_COMPONENT:
+                    addTriggerComponent(item, selectedAsset ? selectedAsset.trigComp : undefined)
+                    break;
+
+                case COMPONENT_TYPES.ACTION_COMPONENT:
+                    addActionComponent(item, selectedAsset ? selectedAsset.actComp : undefined)
+                    break;
+
+                case COMPONENT_TYPES.VISBILITY_COMPONENT:
+                    addVisibilityComponent(item, selectedAsset ? selectedAsset.visComp.visible : true)
+                    break;
+
+                case COMPONENT_TYPES.COLLISION_COMPONENT:
+                    addCollisionComponent(item, selectedAsset ? selectedAsset.colComp : undefined)
+                    break;
+            }
+        })
 
         switch(item.type){
             case '3D':
@@ -442,6 +474,14 @@ export class RoomSceneItemHandler {
 
             case 'Audio':
                 addAudioComponent(item, selectedAsset ? selectedAsset.audComp : null)
+                break;
+
+            case 'SM':
+                switch(name){
+                    case 'Trigger Area':
+                        addTriggerAreaComponent(item, selectedAsset ? selectedAsset.trigArComp : null)
+                        break;
+                }
                 break;
         }
     }

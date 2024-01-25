@@ -23,6 +23,9 @@ export async function writeSceneMetadata(location:string, data:any, parcels?:any
             name: world
         }
     }
+    else{
+        delete metadata.worldConfiguration
+    }
 
     data.sp.forEach((sp:any, index:number)=>{
         const [x1, z1] = sp.split(",")

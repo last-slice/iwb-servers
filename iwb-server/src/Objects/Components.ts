@@ -107,6 +107,12 @@ export class TriggerComponent extends Schema {
     @type([Triggers]) triggers = new ArraySchema<Triggers>()
 }
 
+export class TriggerAreaComponent extends Schema {
+    @type("boolean") enabled: boolean = true
+    @type(["string"]) eActions = new ArraySchema<string>()
+    @type(["string"]) lActions = new ArraySchema<string>()
+}
+
 export function addNFTComponent(item:SceneItem, nft:NFTComponent){
     item.comps.push(COMPONENT_TYPES.NFT_COMPONENT)
     item.nftComp = new NFTComponent()
@@ -120,7 +126,6 @@ export function addNFTComponent(item:SceneItem, nft:NFTComponent){
 }
 
 export function addCollisionComponent(item:SceneItem, collision:CollisionComponent){
-    item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
     item.colComp = new CollisionComponent()
 
     if(collision){
@@ -130,7 +135,6 @@ export function addCollisionComponent(item:SceneItem, collision:CollisionCompone
 }
 
 export function addVisibilityComponent(item:SceneItem, selectedVisibility:boolean){
-    item.comps.push(COMPONENT_TYPES.VISBILITY_COMPONENT)
     item.visComp = new VisibilityComponent()
     item.visComp.visible = selectedVisibility
 }
@@ -210,7 +214,6 @@ export function addTextComponent(item:SceneItem, textComp:TextComponent){
 }
 
 export function addTriggerComponent(item:SceneItem, trigComp:TriggerComponent){
-    item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
     item.trigComp = new TriggerComponent()
     if(trigComp){
         item.trigComp.enabled = trigComp.enabled
@@ -221,11 +224,23 @@ export function addTriggerComponent(item:SceneItem, trigComp:TriggerComponent){
 }
 
 export function addActionComponent(item:SceneItem, actComp:ActionComponent){
-    item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
     item.actComp = new ActionComponent()
     if(actComp){
         actComp.actions.forEach((action, key)=>{
             item.actComp.actions.set(key, action)
+        })
+    }
+}
+
+export function addTriggerAreaComponent(item:SceneItem, trigArComp:TriggerAreaComponent){
+    item.trigArComp = new TriggerAreaComponent()
+    if(trigArComp){
+        item.trigArComp.enabled = trigArComp.enabled
+        trigArComp.eActions.forEach((action)=>{
+            item.trigArComp.eActions.push(action)
+        })
+        trigArComp.lActions.forEach((action)=>{
+            item.trigArComp.lActions.push(action)
         })
     }
 }
