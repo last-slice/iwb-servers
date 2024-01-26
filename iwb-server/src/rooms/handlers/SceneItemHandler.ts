@@ -221,7 +221,7 @@ export class RoomSceneItemHandler {
                 if(scene){
                     let asset = scene.ass.find((a)=> a.aid === info.data.aid)
                     if(asset){
-                        updateItemComponentFunctions[info.component](asset, info)
+                        updateItemComponentFunctions[info.component](asset, info, room)
                     }
                 }
             }

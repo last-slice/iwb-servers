@@ -1,7 +1,7 @@
 import axios from "axios"
 import { itemManager, iwbManager } from "../app.config"
 import { IWBRoom } from "../rooms/IWBRoom"
-import { PlayfabId, abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playerLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
+import { PlayfabId, abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playerLogin, playfabLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
 import { Scene } from "./Scene"
@@ -222,41 +222,65 @@ export class IWBManager{
     }
 
     async createRealmLobby(world:any, newWorld:boolean){
-        this.initiateRealm(world.owner)
-        .then((realmData)=>{           
-            let realmToken = realmData.EntityToken.EntityToken
-            let realmId = realmData.EntityToken.Entity.Id
-            let realmTokenType = realmData.EntityToken.Entity.Type
-
-            this.fetchRealmData(realmData)
-            .then((realmScenes)=>{
-                console.log('realm scenes are ', realmScenes)
-                this.fetchRealmScenes(realmScenes)
-                .then((sceneData)=>{
-                    let scenes = sceneData.filter((scene:any)=> scene.w === world.ens)
-
-                    if(!scenes.find((scene:any)=> scene.n === "Realm Lobby")){
-                        scenes.push(this.createLobbyScene(world))
-
-                        if(newWorld){
-                            world.builds = 1
-                            world.updated = Math.floor(Date.now()/1000)
-                            world.cv = 1    
-                        } 
-
-                        this.backupScene(world.ens, realmToken, realmTokenType, realmId, scenes)
-                        .then(()=>{
-                            if(newWorld){
-                                this.worlds.push(world)  
-                            }
-                        })
-                        .catch((e)=>{
-                            console.log('error backing up lobby scene', world.ens, e)
-                        })
-                    }
-                })
-            })  
-        })
+        try{let user = await playfabLogin(world.owner)
+            let realmMetadata = await fetchUserMetaData(user)
+            let scenes = await fetchPlayfabFile(realmMetadata, 'scenes.json')
+            console.log('user scenes are ', scenes)
+    
+            let realmScenes = scenes.filter((scene:any)=> scene.w === world.ens)
+    
+            if(!realmScenes.find((scene:any)=> scene.n === "Realm Lobby")){
+                scenes.push(this.createLobbyScene(world))
+    
+                if(newWorld){
+                    world.builds = 1
+                    world.updated = Math.floor(Date.now()/1000)
+                    world.cv = 1    
+                } 
+    
+                await this.backupScene(world.ens, user.EntityToken.EntityToken, user.EntityToken.Entity.Type, user.EntityToken.Entity.Id, scenes)
+                if(newWorld){
+                    this.worlds.push(world)  
+                }
+            // this.initiateRealm(world.owner)
+            // .then((realmData)=>{           
+            //     let realmToken = realmData.EntityToken.EntityToken
+            //     let realmId = realmData.EntityToken.Entity.Id
+            //     let realmTokenType = realmData.EntityToken.Entity.Type
+    
+            //     this.fetchRealmData(realmData)
+            //     .then((realmScenes)=>{
+            //         console.log('realm scenes are ', realmScenes)
+            //         this.fetchRealmScenes(realmScenes)
+            //         .then((sceneData)=>{
+            //             let scenes = sceneData.filter((scene:any)=> scene.w === world.ens)
+    
+            //             if(!scenes.find((scene:any)=> scene.n === "Realm Lobby")){
+            //                 scenes.push(this.createLobbyScene(world))
+    
+            //                 if(newWorld){
+            //                     world.builds = 1
+            //                     world.updated = Math.floor(Date.now()/1000)
+            //                     world.cv = 1    
+            //                 } 
+    
+            //                 this.backupScene(world.ens, realmToken, realmTokenType, realmId, scenes)
+            //                 .then(()=>{
+            //                     if(newWorld){
+            //                         this.worlds.push(world)  
+            //                     }
+            //                 })
+            //                 .catch((e)=>{
+            //                     console.log('error backing up lobby scene', world.ens, e)
+            //                 })
+            //             }
+            //         })
+            //     })  
+            // })
+            }}
+        catch(e){
+            console.log('error creating lobby for new world', world)
+        }
     }
 
     async initiateRealm(user:string){

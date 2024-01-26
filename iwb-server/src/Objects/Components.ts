@@ -95,10 +95,16 @@ export class ActionComponent extends Schema {
     @type({map:Actions}) actions = new MapSchema<Actions>()
 }
 
+export class TriggerActionComponent extends Schema {
+    @type('string') aid:string
+    @type('string') id:string
+}
+
 export class Triggers extends Schema {
-    @type(["string"]) actions = new ArraySchema<string>()
+    @type([TriggerActionComponent]) actions = new ArraySchema<TriggerActionComponent>()
     @type("string") type: string = "on_click"
     @type("string") hoverText: string = "Click here"
+    @type("number") pointer:number = 0
     @type("boolean") showHover: boolean = true
 }
 
@@ -109,8 +115,8 @@ export class TriggerComponent extends Schema {
 
 export class TriggerAreaComponent extends Schema {
     @type("boolean") enabled: boolean = true
-    @type(["string"]) eActions = new ArraySchema<string>()
-    @type(["string"]) lActions = new ArraySchema<string>()
+    @type([TriggerActionComponent]) eActions = new ArraySchema<TriggerActionComponent>()
+    @type([TriggerActionComponent]) lActions = new ArraySchema<TriggerActionComponent>()
 }
 
 export function addNFTComponent(item:SceneItem, nft:NFTComponent){

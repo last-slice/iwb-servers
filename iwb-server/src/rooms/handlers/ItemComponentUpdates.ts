@@ -1,6 +1,7 @@
 import { generateId } from "colyseus";
-import { ActionComponent, Actions, Color4, TriggerComponent, Triggers } from "../../Objects/Components";
+import { ActionComponent, Actions, Color4, TriggerActionComponent, TriggerComponent, Triggers } from "../../Objects/Components";
 import { ACTIONS, COMPONENT_TYPES } from "../../utils/types";
+import { IWBRoom } from "../IWBRoom";
 
 export let updateItemComponentFunctions:any = {
     [COMPONENT_TYPES.VISBILITY_COMPONENT]:(asset:any, info:any)=>{updateVisiblityComponent(asset, info)},
@@ -11,9 +12,9 @@ export let updateItemComponentFunctions:any = {
     [COMPONENT_TYPES.AUDIO_COMPONENT]:(asset:any, info:any)=>{updateAudioComponent(asset, info)},
     [COMPONENT_TYPES.NFT_COMPONENT]:(asset:any, info:any)=>{updateNFTComponent(asset, info)},
     [COMPONENT_TYPES.TEXT_COMPONENT]:(asset:any, info:any)=>{updateTextComponent(asset, info)},
-    [COMPONENT_TYPES.TRIGGER_COMPONENT]:(asset:any, info:any)=>{updateTriggerComponent(asset, info)},
+    [COMPONENT_TYPES.TRIGGER_COMPONENT]:(asset:any, info:any, room?:IWBRoom)=>{updateTriggerComponent(asset, info, room)},
     [COMPONENT_TYPES.ACTION_COMPONENT]:(asset:any, info:any)=>{updateActionComponent(asset, info)},
-    [COMPONENT_TYPES.TRIGGER_AREA_COMPONENT]:(asset:any, info:any)=>{updateTriggerAreaComponent(asset, info)},
+    [COMPONENT_TYPES.TRIGGER_AREA_COMPONENT]:(asset:any, info:any, room?:IWBRoom)=>{updateTriggerAreaComponent(asset, info, room)},
 }
 
 function updateVisiblityComponent(asset:any, info:any){
@@ -163,21 +164,39 @@ function updateTextComponent(asset:any, info:any){
     }
 }
 
-function updateTriggerComponent(asset:any, info:any){
+function updateTriggerComponent(asset:any, info:any, room:IWBRoom){
     switch(info.data.type){
         case 'enabled':
             asset.trigComp.enabled = info.data.value
             break;
 
         case 'new':
-            console.log('need to add new trigger', info.data.value)
-            let trigger = new Triggers()
-            trigger.actions.push(info.data.value)
+            console.log('need to add new trigger', info.data)
+            let scene = room.state.scenes.get(info.data.sceneId)
+        
+            if(scene){
+                let actionAsset:any
+                scene.ass.forEach((asset, i)=>{
+                    if(asset.actComp && asset.actComp.actions.has(info.data.value.action)){
+                        actionAsset = asset
+                        return
+                    }
+                })
 
-            if(!asset.trigComp){
-                asset.trigComp = new TriggerComponent()
+                let triggerAction = new TriggerActionComponent()
+                triggerAction.aid = actionAsset.aid
+                triggerAction.id = info.data.value.action
+
+                let trigger = new Triggers()
+                trigger.actions.push(triggerAction)
+                trigger.pointer = info.data.value.pointer
+                trigger.type = info.data.value.type
+    
+                if(!asset.trigComp){
+                    asset.trigComp = new TriggerComponent()
+                }
+                asset.trigComp.triggers.push(trigger)
             }
-            asset.trigComp.triggers.push(trigger)
             break;
 
         case 'remove':
@@ -225,33 +244,47 @@ function updateActionComponent(asset:any, info:any){
     }
 }
 
-function updateTriggerAreaComponent(asset:any, info:any){
+function updateTriggerAreaComponent(asset:any, info:any, room:IWBRoom){
     switch(info.action){
         case 'add':
-            console.log('adding new trigger area action', info.data.value)
-            let action = new Actions()
+            console.log('adding new trigger area action', info.data)
 
-            switch(info.data.value.type){
-                case 'eActions':
-                    asset.trigArComp.eActions.push(info.data.value.action)
-                    break;
+            let scene = room.state.scenes.get(info.data.sceneId)
+        
+            if(scene){
+                let actionAsset:any
+                scene.ass.forEach((asset, i)=>{
+                    if(asset.actComp && asset.actComp.actions.has(info.data.value.action)){
+                        actionAsset = asset
+                        return
+                    }
+                })
 
-                case 'lActions':
-                    asset.trigArComp.lActions.push(info.data.value.action)
-                    break;
+                console.log('acction asset is', actionAsset)
+
+                let triggerAction = new TriggerActionComponent()
+                triggerAction.aid = actionAsset.aid
+                triggerAction.id = info.data.value.action
+
+                switch(info.data.value.type){
+                    case 'eActions':
+                        asset.trigArComp.eActions.push(triggerAction)
+                        break;
+
+                    case 'lActions':
+                        asset.trigArComp.lActions.push(triggerAction)
+                        break;
+                }
+
             }
-
-            console.log('new action to save is', action.name, action.url)
             break;
 
         case 'delete':
             console.log('deleting action', info.data.value)
-            if(asset.actComp){
-                asset.actComp.actions.forEach((action:any, key:any)=>{
-                    if(action.name === info.data.value.name){
-                        asset.actComp.actions.delete(key)
-                    }
-                })
+            if(asset.trigArComp){
+                let array:any[] = info.data.value.type === "eActions" ? asset.trigArComp.eActions : asset.trigArComp.lActions
+                let index = array.findIndex((act:any)=> act === info.data.value.action)
+                array.splice(index,1)
             }
             break;
     }

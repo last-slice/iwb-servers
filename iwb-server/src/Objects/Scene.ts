@@ -11,6 +11,7 @@ import {
     NFTComponent,
     Quaternion,
     TextComponent,
+    TriggerActionComponent,
     TriggerAreaComponent,
     TriggerComponent,
     Triggers,
@@ -261,9 +262,12 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                                                 
                         let trigger = new Triggers()
                         trigger.type = data.type
+                        trigger.pointer = data.pointer ? data.pointer : 0
+                        trigger.showHover = data.showHover ? data.showHover : true
+                        trigger.hoverText = data.hoverText ? data.hoverText : "Click here"
 
                         data.actions.forEach((action:any)=>{
-                            trigger.actions.push(action)
+                            trigger.actions.push(new TriggerActionComponent(action))
                         })
 
                         item.trigComp.triggers.push(trigger)
@@ -304,14 +308,14 @@ export function  addItemComponents(item: SceneItem, asset: any) {
             case COMPONENT_TYPES.TRIGGER_AREA_COMPONENT:
                 item.trigArComp = new TriggerAreaComponent()
                 if(asset.trigArComp){
-                    item.trigArComp.enabled = asset.trigArComp.enabled             
+                    item.trigArComp.enabled = asset.trigArComp.enabled   
 
                     asset.trigArComp.eActions.forEach((action:any)=>{
-                        item.trigArComp.eActions.push(action)
+                        item.trigArComp.eActions.push(new TriggerActionComponent(action))
                     })
 
                     asset.trigArComp.lActions.forEach((action:any)=>{
-                        item.trigArComp.lActions.push(action)
+                        item.trigArComp.lActions.push(new TriggerActionComponent(action))
                     })
                 }
                 break;
