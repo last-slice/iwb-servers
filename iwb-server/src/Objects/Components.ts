@@ -89,6 +89,7 @@ export class Actions extends Schema {
     @type("string") type: string
     @type("string") hoverText: string
     @type("string") aid: string
+    @type("string") animName: string
 }
 
 export class ActionComponent extends Schema {
@@ -118,6 +119,21 @@ export class TriggerAreaComponent extends Schema {
     @type([TriggerActionComponent]) eActions = new ArraySchema<TriggerActionComponent>()
     @type([TriggerActionComponent]) lActions = new ArraySchema<TriggerActionComponent>()
 }
+
+export class ClickAreaComponent extends Schema {
+    @type("boolean") enabled: boolean = true
+    @type([TriggerActionComponent]) actions = new ArraySchema<TriggerActionComponent>()
+}
+
+export class AnimationComponent extends Schema {
+    @type("boolean") enabled: boolean = true
+    @type("boolean") autostart: boolean = false
+    @type("boolean") autoloop: boolean = false
+    @type("number") startIndex: number = 0
+    @type(['string']) animations = new ArraySchema<string>()
+    @type(['number']) durations = new ArraySchema<number>()
+}
+
 
 export function addNFTComponent(item:SceneItem, nft:NFTComponent){
     item.comps.push(COMPONENT_TYPES.NFT_COMPONENT)
@@ -251,14 +267,24 @@ export function addTriggerAreaComponent(item:SceneItem, trigArComp:TriggerAreaCo
     }
 }
 
-// export function addClickComponent(item:SceneItem, clickComp:ClickComponent){
-//     item.comps.push(COMPONENT_TYPES.CLICK_COMPONENT)
-//     item.clickComp = new ClickComponent()
-//     if(clickComp){
-//         item.clickComp.url = clickComp.url
-//         item.clickComp.type = clickComp.type
-//         item.clickComp.enabled = clickComp.enabled
-//         item.clickComp.hoverText = clickComp.hoverText
-//     }
-// }
+export function addClickAreaComponent(item:SceneItem, clickArComp:ClickAreaComponent){
+    item.clickArComp = new ClickAreaComponent()
+    if(clickArComp){
+        item.clickArComp.enabled = clickArComp.enabled
+        clickArComp.actions.forEach((action)=>{
+            item.clickArComp.actions.push(action)
+        })
+    }
+}
 
+export function addAnimationComponent(item:SceneItem, animations:any){
+    item.animComp = new AnimationComponent()
+    item.animComp.enabled = true
+    item.animComp.autostart = false
+    item.animComp.autoloop = false
+
+    animations.forEach((animation:any)=>{
+        item.animComp.animations.push(animation.name)
+        item.animComp.durations.push(animation.duration)
+    })
+}

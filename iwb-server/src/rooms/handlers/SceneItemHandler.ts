@@ -17,7 +17,9 @@ import {
     addVideoComponent,
     addVisibilityComponent,
     addAudioComponent,
-    addTriggerAreaComponent
+    addTriggerAreaComponent,
+    addClickAreaComponent,
+    addAnimationComponent
 } from "../../Objects/Components";
 import { Player } from "../../Objects/Player";
 import { Scene, SceneItem } from "../../Objects/Scene";
@@ -66,13 +68,13 @@ export class RoomSceneItemHandler {
                             if(item.duplicate !== null){
                                 let serverItem = scene.ass.find((as)=> as.aid === item.duplicate)
                                 if(serverItem){
-                                    this.addItemComponents(newItem, sceneItem.n, serverItem)
+                                    this.addItemComponents(newItem, sceneItem, serverItem)
                                 }else{
     
-                                    this.addItemComponents(newItem, sceneItem.n, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
+                                    this.addItemComponents(newItem, sceneItem, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
                                 }
                             }else{
-                                this.addItemComponents(newItem, sceneItem.n, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
+                                this.addItemComponents(newItem, sceneItem, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
                             }
        
                             scene.ass.push(newItem)
@@ -169,6 +171,15 @@ export class RoomSceneItemHandler {
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
                 info.catalogAsset = true
                 player.addSelectedAsset(info)
+
+                iwbManager.eventQueue.push({
+                    EventName: SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET,
+                    PlayFabId: player.playFabData.PlayFabId,
+                    body: {
+                        catalogId:info.catalogId,
+                        ugc:info.ugc
+                    }
+                })
             }else{
                 console.log('player is not in create scene mode')
             }
@@ -409,17 +420,22 @@ export class RoomSceneItemHandler {
         }
     }
 
-    addItemComponents(item:SceneItem, name:string, selectedAsset?:any){
+    addItemComponents(item:SceneItem, catalogItem:any, selectedAsset?:any){
         item.comps.push(COMPONENT_TYPES.TRANSFORM_COMPONENT)
         item.comps.push(COMPONENT_TYPES.VISBILITY_COMPONENT)
 
         console.log('adding item components to item', item.n)
 
         if(item.type === "SM"){
-            switch(name){
+            switch(catalogItem.name){
                 case 'Trigger Area':
                     console.log('need to add trigger component things')
                     item.comps.push(COMPONENT_TYPES.TRIGGER_AREA_COMPONENT)
+                    break;
+
+                case 'Click Area':
+                    console.log('need to add click component things')
+                    item.comps.push(COMPONENT_TYPES.CLICK_AREA_COMPONENT)
                     break;
             }
         }else{
@@ -450,10 +466,14 @@ export class RoomSceneItemHandler {
 
         switch(item.type){
             case '3D':
+                if(catalogItem.anim){
+                    item.comps.push(COMPONENT_TYPES.ANIMATION_COMPONENT)
+                    addAnimationComponent(item, catalogItem.anim)
+                }
                 break;
 
             case '2D':
-                switch(name){
+                switch(catalogItem.name){
                     case 'Image':        
                         console.log('selected ass', selectedAsset)
                         addImageComponent(item, selectedAsset ? selectedAsset.imgComp.url : "")                
@@ -477,9 +497,13 @@ export class RoomSceneItemHandler {
                 break;
 
             case 'SM':
-                switch(name){
+                switch(catalogItem.name){
                     case 'Trigger Area':
                         addTriggerAreaComponent(item, selectedAsset ? selectedAsset.trigArComp : null)
+                        break;
+
+                    case 'Click Area':
+                        addClickAreaComponent(item, selectedAsset ? selectedAsset.clickArComp : null)
                         break;
                 }
                 break;

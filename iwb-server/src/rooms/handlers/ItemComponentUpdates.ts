@@ -15,6 +15,7 @@ export let updateItemComponentFunctions:any = {
     [COMPONENT_TYPES.TRIGGER_COMPONENT]:(asset:any, info:any, room?:IWBRoom)=>{updateTriggerComponent(asset, info, room)},
     [COMPONENT_TYPES.ACTION_COMPONENT]:(asset:any, info:any)=>{updateActionComponent(asset, info)},
     [COMPONENT_TYPES.TRIGGER_AREA_COMPONENT]:(asset:any, info:any, room?:IWBRoom)=>{updateTriggerAreaComponent(asset, info, room)},
+    [COMPONENT_TYPES.ANIMATION_COMPONENT]:(asset:any, info:any)=>{updateAnimationComponent(asset, info)},
 }
 
 function updateVisiblityComponent(asset:any, info:any){
@@ -225,9 +226,12 @@ function updateActionComponent(asset:any, info:any){
                 case ACTIONS.PLAY_VIDEO:
                 case ACTIONS.TOGGLE_VIDEO:
                 break;
-            }
 
-            console.log('new action to save is', action.name, action.url)
+                case ACTIONS.PLAY_ANIMATION:
+                    console.log('adding play animation action', info.data.value.action.animName)
+                    action.animName = info.data.value.action.animName
+                    break;
+            }
             asset.actComp.actions.set(generateId(5), action)
             break;
 
@@ -283,9 +287,29 @@ function updateTriggerAreaComponent(asset:any, info:any, room:IWBRoom){
             console.log('deleting action', info.data.value)
             if(asset.trigArComp){
                 let array:any[] = info.data.value.type === "eActions" ? asset.trigArComp.eActions : asset.trigArComp.lActions
-                let index = array.findIndex((act:any)=> act === info.data.value.action)
+                let index = array.findIndex((act:any)=> act.aid === info.data.value.action.aid)
+                console.log('action index to delete is', index)
                 array.splice(index,1)
             }
             break;
     }
+}
+
+function updateAnimationComponent(asset:any, info:any){
+    console.log('updating animation component', info);
+    
+    switch(info.data.type){
+        case 'autoloop':
+            asset.animComp.autoloop = info.data.value
+            break;
+
+        case 'autostart':
+            asset.animComp.autostart = info.data.value
+            break;
+
+        case 'startIndex':
+            asset.animComp.startIndex = info.data.value
+            break;
+    }
+    
 }

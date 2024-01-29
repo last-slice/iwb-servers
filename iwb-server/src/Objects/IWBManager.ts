@@ -1,12 +1,13 @@
 import axios from "axios"
 import { itemManager, iwbManager } from "../app.config"
 import { IWBRoom } from "../rooms/IWBRoom"
-import { PlayfabId, abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playerLogin, playfabLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
+import { PlayfabId, abortFileUploads, addEvent, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playerLogin, playfabLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
 import { Scene } from "./Scene"
 import { generateId } from "colyseus"
 import { DEBUG } from "../utils/config"
+import { getRandomIntInclusive } from "../utils/functions"
 
 export class IWBManager{
     
@@ -28,6 +29,9 @@ export class IWBManager{
     initQueue:any[]= []
     realmFileKey:string = 'scenes.json'
 
+    eventQueue:any[] = []
+    postingEvents = false
+
     constructor(){
         this.getServerConfigurations(true)
 
@@ -36,9 +40,9 @@ export class IWBManager{
                 this.backup()
             }
         },
-        1000 * 20)
+        1000 * getRandomIntInclusive(10,30))
 
-        this.backupInterval = setInterval(async ()=>{
+        let backupWorldConfigInterval = setInterval(async ()=>{
             if(this.worldsModified){
                 try{
                     await setTitleData({Key:'Worlds', Value: JSON.stringify(this.worlds)})
@@ -50,7 +54,11 @@ export class IWBManager{
 
             }
         },
-        1000 * 20)
+        1000 * getRandomIntInclusive(10,30))
+
+        let eventUpdateInterval = setInterval(async()=>{
+            this.checkEventQueue()
+        }, 1000 * 5)
     }
 
     async backup(){
@@ -225,7 +233,7 @@ export class IWBManager{
         try{let user = await playfabLogin(world.owner)
             let realmMetadata = await fetchUserMetaData(user)
             let scenes = await fetchPlayfabFile(realmMetadata, 'scenes.json')
-            console.log('user scenes are ', scenes)
+            // console.log('user scenes are ', scenes)
     
             let realmScenes = scenes.filter((scene:any)=> scene.w === world.ens)
     
@@ -387,6 +395,8 @@ export class IWBManager{
         try{
             this.addWorldPendingSave(world)
 
+            // console.log('scenes to back up are', scenes)
+
             let initres = await initializeUploadPlayerFiles(token,{
                 Entity: {Id: realmId, Type: type},
                 FileNames:[this.realmFileKey]
@@ -403,7 +413,7 @@ export class IWBManager{
             this.removeWorldPendingSave(world)
         }
         catch(e){
-            console.log('error backing up realm scenes', world)
+            console.log('error backing up realm scenes', world, e)
             this.abortSaveSceneUploads(world, token, type, realmId)
         }
     }
@@ -502,5 +512,21 @@ export class IWBManager{
          (body.data.dest === "gc" ? (body.data.parcel.split(",")[0] + 
          "/" + body.data.parcel.split(",")[1]) : body.data.tokenId)
          return link
+    }
+
+    async checkEventQueue(){
+        if(!this.postingEvents && this.eventQueue.length > 0){
+            this.postingEvents = true
+            let event = this.eventQueue.shift()
+            console.log('event queue has item, post to playfab', event.EventName)
+            try{
+                await addEvent(event)
+                this.postingEvents = false
+            }
+            catch(e){
+                console.log('error posting event', e)
+                this.postingEvents = false
+            }
+        }
     }
 }

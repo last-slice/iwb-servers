@@ -94,6 +94,8 @@ export enum COMPONENT_TYPES {
     TRIGGER_COMPONENT = "Trigger",
     ACTION_COMPONENT = 'Action',
     TRIGGER_AREA_COMPONENT = "Trigger Area",
+    CLICK_AREA_COMPONENT = "Click Area",
+    ANIMATION_COMPONENT = "Animation",
 }
 
 export enum COLLISION_LAYERS {
@@ -150,7 +152,7 @@ export enum ACTIONS {
     EMOTE = 'emote',
     OPEN_LINK = 'open_link',
     SHOW_TOAST = 'show_toast',
-    HIDE_TOAS = 'hide_toast',
+    HIDE_TOAST = 'hide_toast',
     START_DELAY = 'start_delay',
     STOP_DELAY = 'stop_delay',
     START_LOOP = 'start_loop',
@@ -158,5 +160,7 @@ export enum ACTIONS {
     CLONE = 'clone',
     REMOVE = 'remove',
     SHOW_IMAGE = 'show_image',
-    HIDE_IMAGE = 'hide_image'
+    HIDE_IMAGE = 'hide_image',
+    PLAY_ANIMATION = 'play_animation',
+    STOP_ANIMATION = 'stop_animation',
 }

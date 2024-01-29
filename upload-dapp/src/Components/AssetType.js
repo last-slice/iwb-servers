@@ -30,18 +30,21 @@ function AssetType({onClick}) {
       
   return (
     <div className="ui dcl center" style={{backgroundColor:'black', top:"4em"}}>
+      <div className="ui header huge"><label>Custom Asset Uploader</label></div>
     <div  style={centerDivStyle}>
     <div style={colCentered}>
-      <img src={glbpng} onClick={()=>{onClick('3D')}} width={'75%'}/>
+      <img src={glbpng} onClick={()=>{onClick('3D')}} width={'75%'}/><br/>
+      3D Asset
       </div>
 
       <div style={colCentered}>
-      <img src={audiopng} onClick={()=>{onClick('Audio')}} width={'75%'}/>
+      <img src={audiopng} onClick={()=>{onClick('Audio')}} width={'75%'}/><br/>
+      Audio Asset
       </div>
-
+{/* 
       <div style={colCentered}>
       <img src={imagepng} width={'75%'}/>
-      </div>
+      </div> */}
     </div>
     </div>
   );

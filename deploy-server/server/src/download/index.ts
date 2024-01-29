@@ -21,7 +21,7 @@ function checkDownloadQueue(){
 
 async function removefile(download:any){
     try{
-        await fsExtra.remove(temporaryDirectory + download.user + "-" + download.time + ".zip")
+        await fsExtra.remove(temporaryDirectory + download.user + "-" + download.sceneId + ".zip")
         let index = downloadQueue.findIndex((d)=> d.user === download.user)
         if(index >=0){
             downloadQueue.splice(index)

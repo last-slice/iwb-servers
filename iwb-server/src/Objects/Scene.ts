@@ -3,7 +3,9 @@ import {ACTIONS, COMPONENT_TYPES} from "../utils/types";
 import {
     ActionComponent,
     Actions,
+    AnimationComponent,
     AudioComponent,
+    ClickAreaComponent,
     CollisionComponent,
     Color4,
     ImageComponent,
@@ -47,6 +49,8 @@ export class SceneItem extends Schema {
     @type(TriggerComponent) trigComp: TriggerComponent
     @type(ActionComponent) actComp: ActionComponent
     @type(TriggerAreaComponent) trigArComp: TriggerAreaComponent
+    @type(ClickAreaComponent) clickArComp: ClickAreaComponent
+    @type(AnimationComponent) animComp: AnimationComponent
  }
 
 export class TempScene extends Schema {
@@ -210,8 +214,6 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                 item.audComp.autostart = asset.audComp?.autostart
                 item.audComp.loop = asset.audComp?.loop || false
                 item.audComp.attachedPlayer = asset.audComp?.attachedPlayer || false
-
-                console.log('audio component loaded is', item.audComp.url)
                 break;
 
             case COMPONENT_TYPES.VISBILITY_COMPONENT:
@@ -258,8 +260,6 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                     item.trigComp.enabled = asset.trigComp.enabled             
 
                     asset.trigComp.triggers.forEach((data:any)=>{
-                        console.log('triggers are ', data)
-                                                
                         let trigger = new Triggers()
                         trigger.type = data.type
                         trigger.pointer = data.pointer ? data.pointer : 0
@@ -293,14 +293,14 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                             case ACTIONS.PLAY_VIDEO:
                             case ACTIONS.TOGGLE_VIDEO:
                                 break;
+
+                            case ACTIONS.PLAY_ANIMATION:
+                                action.animName = asset.actComp.actions[key].animName
+                                break;
                         }
 
                         item.actComp.actions.set(key, action)
                     }
-                    // console.log('asset actions are a', asset.actComp.actions)
-                    // asset.actComp.actions.forEach((action:any, key:any)=>{
-                    //     item.actComp.actions.set(key, action)
-                    // })
                 }
                 break;
 
@@ -319,6 +319,35 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                     })
                 }
                 break;
+
+                case COMPONENT_TYPES.CLICK_AREA_COMPONENT:
+                    item.clickArComp = new ClickAreaComponent()
+                    if(asset.clickArComp){
+                        item.clickArComp.enabled = asset.clickArComp.enabled   
+    
+                        asset.clickArComp.actions.forEach((action:any)=>{
+                            item.clickArComp.actions.push(new TriggerActionComponent(action))
+                        })
+                    }
+                    break;
+
+                case COMPONENT_TYPES.ANIMATION_COMPONENT:
+                    item.animComp = new AnimationComponent()
+                    if(asset.animComp){
+                        item.animComp.enabled = asset.animComp.enabled   
+                        item.animComp.autostart = asset.animComp.autostart  
+                        item.animComp.autoloop = asset.animComp.autoloop
+    
+                        asset.animComp.animations.forEach((animation:any)=>{
+                            item.animComp.animations.push(animation)
+                        })
+
+                        asset.animComp.durations.forEach((duration:any)=>{
+                            item.animComp.durations.push(duration)
+                        })
+                    }
+                    console.log('item is', asset.animComp)
+                    break;
         }
     })
 }

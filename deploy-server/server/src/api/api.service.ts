@@ -262,7 +262,7 @@ export function validateSceneToken(req:any, res:any){
 }
 
 export async function postNewAssetData(req:any, res:any){
-    const {name, polycount, image, scale, type, category, description, style} = req.body
+    const {name, polycount, image, scale, type, category, description, style, anims} = req.body
 
     let assetData:any = {
         n:name,
@@ -279,7 +279,8 @@ export async function postNewAssetData(req:any, res:any){
         cat:category,
         d:description,
         style:style,
-        user: req.user
+        user: req.user,
+        anims: anims ? JSON.parse(anims) : undefined
     }
 
     console.log('need to send asset data to iwb server ', assetData)

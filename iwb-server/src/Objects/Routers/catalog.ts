@@ -55,4 +55,11 @@ export function iwbRouter(router:any){
         iwbManager.getServerConfigurations()
         res.status(200).send({valid: true, msg: "refreshing server config"})
     });
+
+    router.get("/update/assets/:world", async (req: any, res: any) => {
+        console.log('receive ping to update world assets')
+        iwbManager.updateRealmPendingAssets(req.params.world)
+        res.status(200).send({valid: true, msg: "refreshing world assets"})
+    });
+    
 }

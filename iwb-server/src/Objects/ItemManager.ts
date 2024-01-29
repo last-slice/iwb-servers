@@ -117,6 +117,7 @@ export class ItemManager{
             tag:data.tag,
             bb:data.bb,
             sty:data.style,
+            anim: data.anims ? data.anims : undefined,
             v: ugc ? iwbManager.worlds.find((w)=> w.owner === data.o).cv + 1 : iwbManager.version + 1
         }
         if(data.bb){
