@@ -54,16 +54,8 @@ export class RoomSceneItemHandler {
                     console.log('scene item is', sceneItem)
                     if(sceneItem){
                         if(this.checkSceneLimits(scene, sceneItem)){
-                            const newItem = new SceneItem()
-                            newItem.id = item.id
-                            newItem.aid = item.aid
-                            newItem.p = new Vector3(item.position)
-                            newItem.r = new Quaternion(item.rotation)
-                            newItem.s = new Vector3(item.scale)
-                            newItem.type = sceneItem.ty
-                            newItem.ugc = sceneItem.ugc
-                            newItem.pending = sceneItem.pending
-                            newItem.sty = sceneItem.sty
+
+                            const newItem = this.createNewItem(item, sceneItem)
     
                             if(item.duplicate !== null){
                                 let serverItem = scene.ass.find((as)=> as.aid === item.duplicate)
@@ -106,6 +98,23 @@ export class RoomSceneItemHandler {
                     let sceneItem = scene.ass.find((as)=> as.aid === info.item.aid)
                     if(sceneItem && sceneItem.editing){
                         sceneItem.editing = false
+                        player.removeSelectedAsset()
+                    }
+                }
+            }
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_CANCEL, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_CANCEL + " message", info)
+    
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
+                let scene = this.room.state.scenes.get(info.item.sceneId)
+                if(scene){
+                    let sceneItem = scene.ass.find((as)=> as.aid === info.item.aid)
+                    if(sceneItem && sceneItem.editing){
+                        sceneItem.editing = false
+                        this.cancelAssetChanges(player, sceneItem)
                     }
                 }
             }
@@ -118,10 +127,37 @@ export class RoomSceneItemHandler {
             if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
                 let scene = this.room.state.scenes.get(info.item.sceneId)
                 if(scene){
-                    let sceneItem = scene.ass.find((as)=> as.aid === info.item.aid)
+                    let sceneItem:SceneItem = scene.ass.find((as)=> as.aid === info.item.aid)
                     if(sceneItem && !sceneItem.editing){
                         sceneItem.editing = true
                         sceneItem.editor = client.userData.userId
+
+                        const newItem = this.createNewItem(
+                            {
+                                position: sceneItem.p, 
+                                rotation: sceneItem.r,
+                                scale: sceneItem.s,
+                                id:sceneItem.id,
+                                aid:sceneItem.aid
+                            }, 
+                            {
+                                ty:sceneItem.type,
+                                ugc:sceneItem.ugc,
+                                pending:sceneItem.pending,
+                                sty:sceneItem.sty
+                            }
+                            )
+                        this.addItemComponents(newItem, sceneItem, sceneItem)
+
+                        player.addSelectedAsset(
+                            {
+                            catalogId: sceneItem.id,
+                            assetId: sceneItem.aid,
+                            componentData: newItem
+                            }
+                        )
+
+                        console.log(player.selectedAsset.toJSON())
                     }
                 }
             }
@@ -424,17 +460,15 @@ export class RoomSceneItemHandler {
         item.comps.push(COMPONENT_TYPES.TRANSFORM_COMPONENT)
         item.comps.push(COMPONENT_TYPES.VISBILITY_COMPONENT)
 
-        console.log('adding item components to item', item.n)
+        console.log('adding item components to item', item.type, catalogItem)
 
         if(item.type === "SM"){
-            switch(catalogItem.name){
+            switch(catalogItem.n){
                 case 'Trigger Area':
-                    console.log('need to add trigger component things')
                     item.comps.push(COMPONENT_TYPES.TRIGGER_AREA_COMPONENT)
                     break;
 
                 case 'Click Area':
-                    console.log('need to add click component things')
                     item.comps.push(COMPONENT_TYPES.CLICK_AREA_COMPONENT)
                     break;
             }
@@ -473,7 +507,7 @@ export class RoomSceneItemHandler {
                 break;
 
             case '2D':
-                switch(catalogItem.name){
+                switch(catalogItem.n){
                     case 'Image':        
                         console.log('selected ass', selectedAsset)
                         addImageComponent(item, selectedAsset ? selectedAsset.imgComp.url : "")                
@@ -497,7 +531,7 @@ export class RoomSceneItemHandler {
                 break;
 
             case 'SM':
-                switch(catalogItem.name){
+                switch(catalogItem.n){
                     case 'Trigger Area':
                         addTriggerAreaComponent(item, selectedAsset ? selectedAsset.trigArComp : null)
                         break;
@@ -508,5 +542,43 @@ export class RoomSceneItemHandler {
                 }
                 break;
         }
+    }
+
+    createNewItem(item:any, sceneItem:any){
+        const newItem = new SceneItem()
+        newItem.id = item.id
+        newItem.aid = item.aid
+        newItem.p = new Vector3(item.position)
+        newItem.r = new Quaternion(item.rotation)
+        newItem.s = new Vector3(item.scale)
+        newItem.type = sceneItem.ty
+        newItem.ugc = sceneItem.ugc
+        newItem.pending = sceneItem.pending
+        newItem.sty = sceneItem.sty
+        return newItem
+    }
+
+    cancelAssetChanges(player:Player, sceneItem:SceneItem){
+        console.log('cancelling asset changes')
+        let previousItem:SceneItem = player.selectedAsset.componentData
+
+        //update prior PRS
+        this.revertTransform(previousItem.p, sceneItem)
+
+        //update prior image link
+
+        //update prior video link
+
+        //update prior visibility
+
+        //update prior collision
+
+        //update prior text
+    }
+
+    revertTransform(previousPosition:Vector3, sceneItem:SceneItem){
+        sceneItem.p.x = previousPosition.x
+        sceneItem.p.y = previousPosition.y
+        sceneItem.p.z = previousPosition.z
     }
 }

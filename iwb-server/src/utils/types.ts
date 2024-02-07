@@ -13,6 +13,7 @@ export enum SERVER_MESSAGE_TYPES {
     SELECTED_SCENE_ASSET = 'selected_scene_asset',
     EDIT_SCENE_ASSET = 'edit_scene_asset',
     EDIT_SCENE_ASSET_DONE = 'edit_scene_asset_done',
+    EDIT_SCENE_ASSET_CANCEL = 'edit_scene_asset_cancel',
     PLACE_SELECTED_ASSET = 'place_asset',
     SELECT_CATALOG_ASSET = 'select_catalog_asset',
     PLAYER_CANCELED_CATALOG_ASSET = 'player_canceled_catalog',
@@ -54,7 +55,10 @@ export enum SERVER_MESSAGE_TYPES {
     //World
     INIT_WORLD = "init_world",
     NEW_WORLD_CREATED = 'new_world_created',
-    FORCE_DEPLOYMENT = 'force_deployment'
+    FORCE_DEPLOYMENT = 'force_deployment',
+    SCENE_COUNT  = 'scene_count',
+
+    CUSTOM = "custom"
 }
 
 export enum SCENE_MODES {

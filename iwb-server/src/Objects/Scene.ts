@@ -297,6 +297,10 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                             case ACTIONS.PLAY_ANIMATION:
                                 action.animName = asset.actComp.actions[key].animName
                                 break;
+
+                            case ACTIONS.TELEPORT_PLAYER:
+                                action.teleport = asset.actComp.actions[key].teleport
+                                break;
                         }
 
                         item.actComp.actions.set(key, action)

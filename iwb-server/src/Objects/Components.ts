@@ -90,6 +90,7 @@ export class Actions extends Schema {
     @type("string") hoverText: string
     @type("string") aid: string
     @type("string") animName: string
+    @type("string") teleport: string
 }
 
 export class ActionComponent extends Schema {
@@ -216,6 +217,8 @@ export function addMaterialComponent(item:SceneItem, data:any){
 }
 
 export function addTextComponent(item:SceneItem, textComp:TextComponent){
+    console.log('adding text component', item, textComp)
+    
     item.comps.push(COMPONENT_TYPES.TEXT_COMPONENT)
     item.textComp = new TextComponent()
     if(textComp){
@@ -255,6 +258,7 @@ export function addActionComponent(item:SceneItem, actComp:ActionComponent){
 }
 
 export function addTriggerAreaComponent(item:SceneItem, trigArComp:TriggerAreaComponent){
+    console.log('adding trigger area component')
     item.trigArComp = new TriggerAreaComponent()
     if(trigArComp){
         item.trigArComp.enabled = trigArComp.enabled

@@ -116,14 +116,17 @@ export class ItemManager{
             si: data.fs,
             tag:data.tag,
             bb:data.bb,
-            sty:data.style,
+            sty:data.sty,
             anim: data.anims ? data.anims : undefined,
             v: ugc ? iwbManager.worlds.find((w)=> w.owner === data.o).cv + 1 : iwbManager.version + 1
         }
         if(data.bb){
-            let size = JSON.parse(data.bb)
-
-            asset.bb = {x:parseFloat(size.x.toFixed(2)), y:parseFloat(size.y.toFixed(2)), z:parseFloat(size.z.toFixed(2))  }    
+            if(data.ty === "3D"){
+                asset.bb = data.bb
+            }else{
+                let size = JSON.parse(data.bb)
+                asset.bb = {x:parseFloat(size.x.toFixed(2)), y:parseFloat(size.y.toFixed(2)), z:parseFloat(size.z.toFixed(2))  } 
+            }   
         }
 
         console.log('new asset uploaded is', asset)

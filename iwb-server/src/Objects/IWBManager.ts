@@ -32,6 +32,8 @@ export class IWBManager{
     eventQueue:any[] = []
     postingEvents = false
 
+    customKeys:any = {}
+
     constructor(){
         this.getServerConfigurations(true)
 
@@ -98,7 +100,7 @@ export class IWBManager{
 
     async getServerConfigurations(init?:boolean){
         try{
-            let response = await await getTitleData({Keys: ["Config", "Scenes", "Worlds"]})
+            let response = await await getTitleData({Keys: ["Config", "Scenes", "Worlds", "CUSTOM"]})
             
             let config = JSON.parse(response.Data['Config'])
             this.version = config.v
@@ -109,6 +111,14 @@ export class IWBManager{
             this.worlds = worlds
 
             init ? await itemManager.initServerItems() : null
+
+            let custom = JSON.parse(response.Data['CUSTOM'])
+            let res = await getTitleData({Keys:custom})
+            for(let key in res.Data){
+                this.customKeys[key] = JSON.parse(res.Data[key])
+            }
+
+            console.log('this server custom keys are ', this.customKeys)
         }
         catch(e){
             console.log('error getting server items', e)

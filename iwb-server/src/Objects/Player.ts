@@ -108,37 +108,6 @@ export class Player extends Schema {
     this.selectedAsset = null
   }
 
-  createScene(world:string, info:any, parcels:string[]){
-    let sceneData:any = {
-      w: world,
-      id: "" + generateId(5),
-      im: info.image ? info.image : "",
-      n: info.name,
-      d: info.desc,
-      o: this.dclData.userId,
-      ona: this.dclData.displayName,
-      cat:"",
-      bps:[],
-      bpcl: parcels[0],
-      cd: Math.floor(Date.now()/1000),
-      upd: Math.floor(Date.now()/1000),
-      si: 0,
-      toc:0,
-      pc: 0,
-      pcnt: parcels.length,
-      isdl: false,
-      e:info.enabled,
-      pcls:parcels,
-      sp:["0,0,0"],
-      cp:["0,0,0"],
-      priv:info.private
-    }
-
-    // console.log('creating new scene with data', sceneData)
-    let scene = new Scene(sceneData)
-    return scene
-  }
-
   setStats(stats:any[]){
     console.log('player stats are ', stats)
     try{

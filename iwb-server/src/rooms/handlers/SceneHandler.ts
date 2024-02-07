@@ -4,6 +4,7 @@ import { SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types"
 import { IWBRoom } from "../IWBRoom"
 import { Scene } from "../../Objects/Scene";
 import { DEBUG } from "../../utils/config";
+import { generateId } from "colyseus";
 
 let deploymentServer:any = DEBUG ? process.env.DEPLOYMENT_SERVER_DEV : process.env.DEPLOYMENT_SERVER_PROD
 
@@ -96,7 +97,7 @@ export class RoomSceneHandler {
 
             if(player && player.mode === SCENE_MODES.CREATE_SCENE_MODE){
                 if(this.room.state.temporaryParcels.length > 0){
-                    let scene:Scene = player.createScene(this.room.state.world, info, [...this.room.state.temporaryParcels])
+                    let scene:Scene = this.createScene(player, this.room.state.world, info, [...this.room.state.temporaryParcels])
                     this.room.state.scenes.set(scene.id, scene)
 
                     this.room.state.temporaryParcels.forEach((parcel)=>{
@@ -316,5 +317,36 @@ export class RoomSceneHandler {
             })
         })
     }
+
+    createScene(player:Player, world:string, info:any, parcels:string[]){
+        let sceneData:any = {
+          w: world,
+          id: "" + generateId(5),
+          im: info.image ? info.image : "",
+          n: info.name,
+          d: info.desc,
+          o: player.dclData.userId,
+          ona: player.dclData.displayName,
+          cat:"",
+          bps:[],
+          bpcl: parcels[0],
+          cd: Math.floor(Date.now()/1000),
+          upd: Math.floor(Date.now()/1000),
+          si: 0,
+          toc:0,
+          pc: 0,
+          pcnt: parcels.length,
+          isdl: false,
+          e:info.enabled,
+          pcls:parcels,
+          sp:["0,0,0"],
+          cp:["0,0,0"],
+          priv:info.private
+        }
+    
+        // console.log('creating new scene with data', sceneData)
+        let scene = new Scene(sceneData)
+        return scene
+      }
 }
 

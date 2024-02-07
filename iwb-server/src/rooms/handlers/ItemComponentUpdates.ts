@@ -231,6 +231,10 @@ function updateActionComponent(asset:any, info:any){
                     console.log('adding play animation action', info.data.value.action.animName)
                     action.animName = info.data.value.action.animName
                     break;
+
+                case ACTIONS.TELEPORT_PLAYER:
+                    action.teleport = info.data.value.action.location
+                    break;
             }
             asset.actComp.actions.set(generateId(5), action)
             break;

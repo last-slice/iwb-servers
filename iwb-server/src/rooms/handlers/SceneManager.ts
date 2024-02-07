@@ -2,6 +2,7 @@ import { IWBRoom } from "../IWBRoom"
 import { abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, finalizeUploadFiles, initializeUploadPlayerFiles, playerLogin, playfabLogin, uploadPlayerFiles } from "../../utils/Playfab"
 import { Scene } from "../../Objects/Scene"
 import { iwbManager } from "../../app.config"
+import { SERVER_MESSAGE_TYPES } from "../../utils/types"
 
 export class RoomSceneManager {
     room:IWBRoom
@@ -89,6 +90,8 @@ export class RoomSceneManager {
 
     loadRealmScenes(scenes:any[]){
         let filter = scenes.filter((scene)=> scene.w === this.room.state.world)
+        this.room.broadcast(SERVER_MESSAGE_TYPES.SCENE_COUNT, filter.length)
+        
         filter.forEach((scene)=>{
             this.room.state.scenes.set(scene.id, new Scene(scene, this.room))
         })

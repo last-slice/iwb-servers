@@ -7,6 +7,7 @@ import {SERVER_MESSAGE_TYPES} from "../utils/types";
 import {playerLogin, updatePlayerDisplayName, updatePlayerInternalData} from "../utils/Playfab";
 import * as jwt from "jsonwebtoken";
 import { RoomSceneManager } from "./handlers/SceneManager";
+import { createCustomObjects, destroyCustomObjects } from "../Objects/Custom";
 
 export interface JWTPayloadUserId extends jwt.JwtPayload {
     userId: string
@@ -48,6 +49,7 @@ export class IWBRoom extends Room<IWBRoomState> {
         this.state.sceneManager = new RoomSceneManager(this, options.world)
 
         iwbManager.addRoom(this)
+        createCustomObjects(this)
     }
 
     onJoin(client: Client, options: any, auth: JWTPayloadUserId) {
@@ -96,6 +98,7 @@ export class IWBRoom extends Room<IWBRoomState> {
         console.log("room", this.roomId, "disposing...");
         iwbManager.removeRoom(this)
         this.state.sceneManager.saveRealmScenes()
+        destroyCustomObjects(this)
     }
 
     async getPlayerInfo(client: Client, options: any) {
