@@ -2,7 +2,7 @@ import { Player } from "../../Objects/Player"
 import { itemManager, iwbManager } from "../../app.config"
 import { SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types"
 import { IWBRoom } from "../IWBRoom"
-import { Scene } from "../../Objects/Scene";
+import { Scene, SceneItem } from "../../Objects/Scene";
 import { DEBUG } from "../../utils/config";
 import { generateId } from "colyseus";
 
@@ -180,6 +180,25 @@ export class RoomSceneHandler {
                                 player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE, info)
                             }
                         })
+                    }
+                }
+            }
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.SCENE_CLEAR_ASSETS, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.SCENE_CLEAR_ASSETS + " message", info)
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player){
+                let scene = this.room.state.scenes.get(info.sceneId)
+                if(scene){
+                    if(scene.o === client.userData.userId){
+                        let worldConfig = iwbManager.worlds.find((w)=> w.ens === this.room.state.world)
+                        if(worldConfig){
+                            worldConfig.builds -= 1
+                            worldConfig.updated = Math.floor(Date.now()/1000)
+                        }
+                        scene.ass.clear()
+                        player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "Your scene assets were removed!")
                     }
                 }
             }

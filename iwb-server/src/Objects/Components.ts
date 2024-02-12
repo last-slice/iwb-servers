@@ -121,11 +121,6 @@ export class TriggerAreaComponent extends Schema {
     @type([TriggerActionComponent]) lActions = new ArraySchema<TriggerActionComponent>()
 }
 
-export class ClickAreaComponent extends Schema {
-    @type("boolean") enabled: boolean = true
-    @type([TriggerActionComponent]) actions = new ArraySchema<TriggerActionComponent>()
-}
-
 export class AnimationComponent extends Schema {
     @type("boolean") enabled: boolean = true
     @type("boolean") autostart: boolean = false
@@ -267,16 +262,6 @@ export function addTriggerAreaComponent(item:SceneItem, trigArComp:TriggerAreaCo
         })
         trigArComp.lActions.forEach((action)=>{
             item.trigArComp.lActions.push(action)
-        })
-    }
-}
-
-export function addClickAreaComponent(item:SceneItem, clickArComp:ClickAreaComponent){
-    item.clickArComp = new ClickAreaComponent()
-    if(clickArComp){
-        item.clickArComp.enabled = clickArComp.enabled
-        clickArComp.actions.forEach((action)=>{
-            item.clickArComp.actions.push(action)
         })
     }
 }

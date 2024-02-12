@@ -18,7 +18,6 @@ import {
     addVisibilityComponent,
     addAudioComponent,
     addTriggerAreaComponent,
-    addClickAreaComponent,
     addAnimationComponent
 } from "../../Objects/Components";
 import { Player } from "../../Objects/Player";
@@ -232,17 +231,24 @@ export class RoomSceneItemHandler {
                     assetId: info.assetId,
                 }
                 let scene = this.room.state.scenes.get(info.sceneId)
-                if(scene){
-                    let sceneAsset = scene.ass.find((asset:any)=> asset.aid === info.assetId)
+                if(scene && this.canBuild(player.address, scene.id)){
+                    let sceneAsset:SceneItem = scene.ass.find((asset:any)=> asset.aid === info.assetId)
                     if(sceneAsset && !sceneAsset.editing){
                         sceneAsset.editing = true
+                        sceneAsset.editor = player.address
                         data.componentData = sceneAsset
                     }
+                    player.addSelectedAsset(data)
+                    player.selectedAsset.componentData.comps.includes(COMPONENT_TYPES.IMAGE_COMPONENT) ? addImageComponent(player.selectedAsset.componentData, player.selectedAsset.componentData.imgComp.url) : null
+                    player.selectedAsset.componentData.comps.includes(COMPONENT_TYPES.NFT_COMPONENT) ? addNFTComponent(player.selectedAsset.componentData, player.selectedAsset.componentData.nftComp) : null
+                    this.deleteSceneItem(player, info)
+
+                    // client.send(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET, {valid:true, reason:"", player:player.address})
+                }else{
+                    client.send(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET, {valid:false, reason:"", player:player.address})
                 }
-                player.addSelectedAsset(data)
-                player.selectedAsset.componentData.comps.includes(COMPONENT_TYPES.IMAGE_COMPONENT) ? addImageComponent(player.selectedAsset.componentData, player.selectedAsset.componentData.imgComp.url) : null
-                player.selectedAsset.componentData.comps.includes(COMPONENT_TYPES.NFT_COMPONENT) ? addNFTComponent(player.selectedAsset.componentData, player.selectedAsset.componentData.nftComp) : null
-                this.deleteSceneItem(player, info)
+            }else{
+                client.send(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET, {valid:false, reason:"", player:player.address})
             }
         })
 
@@ -469,7 +475,8 @@ export class RoomSceneItemHandler {
                     break;
 
                 case 'Click Area':
-                    item.comps.push(COMPONENT_TYPES.CLICK_AREA_COMPONENT)
+                    item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
+                    item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
                     break;
             }
         }else{
@@ -534,10 +541,6 @@ export class RoomSceneItemHandler {
                 switch(catalogItem.n){
                     case 'Trigger Area':
                         addTriggerAreaComponent(item, selectedAsset ? selectedAsset.trigArComp : null)
-                        break;
-
-                    case 'Click Area':
-                        addClickAreaComponent(item, selectedAsset ? selectedAsset.clickArComp : null)
                         break;
                 }
                 break;

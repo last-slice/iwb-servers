@@ -18,7 +18,6 @@ import {
     addVisibilityComponent,
     addAudioComponent,
     addTriggerAreaComponent,
-    addClickAreaComponent,
     addAnimationComponent
 } from "../../Objects/Components";
 import { Player } from "../../Objects/Player";

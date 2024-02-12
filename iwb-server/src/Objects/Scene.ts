@@ -5,7 +5,6 @@ import {
     Actions,
     AnimationComponent,
     AudioComponent,
-    ClickAreaComponent,
     CollisionComponent,
     Color4,
     ImageComponent,
@@ -49,7 +48,6 @@ export class SceneItem extends Schema {
     @type(TriggerComponent) trigComp: TriggerComponent
     @type(ActionComponent) actComp: ActionComponent
     @type(TriggerAreaComponent) trigArComp: TriggerAreaComponent
-    @type(ClickAreaComponent) clickArComp: ClickAreaComponent
     @type(AnimationComponent) animComp: AnimationComponent
  }
 
@@ -323,17 +321,6 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                     })
                 }
                 break;
-
-                case COMPONENT_TYPES.CLICK_AREA_COMPONENT:
-                    item.clickArComp = new ClickAreaComponent()
-                    if(asset.clickArComp){
-                        item.clickArComp.enabled = asset.clickArComp.enabled   
-    
-                        asset.clickArComp.actions.forEach((action:any)=>{
-                            item.clickArComp.actions.push(new TriggerActionComponent(action))
-                        })
-                    }
-                    break;
 
                 case COMPONENT_TYPES.ANIMATION_COMPONENT:
                     item.animComp = new AnimationComponent()

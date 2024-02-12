@@ -58,7 +58,6 @@ export class Player extends Schema {
     this.client = client
 
     this.playFabData = client.auth.playfab
-    // console.log('playfab data is', this.playFabData)
     this.dclData = client.userData
     this.address = client.userData.userId
     this.name = client.userData.displayName
