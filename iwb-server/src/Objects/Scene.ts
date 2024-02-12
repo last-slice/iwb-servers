@@ -33,6 +33,8 @@ export class SceneItem extends Schema {
     @type("boolean") ugc:boolean
     @type("boolean") pending:boolean = false
     @type("string") editor:string = ""
+    @type("boolean") buildVis:boolean = true
+    @type("boolean") locked:boolean = false
     @type(Vector3) p: Vector3 = new Vector3()
     @type(Quaternion) r: Vector3 = new Vector3()
     @type(Vector3) s: Vector3 = new Vector3()
@@ -134,6 +136,8 @@ export class Scene extends Schema {
                         item.sty = asset.sty || asset.sty !== "Stream" ? "Local" : "Stream"
                         item.ugc = asset.hasOwnProperty("ugc") ? asset.ugc : false
                         item.pending = asset.hasOwnProperty("pending") ? asset.pending : false
+                        item.locked =  asset.hasOwnProperty("locked") ? asset.locked : false
+                        item.buildVis =  asset.hasOwnProperty("buildVis") ? asset.buildVis : true
 
                         if(item.ugc && room){
                             let ugcItem = room.state.realmAssets.get(item.id)

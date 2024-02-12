@@ -1,6 +1,6 @@
 import { generateId } from "colyseus";
 import { ActionComponent, Actions, Color4, TriggerActionComponent, TriggerComponent, Triggers } from "../../Objects/Components";
-import { ACTIONS, COMPONENT_TYPES } from "../../utils/types";
+import { ACTIONS, COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../../utils/types";
 import { IWBRoom } from "../IWBRoom";
 
 export let updateItemComponentFunctions:any = {
@@ -16,6 +16,8 @@ export let updateItemComponentFunctions:any = {
     [COMPONENT_TYPES.ACTION_COMPONENT]:(asset:any, info:any)=>{updateActionComponent(asset, info)},
     [COMPONENT_TYPES.TRIGGER_AREA_COMPONENT]:(asset:any, info:any, room?:IWBRoom)=>{updateTriggerAreaComponent(asset, info, room)},
     [COMPONENT_TYPES.ANIMATION_COMPONENT]:(asset:any, info:any)=>{updateAnimationComponent(asset, info)},
+    [SERVER_MESSAGE_TYPES.UPDATE_ASSET_LOCKED]:(asset:any, info:any)=>{updateBuildLock(asset, info)},
+    [SERVER_MESSAGE_TYPES.UPDATE_ASSET_BUILD_VIS]:(asset:any, info:any)=>{updateBuildVis(asset, info)},
 }
 
 function updateVisiblityComponent(asset:any, info:any){
@@ -316,4 +318,12 @@ function updateAnimationComponent(asset:any, info:any){
             break;
     }
     
+}
+
+function updateBuildLock(asset:any, info:any){
+    asset.locked = !asset.locked
+}
+
+function updateBuildVis(asset:any, info:any){
+    asset.buildVis = !asset.buildVis
 }
