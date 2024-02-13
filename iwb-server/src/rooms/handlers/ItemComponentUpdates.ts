@@ -298,16 +298,16 @@ function updateActionComponent(asset:any, info:any, room:IWBRoom){
                             scene.ass.forEach((asset:any, i:number)=>{
                                 //check if asset has trigger component
                                 if(asset.trigComp){
-                                    console.log('we found asset that has trigger component')
                                     asset.trigComp.triggers.forEach((trigger:any, i:number)=>{
                                         trigger.actions = trigger.actions.filter((actions:any)=> actions.id !== key)
                                     })
                                 }
 
                                 //check if asset has trigger area component
-
-
-                                //check if asset has click area component
+                                if(asset.trigArComp){
+                                    asset.trigArComp.eActions = asset.trigArComp.eActions.filter((actions:any)=> actions.id !== key)
+                                    asset.trigArComp.lActions = asset.trigArComp.lActions.filter((actions:any)=> actions.id !== key)
+                                }
                             })
                         }
                     }
@@ -318,12 +318,15 @@ function updateActionComponent(asset:any, info:any, room:IWBRoom){
 }
 
 function updateTriggerAreaComponent(asset:any, info:any, room:IWBRoom){
+    let scene = room.state.scenes.get(info.data.sceneId)
+
     switch(info.action){
+        case 'toggle':
+            asset.trigArComp.enabled = !asset.trigArComp.enabled
+            break;
+
         case 'add':
             console.log('adding new trigger area action', info.data)
-
-            let scene = room.state.scenes.get(info.data.sceneId)
-        
             if(scene){
                 let actionAsset:any
                 scene.ass.forEach((asset, i)=>{
