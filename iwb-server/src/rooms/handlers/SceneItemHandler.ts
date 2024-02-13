@@ -267,7 +267,6 @@ export class RoomSceneItemHandler {
 
         room.onMessage(SERVER_MESSAGE_TYPES.UPDATE_ITEM_COMPONENT, async(client, info)=>{
             console.log(SERVER_MESSAGE_TYPES.UPDATE_ITEM_COMPONENT + " message", info)
-
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
                 let scene = room.state.scenes.get(info.data.sceneId)

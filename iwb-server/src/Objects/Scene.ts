@@ -298,6 +298,7 @@ export function  addItemComponents(item: SceneItem, asset: any) {
 
                             case ACTIONS.PLAY_ANIMATION:
                                 action.animName = asset.actComp.actions[key].animName
+                                action.animLoop = asset.actComp.actions[key].animLoop
                                 break;
 
                             case ACTIONS.TELEPORT_PLAYER:

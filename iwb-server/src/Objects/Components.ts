@@ -91,6 +91,7 @@ export class Actions extends Schema {
     @type("string") aid: string
     @type("string") animName: string
     @type("string") teleport: string
+    @type("boolean") animLoop:boolean
 }
 
 export class ActionComponent extends Schema {
