@@ -100,7 +100,7 @@ export class Scene extends Schema {
             this.id = data.id
             this.n = data.n
             this.d = data.d
-            this.pcnt = data.pcnt
+            this.pcnt = data.pcls.length
             this.cd = data.cd
             this.upd = data.upd
             this.o = data.o

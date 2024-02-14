@@ -1,18 +1,18 @@
 import { iwbManager } from "../../app.config";
 
 export function messageRouter(router:any){
-    router.post("/all/message", async (req: any, res: any) => {
+    router.post("/all/message/:auth", async (req: any, res: any) => {
         console.log('send message to all users')
         iwbManager.sendAllMessage(req.body)
         res.send("It's time to kick ass and chew bubblegum!");
     });
 
-    router.post("/user/message", async (req: any, res: any) => {
+    router.post("/user/message/:auth", async (req: any, res: any) => {
         console.log('send message to user')
         iwbManager.attemptUserMessage(req, res)
     });
 
-    router.get("/feedback/get", async (req: any, res: any) => {
+    router.get("/feedback/get/:auth", async (req: any, res: any) => {
         console.log('getting user feedback')
         res.status(200).send({valid: true, feedback:iwbManager.feedback})
     });
@@ -22,7 +22,7 @@ export function messageRouter(router:any){
         iwbManager.clearFeedback(req, res)
     });
 
-    router.get("/tutorials/get", async (req: any, res: any) => {
+    router.get("/tutorials/get/:auth", async (req: any, res: any) => {
         console.log('getting tutorials')
         res.status(200).send({valid: true, tutorials:iwbManager.tutorials})
     });

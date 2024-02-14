@@ -215,7 +215,13 @@ export class RoomSceneHandler {
 
                         scene.n = info.name
                         scene.d = info.desc
+
+                        let enabledView = false
+                        scene.e !== info.enabled ? enabledView = true : null
                         scene.e = info.enabled
+
+                        let privateView = false
+                        scene.priv !== info.priv ? privateView = true : null
                         scene.priv = info.priv
 
                         let worldConfig = iwbManager.worlds.find((w)=> w.ens === this.room.state.world)
@@ -223,7 +229,7 @@ export class RoomSceneHandler {
                             worldConfig.updated = Math.floor(Date.now()/1000)
                         }
                         
-                        room.broadcast(SERVER_MESSAGE_TYPES.SCENE_SAVE_EDITS, info)
+                        room.broadcast(SERVER_MESSAGE_TYPES.SCENE_SAVE_EDITS, {sceneId:info.sceneId, enabledChanged:enabledView, privateChanged:privateView})
                     }
                 }
             }

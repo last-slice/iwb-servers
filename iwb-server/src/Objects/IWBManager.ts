@@ -553,24 +553,26 @@ export class IWBManager{
         }
     }
 
-    addTutorial(req:any, res:any){
+    async addTutorial(req:any, res:any){
         if(req.params.auth && req.params.auth === process.env.IWB_UPLOAD_AUTH_KEY){
-            iwbManager.tutorials.push(req.body)
+            this.tutorials.push(req.body)
             this.rooms.forEach((room:IWBRoom)=>{
                 room.broadcast(SERVER_MESSAGE_TYPES.ADDED_TUTORIAL, req.body)
             })
+            await setTitleData({Key:'Tutorials', Value: JSON.stringify(this.tutorials)})
             res.status(200).send({valid: true})
         }else{
             res.status(200).send({valid: false})
         }
     }
 
-    clearTutorial(req:any, res:any){
+    async clearTutorial(req:any, res:any){
         if(req.params.auth && req.params.auth === process.env.IWB_UPLOAD_AUTH_KEY){
-            iwbManager.tutorials.splice(parseInt(req.params.index), 1)
+            this.tutorials.splice(parseInt(req.params.index), 1)
             this.rooms.forEach((room:IWBRoom)=>{
                 room.broadcast(SERVER_MESSAGE_TYPES.REMOVED_TUTORIAL, parseInt(req.params.index))
             })
+            await setTitleData({Key:'Tutorials', Value: JSON.stringify(this.tutorials)})
             res.status(200).send({valid: true})
         }else{
             res.status(200).send({valid: false})
