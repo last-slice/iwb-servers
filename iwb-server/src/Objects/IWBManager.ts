@@ -34,6 +34,9 @@ export class IWBManager{
 
     customKeys:any = {}
 
+    tutorials:any[] = []
+    feedback:any[] = []
+
     constructor(){
         this.getServerConfigurations(true)
 
@@ -100,7 +103,7 @@ export class IWBManager{
 
     async getServerConfigurations(init?:boolean){
         try{
-            let response = await await getTitleData({Keys: ["Config", "Scenes", "Worlds", "CUSTOM"]})
+            let response = await await getTitleData({Keys: ["Config", "Scenes", "Worlds", "CUSTOM", "Tutorials"]})
             
             let config = JSON.parse(response.Data['Config'])
             this.version = config.v
@@ -118,7 +121,8 @@ export class IWBManager{
                 this.customKeys[key] = JSON.parse(res.Data[key])
             }
 
-            console.log('this server custom keys are ', this.customKeys)
+            let serverTutorials = JSON.parse(response.Data['Tutorials'])
+            this.tutorials = serverTutorials
         }
         catch(e){
             console.log('error getting server items', e)
@@ -537,6 +541,39 @@ export class IWBManager{
                 console.log('error posting event', e)
                 this.postingEvents = false
             }
+        }
+    }
+
+    clearFeedback(req:any, res:any){
+        if(req.params.auth && req.params.auth === process.env.IWB_UPLOAD_AUTH_KEY){
+            iwbManager.feedback.length = 0
+            res.status(200).send({valid: true})
+        }else{
+            res.status(200).send({valid: false})
+        }
+    }
+
+    addTutorial(req:any, res:any){
+        if(req.params.auth && req.params.auth === process.env.IWB_UPLOAD_AUTH_KEY){
+            iwbManager.tutorials.push(req.body)
+            this.rooms.forEach((room:IWBRoom)=>{
+                room.broadcast(SERVER_MESSAGE_TYPES.ADDED_TUTORIAL, req.body)
+            })
+            res.status(200).send({valid: true})
+        }else{
+            res.status(200).send({valid: false})
+        }
+    }
+
+    clearTutorial(req:any, res:any){
+        if(req.params.auth && req.params.auth === process.env.IWB_UPLOAD_AUTH_KEY){
+            iwbManager.tutorials.splice(parseInt(req.params.index), 1)
+            this.rooms.forEach((room:IWBRoom)=>{
+                room.broadcast(SERVER_MESSAGE_TYPES.REMOVED_TUTORIAL, parseInt(req.params.index))
+            })
+            res.status(200).send({valid: true})
+        }else{
+            res.status(200).send({valid: false})
         }
     }
 }

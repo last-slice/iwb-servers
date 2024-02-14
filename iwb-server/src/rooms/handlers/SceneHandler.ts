@@ -284,6 +284,11 @@ export class RoomSceneHandler {
                 scene.cp.splice(info.index, 1)
             }
         })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.SUBMIT_FEEDBACK, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.SUBMIT_FEEDBACK + " message", info)
+            iwbManager.feedback.push(info)
+        })
     }
 
     removeParcel(scene:Scene, parcel: any) {
