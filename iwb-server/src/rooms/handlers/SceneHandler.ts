@@ -192,12 +192,14 @@ export class RoomSceneHandler {
                 let scene = this.room.state.scenes.get(info.sceneId)
                 if(scene){
                     if(scene.o === client.userData.userId){
-                        let worldConfig = iwbManager.worlds.find((w)=> w.ens === this.room.state.world)
-                        if(worldConfig){
-                            worldConfig.builds -= 1
-                            worldConfig.updated = Math.floor(Date.now()/1000)
-                        }
+                        // let worldConfig = iwbManager.worlds.find((w)=> w.ens === this.room.state.world)
+                        // if(worldConfig){
+                        //     worldConfig.builds -= 1
+                        //     worldConfig.updated = Math.floor(Date.now()/1000)
+                        // }
                         scene.ass.clear()
+                        scene.si = 0
+                        scene.pc = 0
                         player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "Your scene assets were removed!")
                     }
                 }
