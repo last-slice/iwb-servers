@@ -211,7 +211,7 @@ export function  addItemComponents(item: SceneItem, asset: any) {
             case COMPONENT_TYPES.AUDIO_COMPONENT:
                 console.log('audio component is', asset)
                 item.audComp = new AudioComponent()
-                item.audComp.url = asset.hasOwnProperty("audComp") ? (asset.sty !== "Stream" ? "assets/" + asset.id + ".mp3" : asset.audComp.url) :""
+                item.audComp.url = asset.hasOwnProperty("audComp") ? (asset.id !== "e6991f31-4b1e-4c17-82c2-2e484f53a124" ? "assets/" + asset.id + ".mp3" : asset.audComp.url) :""
                 item.audComp.volume = asset.audComp?.volume || 0.5
                 item.audComp.autostart = asset.audComp?.autostart
                 item.audComp.loop = asset.audComp?.loop || false

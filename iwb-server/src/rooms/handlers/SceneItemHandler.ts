@@ -448,11 +448,11 @@ export class RoomSceneItemHandler {
         }
     }
 
-    checkSceneLimits(scene:Scene, item:SceneItem){
+    checkSceneLimits(scene:Scene, item:any){
         let totalSize = (scene.pcnt > 20 ? 300 : scene.pcnt * 15) * (1024 ** 2)
         let totalPoly = scene.pcnt * 10000
 
-        if(scene.si > totalSize || scene.pc > totalPoly){
+        if((scene.si + item.si) > totalSize || (scene.pc + item.pc) > totalPoly){
             console.log('scene is over limitations')
             return false
         }else{

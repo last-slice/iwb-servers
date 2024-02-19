@@ -108,7 +108,10 @@ export class IWBRoom extends Room<IWBRoomState> {
             styles: iwbManager.styles,
             worlds: iwbManager.worlds,
             iwb: {v: iwbManager.version, updates:iwbManager.versionUpdates},
-            tutorials: iwbManager.tutorials
+            tutorials: {
+                videos: iwbManager.tutorials,
+                cid: iwbManager.tutorialsCID
+            }
         })
 
         let player = new Player(this, client)

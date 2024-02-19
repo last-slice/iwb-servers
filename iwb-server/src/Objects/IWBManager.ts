@@ -35,6 +35,7 @@ export class IWBManager{
     customKeys:any = {}
 
     tutorials:any[] = []
+    tutorialsCID:string = ""
     feedback:any[] = []
 
     constructor(){
@@ -121,8 +122,9 @@ export class IWBManager{
                 this.customKeys[key] = JSON.parse(res.Data[key])
             }
 
-            let serverTutorials = JSON.parse(response.Data['Tutorials'])
-            this.tutorials = serverTutorials
+            let tutorialsConfig = JSON.parse(response.Data['Tutorials'])
+            this.tutorials = tutorialsConfig.videos
+            this.tutorialsCID = tutorialsConfig.CID
         }
         catch(e){
             console.log('error getting server items', e)
@@ -257,7 +259,8 @@ export class IWBManager{
                 if(newWorld){
                     world.builds = 1
                     world.updated = Math.floor(Date.now()/1000)
-                    world.cv = 1    
+                    world.cv = 1
+                    world.v = iwbManager.version    
                 } 
     
                 await this.backupScene(world.ens, user.EntityToken.EntityToken, user.EntityToken.Entity.Type, user.EntityToken.Entity.Id, scenes)
@@ -559,7 +562,20 @@ export class IWBManager{
             this.rooms.forEach((room:IWBRoom)=>{
                 room.broadcast(SERVER_MESSAGE_TYPES.ADDED_TUTORIAL, req.body)
             })
-            await setTitleData({Key:'Tutorials', Value: JSON.stringify(this.tutorials)})
+            await setTitleData({Key:'Tutorials', Value: JSON.stringify({videos:this.tutorials, CID:iwbManager.tutorialsCID})})
+            res.status(200).send({valid: true})
+        }else{
+            res.status(200).send({valid: false})
+        }
+    }
+
+    async updateCID(req:any, res:any){
+        if(req.params.auth && req.params.auth === process.env.IWB_UPLOAD_AUTH_KEY){
+            iwbManager.tutorialsCID = req.body.CID
+            this.rooms.forEach((room:IWBRoom)=>{
+                room.broadcast(SERVER_MESSAGE_TYPES.ADDED_TUTORIAL, req.body.CID)
+            })
+            await setTitleData({Key:'Tutorials', Value: JSON.stringify({videos:this.tutorials, CID:iwbManager.tutorialsCID})})
             res.status(200).send({valid: true})
         }else{
             res.status(200).send({valid: false})

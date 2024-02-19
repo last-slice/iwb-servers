@@ -24,12 +24,17 @@ export function messageRouter(router:any){
 
     router.get("/tutorials/get/:auth", async (req: any, res: any) => {
         console.log('getting tutorials')
-        res.status(200).send({valid: true, tutorials:iwbManager.tutorials})
+        res.status(200).send({valid: true, tutorials:iwbManager.tutorials, cid:iwbManager.tutorialsCID})
     });
 
     router.post("/tutorials/add/:auth", async (req: any, res: any) => {
         console.log('adding tutorial')
         iwbManager.addTutorial(req, res)
+    });
+
+    router.post("/tutorials/update/cid/:auth/", async (req: any, res: any) => {
+        console.log('updating cid')
+        iwbManager.updateCID(req, res)
     });
 
     router.get("/tutorials/clear/:auth/:index", async (req: any, res: any) => {

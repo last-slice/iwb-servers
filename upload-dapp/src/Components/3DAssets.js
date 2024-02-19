@@ -173,7 +173,10 @@ const checkModelSize = ()=>{
     formData.append('description', modelDescription)
     formData.append('style', style)
     formData.append('category', '')
-    formData.append('anims', animations.length > 0 ? JSON.stringify(animations) : undefined)
+    
+    if(animations.length > 0){
+      formData.append('anims', JSON.stringify(animations))
+    }
 
 
     console.log('animations is', animations)
