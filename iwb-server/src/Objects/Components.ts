@@ -92,6 +92,7 @@ export class Actions extends Schema {
     @type("string") animName: string
     @type("string") teleport: string
     @type("boolean") animLoop:boolean
+    @type("string") emote: string
 }
 
 export class ActionComponent extends Schema {
@@ -129,6 +130,17 @@ export class AnimationComponent extends Schema {
     @type("number") startIndex: number = 0
     @type(['string']) animations = new ArraySchema<string>()
     @type(['number']) durations = new ArraySchema<number>()
+}
+
+export class NpcComponent extends Schema {
+    @type("string") name:string = ""
+    @type("number") bodyShape:number = 0
+    @type("number") type:number = 0
+    @type("boolean") dName: boolean = true
+    @type(['string']) wearables:ArraySchema<string>
+    @type(Color4) eyeColor = new Color4(0,0,0,1)
+    @type(Color4) skinColor = new Color4(215,170,105,1)
+    @type(Color4) hairColor = new Color4(0,0,0,1)
 }
 
 
@@ -277,4 +289,19 @@ export function addAnimationComponent(item:SceneItem, animations:any){
         item.animComp.animations.push(animation.name)
         item.animComp.durations.push(animation.duration)
     })
+}
+
+export function addNPCComponent(item:SceneItem, npcComp:NpcComponent){
+    console.log('adding npc component')
+    item.npcComp = new NpcComponent()
+    if(npcComp){
+        item.npcComp.name = npcComp.name
+        item.npcComp.dName = npcComp.dName
+        item.npcComp.bodyShape = npcComp.bodyShape
+        item.npcComp.wearables = npcComp.wearables
+
+        item.npcComp.eyeColor = npcComp.eyeColor
+        item.npcComp.hairColor = npcComp.hairColor
+        item.npcComp.skinColor = npcComp.skinColor
+    }
 }

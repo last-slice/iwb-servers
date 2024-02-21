@@ -38,6 +38,14 @@ export class IWBManager{
     tutorialsCID:string = ""
     feedback:any[] = []
 
+
+    defaultPlayerSettings:any = {
+            firstTime: false,
+            nots: true,
+            confirms: false,
+            music: true
+        }
+
     constructor(){
         this.getServerConfigurations(true)
 

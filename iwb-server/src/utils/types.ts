@@ -19,6 +19,8 @@ export enum SERVER_MESSAGE_TYPES {
     PLAYER_CANCELED_CATALOG_ASSET = 'player_canceled_catalog',
     ASSET_OVER_SCENE_LIMIT = 'asset_over_scene_limit',
     SUBMIT_FEEDBACK = 'submit_feedback',
+    PLAYER_SETTINGS = 'player_settings',
+    FIRST_TIME = 'first_time',
 
     // Catalog and Assets
     CATALOG_UPDATED = 'catalog_updated',
@@ -107,6 +109,7 @@ export enum COMPONENT_TYPES {
     TRIGGER_AREA_COMPONENT = "Trigger Area",
     CLICK_AREA_COMPONENT = "Click Area",
     ANIMATION_COMPONENT = "Animation",
+    NPC_COMPONENT = 'NPC'
 }
 
 export enum COLLISION_LAYERS {

@@ -2,7 +2,7 @@ import {MapSchema, Schema, type} from "@colyseus/schema";
 import {IWBRoom} from "../rooms/IWBRoom";
 import {Client} from "@colyseus/core";
 import {SCENE_MODES, SERVER_MESSAGE_TYPES} from "../utils/types";
-import {abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, initializeUploadPlayerFiles, playfabLogin, updatePlayerData, uploadPlayerFiles} from "../utils/Playfab";
+import {abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, initializeUploadPlayerFiles, playfabLogin, setTitleData, updatePlayerData, uploadPlayerFiles} from "../utils/Playfab";
 import {Scene, SceneItem} from "./Scene";
 import { generateId } from "colyseus";
 import { ImageComponent, MaterialComponent, NFTComponent } from "./Components";
@@ -44,10 +44,9 @@ export class Player extends Schema {
 
   mode:SCENE_MODES
 
+  settings:any
 
   stats = new MapSchema<number>()
-  settings: Map<string,any> = new Map()
-  // assets: Map<string,SceneItem> = new Map()
   catalog:Map<string,any> = new Map()
   pendingAssets:any[] = []
   pendingDeployment:any = false
@@ -63,32 +62,10 @@ export class Player extends Schema {
     this.name = client.userData.displayName
 
     this.mode = SCENE_MODES.PLAYMODE
+
+    console.log('playfab settings', this.playFabData)
+    this.setSettings(this.playFabData.InfoResultPayload.UserData)
   }
-
-  // setScenes(){
-  //   let data = this.playFabData.InfoResultPayload.UserData
-  //   console.log('player setting scenes', data)
-
-  //   //hard coded test data
-  //   let sceneIds = ["2831","2832","2833"]
-  //   ////
-
-    
-  //   if(data.hasOwnProperty("Scenes")){
-  //     sceneIds = JSON.parse(data.Scenes.Value)
-  //   }
-
-  //   let scenes = sceneManager.scenes.filter((element) => sceneIds.includes(element.id))
-  //   console.log('any scenes are a', scenes)
-  //   scenes.forEach((scene)=>{
-  //     // this.scenes.set(scene.id, scene)
-  //   })
-
-  //   if(scenes.length > 0){
-  //     console.log('player scenes greater than 0')
-  //     this.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_SCENES_CATALOG, {scenes:scenes, user:this.dclData.userId})
-  //   }
-  // }
 
   updatePlayMode(mode:SCENE_MODES){
     this.mode = mode
@@ -176,7 +153,7 @@ export class Player extends Schema {
 
   async saveCache(){
     // await this.recordPlayerTime()
-    // await this.saveToDB()
+    await this.saveToDB()
   }
 
   async recordPlayerTime(){
@@ -201,6 +178,7 @@ export class Player extends Schema {
 
   async saveToDB(){
     console.log('saving player updates to db', this.dclData.userId)
+    await this.saveSetttingsDB()
     // let stats:any = []
     // this.stats.forEach((stat,key)=>{
     //   stats.push({StatisticName:initManager.pDefaultStats.filter((stat)=> stat.pKey === key)[0].StatisticName, Value:stat})
@@ -242,6 +220,18 @@ export class Player extends Schema {
     // }
   }
 
+  async saveSetttingsDB(){
+    console.log('saving player settings to db', this.dclData.userId)
+    console.log('server settings are ', this.settings)
+    let res = await updatePlayerData({
+      PlayFabId: this.playFabData.PlayFabId,
+      Data:{
+        'Settings':JSON.stringify(this.settings)
+      }
+    })
+    console.log('update data res is', res)
+  }
+
   async cancelPendingDeployment(){
     try{
         const result = await axios.post("http://localhost:3525/scene/deployment/cancel", { user:this.address, auth: this.pendingDeployment},
@@ -254,6 +244,23 @@ export class Player extends Schema {
       catch(e){
         console.log('error validating deployment')
       }
-}
+  }
+
+  async setSettings(server:any){
+    console.log('setting player settings')
+    if(!server.hasOwnProperty("Settings")){
+      console.log('player doesnt have settings, need to initiliaze')
+      this.settings = iwbManager.defaultPlayerSettings
+      await this.saveSetttingsDB()
+    }
+    else{
+        let settings = JSON.parse(server.Settings.Value)
+        this.settings = settings
+
+        console.log('player settings are ', this.settings)
+    }
+
+    this.client.send(SERVER_MESSAGE_TYPES.PLAYER_SETTINGS, {action:"load", value:this.settings})
+  }
 
 }

@@ -18,7 +18,8 @@ import {
     addVisibilityComponent,
     addAudioComponent,
     addTriggerAreaComponent,
-    addAnimationComponent
+    addAnimationComponent,
+    addNPCComponent
 } from "../../Objects/Components";
 import { Player } from "../../Objects/Player";
 import { Scene, SceneItem } from "../../Objects/Scene";
@@ -473,9 +474,16 @@ export class RoomSceneItemHandler {
                     item.comps.push(COMPONENT_TYPES.TRIGGER_AREA_COMPONENT)
                     break;
 
+                
                 case 'Click Area':
                     item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
                     item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
+                    break;
+
+                case 'NPC':
+                    item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
+                    item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
+                    item.comps.push(COMPONENT_TYPES.NPC_COMPONENT)
                     break;
             }
         }else{
@@ -540,6 +548,10 @@ export class RoomSceneItemHandler {
                 switch(catalogItem.n){
                     case 'Trigger Area':
                         addTriggerAreaComponent(item, selectedAsset ? selectedAsset.trigArComp : null)
+                        break;
+
+                    case 'NPC':
+                        addNPCComponent(item, selectedAsset ? selectedAsset.trigArComp : null)
                         break;
                 }
                 break;

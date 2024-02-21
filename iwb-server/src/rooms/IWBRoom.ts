@@ -219,7 +219,7 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         let data:any = {
           Settings:{
-            Value:JSON.stringify([])
+            Value:JSON.stringify(iwbManager.defaultPlayerSettings)
           },
           Assets:{
             Value:JSON.stringify([])

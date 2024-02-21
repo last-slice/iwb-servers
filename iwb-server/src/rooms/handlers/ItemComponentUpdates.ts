@@ -16,6 +16,7 @@ export let updateItemComponentFunctions:any = {
     [COMPONENT_TYPES.ACTION_COMPONENT]:(asset:any, info:any, room?:IWBRoom)=>{updateActionComponent(asset, info, room)},
     [COMPONENT_TYPES.TRIGGER_AREA_COMPONENT]:(asset:any, info:any, room?:IWBRoom)=>{updateTriggerAreaComponent(asset, info, room)},
     [COMPONENT_TYPES.ANIMATION_COMPONENT]:(asset:any, info:any)=>{updateAnimationComponent(asset, info)},
+    [COMPONENT_TYPES.NPC_COMPONENT]:(asset:any, info:any)=>{updateNPCComponent(asset, info)},
     [SERVER_MESSAGE_TYPES.UPDATE_ASSET_LOCKED]:(asset:any, info:any)=>{updateBuildLock(asset, info)},
     [SERVER_MESSAGE_TYPES.UPDATE_ASSET_BUILD_VIS]:(asset:any, info:any)=>{updateBuildVis(asset, info)},
 }
@@ -281,6 +282,10 @@ function updateActionComponent(asset:any, info:any, room:IWBRoom){
                 case ACTIONS.TELEPORT_PLAYER:
                     action.teleport = info.data.value.action.location
                     break;
+
+                case ACTIONS.EMOTE:
+                    action.emote = info.data.value.action.emote
+                    break;
             }
             asset.actComp.actions.set(generateId(5), action)
             break;
@@ -392,4 +397,32 @@ function updateBuildLock(asset:any, info:any){
 
 function updateBuildVis(asset:any, info:any){
     asset.buildVis = !asset.buildVis
+}
+
+function updateNPCComponent(asset:any, info:any){
+    console.log('updating npc component', info.data.value.hairColor, info.data.value.eyeColor, info.data.value.skinColor);
+    
+    switch(info.type){
+        case 'update':
+            let data = info.data.value
+            asset.npcComp.name = data.name
+            asset.npcComp.dName = data.dName
+            asset.npcComp.bodyShape = data.bodyShape
+            asset.npcComp.wearables = data.wearables
+
+            asset.npcComp.eyeColor.r = data.eyeColor.r
+            asset.npcComp.eyeColor.g = data.eyeColor.g
+            asset.npcComp.eyeColor.b = data.eyeColor.b
+
+            asset.npcComp.hairColor.r = data.hairColor.r
+            asset.npcComp.hairColor.g = data.hairColor.g
+            asset.npcComp.hairColor.b = data.hairColor.b
+
+            asset.npcComp.skinColor.r = data.skinColor.r
+            asset.npcComp.skinColor.g = data.skinColor.g
+            asset.npcComp.skinColor.b = data.skinColor.b
+
+            break;
+    }
+    
 }

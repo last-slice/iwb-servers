@@ -10,6 +10,7 @@ import {
     ImageComponent,
     MaterialComponent,
     NFTComponent,
+    NpcComponent,
     Quaternion,
     TextComponent,
     TriggerActionComponent,
@@ -51,6 +52,7 @@ export class SceneItem extends Schema {
     @type(ActionComponent) actComp: ActionComponent
     @type(TriggerAreaComponent) trigArComp: TriggerAreaComponent
     @type(AnimationComponent) animComp: AnimationComponent
+    @type(NpcComponent) npcComp: NpcComponent
  }
 
 export class TempScene extends Schema {
@@ -304,6 +306,10 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                             case ACTIONS.TELEPORT_PLAYER:
                                 action.teleport = asset.actComp.actions[key].teleport
                                 break;
+
+                            case ACTIONS.EMOTE:
+                                action.emote = asset.actComp.actions[key].emote
+                                break;
                         }
 
                         item.actComp.actions.set(key, action)
@@ -342,7 +348,30 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                             item.animComp.durations.push(duration)
                         })
                     }
-                    console.log('item is', asset.animComp)
+                    break;
+
+                    case COMPONENT_TYPES.NPC_COMPONENT:
+                    console.log('item is npc component', asset)
+                    item.npcComp = new NpcComponent()
+                    if(asset.npcComp){
+                        item.npcComp.name = asset.npcComp.name
+                        item.npcComp.dName = asset.npcComp.dName
+                        item.npcComp.bodyShape = asset.npcComp.bodyShape
+                        item.npcComp.type = asset.npcComp.type
+
+                        // item.npcComp.wearables = asset.wearables
+                        item.npcComp.eyeColor.r = asset.npcComp.eyeColor.r
+                        item.npcComp.eyeColor.g = asset.npcComp.eyeColor.g
+                        item.npcComp.eyeColor.b = asset.npcComp.eyeColor.b
+            
+                        item.npcComp.hairColor.r = asset.npcComp.hairColor.r
+                        item.npcComp.hairColor.g = asset.npcComp.hairColor.g
+                        item.npcComp.hairColor.b = asset.npcComp.hairColor.b
+            
+                        item.npcComp.skinColor.r = asset.npcComp.skinColor.r
+                        item.npcComp.skinColor.g = asset.npcComp.skinColor.g
+                        item.npcComp.skinColor.b = asset.npcComp.skinColor.b
+                    }
                     break;
         }
     })

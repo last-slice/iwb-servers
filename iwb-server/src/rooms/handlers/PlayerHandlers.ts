@@ -29,5 +29,21 @@ export class RoomPlayerHandler {
                 iwbManager.initWorld(info.world)
             }
         })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.FIRST_TIME, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.FIRST_TIME + " message", info)
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player){
+                player.settings.firstTime = true
+            }
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.PLAYER_SETTINGS, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.PLAYER_SETTINGS + " message", info)
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player){
+                player.settings[info.key] = info.value
+            }
+        })
     }
 }
