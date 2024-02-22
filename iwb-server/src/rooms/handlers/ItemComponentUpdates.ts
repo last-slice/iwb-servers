@@ -401,14 +401,19 @@ function updateBuildVis(asset:any, info:any){
 
 function updateNPCComponent(asset:any, info:any){
     console.log('updating npc component', info.data.value.hairColor, info.data.value.eyeColor, info.data.value.skinColor);
+    let data = info.data.value
     
     switch(info.type){
         case 'update':
-            let data = info.data.value
             asset.npcComp.name = data.name
             asset.npcComp.dName = data.dName
             asset.npcComp.bodyShape = data.bodyShape
-            asset.npcComp.wearables = data.wearables
+
+            console.log('wearables are ', data.wearables)
+            asset.npcComp.wearables.length = 0
+            data.wearables.forEach((wearable:string)=>{
+                asset.npcComp.wearables.push(wearable)
+            })
 
             asset.npcComp.eyeColor.r = data.eyeColor.r
             asset.npcComp.eyeColor.g = data.eyeColor.g
@@ -421,7 +426,14 @@ function updateNPCComponent(asset:any, info:any){
             asset.npcComp.skinColor.r = data.skinColor.r
             asset.npcComp.skinColor.g = data.skinColor.g
             asset.npcComp.skinColor.b = data.skinColor.b
+            break;
 
+        case 'wDelete':
+            asset.npcComp.wearables.splice(data, 1)
+            break;
+
+        case 'wAdd':
+            asset.npcComp.wearables.push(data)
             break;
     }
     

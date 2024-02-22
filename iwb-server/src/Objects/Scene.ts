@@ -358,8 +358,12 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                         item.npcComp.dName = asset.npcComp.dName
                         item.npcComp.bodyShape = asset.npcComp.bodyShape
                         item.npcComp.type = asset.npcComp.type
+                        item.npcComp.wearables.length = 0
 
-                        // item.npcComp.wearables = asset.wearables
+                        asset.npcComp.wearables.forEach((wearable:string)=>{
+                            item.npcComp.wearables.push(wearable)
+                        })
+
                         item.npcComp.eyeColor.r = asset.npcComp.eyeColor.r
                         item.npcComp.eyeColor.g = asset.npcComp.eyeColor.g
                         item.npcComp.eyeColor.b = asset.npcComp.eyeColor.b
