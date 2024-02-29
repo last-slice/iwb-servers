@@ -286,6 +286,13 @@ function updateActionComponent(asset:any, info:any, room:IWBRoom){
                 case ACTIONS.EMOTE:
                     action.emote = info.data.value.action.emote
                     break;
+
+                case ACTIONS.SET_VISIBILITY:
+                    console.log('visibility action', info.data.value.action)
+                    action.vis = info.data.value.action.vis === 0 ? true : false
+                    action.vMask = info.data.value.action.vMask
+                    action.iMask = info.data.value.action.iMask
+                    break;
             }
             asset.actComp.actions.set(generateId(5), action)
             break;

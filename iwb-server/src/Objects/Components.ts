@@ -93,6 +93,9 @@ export class Actions extends Schema {
     @type("string") teleport: string
     @type("boolean") animLoop:boolean
     @type("string") emote: string
+    @type("boolean") vis:boolean
+    @type("number") vMask:number
+    @type("number") iMask:number
 }
 
 export class ActionComponent extends Schema {

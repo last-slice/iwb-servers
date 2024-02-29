@@ -211,7 +211,7 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                 break;
 
             case COMPONENT_TYPES.AUDIO_COMPONENT:
-                console.log('audio component is', asset)
+                // console.log('audio component is', asset)
                 item.audComp = new AudioComponent()
                 item.audComp.url = asset.hasOwnProperty("audComp") ? (asset.id !== "e6991f31-4b1e-4c17-82c2-2e484f53a124" ? "assets/" + asset.id + ".mp3" : asset.audComp.url) :""
                 item.audComp.volume = asset.audComp?.volume || 0.5
@@ -310,6 +310,12 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                             case ACTIONS.EMOTE:
                                 action.emote = asset.actComp.actions[key].emote
                                 break;
+
+                            case ACTIONS.SET_VISIBILITY:
+                                action.vis = asset.actComp.actions[key].vis
+                                action.vMask = asset.actComp.actions[key].vMask
+                                action.iMask = asset.actComp.actions[key].iMask
+                                break;
                         }
 
                         item.actComp.actions.set(key, action)
@@ -351,7 +357,7 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                     break;
 
                     case COMPONENT_TYPES.NPC_COMPONENT:
-                    console.log('item is npc component', asset)
+                    // console.log('item is npc component', asset)
                     item.npcComp = new NpcComponent()
                     if(asset.npcComp){
                         item.npcComp.name = asset.npcComp.name

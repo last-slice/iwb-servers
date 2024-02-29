@@ -326,6 +326,12 @@ export class RoomSceneItemHandler {
                             pc = item ? item.pc : undefined
                             si = item ? item.si : undefined
                         }
+
+                        //delete actions from triggers
+                        if(sceneItem.actComp){
+                            console.log('need to delete actions for item across all triggers')
+                            this.deleteActionsOnTriggers(scene, sceneItem)
+                        }
     
                         scene.pc -= pc ? pc : 0
                         scene.si -= si ? si : 0
@@ -338,9 +344,36 @@ export class RoomSceneItemHandler {
             }
         }
         catch(e){
-            console.log('error deleting scene item', info)
+            console.log('error deleting scene item', info, e)
         }
 
+    }
+
+    deleteActionsOnTriggers(scene:Scene, sceneItem:SceneItem){
+        let triggerAssets:SceneItem[] = scene.ass.filter((asset:any)=> asset.trigComp)
+
+        triggerAssets.forEach((asset:SceneItem)=>{
+            asset.trigComp.triggers.forEach((trigger:any)=>{
+                trigger.actions = trigger.actions.filter((action:any)=> !sceneItem.actComp.actions.has(action.id))
+                console.log('actions remaining =', trigger.actions.length)
+            })
+        })
+
+        triggerAssets = scene.ass.filter((asset:any)=> asset.trigArComp)
+
+        triggerAssets.forEach((asset:SceneItem)=>{
+            asset.trigArComp.eActions = asset.trigArComp.eActions.filter((action:any)=> !sceneItem.actComp.actions.has(action.id))
+            asset.trigArComp.lActions = asset.trigArComp.lActions.filter((action:any)=> !sceneItem.actComp.actions.has(action.id))
+        })
+
+        
+        // triggerAssets = scene.ass.filter((asset:any)=> asset.trigArComp)
+        // triggerAssets.trigArComp.triggers.forEach((trigger:any)=>{
+        //     let actions = trigger.actions.filter((action:any)=> !sceneItem.actComp.actions.has(action.id))
+        //     console.log('actions remaining =', actions.length)
+        // })
+
+        sceneItem.actComp.actions.clear()
     }
 
     transformAsset(scene:Scene, data:any){
