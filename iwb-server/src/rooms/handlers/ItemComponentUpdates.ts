@@ -274,7 +274,6 @@ function updateActionComponent(asset:any, info:any, room:IWBRoom){
                 break;
 
                 case ACTIONS.PLAY_ANIMATION:
-                    console.log('adding play animation action', info.data.value.action.animName)
                     action.animName = info.data.value.action.animName
                     action.animLoop = info.data.value.action.animLoop
                     break;
@@ -288,10 +287,17 @@ function updateActionComponent(asset:any, info:any, room:IWBRoom){
                     break;
 
                 case ACTIONS.SET_VISIBILITY:
-                    console.log('visibility action', info.data.value.action)
                     action.vis = info.data.value.action.vis === 0 ? true : false
                     action.vMask = info.data.value.action.vMask
                     action.iMask = info.data.value.action.iMask
+                    break;
+
+                case ACTIONS.SHOW_TEXT:
+                    console.log('show text action', info.data.value.action)
+                    action.showText = info.data.value.action.text.text
+                    action.showSize = info.data.value.action.text.size
+                    action.showTimer = info.data.value.action.text.timer
+                    action.showPos = info.data.value.action.text.pos
                     break;
             }
             asset.actComp.actions.set(generateId(5), action)

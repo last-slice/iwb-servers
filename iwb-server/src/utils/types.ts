@@ -165,6 +165,8 @@ export enum ACTIONS {
     TELEPORT_PLAYER = 'telport',
     EMOTE = 'emote',
     OPEN_LINK = 'open_link',
+    SHOW_TEXT = 'show_text',
+    HIDE_TEXT = 'hide_text',
     SHOW_TOAST = 'show_toast',
     HIDE_TOAST = 'hide_toast',
     START_DELAY = 'start_delay',

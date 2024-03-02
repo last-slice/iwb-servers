@@ -316,6 +316,13 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                                 action.vMask = asset.actComp.actions[key].vMask
                                 action.iMask = asset.actComp.actions[key].iMask
                                 break;
+
+                            case ACTIONS.SHOW_TEXT:
+                                action.showText = asset.actComp.actions[key].showText
+                                action.showSize = asset.actComp.actions[key].showSize
+                                action.showTimer = asset.actComp.actions[key].showTimer
+                                action.showPos = asset.actComp.actions[key].showPos
+                                break;
                         }
 
                         item.actComp.actions.set(key, action)

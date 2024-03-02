@@ -96,6 +96,10 @@ export class Actions extends Schema {
     @type("boolean") vis:boolean
     @type("number") vMask:number
     @type("number") iMask:number
+    @type("string") showText: string
+    @type("number") showTimer: string
+    @type("number") showSize: string
+    @type("string") showPos: string
 }
 
 export class ActionComponent extends Schema {
