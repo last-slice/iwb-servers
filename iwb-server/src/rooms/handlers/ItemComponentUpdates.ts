@@ -244,6 +244,15 @@ function updateTriggerComponent(asset:any, info:any, room:IWBRoom){
             }
             break;
 
+         case 'distance':
+            if(scene){
+                let trigger = asset.trigComp.triggers.find((t:any)=>t.type === info.data.value.type)
+                if(trigger){
+                    trigger.distance = info.data.value.distance
+                }
+            }
+            break;
+
         case 'remove':
             if(asset.trigComp){
                 asset.trigComp.triggers.splice(info.data.value, 1)
@@ -258,6 +267,8 @@ function updateActionComponent(asset:any, info:any, room:IWBRoom){
 
     switch(info.action){
         case 'add':
+            console.log('show action', info.data.value.action)
+
             let action = new Actions()
             action.aid = info.data.value.action.aid
             action.name = info.data.value.name
@@ -293,11 +304,18 @@ function updateActionComponent(asset:any, info:any, room:IWBRoom){
                     break;
 
                 case ACTIONS.SHOW_TEXT:
-                    console.log('show text action', info.data.value.action)
                     action.showText = info.data.value.action.text.text
                     action.showSize = info.data.value.action.text.size
                     action.showTimer = info.data.value.action.text.timer
                     action.showPos = info.data.value.action.text.pos
+                    break;
+
+                case ACTIONS.HIDE_TEXT:
+                    break;
+
+                case ACTIONS.START_DELAY:
+                    action.startDTimer = info.data.value.action.delay.timer
+                    action.startDId = info.data.value.action.delay.id
                     break;
             }
             asset.actComp.actions.set(generateId(5), action)

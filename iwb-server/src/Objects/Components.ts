@@ -98,8 +98,10 @@ export class Actions extends Schema {
     @type("number") iMask:number
     @type("string") showText: string
     @type("number") showTimer: string
-    @type("number") showSize: string
+    @type("number") showSize: number
     @type("string") showPos: string
+    @type("number") startDTimer: number
+    @type("string") startDId: string
 }
 
 export class ActionComponent extends Schema {
@@ -116,6 +118,7 @@ export class Triggers extends Schema {
     @type("string") type: string = "on_click"
     @type("string") hoverText: string = "Click here"
     @type("number") pointer:number = 0
+    @type("number") distance:number = 3
     @type("boolean") showHover: boolean = true
 }
 

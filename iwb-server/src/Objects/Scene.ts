@@ -269,6 +269,7 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                         trigger.pointer = data.pointer ? data.pointer : 0
                         trigger.showHover = data.showHover ? data.showHover : true
                         trigger.hoverText = data.hoverText ? data.hoverText : "Click here"
+                        trigger.distance = data.distance? data.distance : 3
 
                         data.actions.forEach((action:any)=>{
                             trigger.actions.push(new TriggerActionComponent(action))
@@ -322,6 +323,14 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                                 action.showSize = asset.actComp.actions[key].showSize
                                 action.showTimer = asset.actComp.actions[key].showTimer
                                 action.showPos = asset.actComp.actions[key].showPos
+                                break;
+
+                            case ACTIONS.HIDE_TEXT:
+                                break;
+
+                            case ACTIONS.START_DELAY:
+                                action.startDId = asset.actComp.actions[key].startDId
+                                action.startDTimer = asset.actComp.actions[key].startDTimer
                                 break;
                         }
 
