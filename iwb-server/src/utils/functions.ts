@@ -9,10 +9,10 @@ export function initIWBDeploy(){
       auth:process.env.DEPLOYMENT_AUTH
   })
   .then(function (response:any) {
-  console.log(response);
+  // console.log(response);
   })
   .catch(function (error:any) {
-  console.log(error);
+  console.log('init iwb deployument error', error);
   })
 }
 
@@ -23,7 +23,7 @@ export function initDeployServerDeploy(){
 
       // Listen for stdout data events
       childProcess.stdout.on('data', (data:any) => {
-          console.log(`stdout: ${data}`);
+         // console.log(`stdout: ${data}`);
       });
           
       // Listen for stderr data events
@@ -34,16 +34,16 @@ export function initDeployServerDeploy(){
               console.log('we have an error with deployment')
           }
           else if(data === "Content uploaded successfully"){
-              console.log('we finished deploying')
+              // console.log('we finished deploying')
           }
       });
 
       // You can also listen for the child process to exit
       childProcess.on('exit', (code:any, signal:any) => {
           if (code === 0) {
-              console.log('Child process exited successfully.');
+            //   console.log('Child process exited successfully.');
             } else {
-              console.error(`Child process exited with code ${code}.`);
+            //   console.error(`Child process exited with code ${code}.`);
             }        
       });
 

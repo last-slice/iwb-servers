@@ -8,6 +8,10 @@ import { Scene } from "./Scene"
 import { generateId } from "colyseus"
 import { DEBUG } from "../utils/config"
 import { getRandomIntInclusive } from "../utils/functions"
+import { pushPlayfabEvent } from "./PlayfabEvents"
+
+const fs = require('fs');
+
 
 export class IWBManager{
     
@@ -128,6 +132,7 @@ export class IWBManager{
             let res = await getTitleData({Keys:custom})
             for(let key in res.Data){
                 this.customKeys[key] = JSON.parse(res.Data[key])
+                console.log('key is', key, this.customKeys[key])
             }
 
             let tutorialsConfig = JSON.parse(response.Data['Tutorials'])
@@ -600,6 +605,46 @@ export class IWBManager{
             res.status(200).send({valid: true})
         }else{
             res.status(200).send({valid: false})
+        }
+    }
+
+    isOwner(user:string, world:string){
+        return this.worlds.find((w)=> w.ens === world && w.owner === user)
+    }
+
+    // async deleteUGCAsset(id:string, type){
+    //     try{
+    //         fs.unlinkSync(pathToFile);
+    //         console.log('File deleted successfully');
+    //     }
+    //     catch(e){
+    //         console.log('error deleting ugc asset from world', id)
+    //     }
+    // }
+
+    async deleteUGCAsset(player:Player, ugcAsset:any, room:IWBRoom){
+        console.log('ugc asset to delete is', ugcAsset)
+        let path = "" + player.address + "/" + ugcAsset.id
+        switch(ugcAsset.ty){
+            case '3D':
+                path += ".glb"
+                break;
+
+            case 'Audio':
+                path += ".mp3"
+                break;
+                
+        }
+
+        try{
+            room.state.realmAssets.delete(ugcAsset.id)
+
+            fs.unlinkSync("" + (DEBUG ? process.env.DEV_DOWNLOAD_UGC_DIRECTORY : process.env.PROD_DOWNLOAD_UGC_DIRECTORY) + path);
+            await itemManager.uploadFile(player.address, "catalogs.json", [...room.state.realmAssets.values()])
+            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET, {id:ugcAsset.id})
+        }
+        catch(e){
+            console.log('error in deleting ugc asset from server', ugcAsset, e)
         }
     }
 }

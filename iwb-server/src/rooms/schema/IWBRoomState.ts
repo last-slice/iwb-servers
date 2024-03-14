@@ -7,6 +7,7 @@ import { RoomSceneManager } from "../handlers/SceneManager";
 export class IWBRoomState extends Schema {
 
   @type("string") world:string
+  @type("string") owner:string
   @type("number") cv:number = 0 
   messageHandler:RoomMessageHandler
   sceneManager:RoomSceneManager

@@ -5,6 +5,7 @@ import { IWBRoom } from "../IWBRoom"
 import { Scene, SceneItem } from "../../Objects/Scene";
 import { DEBUG } from "../../utils/config";
 import { generateId } from "colyseus";
+import { pushPlayfabEvent } from "../../Objects/PlayfabEvents";
 
 let deploymentServer:any = DEBUG ? process.env.DEPLOYMENT_SERVER_DEV : process.env.DEPLOYMENT_SERVER_PROD
 
@@ -15,7 +16,7 @@ export class RoomSceneHandler {
         this.room = room
 
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD + " message", info)
+            // (SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){//} && (player.mode === SCENE_MODES.BUILD_MODE)){
@@ -35,7 +36,13 @@ export class RoomSceneHandler {
                             headers:{"Content-type": "application/json"},
                             body: JSON.stringify({scene:scene})
                         })
-                        console.log('deployment ping', await res.json())
+                       //  console.log('deployment ping', await res.json())
+
+                       pushPlayfabEvent(
+                        SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD, 
+                        player, 
+                        [{scene:scene.n}]
+                        )
                     }
                     catch(e){
                         console.log('error pinging download server for zip file', player.address, e)
@@ -46,7 +53,7 @@ export class RoomSceneHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
@@ -58,7 +65,7 @@ export class RoomSceneHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SELECT_PARCEL, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SELECT_PARCEL + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.SELECT_PARCEL + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && (player.mode === SCENE_MODES.CREATE_SCENE_MODE || info.current)){
@@ -77,11 +84,11 @@ export class RoomSceneHandler {
                     if(!this.isOccupied(info.parcel)){
                         if(info.current){}
                         if(this.hasTemporaryParcel(info.parcel)){
-                            console.log('player has temporary parcel', info.parcel)
+                         //    console.log('player has temporary parcel', info.parcel)
                             this.removeTemporaryParcel(info.parcel)
                             }else{
                             if(!this.hasTemporaryParcel(info.parcel)){
-                                console.log('scene doesnt have temp parcel')
+                               //  console.log('scene doesnt have temp parcel')
                                 this.addTempParcel(info.parcel) 
                             }
                         }
@@ -91,7 +98,7 @@ export class RoomSceneHandler {
         })   
     
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_SAVE_NEW, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_SAVE_NEW + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.SCENE_SAVE_NEW + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
 
@@ -113,14 +120,20 @@ export class RoomSceneHandler {
 
                     player.updatePlayMode(SCENE_MODES.BUILD_MODE)
                     client.send(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED, {mode:player.mode})
+
+                    pushPlayfabEvent(
+                        SERVER_MESSAGE_TYPES.SCENE_SAVE_NEW, 
+                        player, 
+                        [{scene: scene.n, world:world.ens}]
+                    )
                 }
             }else{
-                console.log('player is not in create scene mode')
+              //   console.log('player is not in create scene mode')
             }
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADD_BP, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_ADD_BP + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.SCENE_ADD_BP + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
@@ -133,13 +146,18 @@ export class RoomSceneHandler {
                         if(otherPlayer){
                             otherPlayer.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_ADD_BP, info)
                         }
+                        pushPlayfabEvent(
+                            SERVER_MESSAGE_TYPES.SCENE_ADD_BP, 
+                            player, 
+                            [{scene: scene.n, world:scene.w, permissions: info.user, owner:client.userData.userId}]
+                        )
                     }
                 }
             }
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE_BP, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_BP + " message", info)
+           //  console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_BP + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
@@ -154,6 +172,11 @@ export class RoomSceneHandler {
                             if(otherPlayer){
                                 otherPlayer.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE_BP, info)
                             }
+                            pushPlayfabEvent(
+                                SERVER_MESSAGE_TYPES.SCENE_DELETE_BP, 
+                                player, 
+                                [{scene: scene.n, world:scene.w, permissions: info.user, owner:client.userData.userId}]
+                            )
                         }
                     }
                 }
@@ -161,7 +184,7 @@ export class RoomSceneHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE + " message", info)
+           //  console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
@@ -180,13 +203,19 @@ export class RoomSceneHandler {
                                 player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE, info)
                             }
                         })
+
+                        pushPlayfabEvent(
+                            SERVER_MESSAGE_TYPES.SCENE_DELETE, 
+                            player, 
+                            [{scene: scene.n, world:scene.w}]
+                        )
                     }
                 }
             }
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_CLEAR_ASSETS, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_CLEAR_ASSETS + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.SCENE_CLEAR_ASSETS + " message", info)
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
                 let scene = this.room.state.scenes.get(info.sceneId)
@@ -200,6 +229,13 @@ export class RoomSceneHandler {
                         scene.ass.clear()
                         scene.si = 0
                         scene.pc = 0
+
+                        pushPlayfabEvent(
+                            SERVER_MESSAGE_TYPES.SCENE_CLEAR_ASSETS, 
+                            player, 
+                            [{scene: scene.n, world:scene.w}]
+                        )
+
                         player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "Your scene assets were removed!")
                     }
                 }
@@ -207,7 +243,7 @@ export class RoomSceneHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_SAVE_EDITS, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_SAVE_EDITS + " message", info)
+           // console.log(SERVER_MESSAGE_TYPES.SCENE_SAVE_EDITS + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
@@ -226,6 +262,10 @@ export class RoomSceneHandler {
                         scene.priv !== info.priv ? privateView = true : null
                         scene.priv = info.priv
 
+                        let limits = false
+                        scene.lim !== info.lim ? limits = true : null
+                        scene.lim = info.lim
+
                         let worldConfig = iwbManager.worlds.find((w)=> w.ens === this.room.state.world)
                         if(worldConfig){
                             worldConfig.updated = Math.floor(Date.now()/1000)
@@ -238,12 +278,12 @@ export class RoomSceneHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_DEPLOY + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.SCENE_DEPLOY + " message", info)
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
                 let scene:Scene = this.room.state.scenes.get(info.sceneId)
                 if(scene && scene.o === player.address){
-                    console.log('owner is requesting deployment')
+                  //   console.log('owner is requesting deployment')
 
                     try{
                         let res = await fetch(deploymentServer + "scene/deploy", {
@@ -262,41 +302,92 @@ export class RoomSceneHandler {
                         })
                         let json = await res.json()
                         player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:json.valid, msg:json.valid ? "Your deployment is pending!...Please wait for a link to sign the deployment. This could take a couple minutes." : "Error with your deployment request. Please try again."})
+
+                        pushPlayfabEvent(
+                            SERVER_MESSAGE_TYPES.SCENE_DEPLOY, 
+                            player, 
+                            [{scene:scene, world: scene.w}]
+                        )
                     }
                     catch(e){
-                        console.log('error pinging deploy server', player.address, e)
+                       //  console.log('error pinging deploy server', player.address, e)
                         player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:false, msg:"Error pinging the deploy server"})
                     }
                 }else{
-                    console.log('someone else requesting deployment access')
+                   //  console.log('someone else requesting deployment access')
                 }
             }
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN + " message", info)
             let player:Player = room.state.players.get(client.userData.userId)
             let scene: Scene = room.state.scenes.get(info.sceneId)
             if(player && scene && scene.o === player.address){
                 scene.sp.push("" + info.sp.x.toFixed(0) + "," + info.sp.y.toFixed(0) + "," + info.sp.z.toFixed(0))
                 scene.cp.push("" + info.cp.x.toFixed(0) + "," + info.cp.y.toFixed(0) + "," + info.cp.z.toFixed(0))
+
+                pushPlayfabEvent(
+                    SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN, 
+                    player, 
+                    [{scene: scene.n, world:scene.w}]
+                )
             }
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE_SPAWN, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_SPAWN + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_SPAWN + " message", info)
             let player:Player = room.state.players.get(client.userData.userId)
             let scene: Scene = room.state.scenes.get(info.sceneId)
             if(player && scene && scene.o === player.address){
                 scene.sp.splice(info.index, 1)
                 scene.cp.splice(info.index, 1)
+
+                pushPlayfabEvent(
+                    SERVER_MESSAGE_TYPES.SCENE_DELETE_SPAWN, 
+                    player, 
+                    [{scene: scene.n, world:scene.w}]
+                )
             }
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SUBMIT_FEEDBACK, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SUBMIT_FEEDBACK + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.SUBMIT_FEEDBACK + " message", info)
+            let player:Player = room.state.players.get(client.userData.userId)            
             iwbManager.feedback.push(info)
+
+            pushPlayfabEvent(
+                SERVER_MESSAGE_TYPES.SUBMIT_FEEDBACK, 
+                player, 
+                [{feedback:info}]
+            )
         })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.WORLD_TRAVEL, async(client, info)=>{
+            // console.log(SERVER_MESSAGE_TYPES.WORLD_TRAVEL + " message", info)
+            let player:Player = room.state.players.get(client.userData.userId)
+            pushPlayfabEvent(
+                SERVER_MESSAGE_TYPES.WORLD_TRAVEL, 
+                player, 
+                [info]
+            )
+        })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET, async(client, info)=>{
+             console.log(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET + " message", info)
+
+            let player:Player = room.state.players.get(client.userData.userId)
+            if(player && iwbManager.isOwner(player.address, room.state.world)){
+                let ugcAsset = room.state.realmAssets.get(info.id)
+                if(ugcAsset){
+                    iwbManager.deleteUGCAsset(player, ugcAsset, room)
+                }else{
+                    console.log('ugc asset does not exist')
+                }
+            }else{
+                console.log('not owner')
+            }
+        }) 
     }
 
     removeParcel(scene:Scene, parcel: any) {

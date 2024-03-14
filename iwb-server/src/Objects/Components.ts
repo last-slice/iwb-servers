@@ -1,6 +1,7 @@
 import {ArraySchema, Schema, type, MapSchema} from "@colyseus/schema";
 import {COMPONENT_TYPES} from "../utils/types";
 import { SceneItem } from "./Scene";
+import { generateId } from "colyseus";
 
 export class Color4 extends Schema {
     @type("number") r: number = 1
@@ -102,6 +103,9 @@ export class Actions extends Schema {
     @type("string") showPos: string
     @type("number") startDTimer: number
     @type("string") startDId: string
+    @type("number") cVMask:number
+    @type("number") cIMask:number
+    @type("string") dialID:string
 }
 
 export class ActionComponent extends Schema {
@@ -146,11 +150,28 @@ export class NpcComponent extends Schema {
     @type("string") name:string = ""
     @type("number") bodyShape:number = 0
     @type("number") type:number = 0
+    @type("number") change:number = 0
     @type("boolean") dName: boolean = true
     @type(['string']) wearables = new ArraySchema<string>()
     @type(Color4) eyeColor = new Color4(0,0,0,1)
     @type(Color4) skinColor = new Color4(215,170,105,1)
     @type(Color4) hairColor = new Color4(0,0,0,1)
+}
+
+export class DialogInfoComponent extends Schema {
+    @type("string") text: string
+    //audio
+    //image
+    //buttons
+    //triggerable actions
+}
+
+export class DialogComponent extends Schema {
+    @type("string") name:string = "Dialog"
+    @type("string") id:string
+    @type("number") i:number = 0
+    @type("number") type:number = 0
+    @type([DialogInfoComponent]) dialogs = new ArraySchema<DialogInfoComponent>()
 }
 
 
@@ -313,5 +334,23 @@ export function addNPCComponent(item:SceneItem, npcComp:NpcComponent){
         item.npcComp.eyeColor = npcComp.eyeColor
         item.npcComp.hairColor = npcComp.hairColor
         item.npcComp.skinColor = npcComp.skinColor
+    }
+}
+
+export function addDialogComponent(item:SceneItem, dialComp:DialogComponent){
+    console.log('adding npc component')
+    item.dialComp = new DialogComponent()
+    if(dialComp){
+        item.dialComp.id = dialComp.id
+        // item.npcComp.name = npcComp.name
+        // item.npcComp.dName = npcComp.dName
+        // item.npcComp.bodyShape = npcComp.bodyShape
+        // item.npcComp.wearables = npcComp.wearables
+
+        // item.npcComp.eyeColor = npcComp.eyeColor
+        // item.npcComp.hairColor = npcComp.hairColor
+        // item.npcComp.skinColor = npcComp.skinColor
+    }else{
+        item.dialComp.id = generateId(5)
     }
 }

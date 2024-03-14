@@ -34,8 +34,8 @@ export class RoomSceneManager {
 
         this.room.state.cv = iwbManager.worlds.find((w:any)=> w.ens === this.room.state.world).cv
 
-        console.log('room cv is', this.room.state.cv)
-        console.log('world cv is', iwbManager.worlds.find((w:any)=> w.ens === this.room.state.world).cv)
+       //  console.log('room cv is', this.room.state.cv)
+        // console.log('world cv is', iwbManager.worlds.find((w:any)=> w.ens === this.room.state.world).cv)
 
         this.initServerScenes()
         this.initServerAssets()
@@ -60,7 +60,7 @@ export class RoomSceneManager {
         
                         iwbManager.fetchRealmData(realmData)
                         .then((realmScenes)=>{
-                            console.log('realm scenes are ', realmScenes)
+                           //  console.log('realm scenes are ', realmScenes)
                             iwbManager.fetchRealmScenes(realmScenes)
                             .then((sceneData)=>{
     

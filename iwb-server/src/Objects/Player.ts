@@ -14,6 +14,7 @@ export class SelectedAsset extends Schema {
   @type("string") assetId: string
   @type("boolean") catalogAsset:boolean = false
   @type(SceneItem) componentData:SceneItem
+  @type("boolean") grabbed:boolean
 
   constructor(info:any){
     super()
@@ -21,6 +22,7 @@ export class SelectedAsset extends Schema {
     this.catalogId = info.catalogId
     this.assetId = info.assetId
     this.catalogAsset = info.catalogAsset
+    this.grabbed = info.grabbed ? info.grabbed : undefined
   }
 }
 
@@ -63,7 +65,7 @@ export class Player extends Schema {
 
     this.mode = SCENE_MODES.PLAYMODE
 
-    console.log('playfab settings', this.playFabData)
+ //    console.log('playfab settings', this.playFabData)
     this.setSettings(this.playFabData.InfoResultPayload.UserData)
   }
 
@@ -85,10 +87,10 @@ export class Player extends Schema {
   }
 
   setStats(stats:any[]){
-    console.log('player stats are ', stats)
+    // console.log('player stats are ', stats)
     try{
      if(stats.length == 0){
-       console.log('need to initialize stats')
+      //  console.log('need to initialize stats')
        // updatePlayerStatistic({
        //   PlayFabId: this.playFabData.PlayFabId,
        //   Statistics:initManager.pDefaultStats
@@ -120,7 +122,7 @@ export class Player extends Schema {
   }
 
   async uploadAsset(asset:any, notify?:boolean){
-    console.log('asset to save is', asset)
+   //  console.log('asset to save is', asset)
 
     //to do
     //check if already upload and wait before uploading another to the file
@@ -177,7 +179,7 @@ export class Player extends Schema {
   }
 
   async saveToDB(){
-    console.log('saving player updates to db', this.dclData.userId)
+    // console.log('saving player updates to db', this.dclData.userId)
     await this.saveSetttingsDB()
     // let stats:any = []
     // this.stats.forEach((stat,key)=>{
@@ -221,15 +223,15 @@ export class Player extends Schema {
   }
 
   async saveSetttingsDB(){
-    console.log('saving player settings to db', this.dclData.userId)
-    console.log('server settings are ', this.settings)
+   //  console.log('saving player settings to db', this.dclData.userId)
+    // console.log('server settings are ', this.settings)
     let res = await updatePlayerData({
       PlayFabId: this.playFabData.PlayFabId,
       Data:{
         'Settings':JSON.stringify(this.settings)
       }
     })
-    console.log('update data res is', res)
+    // console.log('update data res is', res)
   }
 
   async cancelPendingDeployment(){
@@ -239,7 +241,7 @@ export class Player extends Schema {
         //   'Authorization': `Bearer ${value2}`,
         // }},
         );
-        console.log('validation data', result.data)
+        // console.log('validation data', result.data)
       }
       catch(e){
         console.log('error validating deployment')
@@ -247,9 +249,9 @@ export class Player extends Schema {
   }
 
   async setSettings(server:any){
-    console.log('setting player settings')
+    // console.log('setting player settings')
     if(!server.hasOwnProperty("Settings")){
-      console.log('player doesnt have settings, need to initiliaze')
+     //  console.log('player doesnt have settings, need to initiliaze')
       this.settings = iwbManager.defaultPlayerSettings
       await this.saveSetttingsDB()
     }
@@ -257,7 +259,7 @@ export class Player extends Schema {
         let settings = JSON.parse(server.Settings.Value)
         this.settings = settings
 
-        console.log('player settings are ', this.settings)
+       //  console.log('player settings are ', this.settings)
     }
 
     this.client.send(SERVER_MESSAGE_TYPES.PLAYER_SETTINGS, {action:"load", value:this.settings})

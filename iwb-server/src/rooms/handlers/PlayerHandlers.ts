@@ -10,7 +10,7 @@ export class RoomPlayerHandler {
 
     constructor(room:IWBRoom) {
         room.onMessage(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED + " message", info)
+           //  console.log(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
@@ -21,17 +21,17 @@ export class RoomPlayerHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.INIT_WORLD, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.INIT_WORLD + " message", info)
+          //   console.log(SERVER_MESSAGE_TYPES.INIT_WORLD + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
-                console.log('need to initiate deployment to world')
+               //  console.log('need to initiate deployment to world')
                 iwbManager.initWorld(info.world)
             }
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.FIRST_TIME, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.FIRST_TIME + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.FIRST_TIME + " message", info)
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
                 player.settings.firstTime = true
@@ -39,7 +39,7 @@ export class RoomPlayerHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.PLAYER_SETTINGS, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.PLAYER_SETTINGS + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.PLAYER_SETTINGS + " message", info)
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
                 player.settings[info.key] = info.value

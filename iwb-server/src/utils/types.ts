@@ -36,6 +36,7 @@ export enum SERVER_MESSAGE_TYPES {
     PLAYER_ASSET_PENDING = 'player_asset_pending',
     UPDATE_ASSET_LOCKED = 'update_asset_locked',
     UPDATE_ASSET_BUILD_VIS = 'update_asset_build_visibility',
+    DELETE_UGC_ASSET = 'delete_ugc_asset',
 
     // Scene
     SCENE_SAVE_NEW = "scene_save_new",
@@ -57,6 +58,7 @@ export enum SERVER_MESSAGE_TYPES {
     SCENE_ADDED_SPAWN = "scene_added_spawn",
     SCENE_DELETE_SPAWN = "scene_delete_spawn",
     SCENE_CLEAR_ASSETS = 'scene_clear_assets',
+    SCENE_COPY_ITEM = 'scene_copy_item',
 
     //World
     INIT_WORLD = "init_world",
@@ -66,6 +68,7 @@ export enum SERVER_MESSAGE_TYPES {
     ADDED_TUTORIAL = 'added_tutorial',
     REMOVED_TUTORIAL = 'removed_tutorial',
     UPDATED_TUTORIAL_CID = 'updated_tutorial_cid', 
+    WORLD_TRAVEL = 'world_travel',
 
     CUSTOM = "custom"
 }
@@ -109,7 +112,8 @@ export enum COMPONENT_TYPES {
     TRIGGER_AREA_COMPONENT = "Trigger Area",
     CLICK_AREA_COMPONENT = "Click Area",
     ANIMATION_COMPONENT = "Animation",
-    NPC_COMPONENT = 'NPC'
+    NPC_COMPONENT = 'NPC',
+    DIALOG_COMPONENT = 'Dialog'
 }
 
 export enum COLLISION_LAYERS {
@@ -179,4 +183,5 @@ export enum ACTIONS {
     HIDE_IMAGE = 'hide_image',
     PLAY_ANIMATION = 'play_animation',
     STOP_ANIMATION = 'stop_animation',
+    SHOW_DIALOG = 'show_dialog'
 }

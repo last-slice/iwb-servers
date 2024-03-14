@@ -25,6 +25,20 @@ async function checkEventQueue(){
     }
 }
 
-export function pushPlayfabEvent(event:any){
+export function pushPlayfabEvent(type:any, player:any, data:any){
+    let event:any = {
+        EventName: type,
+        PlayFabId: player.playFabData.PlayFabId,
+        body:{
+            player: player.dclData.displayName,
+            wallet: player.dclData.userId,
+        }
+    }
+
+    for(let key in data[0]){
+        event.body[key] = data[0][key]
+    }
+
+    console.log('new event to post is', event)
     eventQueue.push(event)
 }

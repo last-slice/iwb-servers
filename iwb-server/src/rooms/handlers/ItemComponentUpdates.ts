@@ -1,5 +1,5 @@
 import { generateId } from "colyseus";
-import { ActionComponent, Actions, Color4, TriggerActionComponent, TriggerComponent, Triggers } from "../../Objects/Components";
+import { ActionComponent, Actions, Color4, DialogInfoComponent, TriggerActionComponent, TriggerComponent, Triggers } from "../../Objects/Components";
 import { ACTIONS, COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../../utils/types";
 import { IWBRoom } from "../IWBRoom";
 
@@ -17,6 +17,7 @@ export let updateItemComponentFunctions:any = {
     [COMPONENT_TYPES.TRIGGER_AREA_COMPONENT]:(asset:any, info:any, room?:IWBRoom)=>{updateTriggerAreaComponent(asset, info, room)},
     [COMPONENT_TYPES.ANIMATION_COMPONENT]:(asset:any, info:any)=>{updateAnimationComponent(asset, info)},
     [COMPONENT_TYPES.NPC_COMPONENT]:(asset:any, info:any)=>{updateNPCComponent(asset, info)},
+    [COMPONENT_TYPES.DIALOG_COMPONENT]:(asset:any, info:any)=>{updateDialogComponent(asset, info)},
     [SERVER_MESSAGE_TYPES.UPDATE_ASSET_LOCKED]:(asset:any, info:any)=>{updateBuildLock(asset, info)},
     [SERVER_MESSAGE_TYPES.UPDATE_ASSET_BUILD_VIS]:(asset:any, info:any)=>{updateBuildVis(asset, info)},
 }
@@ -30,7 +31,7 @@ function updateImageComponent(asset:any, info:any){
 }
 
 function updateVideoComponent(asset:any, info:any){
-    console.log('updating video component', info);
+    // console.log('updating video component', info);
 
     switch(info.data.type){
         case 'url':
@@ -52,7 +53,7 @@ function updateVideoComponent(asset:any, info:any){
 }
 
 function updateAudioComponent(asset:any, info:any){
-    console.log('updating audio component', info);
+   //  console.log('updating audio component', info);
     
     switch(info.data.type){
         case 'url':
@@ -79,7 +80,7 @@ function updateAudioComponent(asset:any, info:any){
 }
 
 function updateMaterialComponent(asset:any, info:any){
-    console.log('data is', info)
+  //  console.log('data is', info)
     switch(info.data.type){
         case 'enabled':
             asset.matComp.emiss = info.data.value
@@ -91,22 +92,22 @@ function updateMaterialComponent(asset:any, info:any){
         break;
 
         case 'metallic':
-            console.log('updating metallic', info.data.value)
+            // console.log('updating metallic', info.data.value)
             asset.matComp.metallic = info.data.value
         break;
 
         case 'emissPath':
-            console.log('updating emissPath', info.data.value)
+            // console.log('updating emissPath', info.data.value)
             asset.matComp.emissPath = info.data.value
         break;
 
         case 'emissInt':
-            console.log('updating emissInt', info.data.value)
+            // console.log('updating emissInt', info.data.value)
             asset.matComp.emissInt = info.data.value
         break;
 
         case 'type':
-            console.log('updating type', info.data.value)
+            // console.log('updating type', info.data.value)
             asset.matComp.type = info.data.value
         break;
     }
@@ -216,7 +217,7 @@ function updateTriggerComponent(asset:any, info:any, room:IWBRoom){
                 if(actionAsset){
                     let trigger = asset.trigComp.triggers.find((t:any)=>t.type === info.data.value.type && t.pointer === info.data.value.pointer)
                     if(trigger){
-                        console.log('found trigger for that type')
+                        // console.log('found trigger for that type')
                         let triggerAction = new TriggerActionComponent()
                         triggerAction.aid = actionAsset.aid
                         triggerAction.id = info.data.value.action
@@ -267,7 +268,7 @@ function updateActionComponent(asset:any, info:any, room:IWBRoom){
 
     switch(info.action){
         case 'add':
-            console.log('show action', info.data.value.action)
+            // console.log('show action', info.data.value.action)
 
             let action = new Actions()
             action.aid = info.data.value.action.aid
@@ -317,20 +318,24 @@ function updateActionComponent(asset:any, info:any, room:IWBRoom){
                     action.startDTimer = info.data.value.action.delay.timer
                     action.startDId = info.data.value.action.delay.id
                     break;
+
+                case ACTIONS.SHOW_DIALOG:
+                    action.dialID = info.data.value.action.dialID
+                    break;
             }
             asset.actComp.actions.set(generateId(5), action)
             break;
 
         case 'delete':
-            console.log('deletint action')
+          //   console.log('deletint action')
             if(asset.actComp){
-                console.log('asset has action component')
+               //  console.log('asset has action component')
                 asset.actComp.actions.forEach((action:any, key:any)=>{
-                    console.log('asset action is', key, action)
+                  //   console.log('asset action is', key, action)
                     if(action.name === info.data.value.name){
                         asset.actComp.actions.delete(key)
                         if(scene){
-                            console.log('we found scene pertaining to asset')
+                           //  console.log('we found scene pertaining to asset')
                             scene.ass.forEach((asset:any, i:number)=>{
                                 //check if asset has trigger component
                                 if(asset.trigComp){
@@ -362,7 +367,7 @@ function updateTriggerAreaComponent(asset:any, info:any, room:IWBRoom){
             break;
 
         case 'add':
-            console.log('adding new trigger area action', info.data)
+           //  console.log('adding new trigger area action', info.data)
             if(scene){
                 let actionAsset:any
                 scene.ass.forEach((asset, i)=>{
@@ -372,7 +377,7 @@ function updateTriggerAreaComponent(asset:any, info:any, room:IWBRoom){
                     }
                 })
 
-                console.log('acction asset is', actionAsset)
+               //  console.log('acction asset is', actionAsset)
 
                 let triggerAction = new TriggerActionComponent()
                 triggerAction.aid = actionAsset.aid
@@ -392,11 +397,11 @@ function updateTriggerAreaComponent(asset:any, info:any, room:IWBRoom){
             break;
 
         case 'delete':
-            console.log('deleting action', info.data.value)
+            // console.log('deleting action', info.data.value)
             if(asset.trigArComp){
                 let array:any[] = info.data.value.type === "eActions" ? asset.trigArComp.eActions : asset.trigArComp.lActions
                 let index = array.findIndex((act:any)=> act.aid === info.data.value.action.aid)
-                console.log('action index to delete is', index)
+                // console.log('action index to delete is', index)
                 array.splice(index,1)
             }
             break;
@@ -404,7 +409,7 @@ function updateTriggerAreaComponent(asset:any, info:any, room:IWBRoom){
 }
 
 function updateAnimationComponent(asset:any, info:any){
-    console.log('updating animation component', info);
+   //  console.log('updating animation component', info);
     
     switch(info.data.type){
         case 'autoloop':
@@ -431,20 +436,15 @@ function updateBuildVis(asset:any, info:any){
 }
 
 function updateNPCComponent(asset:any, info:any){
-    console.log('updating npc component', info.data.value.hairColor, info.data.value.eyeColor, info.data.value.skinColor);
     let data = info.data.value
     
     switch(info.type){
         case 'update':
+            asset.npcComp.change++
+
             asset.npcComp.name = data.name
             asset.npcComp.dName = data.dName
             asset.npcComp.bodyShape = data.bodyShape
-
-            console.log('wearables are ', data.wearables)
-            asset.npcComp.wearables.length = 0
-            data.wearables.forEach((wearable:string)=>{
-                asset.npcComp.wearables.push(wearable)
-            })
 
             asset.npcComp.eyeColor.r = data.eyeColor.r
             asset.npcComp.eyeColor.g = data.eyeColor.g
@@ -457,15 +457,35 @@ function updateNPCComponent(asset:any, info:any){
             asset.npcComp.skinColor.r = data.skinColor.r
             asset.npcComp.skinColor.g = data.skinColor.g
             asset.npcComp.skinColor.b = data.skinColor.b
+
+            asset.npcComp.wearables.length = 0
+            data.wearables.forEach((wearable:string)=>{
+                asset.npcComp.wearables.push(wearable)
+            })
+
             break;
 
         case 'wDelete':
+            asset.npcComp.change++
             asset.npcComp.wearables.splice(data, 1)
             break;
 
         case 'wAdd':
+            asset.npcComp.change++
             asset.npcComp.wearables.push(data)
             break;
     }
     
+}
+
+function updateDialogComponent(asset:any, info:any){
+    console.log('new dialog is', info)
+    
+    switch(info.type){
+        case 'new':
+            let dialog = new DialogInfoComponent()
+            dialog.text = info.data.value.dialog.text
+            asset.dialComp.dialogs.push(dialog)
+            break;
+    }
 }

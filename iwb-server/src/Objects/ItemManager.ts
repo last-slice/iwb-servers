@@ -4,6 +4,7 @@ import { RoomMessageHandler } from "../rooms/handlers/MessageHandler"
 import { PLAYFAB_DATA_ACCOUNT, abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playfabLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
+import { pushPlayfabEvent } from "./PlayfabEvents"
 
 
 
@@ -86,10 +87,20 @@ export class ItemManager{
             console.log('we have player, get their info')
             asset.on = "" + player.dclData.displayName
             player.uploadAsset(asset, true)
+
+            pushPlayfabEvent(
+                SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, 
+                player, 
+                [{name:data.n, type:data.ty}]
+            )
+
         }else{
             asset.on = "" + iwbManager.worlds.find((w)=> w.owner === user).worldName
             console.log("player no longer here, need to add to their profile")
-            let metadata = await fetchPlayfabMetadata(user)
+
+            let userData = await playfabLogin(user)
+            let metadata = await fetchUserMetaData(userData)
+
             let catalog = await fetchPlayfabFile(metadata, 'catalogs.json')
 
             asset.pending = true
@@ -97,6 +108,12 @@ export class ItemManager{
             
             catalog.push(asset)
             await this.uploadFile(data.o, "catalogs.json", catalog)
+
+            pushPlayfabEvent(
+                SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, 
+                userData.PlayFabId, 
+                [{name:data.n, type:data.ty}]
+            )
         }
     }
 
@@ -116,17 +133,23 @@ export class ItemManager{
             si: data.fs,
             tag:data.tag,
             bb:data.bb,
-            sty:data.sty,
+            sty:data.sty ? data.sty : data.style ? data.style : undefined,
             anim: data.anims ? data.anims : undefined,
             v: ugc ? iwbManager.worlds.find((w)=> w.owner === data.o).cv + 1 : iwbManager.version + 1
         }
         if(data.bb){
             if(data.ty === "3D"){
+                if(typeof data.bb === "string"){
+                    data.bb = JSON.parse(data.bb)
+                }
                 asset.bb = data.bb
+                asset.bb = {x:parseFloat(data.bb.x.toFixed(2)), y:parseFloat(data.bb.y.toFixed(2)), z:parseFloat(data.bb.z.toFixed(2))  } 
             }else{
                 let size = JSON.parse(data.bb)
                 asset.bb = {x:parseFloat(size.x.toFixed(2)), y:parseFloat(size.y.toFixed(2)), z:parseFloat(size.z.toFixed(2))  } 
+
             }   
+            
         }
 
         console.log('new asset uploaded is', asset)

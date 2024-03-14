@@ -19,7 +19,8 @@ enum BUILD_TYPES {
     CAST_VOTE = 'cast-vote',
     START = 'start',
     END = 'end',
-    UPDATE = 'update'
+    UPDATE = 'update',
+    CHECK_BUILDER_EXISTS = 'check_builder_exists'
 }
 
 let signupQueue:any[] = []
@@ -196,8 +197,31 @@ export function createBuildCompetitionRouters(router:any){
         addScene(req, res)
     });
 
+    router.get('/custom/competitions/pending/nudge/:auth/', (req:any, res:any) => {
+        console.log('nudge pending queue', req.params.slot, req.params.parcels)
+        //need to check auth
+        if(!req.params.auth || req.params.auth !== process.env.IWB_UPLOAD_AUTH_KEY){
+            res.status(200).send({valid: false, msg: "Invalid Auth"})
+            return
+        }
+        checkPendingQueue(true)
+        res.status(200).send({valid: true})
+    });
+
+    router.get('/custom/competitions/pending/reset/:auth/', (req:any, res:any) => {
+        console.log('reset pending queue', req.params.slot, req.params.parcels)
+        //need to check auth
+        if(!req.params.auth || req.params.auth !== process.env.IWB_UPLOAD_AUTH_KEY){
+            res.status(200).send({valid: false, msg: "Invalid Auth"})
+            return
+        }
+        iwbManager.customKeys['Build Competition'].pending = []
+        res.status(200).send({valid: true})
+    });
+
+
     router.get('/custom/competitions/queue/nudge/:auth/', (req:any, res:any) => {
-        console.log('adding build slots', req.params.slot, req.params.parcels)
+        console.log('nudge signup queue', req.params.slot, req.params.parcels)
         //need to check auth
         if(!req.params.auth || req.params.auth !== process.env.IWB_UPLOAD_AUTH_KEY){
             res.status(200).send({valid: false, msg: "Invalid Auth"})
@@ -223,8 +247,17 @@ function checkSignupQueue(admin?:boolean){
     console.log('signup queue is', signingup)
     if(signupQueue.length > 0 && !signingup){
         signingup = true
-        let user = signupQueue.shift()
-        signUpUser(user, admin)
+        let info = signupQueue.shift()
+        signUpTeam(info, admin)
+    }
+}
+
+function checkPendingQueue(admin?:boolean){
+    console.log('signup queue is', signingup)
+    if(iwbManager.customKeys['Build Competition'].pending.length > 0 && !signingup){
+        signingup = true
+        let info = iwbManager.customKeys['Build Competition'].pending.shift()
+        signUpTeam(info, admin)
     }
 }
 
@@ -260,10 +293,11 @@ function addBuildSlot(req:any, res:any){
             slot:req.params.slot,
             available:true,
             name:"",
-            builder:"",
+            builders:[],
             parcels: req.params.parcels.split('|')
         })
         res.status(200).send({valid: true, msg: "Builder Slot Added"})
+        queueBackup()
     }else{
         res.status(200).send({valid: false, msg: "Already Created Slot!"})
     }
@@ -283,29 +317,39 @@ function resetBuilderSlots(req:any, res:any){
         });
     }
     res.status(200).send({valid: true, msg: "Builder Slot(s) Reset"})
+    queueBackup()
 }
 
 function resetBuilderSlot(slot:any){
     slot.available = true
     slot.name = ""
-    slot.builder = ""
+    slot.builders = []
 }
 
 function resetBuilderScenes(req:any, res:any){
-    if(req.params.slots === "all"){
+    if(req.params.scene === "all"){
         iwbManager.customKeys['Build Competition'].scenes.length = 0
     }else{
         let sceneIndex = iwbManager.customKeys['Build Competition'].scenes.findIndex((scene:any)=>scene.builder === req.params.scene)
         iwbManager.customKeys['Build Competition'].scenes.splice(sceneIndex, 1)
     }
     res.status(200).send({valid: true, msg: "Builder Scene Reset"})
+    queueBackup()
 }
 
 function deleteBuilderSlot(req:any, res:any){
+    if(req.params.slot === "all"){
+        iwbManager.customKeys['Build Competition'].slots.length = 0
+        res.status(200).send({valid: true, msg: "Builder Slot Deleted"})
+        queueBackup()
+        return
+    }
+
     let index = iwbManager.customKeys['Build Competition'].slots.findIndex((bs:any)=> bs.slot === req.params.slot)
     if(index >=0){
         iwbManager.customKeys['Build Competition'].slots.splice(index,1)
         res.status(200).send({valid: true, msg: "Builder Slot Deleted"})
+        queueBackup()
     }else{
         res.status(200).send({valid: true, msg: "Builder Slot does not exist"})
     }
@@ -313,8 +357,57 @@ function deleteBuilderSlot(req:any, res:any){
 
 function handleAction(client:any, info:any){
     switch(info.data.type){
+        case BUILD_TYPES.CHECK_BUILDER_EXISTS:
+            iwbManager.customKeys['Build Competition'].scenes.b
+            if(iwbManager.customKeys['Build Competition'].scenes.length > 0){
+                let found = false
+
+                for(let i = 0; i < iwbManager.customKeys['Build Competition'].scenes.length; i++){
+                    console.log('checking scene', iwbManager.customKeys['Build Competition'].scenes[i])
+                    if(iwbManager.customKeys['Build Competition'].scenes[i].builders){
+                        console.log('checking scene builder')
+                        let scene = iwbManager.customKeys['Build Competition'].scenes[i]
+                        if(scene.builders.find((builder:string) => builder === info.data.mate || builder === client.userData.userId)){
+                            found = true
+                            break;
+                        }
+                    }
+                }
+
+                console.log(found)
+
+                if(found){
+                    console.log('builder already on team', info.data.mate)
+                    client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "You or this teammate's wallet is already on another team")
+                }else{
+                    console.log('did not find team member')
+                    client.send(SERVER_MESSAGE_TYPES.CUSTOM, 
+                        {
+                            action:MESSAGE_ACTION, 
+                            data:{
+                                type:info.data.type, 
+                                value:info.data.mate
+                            }
+                        }
+                    )
+                }
+
+            }else{
+                client.send(SERVER_MESSAGE_TYPES.CUSTOM, 
+                    {
+                        action:MESSAGE_ACTION, 
+                        data:{
+                            type:info.data.type, 
+                            value:info.data.mate
+                        }
+                    }
+                )
+            }
+
+            break;
+
         case BUILD_TYPES.SIGNUP:
-            handleSignUp(client, info)
+            handleSignUp(client, info.data)
             break;
 
         case BUILD_TYPES.GET_SCENES:
@@ -346,25 +439,20 @@ function handleAction(client:any, info:any){
 async function handleSignUp(client:any, info:any, admin?:boolean){
     console.log('handling sign up for ', client.userData.displayName, client.userData.userId)
     try{
-        // let add = web3.eth.accounts.recover(info.data.message, info.data.signature);
-        // console.log('message is', add)
         if(iwbRoom || admin){
-        // if((iwbRoom && iwbRoom.state.players.has(client.userData.userId)) || admin){
             if(admin){}
             else{
                 console.log("room exists so let them sign up")
-                let player:Player = iwbRoom.state.players.get(client.userData.userId)
-                console.log('player data is', player.dclData)
-                // if(!player.dclData.hasConnectedWeb3){
-                //     client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "Only Web3 wallets are eligible")
-                //     return
-                // }
             }
-            signupQueue.push(client)
+
+            if(!info.team.name || info.team.name === ""){
+                client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "Please type a Team Name.")
+                return
+            }
+            signupQueue.push({info:info, client:client})
             checkSignupQueue(admin)
         }else{
             console.log('player is not on colyseus server', client.userData.userId)
-            client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "Our server cannot detect your presence. Refresh and try agian.")
         }
     }
     catch(e){
@@ -420,6 +508,54 @@ async function signUpUser(client:any, admin?:boolean){
     checkSignupQueue()
 }
 
+async function signUpTeam(data:any, admin?:boolean){
+    console.log('info is', data.info, admin)
+    let competitionScene:any = {
+        builders: data.info.team.mates,
+        name: data.info.team.name,
+        votes:[]
+    }
+    
+    try{
+        let sceneId = await assignLocation(data.info.team)
+        if(sceneId !== null){
+            iwbManager.customKeys['Build Competition'].scenes.push(competitionScene)
+            if(admin){}
+            else{
+                if(admin){}
+                else{
+                    data.client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "You have registered your team for the Builder Competition! Your team will be assigned a 3x3 scene inside the BuilderWorld realm.")
+                }
+                iwbRoom.broadcast(SERVER_MESSAGE_TYPES.CUSTOM, 
+                    {action:MESSAGE_ACTION, 
+                        data:{
+                            type:BUILD_TYPES.SIGNUP, 
+                            sceneId:sceneId,
+                            competitionScene:competitionScene
+                        }
+                    }
+                )
+            }
+            queueBackup()
+        }else{
+            console.log('no more open slots for registration')
+            if(admin){}
+            else{
+                data.client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "There are no more open slots for the competition! You are on the wait list to be added manually.")
+            }
+            iwbManager.customKeys['Build Competition'].pending.push({info:data.info})
+        }
+    }
+    catch(e){
+        console.log('error singing up team', data.info.team, e)
+    }
+
+
+
+    signingup = false
+    checkSignupQueue()
+}
+
 function castVote(client:any, info:any){
     if(!iwbManager.customKeys['Build Competition'].voting){
         client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "Voting is disabled.")
@@ -427,7 +563,7 @@ function castVote(client:any, info:any){
     }
 
     let player = iwbRoom.state.players.get(client.userData.userId)
-    if(!player || !player.dclData.hasConnectedWeb3){
+    if(!player || player.dclData.isGuest){
         client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "Invalid Player. Cannot Vote.")
         return
     }
@@ -443,7 +579,7 @@ function castVote(client:any, info:any){
         let sceneToVote = iwbManager.customKeys['Build Competition'].scenes.find((scene:any)=> scene.name === info.data.builder)
         if(sceneToVote){
             console.log('scene to vote is', sceneToVote)
-            if(sceneToVote.builder === client.userData.userId){
+            if(sceneToVote.builders.includes(client.userData.userId)){
                 console.log('trying to vote for yourself')
                 client.send(SERVER_MESSAGE_TYPES.CUSTOM, 
                     {action:MESSAGE_ACTION, 
@@ -475,8 +611,8 @@ function castVote(client:any, info:any){
 
 }
 
-function assignLocation(client:any){
-    let randomAssignment = getRandomAssignment(client)
+function assignLocation(team:any){
+    let randomAssignment = getRandomAssignment(team)
     if(randomAssignment !== null){
         let world = iwbManager.worlds.find((w)=>w.ens === iwbRoom.state.world)
         if(world){
@@ -484,7 +620,7 @@ function assignLocation(client:any){
             world.updated = Math.floor(Date.now()/1000)
         }
 
-        let scene:Scene = createScene(iwbRoom.state.world, {world:world, name: client.userData.displayName, builder:client.userData.userId}, randomAssignment)
+        let scene:Scene = createScene(iwbRoom.state.world, {world:world, name: team.name, builder:team.mates}, randomAssignment)
         iwbRoom.state.scenes.set(scene.id, scene)
     
         randomAssignment.forEach((parcel:any)=>{
@@ -496,13 +632,13 @@ function assignLocation(client:any){
     }
 }
 
-function getRandomAssignment(client:any){
+function getRandomAssignment(team:any){
     let availableSlots = iwbManager.customKeys['Build Competition'].slots.filter((ass:any)=> ass.available)
     if(availableSlots.length > 0){
         let rand = getRandomIntInclusive(0, availableSlots.length-1)
         availableSlots[rand].available = false
-        availableSlots[rand].name = client.userData.displayName
-        availableSlots[rand].builder = client.userData.userId
+        availableSlots[rand].name = team.name
+        availableSlots[rand].builders = team.mates
 
         return availableSlots[rand].parcels
     }else{
@@ -511,6 +647,7 @@ function getRandomAssignment(client:any){
 }
 
 function createScene(world:string, info:any, parcels:string[]){
+    console.log('create scene info', info)
     return new Scene({
         w: world,
         id: "" + generateId(5),
@@ -520,7 +657,7 @@ function createScene(world:string, info:any, parcels:string[]){
         o: info.world.owner,
         ona: info.world.name,
         cat:"",
-        bps:[info.builder],
+        bps:info.builder,
         bpcl: parcels[0],
         cd: Math.floor(Date.now()/1000),
         upd: Math.floor(Date.now()/1000),
@@ -533,7 +670,7 @@ function createScene(world:string, info:any, parcels:string[]){
         pcls:parcels,
         sp:["0,0,0"],
         cp:["0,0,0"],
-        priv:false
+        priv:false,
     })
 }
 

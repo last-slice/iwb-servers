@@ -7,6 +7,8 @@ import {
     AudioComponent,
     CollisionComponent,
     Color4,
+    DialogComponent,
+    DialogInfoComponent,
     ImageComponent,
     MaterialComponent,
     NFTComponent,
@@ -53,6 +55,7 @@ export class SceneItem extends Schema {
     @type(TriggerAreaComponent) trigArComp: TriggerAreaComponent
     @type(AnimationComponent) animComp: AnimationComponent
     @type(NpcComponent) npcComp: NpcComponent
+    @type(DialogComponent) dialComp: DialogComponent
  }
 
 export class TempScene extends Schema {
@@ -92,6 +95,7 @@ export class Scene extends Schema {
     @type("boolean") isdl: boolean
     @type("boolean") e: boolean
     @type("boolean") priv: boolean
+    @type("boolean") lim: boolean = true
 
     @type([SceneItem]) ass = new ArraySchema<SceneItem>();
 
@@ -123,6 +127,7 @@ export class Scene extends Schema {
             this.w = data.w
             this.priv = data.priv
             this.im = data.im ? data.im : ""
+            this.lim = data.hasOwnProperty("lim") ? data.lim : true
 
             if (data.ass) {
                 data.ass.forEach((asset: any) => {
@@ -399,6 +404,19 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                         item.npcComp.skinColor.b = asset.npcComp.skinColor.b
                     }
                     break;
+
+                    case COMPONENT_TYPES.DIALOG_COMPONENT:
+                        console.log('dialog asset', asset.dialComp)
+                        item.dialComp = new DialogComponent()
+                        item.dialComp.id = asset.dialComp.id
+                        item.dialComp.name = asset.dialComp.name
+
+                        asset.dialComp.dialogs.forEach((data:any)=>{
+                            let dialog = new DialogInfoComponent()
+                            dialog.text = data.text
+                            item.dialComp.dialogs.push(dialog)
+                        })
+                        break;
         }
     })
 }

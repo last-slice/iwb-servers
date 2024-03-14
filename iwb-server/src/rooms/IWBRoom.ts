@@ -43,7 +43,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     onCreate(options: any) {
         this.setState(new IWBRoomState());
         this.state.world = options.world
-        console.log('room realm is', options.world)
+       //  console.log('room realm is', options.world)
 
         this.state.messageHandler = new RoomMessageHandler(this)
         this.state.sceneManager = new RoomSceneManager(this, options.world)
@@ -70,7 +70,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     }
 
     async onLeave(client: Client, consented: boolean) {
-        console.log(client.userData.userId, "left!", consented);
+      //   console.log(client.userData.userId, "left!", consented);
 
         let player:Player = this.state.players.get(client.userData.userId)
         if(player){
@@ -80,12 +80,12 @@ export class IWBRoom extends Room<IWBRoomState> {
             
             if(!player.pendingDeployment){}
             else{
-                console.log('need to cancel pending deployment')
+               //  console.log('need to cancel pending deployment')
                 player.cancelPendingDeployment()
             }
 
           setTimeout(()=>{
-            console.log('player is not in another world, need to remove them from server')
+          //   console.log('player is not in another world, need to remove them from server')
             playerManager.removePlayer(player.dclData.userId)
             playerManager.savePlayerCache(player)
             this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
@@ -133,12 +133,12 @@ export class IWBRoom extends Room<IWBRoomState> {
     async doLogin(client: any, options: any, request: any) {
         return new Promise((resolve) => {
             setTimeout(async() => {
-                console.log('Timeout finished!');
+                // console.log('Timeout finished!');
                 let info:any = false
                 try {
 
                     const ipAddress = request.headers['x-forwarded-for'] || request.socket.address().address;
-                    console.log(`Client IP address: ${ipAddress}`);
+                    // console.log(`Client IP address: ${ipAddress}`);
                     const playfabInfo = await playerLogin(
                         {
                             CreateAccount: true,
@@ -162,9 +162,9 @@ export class IWBRoom extends Room<IWBRoomState> {
                         })
         
                     if (playfabInfo.error) {
-                        console.log('playfab login error => ', playfabInfo.error)
+                     //    console.log('playfab login error => ', playfabInfo.error)
                     } else {
-                        console.log('playfab login success')
+                       //  console.log('playfab login success')
                         client.auth = {}
                         client.auth.playfab = playfabInfo
                         client.auth.ip = ipAddress
@@ -198,18 +198,18 @@ export class IWBRoom extends Room<IWBRoomState> {
             DisplayName: options.userData.displayName,
             PlayFabId: auth.playfab.PlayFabId
         })
-        console.log('setting player name res is', result)
+       //  console.log('setting player name res is', result)
 
         let def: any = {}
         def.address = options.userData.userId
-        def.web3 = options.userData.hasConnectedWeb3
+        def.web3 = !options.userData.isGuest
 
         //set initial player data
         const initPlayerDataRes = await updatePlayerInternalData({
             Data: def,
             PlayFabId: auth.playfab.PlayFabId
         })
-        console.log('setting eth address result', initPlayerDataRes)
+        // console.log('setting eth address result', initPlayerDataRes)
 
         let stats: any[] = []
         //we have no stats for now

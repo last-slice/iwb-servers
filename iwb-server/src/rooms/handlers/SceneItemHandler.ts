@@ -19,7 +19,8 @@ import {
     addAudioComponent,
     addTriggerAreaComponent,
     addAnimationComponent,
-    addNPCComponent
+    addNPCComponent,
+    addDialogComponent
 } from "../../Objects/Components";
 import { Player } from "../../Objects/Player";
 import { Scene, SceneItem } from "../../Objects/Scene";
@@ -27,6 +28,7 @@ import { itemManager, iwbManager } from "../../app.config";
 import { COMPONENT_TYPES, EDIT_MODIFIERS, SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types";
 import { IWBRoom } from "../IWBRoom";
 import { updateItemComponentFunctions } from "./ItemComponentUpdates";
+import { pushPlayfabEvent } from "../../Objects/PlayfabEvents";
 
 export class RoomSceneItemHandler {
     room:IWBRoom
@@ -35,14 +37,14 @@ export class RoomSceneItemHandler {
         this.room = room
 
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM + " message", info)
 
             let player:Player = room.state.players.get(client.userData.userId)
             this.deleteSceneItem(player, info)
         })
     
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
@@ -51,7 +53,7 @@ export class RoomSceneItemHandler {
                 let scene = this.room.state.scenes.get(info.item.sceneId)
                 if(scene){
                     let sceneItem = item.ugc ? this.room.state.realmAssets.get(item.id) : itemManager.items.get(item.id)
-                    console.log('scene item is', sceneItem)
+                    // console.log('scene item is', sceneItem)
                     if(sceneItem){
                         if(this.checkSceneLimits(scene, sceneItem)){
 
@@ -65,8 +67,21 @@ export class RoomSceneItemHandler {
     
                                     this.addItemComponents(newItem, sceneItem, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
                                 }
+
+                                pushPlayfabEvent(
+                                    SERVER_MESSAGE_TYPES.SCENE_COPY_ITEM, 
+                                    player, 
+                                    [{name:sceneItem.n, type:sceneItem.ty}]
+                                )
+
                             }else{
                                 this.addItemComponents(newItem, sceneItem, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
+                                
+                                pushPlayfabEvent(
+                                    SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, 
+                                    player, 
+                                    [{name:sceneItem.n, type:sceneItem.ty}]
+                                )
                             }
        
                             scene.ass.push(newItem)
@@ -75,6 +90,11 @@ export class RoomSceneItemHandler {
                         }
                         else{
                             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.ASSET_OVER_SCENE_LIMIT, {})
+                            pushPlayfabEvent(
+                                SERVER_MESSAGE_TYPES.ASSET_OVER_SCENE_LIMIT, 
+                                player, 
+                                [{name: sceneItem.n}]
+                            )
                         }
                     }
                 }
@@ -84,7 +104,7 @@ export class RoomSceneItemHandler {
 
                 player.removeSelectedAsset()
             }else{
-                console.log('something wrong here')
+                console.log('something wrong here with adding item', info)
             }
         })
 
@@ -99,13 +119,21 @@ export class RoomSceneItemHandler {
                     if(sceneItem && sceneItem.editing){
                         sceneItem.editing = false
                         player.removeSelectedAsset()
+
+                        let itemData = sceneItem.ugc ? this.room.state.realmAssets.get(sceneItem.id) : itemManager.items.get(sceneItem.id)
+
+                        pushPlayfabEvent(
+                            SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_DONE, 
+                            player, 
+                            [{name:itemData.n, type:sceneItem.type}]
+                        )
                     }
                 }
             }
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_CANCEL, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_CANCEL + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_CANCEL + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
@@ -121,7 +149,7 @@ export class RoomSceneItemHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
@@ -153,18 +181,19 @@ export class RoomSceneItemHandler {
                             {
                             catalogId: sceneItem.id,
                             assetId: sceneItem.aid,
-                            componentData: newItem
+                            componentData: newItem,
+                            grabbed:false
                             }
                         )
 
-                        console.log(player.selectedAsset.toJSON())
+                        // console.log(player.selectedAsset.toJSON())
                     }
                 }
             }
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_UPDATE_ITEM, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SCENE_UPDATE_ITEM + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.SCENE_UPDATE_ITEM + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
@@ -187,7 +216,7 @@ export class RoomSceneItemHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.PLAYER_CANCELED_CATALOG_ASSET, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.PLAYER_CANCELED_CATALOG_ASSET + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.PLAYER_CANCELED_CATALOG_ASSET + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
 
@@ -195,29 +224,27 @@ export class RoomSceneItemHandler {
                 player.removeSelectedAsset()
                 // this.room.broadcast(SERVER_MESSAGE_TYPES.SELECT_NEW_ASSET, info)
             }else{
-                console.log('player is not in create scene mode')
+                // console.log('player is not in create scene mode')
             }
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
 
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
                 info.catalogAsset = true
+                info.grabbed = true
                 player.addSelectedAsset(info)
 
-                iwbManager.eventQueue.push({
-                    EventName: SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET,
-                    PlayFabId: player.playFabData.PlayFabId,
-                    body: {
-                        catalogId:info.catalogId,
-                        ugc:info.ugc
-                    }
-                })
+                // pushPlayfabEvent(
+                //     SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, 
+                //     player, 
+                //     [{name:info.catalogId, type:sceneItem.ty}]
+                // )
             }else{
-                console.log('player is not in create scene mode')
+                // console.log('player is not in create scene mode')
             }
         })
 
@@ -238,11 +265,12 @@ export class RoomSceneItemHandler {
                         sceneAsset.editing = true
                         sceneAsset.editor = player.address
                         data.componentData = sceneAsset
+                        data.grabbed = true
                     }
                     player.addSelectedAsset(data)
                     player.selectedAsset.componentData.comps.includes(COMPONENT_TYPES.IMAGE_COMPONENT) ? addImageComponent(player.selectedAsset.componentData, player.selectedAsset.componentData.imgComp.url) : null
                     player.selectedAsset.componentData.comps.includes(COMPONENT_TYPES.NFT_COMPONENT) ? addNFTComponent(player.selectedAsset.componentData, player.selectedAsset.componentData.nftComp) : null
-                    this.deleteSceneItem(player, info)
+                    this.deleteSceneItem(player, info,true)
 
                     // client.send(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET, {valid:true, reason:"", player:player.address})
                 }else{
@@ -254,7 +282,7 @@ export class RoomSceneItemHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.PLACE_SELECTED_ASSET, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.PLACE_SELECTED_ASSET + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.PLACE_SELECTED_ASSET + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
 
@@ -281,7 +309,7 @@ export class RoomSceneItemHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.PLAYER_EDIT_ASSET, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.PLAYER_EDIT_ASSET + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.PLAYER_EDIT_ASSET + " message", info)
 
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
@@ -297,30 +325,30 @@ export class RoomSceneItemHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, async(client, info)=>{
-            console.log(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS + " message", info)
+            // console.log(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS + " message", info)
             // room.broadcast(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, {user:client.userData.userId, y:info.y, aid:info.aid})
         })
     }
 
-    deleteSceneItem(player:Player, info:any){
+    deleteSceneItem(player:Player, info:any, edit?:boolean){
         try{
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
                 let scene = this.room.state.scenes.get(info.sceneId)
                 if(scene){
                     let sceneItem = scene.ass.find((asset)=> asset.aid === info.assetId)
-                    if(sceneItem){
+                    if(sceneItem && !sceneItem.locked){
                         // console.log('found scene item to delete', sceneItem.id, sceneItem.ugc)
                         let pc:any
                         let si:any
                         if(sceneItem.ugc){
-                            console.log('ugc asset to delete')
+                            // console.log('ugc asset to delete')
                             let realmAsset = this.room.state.realmAssets.get(sceneItem.id)
                             // console.log('realm asset is', realmAsset)
                             pc = realmAsset ? realmAsset.pc : undefined
                             si = realmAsset ? realmAsset.si : undefined
                         }
                         else{
-                            console.log('catalog asset to delete')
+                           //  console.log('catalog asset to delete')
                             let item = itemManager.items.get(sceneItem.id)
                             // console.log('catalog item to delete is', item)
                             pc = item ? item.pc : undefined
@@ -329,7 +357,7 @@ export class RoomSceneItemHandler {
 
                         //delete actions from triggers
                         if(sceneItem.actComp){
-                            console.log('need to delete actions for item across all triggers')
+                           //  console.log('need to delete actions for item across all triggers')
                             this.deleteActionsOnTriggers(scene, sceneItem)
                         }
     
@@ -337,7 +365,19 @@ export class RoomSceneItemHandler {
                         scene.si -= si ? si : 0
                         let index = scene.ass.findIndex((asset)=> asset.aid === info.assetId)
                         if(index >= 0){
+                            console.log('deleting scene item')
                             scene.ass.splice(index,1)
+                        }
+
+                        let itemData = sceneItem.ugc ? this.room.state.realmAssets.get(sceneItem.id) : itemManager.items.get(sceneItem.id)
+
+                        if(edit){}
+                        else{
+                            pushPlayfabEvent(
+                                SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM, 
+                                player, 
+                                [{name:itemData.n, type:sceneItem.type}]
+                            )
                         }
                     }
                 }
@@ -355,7 +395,7 @@ export class RoomSceneItemHandler {
         triggerAssets.forEach((asset:SceneItem)=>{
             asset.trigComp.triggers.forEach((trigger:any)=>{
                 trigger.actions = trigger.actions.filter((action:any)=> !sceneItem.actComp.actions.has(action.id))
-                console.log('actions remaining =', trigger.actions.length)
+                // console.log('actions remaining =', trigger.actions.length)
             })
         })
 
@@ -377,14 +417,14 @@ export class RoomSceneItemHandler {
     }
 
     transformAsset(scene:Scene, data:any){
-        console.log('need to get asset to update scene')
+        // console.log('need to get asset to update scene')
         let asset = scene.ass.find((asset)=> asset.aid === data.aid)
         if(asset){
-            console.log('asset to transform is', asset.aid)
-            console.log(data.modifier)
+            // console.log('asset to transform is', asset.aid)
+            // console.log(data.modifier)
             switch(data.modifier){
                 case EDIT_MODIFIERS.POSITION:
-                    console.log('editing position')
+                    // console.log('editing position')
                     switch(data.axis){
                         case 'x':
                             if(data.manual){
@@ -474,23 +514,28 @@ export class RoomSceneItemHandler {
     canBuild(user:string, sceneId:any){
         let scene:Scene = this.room.state.scenes.get(sceneId)
         if(scene){
-            console.log('can build')
+           //  console.log('can build')
             return scene.bps.includes(user) || user === iwbManager.worlds.find((w) => w.ens === this.room.state.world).owner;
         }else{
-            console.log('cannot build')
+            // console.log('cannot build')
             return false
         }
     }
 
     checkSceneLimits(scene:Scene, item:any){
+        if(!scene.lim){
+            // console.log('scene limits are toggled off')
+            return true
+        }
+
         let totalSize = (scene.pcnt > 20 ? 300 : scene.pcnt * 15) * (1024 ** 2)
         let totalPoly = scene.pcnt * 10000
 
         if((scene.si + item.si) > totalSize || (scene.pc + item.pc) > totalPoly){
-            console.log('scene is over limitations')
+            // console.log('scene is over limitations', scene.si + item.si > totalSize, (scene.pc + item.pc) > totalPoly)
             return false
         }else{
-            console.log('scene is within limitations')
+            // console.log('scene is within limitations')
             return true
         }
     }
@@ -499,7 +544,7 @@ export class RoomSceneItemHandler {
         item.comps.push(COMPONENT_TYPES.TRANSFORM_COMPONENT)
         item.comps.push(COMPONENT_TYPES.VISBILITY_COMPONENT)
 
-        console.log('adding item components to item', item.type, catalogItem)
+        // console.log('adding item components to item', item.type, catalogItem)
 
         if(item.type === "SM"){
             switch(catalogItem.n){
@@ -517,6 +562,11 @@ export class RoomSceneItemHandler {
                     item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
                     item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
                     item.comps.push(COMPONENT_TYPES.NPC_COMPONENT)
+                    break;
+
+                case 'Dialog':
+                    item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
+                    item.comps.push(COMPONENT_TYPES.DIALOG_COMPONENT)
                     break;
             }
         }else{
@@ -556,7 +606,7 @@ export class RoomSceneItemHandler {
             case '2D':
                 switch(catalogItem.n){
                     case 'Image':        
-                        console.log('selected ass', selectedAsset)
+                      //   console.log('selected ass', selectedAsset)
                         addImageComponent(item, selectedAsset ? selectedAsset.imgComp.url : "")                
                         addMaterialComponent(item, selectedAsset ? selectedAsset.matComp : null)
                         break;
@@ -586,6 +636,10 @@ export class RoomSceneItemHandler {
                     case 'NPC':
                         addNPCComponent(item, selectedAsset ? selectedAsset.trigArComp : null)
                         break;
+
+                    case 'Dialog':
+                        addDialogComponent(item, selectedAsset ? selectedAsset.dialComp : null)
+                        break;
                 }
                 break;
         }
@@ -606,7 +660,7 @@ export class RoomSceneItemHandler {
     }
 
     cancelAssetChanges(player:Player, sceneItem:SceneItem){
-        console.log('cancelling asset changes')
+      //   console.log('cancelling asset changes')
         let previousItem:SceneItem = player.selectedAsset.componentData
 
         //update prior PRS

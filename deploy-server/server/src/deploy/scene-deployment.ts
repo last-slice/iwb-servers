@@ -93,7 +93,7 @@ async function deployBucket(key:string){
         });
 
         deployProcess.stderr.on('data', (data:any) => {
-            console.log(`stdout: ${data}`);
+            console.log(`stderr: ${data}`);
         });
 
         deployProcess.on('exit', (code:any, signal:any) => {

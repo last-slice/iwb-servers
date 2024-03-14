@@ -316,7 +316,7 @@ export async function playfabLogin(user:string){
       return null
     }
     else{
-      console.log('playfab login success, initiate realm')
+      // console.log('playfab login success, initiate realm')
       return playfabInfo
     }
   }
