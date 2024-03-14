@@ -30,7 +30,7 @@ export function createArtWeekRouters(router:any){
 
 function addArtist(req:any, res:any){
     req.body.wallet = req.body.wallet.toLowerCase()
-    if(!iwbManager.customKeys['Artweek'].artists.find((artist:any)=>artist.wallet === req.body.artist)){
+    if(!iwbManager.customKeys['Artweek'].artists.find((artist:any)=>artist.wallet === req.body.wallet)){
         iwbManager.customKeys['Artweek'].artists.push(req.body)
 
         res.status(200).send({valid: true, msg: "Artist Added"})

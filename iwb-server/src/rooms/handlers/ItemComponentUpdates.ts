@@ -487,5 +487,9 @@ function updateDialogComponent(asset:any, info:any){
             dialog.text = info.data.value.dialog.text
             asset.dialComp.dialogs.push(dialog)
             break;
+
+        case 'remove':
+            asset.dialComp.dialogs.splice(info.data.value.index, 1)
+            break;
     }
 }
