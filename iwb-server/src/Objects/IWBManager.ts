@@ -43,10 +43,10 @@ export class IWBManager{
 
 
     defaultPlayerSettings:any = {
-            firstTime: false,
+            firstTime: true,
             nots: true,
-            confirms: false,
-            music: true
+            confirms: true,
+            music: false
         }
 
     constructor(){

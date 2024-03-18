@@ -24,8 +24,8 @@ export class Quaternion extends Schema {
 }
 
 export class CollisionComponent extends Schema {
-    @type("number") vMask: number = 1
-    @type("number") iMask: number = 2
+    @type("number") vMask: number = 0
+    @type("number") iMask: number = 3
 }
 
 export class MaterialComponent extends Schema {

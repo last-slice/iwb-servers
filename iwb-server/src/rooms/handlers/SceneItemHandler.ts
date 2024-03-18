@@ -367,6 +367,7 @@ export class RoomSceneItemHandler {
                         if(index >= 0){
                             console.log('deleting scene item')
                             scene.ass.splice(index,1)
+                            player.removeSelectedAsset()
                         }
 
                         let itemData = sceneItem.ugc ? this.room.state.realmAssets.get(sceneItem.id) : itemManager.items.get(sceneItem.id)
