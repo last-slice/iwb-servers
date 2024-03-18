@@ -44,7 +44,7 @@ export class RoomSceneItemHandler {
         })
     
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, async(client, info)=>{
-            // console.log(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM + " message", info)
+            console.log(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
@@ -133,7 +133,7 @@ export class RoomSceneItemHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_CANCEL, async(client, info)=>{
-            // console.log(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_CANCEL + " message", info)
+            console.log(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_CANCEL + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player && player.mode === SCENE_MODES.BUILD_MODE && this.canBuild(client.userData.userId, info.item.sceneId)){
@@ -216,7 +216,7 @@ export class RoomSceneItemHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.PLAYER_CANCELED_CATALOG_ASSET, async(client, info)=>{
-            // console.log(SERVER_MESSAGE_TYPES.PLAYER_CANCELED_CATALOG_ASSET + " message", info)
+            console.log(SERVER_MESSAGE_TYPES.PLAYER_CANCELED_CATALOG_ASSET + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
 
@@ -229,7 +229,7 @@ export class RoomSceneItemHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET, async(client, info)=>{
-            // console.log(SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET + " message", info)
+            console.log(SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
 
@@ -661,20 +661,22 @@ export class RoomSceneItemHandler {
 
     cancelAssetChanges(player:Player, sceneItem:SceneItem){
       //   console.log('cancelling asset changes')
-        let previousItem:SceneItem = player.selectedAsset.componentData
+        let previousItem:SceneItem = player.selectedAsset?.componentData
 
-        //update prior PRS
-        this.revertTransform(previousItem.p, sceneItem)
+        if(previousItem){
+            //update prior PRS
+            this.revertTransform(previousItem.p, sceneItem)
 
-        //update prior image link
+            //update prior image link
 
-        //update prior video link
+            //update prior video link
 
-        //update prior visibility
+            //update prior visibility
 
-        //update prior collision
+            //update prior collision
 
-        //update prior text
+            //update prior text
+        }
     }
 
     revertTransform(previousPosition:Vector3, sceneItem:SceneItem){

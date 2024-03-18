@@ -168,7 +168,6 @@ export class ItemManager{
         this.newItemsToDeploy.length = 0
     }
 
-
     async uploadFile(customLogin:any, filename:string, file:any){
         let user:any
         try{

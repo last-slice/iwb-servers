@@ -8,7 +8,6 @@ import { Scene } from "./Scene"
 import { generateId } from "colyseus"
 import { DEBUG } from "../utils/config"
 import { getRandomIntInclusive } from "../utils/functions"
-import { pushPlayfabEvent } from "./PlayfabEvents"
 
 const fs = require('fs');
 
