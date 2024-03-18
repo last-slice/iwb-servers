@@ -75,7 +75,7 @@ export function deployIWB(fromGithub?:boolean){
 }
 
 async function updateIWBVersion(){
-  const result = await Axios.get('http://localhost:2751/update/version',
+  const result = await Axios.get('https://dcl-iwb.co/toolset/update/version',
   {headers: {                      
       'AssetAuth': `Bearer ${process.env.IWB_UPLOAD_AUTH_KEY}`, 
   }},

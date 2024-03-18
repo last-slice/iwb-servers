@@ -285,7 +285,7 @@ export async function postNewAssetData(req:any, res:any){
 
     console.log('need to send asset data to iwb server ', assetData)
 
-    const result = await Axios.post('http://localhost:2751/asset/uploaded', assetData,
+    const result = await Axios.post('https://dcl-iwb.co/toolset/asset/uploaded', assetData,
         {headers: {                      
             'Authorization': `Bearer ${req.key}`,
             'AssetAuth': `Bearer ${process.env.IWB_UPLOAD_AUTH_KEY}`,

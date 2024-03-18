@@ -449,7 +449,7 @@ export class RoomSceneHandler {
           n: info.name,
           d: info.desc,
           o: player.dclData.userId,
-          ona: player.dclData.displayName,
+          ona: player.dclData.name,
           cat:"",
           bps:[],
           bpcl: parcels[0],

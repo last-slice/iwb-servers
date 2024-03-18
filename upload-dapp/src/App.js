@@ -37,7 +37,7 @@ function App() {
       console.log(value1, value2)
 
       async function validateSceneToken(){
-        const result = await axios.post((DEBUG ? "http://localhost:3525" : 'https://dcl-iwb.co/dcl/deployment') + '/scene/verify', { user:value1},
+        const result = await axios.post((DEBUG ? "http://localhost:3525" : 'https://deployment.dcl-iwb.co') + '/scene/verify', { user:value1},
         {headers: {
           'Authorization': `Bearer ${value2}`,
         }},

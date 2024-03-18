@@ -30,7 +30,7 @@ export function pushPlayfabEvent(type:any, player:any, data:any){
         EventName: type,
         PlayFabId: player.playFabData.PlayFabId,
         body:{
-            player: player.dclData.displayName,
+            player: player.dclData.name,
             wallet: player.dclData.userId,
         }
     }
@@ -39,6 +39,6 @@ export function pushPlayfabEvent(type:any, player:any, data:any){
         event.body[key] = data[0][key]
     }
 
-    console.log('new event to post is', event)
+    // console.log('new event to post is', event)
     eventQueue.push(event)
 }

@@ -54,7 +54,7 @@ export class IWBRoom extends Room<IWBRoomState> {
 
     onJoin(client: Client, options: any, auth: JWTPayloadUserId) {
         try {
-            // console.log(auth.userId, "joined! -", options.userData.displayName, "Realm -", auth.realm);
+            // console.log(auth.userId, "joined! -", options.userData.name, "Realm -", auth.realm);
 
             client.userData = options.userData;
             // client.userData.userId = auth.userId;
@@ -123,7 +123,7 @@ export class IWBRoom extends Room<IWBRoomState> {
         //   EventName: 'JOINED',
         //   PlayFabId: client.auth.PlayFabId,
         //   Body:{
-        //     'player':options.userData.displayName,
+        //     'player':options.userData.name,
         //     'ethaddress':options.userData.userId,
         //     'ip': client.auth.ip
         //   }
@@ -195,7 +195,7 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         //set new user display name
         const result = await updatePlayerDisplayName({
-            DisplayName: options.userData.displayName,
+            DisplayName: options.userData.name,
             PlayFabId: auth.playfab.PlayFabId
         })
        //  console.log('setting player name res is', result)

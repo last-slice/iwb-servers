@@ -39,7 +39,7 @@ destination_folder=""
 if [ "$debug" = true ]; then
   destination_folder="/Users/lastraum/Desktop/Programming/Decentraland/Lastslice/sdk7/iwb/servers/deploy-server/iwb-template/assets"
 else
-  destination_folder="/root/deployment/iwb-template/assets"
+  destination_folder="/root/iwb-deployment/iwb-template/assets"
 fi
 
 # Use the '-r' flag for recursive copy if you want to copy subdirectories and their contents

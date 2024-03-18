@@ -141,7 +141,7 @@ const checkModelSize = ()=>{
     try {
 
       console.log('upload data is')
-      const result = await axios.post((DEBUG ? "http://localhost:3525" : 'https://dcl-iwb.co/dcl/deployment') + "/upload", formData, 
+      const result = await axios.post((DEBUG ? "http://localhost:3525" : 'https://deployment.dcl-iwb.co/dcl') + "/upload", formData, 
         {headers: {
           'UploadAuth': `Bearer ${token}`,
           'SceneAuth': `Bearer ${sceneKey}`,

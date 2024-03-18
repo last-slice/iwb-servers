@@ -12,7 +12,7 @@ export async function postPendingAsset(req:any, res:any, next:any) {
 
     console.log('pending asset data to send to wib server', assetData)
 
-    const result = await Axios.post('http://localhost:2751/asset/pending', assetData,
+    const result = await Axios.post('https://dcl-iwb.co/toolset/asset/pending', assetData,
     {headers: {                      
         'Authorization': `Bearer ${req.key}`,
         'AssetAuth': `Bearer ${process.env.IWB_UPLOAD_AUTH_KEY}`,

@@ -9,10 +9,10 @@ const ncp = require('ncp').ncp;
 const path = require('path');
 const { exec } = require('child_process');
 
-const command = status.DEBUG ? '/Users/lastraum/desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/deploy.sh' : '/root/deployment/server/deploy.sh';
+const command = status.DEBUG ? '/Users/lastraum/desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/deploy.sh' : '/root/iwb-deployment/server/deploy.sh';
 
 export let iwbDeploymentQueue:DeploymentData[] = []
-let worldBucketDirectory = status.DEBUG ? "/Users/lastraum/Desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/buckets/iwb/" : "/root/deployment/buckets/iwb/"
+let worldBucketDirectory = status.DEBUG ? "/Users/lastraum/Desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/buckets/iwb/" : "/root/iwb-deployment/buckets/iwb/"
 let assetDirectory = status.DEBUG ? "/Users/lastraum/Desktop/programming/decentraland/lastslice/sdk7/iwb/toolset/" : "/root/iwb-assets/"
 
 ////cp -r /root/deployment/iwb-template/* /root/deployment/buckets/iwb/bucket1/  need to expose an endpoint so i can copy the template into all of the buckets
@@ -60,11 +60,11 @@ async function deploy(key:string, data:DeploymentData){
 
         console.log('directory is', b.directory)
     
-        await buildTypescript({
-            workingDir: b.directory, 
-            watch:false, 
-            production: true
-          })
+        // await buildTypescript({
+        //     workingDir: b.directory, 
+        //     watch:false, 
+        //     production: true
+        //   })
         
         await deployBucket(key)
     

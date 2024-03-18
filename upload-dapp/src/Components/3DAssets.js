@@ -184,7 +184,7 @@ const checkModelSize = ()=>{
     try {
 
       console.log('upload token is', token)
-      const result = await axios.post((DEBUG ? "http://localhost:3525" : 'https://dcl-iwb.co/dcl/deployment') + "/upload", formData, 
+      const result = await axios.post((DEBUG ? "http://localhost:3525" : 'https://deployment.dcl-iwb.co') + "/upload", formData, 
 
         // const result = await axios.post('https://dcl-iwb.co/dcl/deployment/upload', formData, 
         {headers: {
@@ -195,18 +195,18 @@ const checkModelSize = ()=>{
 
         console.log('asset upload result is', result.data); // result is server's response
 
-    } catch(error){
-        console.error(error);
-        setAssetState("failure")
-    } finally {
-      setAssetState("success")
+        setAssetState("success")
         console.log('Upload complete');
         setTimeout(()=>{
                   // resetLoader()
         // setAssetState('configure')
         window.close();
         }, 2000)
-    }
+
+    } catch(error){
+        console.error(error);
+        setAssetState("failure")
+    } 
   }
 
   return (

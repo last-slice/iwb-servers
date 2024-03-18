@@ -61,7 +61,7 @@ export class Player extends Schema {
     this.playFabData = client.auth.playfab
     this.dclData = client.userData
     this.address = client.userData.userId
-    this.name = client.userData.displayName
+    this.name = client.userData.name
 
     this.mode = SCENE_MODES.PLAYMODE
 
@@ -107,7 +107,7 @@ export class Player extends Schema {
     //  })
     }
     catch(e){
-     console.log('error setting player stats', this.dclData.displayName)
+     console.log('error setting player stats', this.dclData.name)
     }
      
    }
@@ -130,7 +130,7 @@ export class Player extends Schema {
     let filename = "catalogs.json"
     let catalog:any[] = []
 
-    asset.on = this.dclData.displayName
+    asset.on = this.dclData.name
     asset.pending = true
     asset.ugc = true
 
@@ -172,7 +172,7 @@ export class Player extends Schema {
     //   Body:{
     //     'type': 'PLAYTIME',
     //     'time': now - this.playtime,
-    //     'player':this.dclData.displayName,
+    //     'player':this.dclData.name,
     //     'ethaddress':this.dclData.userId
     //   }
     // })
@@ -236,7 +236,7 @@ export class Player extends Schema {
 
   async cancelPendingDeployment(){
     try{
-        const result = await axios.post("http://localhost:3525/scene/deployment/cancel", { user:this.address, auth: this.pendingDeployment},
+        const result = await axios.post("https://deployment.dcl-iwb.co/scene/deployment/cancel", { user:this.address, auth: this.pendingDeployment},
         // {headers: {
         //   'Authorization': `Bearer ${value2}`,
         // }},

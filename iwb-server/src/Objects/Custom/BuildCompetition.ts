@@ -437,7 +437,7 @@ function handleAction(client:any, info:any){
 }
 
 async function handleSignUp(client:any, info:any, admin?:boolean){
-    console.log('handling sign up for ', client.userData.displayName, client.userData.userId)
+    console.log('handling sign up for ', client.userData.name, client.userData.userId)
     try{
         if(iwbRoom || admin){
             if(admin){}
@@ -465,7 +465,7 @@ async function signUpUser(client:any, admin?:boolean){
     if(!iwbManager.customKeys['Build Competition'].scenes.find((scene:any)=> scene.builder === client.userData.userId)){
         let competitionScene:any = {
             builder: client.userData.userId,
-            name: client.userData.displayName,
+            name: client.userData.name,
             votes:[]
         }
         
@@ -490,12 +490,12 @@ async function signUpUser(client:any, admin?:boolean){
             }
             queueBackup()
         }else{
-            console.log('no more open slots for registration', client.userData.displayName, client.userData.userId)
+            console.log('no more open slots for registration', client.userData.name, client.userData.userId)
             if(admin){}
             else{
                 client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "There are no more open slots for the competition! You are on the wait list to be added manually.")
             }
-            iwbManager.customKeys['Build Competition'].pending.push({builder:client.userData.userId, name:client.userData.displayName})
+            iwbManager.customKeys['Build Competition'].pending.push({builder:client.userData.userId, name:client.userData.name})
         }
     }else{
         console.log('player has already registered', client.dclData.userId)

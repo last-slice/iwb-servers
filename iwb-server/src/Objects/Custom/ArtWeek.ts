@@ -1,10 +1,20 @@
 import { queueBackup } from ".";
 import { iwbManager } from "../../app.config";
 import { IWBRoom } from "../../rooms/IWBRoom";
+import { getTitleData } from "../../utils/Playfab";
 
 export function createArtWeekRouters(router:any){
     router.get('/custom/artweek/get', (req:any, res:any) => {
         res.status(200).send({valid: true, artweek: iwbManager.customKeys['Artweek']})
+    });
+
+    router.get('/custom/artweek/refresh/:auth', async (req:any, res:any) => {
+        if(!req.params.auth || req.params.auth !== process.env.IWB_UPLOAD_AUTH_KEY){
+            res.status(200).send({valid: false, msg: "Invalid Auth"})
+            return
+        }
+        await iwbManager.getServerConfigurations()
+        res.status(200).send({valid: true})
     });
 
     router.post('/custom/artweek/add/:auth', (req:any, res:any) => {

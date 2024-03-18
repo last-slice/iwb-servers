@@ -191,21 +191,40 @@ export class IWBManager{
     }
 
     async deployWorld(world:any, init:boolean){
-        let res = await fetch(process.env.DEPLOYMENT_WORLD_ENDPOINT,{
-            headers:{"content-type":"application/json"},
-            method:"POST",
-            body:JSON.stringify({
-                auth: process.env.DEPLOYMENT_AUTH,
-                world:{
-                    ens:world.ens,
-                    worldName: world.name,
-                    owner: world.owner,
-                    init:init
-                }
+        try{
+            console.log('deploying world')
+            // let response = await axios.post("https://" + PlayfabId + ".playfabapi.com/File/GetFiles",
+            // {
+            //     auth: process.env.DEPLOYMENT_AUTH,
+            //     world:{
+            //         ens:world.ens,
+            //         worldName: world.name,
+            //         owner: world.owner,
+            //         init:init
+            //     }
+            // }) 
+            // console.log('response is', response.data)
+
+            let res = await fetch(process.env.DEPLOYMENT_WORLD_ENDPOINT,{
+                headers:{"content-type":"application/json"},
+                method:"POST",
+                body:JSON.stringify({
+                    auth: process.env.DEPLOYMENT_AUTH,
+                    world:{
+                        ens:world.ens,
+                        worldName: world.name,
+                        owner: world.owner,
+                        init:init
+                    }
+                })
             })
-        })
-        let json = await res.json()
-        console.log('world deployment api response is', json)
+            let json = await res.json()
+            console.log('world deployment api response is', json)
+        }
+        catch(e){
+            console.log('error posting deployment request', e)
+        }
+
     }
 
     async initWorld(world:any){
@@ -639,7 +658,22 @@ export class IWBManager{
         try{
             room.state.realmAssets.delete(ugcAsset.id)
 
-            fs.unlinkSync("" + (DEBUG ? process.env.DEV_DOWNLOAD_UGC_DIRECTORY : process.env.PROD_DOWNLOAD_UGC_DIRECTORY) + path);
+            let response = await axios.get((DEBUG ? "http://localhost:3525/" : "https://deployment.dcl-iwb.co") + 
+            "/ugc/delete/" + 
+            player.address + 
+            "/" + 
+            ugcAsset.id + 
+            "/" + 
+            ugcAsset.ty + 
+            "/" +
+             process.env.DEPLOYMENT_AUTH)
+
+            if(response.data && response.data.valid){
+                console.log('sucessfully deleted ugc asset on server')
+            }else{
+                console.log('failed to remove asset on ugc server', ugcAsset.id, player.address)
+            }
+
             await itemManager.uploadFile(player.address, "catalogs.json", [...room.state.realmAssets.values()])
             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET, {id:ugcAsset.id})
         }

@@ -85,7 +85,7 @@ export class ItemManager{
         let player:Player = iwbManager.findUser(user)
         if(player){
             console.log('we have player, get their info')
-            asset.on = "" + player.dclData.displayName
+            asset.on = "" + player.dclData.name
             player.uploadAsset(asset, true)
 
             pushPlayfabEvent(
