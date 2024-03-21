@@ -259,6 +259,11 @@ export class Player extends Schema {
         let settings = JSON.parse(server.Settings.Value)
         this.settings = settings
 
+        if(this.settings.length === 0){
+          console.log('settings are empty, add some')
+          this.settings = iwbManager.defaultPlayerSettings
+        }
+
        //  console.log('player settings are ', this.settings)
     }
 

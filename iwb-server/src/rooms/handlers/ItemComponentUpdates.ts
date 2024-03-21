@@ -1,5 +1,5 @@
 import { generateId } from "colyseus";
-import { ActionComponent, Actions, Color4, DialogInfoComponent, TriggerActionComponent, TriggerComponent, Triggers } from "../../Objects/Components";
+import { ActionComponent, Actions, Color4, DialogButtonComponent, DialogInfoComponent, TriggerActionComponent, TriggerComponent, Triggers } from "../../Objects/Components";
 import { ACTIONS, COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../../utils/types";
 import { IWBRoom } from "../IWBRoom";
 
@@ -292,6 +292,7 @@ function updateActionComponent(asset:any, info:any, room:IWBRoom){
 
                 case ACTIONS.TELEPORT_PLAYER:
                     action.teleport = info.data.value.action.location
+                    action.teleCam = info.data.value.action.camera
                     break;
 
                 case ACTIONS.EMOTE:
@@ -479,12 +480,22 @@ function updateNPCComponent(asset:any, info:any){
 }
 
 function updateDialogComponent(asset:any, info:any){
-    console.log('new dialog is', info)
+    console.log('new dialog is', info,info.data.value.dialog)
     
     switch(info.type){
         case 'new':
             let dialog = new DialogInfoComponent()
             dialog.text = info.data.value.dialog.text
+            if(info.data.value.dialog.buttons){
+                info.data.value.dialog.buttons.forEach((buttonData:any)=>{
+                    let button = new DialogButtonComponent()
+                    button.label = buttonData.label
+                    buttonData.actions.forEach((action:any)=>{
+                        button.actions.push(action.id)
+                    })
+                    dialog.buttons.push(button)
+                })
+            }
             asset.dialComp.dialogs.push(dialog)
             break;
 

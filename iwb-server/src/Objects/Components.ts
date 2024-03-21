@@ -92,6 +92,7 @@ export class Actions extends Schema {
     @type("string") aid: string
     @type("string") animName: string
     @type("string") teleport: string
+    @type("string") teleCam: string
     @type("boolean") animLoop:boolean
     @type("string") emote: string
     @type("boolean") vis:boolean
@@ -158,12 +159,16 @@ export class NpcComponent extends Schema {
     @type(Color4) hairColor = new Color4(0,0,0,1)
 }
 
+export class DialogButtonComponent extends Schema {
+    @type("string") label: string
+    @type(['string']) actions = new ArraySchema<string>()
+}
+
 export class DialogInfoComponent extends Schema {
     @type("string") text: string
+    @type([DialogButtonComponent]) buttons = new ArraySchema<DialogButtonComponent>
     //audio
     //image
-    //buttons
-    //triggerable actions
 }
 
 export class DialogComponent extends Schema {

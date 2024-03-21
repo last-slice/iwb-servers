@@ -131,6 +131,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     }
 
     async doLogin(client: any, options: any, request: any) {
+        console.log('login options', options)
         return new Promise((resolve) => {
             setTimeout(async() => {
                 // console.log('Timeout finished!');
@@ -195,7 +196,10 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         //set new user display name
         const result = await updatePlayerDisplayName({
-            DisplayName: options.userData.name,
+            DisplayName: options.userData.name === "Guest" ? 
+            options.userData.name + options.userData.userId.substring(options.userData.userid.length - 5) : 
+            options.userData.name,
+            
             PlayFabId: auth.playfab.PlayFabId
         })
        //  console.log('setting player name res is', result)

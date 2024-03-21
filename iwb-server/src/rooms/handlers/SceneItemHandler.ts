@@ -334,7 +334,7 @@ export class RoomSceneItemHandler {
         try{
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
                 let scene = this.room.state.scenes.get(info.sceneId)
-                if(scene){
+                if(scene && this.canBuild(player.address, scene.id)){
                     let sceneItem = scene.ass.find((asset)=> asset.aid === info.assetId)
                     if(sceneItem && !sceneItem.locked){
                         // console.log('found scene item to delete', sceneItem.id, sceneItem.ugc)

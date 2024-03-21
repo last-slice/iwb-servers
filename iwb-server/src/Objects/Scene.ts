@@ -7,6 +7,7 @@ import {
     AudioComponent,
     CollisionComponent,
     Color4,
+    DialogButtonComponent,
     DialogComponent,
     DialogInfoComponent,
     ImageComponent,
@@ -414,6 +415,17 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                         asset.dialComp.dialogs.forEach((data:any)=>{
                             let dialog = new DialogInfoComponent()
                             dialog.text = data.text
+
+                            if(data.buttons){
+                                data.buttons.forEach((buttonData:any)=>{
+                                    let button = new DialogButtonComponent()
+                                    button.label = buttonData.label
+                                    buttonData.actions.forEach((action:any)=>{
+                                        button.actions.push(action)
+                                    })
+                                    dialog.buttons.push(button)
+                                })
+                            }
                             item.dialComp.dialogs.push(dialog)
                         })
                         break;

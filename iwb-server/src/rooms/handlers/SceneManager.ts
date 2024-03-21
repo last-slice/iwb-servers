@@ -25,20 +25,25 @@ export class RoomSceneManager {
         this.room = room
         this.realm = realm
 
-        // let backupInterval = setInterval(async()=>{
-        //     if(this.modified){
-        //         await setTitleData({Key:"Scenes", Value: JSON.stringify(this.scenes)})
-        //         this.modified = false
-        //     }
-        // }, 1000 * 30)
+        try{
+            // let backupInterval = setInterval(async()=>{
+            //     if(this.modified){
+            //         await setTitleData({Key:"Scenes", Value: JSON.stringify(this.scenes)})
+            //         this.modified = false
+            //     }
+            // }, 1000 * 30)
 
-        this.room.state.cv = iwbManager.worlds.find((w:any)=> w.ens === this.room.state.world).cv
+            this.room.state.cv = iwbManager.worlds.find((w:any)=> w.ens === this.room.state.world).cv
 
-       //  console.log('room cv is', this.room.state.cv)
-        // console.log('world cv is', iwbManager.worlds.find((w:any)=> w.ens === this.room.state.world).cv)
-
-        this.initServerScenes()
-        this.initServerAssets()
+            //  console.log('room cv is', this.room.state.cv)
+            // console.log('world cv is', iwbManager.worlds.find((w:any)=> w.ens === this.room.state.world).cv)
+    
+            this.initServerScenes()
+            this.initServerAssets()
+        }
+        catch(e){
+            console.log('error with init scene manager', e)
+        }
     }
 
     initServerScenes(){
@@ -61,7 +66,7 @@ export class RoomSceneManager {
                         iwbManager.fetchRealmData(realmData)
                         .then((realmScenes)=>{
                            //  console.log('realm scenes are ', realmScenes)
-                            iwbManager.fetchRealmScenes(realmScenes)
+                            iwbManager.fetchRealmScenes(this.room.state.world, realmScenes)
                             .then((sceneData)=>{
     
                                 this.loadRealmScenes(sceneData)
