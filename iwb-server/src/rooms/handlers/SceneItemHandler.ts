@@ -20,7 +20,8 @@ import {
     addTriggerAreaComponent,
     addAnimationComponent,
     addNPCComponent,
-    addDialogComponent
+    addDialogComponent,
+    addClickAreaComponent
 } from "../../Objects/Components";
 import { Player } from "../../Objects/Player";
 import { Scene, SceneItem } from "../../Objects/Scene";
@@ -557,6 +558,7 @@ export class RoomSceneItemHandler {
                 case 'Click Area':
                     item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
                     item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
+                    item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
                     break;
 
                 case 'NPC':
@@ -630,6 +632,10 @@ export class RoomSceneItemHandler {
 
             case 'SM':
                 switch(catalogItem.n){
+                    case 'Click Area':
+                        addClickAreaComponent(item)
+                        break;
+
                     case 'Trigger Area':
                         addTriggerAreaComponent(item, selectedAsset ? selectedAsset.trigArComp : null)
                         break;
@@ -650,6 +656,7 @@ export class RoomSceneItemHandler {
         const newItem = new SceneItem()
         newItem.id = item.id
         newItem.aid = item.aid
+        newItem.n = item.n
         newItem.p = new Vector3(item.position)
         newItem.r = new Quaternion(item.rotation)
         newItem.s = new Vector3(item.scale)

@@ -323,6 +323,18 @@ function updateActionComponent(asset:any, info:any, room:IWBRoom){
                 case ACTIONS.SHOW_DIALOG:
                     action.dialID = info.data.value.action.dialID
                     break;
+
+                case ACTIONS.START_TWEEN:
+                    console.log('adding tween action', info.data.value.action.tween)
+                    action.twT = info.data.value.action.tween.type
+                    action.twE = info.data.value.action.tween.ease
+                    action.twD = info.data.value.action.tween.duration
+                    action.twL = info.data.value.action.tween.loop
+                    action.twEX = info.data.value.action.tween.end.x
+                    action.twEY = info.data.value.action.tween.end.y
+                    action.twEZ = info.data.value.action.tween.end.z
+                    break;
+
             }
             asset.actComp.actions.set(generateId(5), action)
             break;

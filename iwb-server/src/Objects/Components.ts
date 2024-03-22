@@ -107,6 +107,13 @@ export class Actions extends Schema {
     @type("number") cVMask:number
     @type("number") cIMask:number
     @type("string") dialID:string
+    @type("number") twT:number
+    @type("number") twE:number
+    @type("number") twD:number
+    @type("number") twL:number
+    @type("number") twEX:number
+    @type("number") twEY:number
+    @type("number") twEZ:number
 }
 
 export class ActionComponent extends Schema {
@@ -177,6 +184,13 @@ export class DialogComponent extends Schema {
     @type("number") i:number = 0
     @type("number") type:number = 0
     @type([DialogInfoComponent]) dialogs = new ArraySchema<DialogInfoComponent>()
+}
+
+export class TweenComponent extends Schema {
+    @type("number") type:number = 0
+    @type("number") duration:number = 1
+    @type("number") easing:number = 0
+    @type("string") endPos:string = "0,0,0"
 }
 
 
@@ -313,6 +327,12 @@ export function addTriggerAreaComponent(item:SceneItem, trigArComp:TriggerAreaCo
             item.trigArComp.lActions.push(action)
         })
     }
+}
+
+export function addClickAreaComponent(item:SceneItem){
+    console.log('adding click area component')
+    item.colComp.iMask = 0
+    item.colComp.vMask = 1
 }
 
 export function addAnimationComponent(item:SceneItem, animations:any){

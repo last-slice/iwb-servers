@@ -131,7 +131,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     }
 
     async doLogin(client: any, options: any, request: any) {
-        console.log('login options', options)
+        // console.log('login options', options)
         return new Promise((resolve) => {
             setTimeout(async() => {
                 // console.log('Timeout finished!');

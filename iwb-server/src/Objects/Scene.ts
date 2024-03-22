@@ -169,21 +169,22 @@ export class Scene extends Schema {
     }
 }
 
-export function  addItemComponents(item: SceneItem, asset: any) {
+export function addItemComponents(item: SceneItem, asset: any) {
     item.comps = asset.comps
+    console.log('asset is', asset)
 
     if(item.type !== "SM"){
-        if(!item.comps.includes(COMPONENT_TYPES.COLLISION_COMPONENT)){
-            item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
-        }
-    
         if(!item.comps.includes(COMPONENT_TYPES.TRIGGER_COMPONENT)){
             item.comps.push(COMPONENT_TYPES.TRIGGER_COMPONENT)
         }
-    
-        if(!item.comps.includes(COMPONENT_TYPES.ACTION_COMPONENT)){
-            item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
-        }
+    }
+
+    if(!item.comps.includes(COMPONENT_TYPES.COLLISION_COMPONENT)){
+        item.comps.push(COMPONENT_TYPES.COLLISION_COMPONENT)
+    }
+
+    if(!item.comps.includes(COMPONENT_TYPES.ACTION_COMPONENT)){
+        item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
     }
 
     item.comps.forEach((component: string) => {
@@ -312,6 +313,7 @@ export function  addItemComponents(item: SceneItem, asset: any) {
 
                             case ACTIONS.TELEPORT_PLAYER:
                                 action.teleport = asset.actComp.actions[key].teleport
+                                action.teleCam = asset.actComp.actions[key].teleCam ? asset.actComp.actions[key].teleCam : undefined
                                 break;
 
                             case ACTIONS.EMOTE:
@@ -338,6 +340,17 @@ export function  addItemComponents(item: SceneItem, asset: any) {
                                 action.startDId = asset.actComp.actions[key].startDId
                                 action.startDTimer = asset.actComp.actions[key].startDTimer
                                 break;
+
+                            case ACTIONS.START_TWEEN:
+                                action.twT = asset.actComp.actions[key].twT
+                                action.twE = asset.actComp.actions[key].twE
+                                action.twD = asset.actComp.actions[key].twD
+                                action.twL = asset.actComp.actions[key].twL
+                                action.twEX = asset.actComp.actions[key].twEX
+                                action.twEY = asset.actComp.actions[key].twEY
+                                action.twEZ = asset.actComp.actions[key].twEZ
+                                break;
+                    break;
                         }
 
                         item.actComp.actions.set(key, action)
