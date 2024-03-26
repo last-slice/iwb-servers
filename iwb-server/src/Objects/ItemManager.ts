@@ -109,9 +109,11 @@ export class ItemManager{
             catalog.push(asset)
             await this.uploadFile(data.o, "catalogs.json", catalog)
 
+            player.playFabData.PlayFabId,
+            
             pushPlayfabEvent(
                 SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, 
-                userData.PlayFabId, 
+                {playfabData:{PlayFabId:userData.PlayFabId}}, 
                 [{name:data.n, type:data.ty}]
             )
         }

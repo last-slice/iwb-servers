@@ -8,6 +8,7 @@ import {playerLogin, updatePlayerDisplayName, updatePlayerInternalData} from "..
 import * as jwt from "jsonwebtoken";
 import { RoomSceneManager } from "./handlers/SceneManager";
 import { createCustomObjects, destroyCustomObjects } from "../Objects/Custom";
+import { pushPlayfabEvent } from "../Objects/PlayfabEvents";
 
 export interface JWTPayloadUserId extends jwt.JwtPayload {
     userId: string
@@ -43,6 +44,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     onCreate(options: any) {
         this.setState(new IWBRoomState());
         this.state.world = options.world
+        this.roomId = this.state.world
        //  console.log('room realm is', options.world)
 
         this.state.messageHandler = new RoomMessageHandler(this)
@@ -118,16 +120,11 @@ export class IWBRoom extends Room<IWBRoomState> {
         this.state.players.set(options.userData.userId, player)
         playerManager.addPlayerToWorld(player)
 
-        //todo
-        // pushPlayfabEvent({
-        //   EventName: 'JOINED',
-        //   PlayFabId: client.auth.PlayFabId,
-        //   Body:{
-        //     'player':options.userData.name,
-        //     'ethaddress':options.userData.userId,
-        //     'ip': client.auth.ip
-        //   }
-        // })
+        pushPlayfabEvent(
+            SERVER_MESSAGE_TYPES.PLAYER_JOINED, 
+            player, 
+            [{world:options.world}]
+        )
     }
 
     async doLogin(client: any, options: any, request: any) {

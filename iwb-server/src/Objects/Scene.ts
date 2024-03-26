@@ -171,7 +171,7 @@ export class Scene extends Schema {
 
 export function addItemComponents(item: SceneItem, asset: any) {
     item.comps = asset.comps
-    console.log('asset is', asset)
+    // console.log('asset is', asset)
 
     if(item.type !== "SM"){
         if(!item.comps.includes(COMPONENT_TYPES.TRIGGER_COMPONENT)){

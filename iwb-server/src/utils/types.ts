@@ -3,6 +3,7 @@
 export enum SERVER_MESSAGE_TYPES {
     INIT = "init",
     PLAYER_LEAVE = "player_leave",
+    PLAYER_JOINED = 'player_joined',
 
     // Parcels
     SELECT_PARCEL = "select_parcel",
@@ -69,6 +70,7 @@ export enum SERVER_MESSAGE_TYPES {
     REMOVED_TUTORIAL = 'removed_tutorial',
     UPDATED_TUTORIAL_CID = 'updated_tutorial_cid', 
     WORLD_TRAVEL = 'world_travel',
+    PLAYTIME = 'playtime',
 
     CUSTOM = "custom"
 }

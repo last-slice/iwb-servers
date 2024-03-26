@@ -8,6 +8,7 @@ import { generateId } from "colyseus";
 import { ImageComponent, MaterialComponent, NFTComponent } from "./Components";
 import { itemManager, iwbManager } from "../app.config";
 import axios from "axios";
+import { pushPlayfabEvent } from "./PlayfabEvents";
 
 export class SelectedAsset extends Schema {
   @type("string") catalogId: string
@@ -52,6 +53,7 @@ export class Player extends Schema {
   catalog:Map<string,any> = new Map()
   pendingAssets:any[] = []
   pendingDeployment:any = false
+  startTime:any
 
   constructor(room:IWBRoom, client:Client){
     super()
@@ -64,6 +66,8 @@ export class Player extends Schema {
     this.name = client.userData.name
 
     this.mode = SCENE_MODES.PLAYMODE
+
+    this.startTime = Math.floor(Date.now()/1000)
 
  //    console.log('playfab settings', this.playFabData)
     this.setSettings(this.playFabData.InfoResultPayload.UserData)
@@ -154,12 +158,19 @@ export class Player extends Schema {
   }
 
   async saveCache(){
-    // await this.recordPlayerTime()
+    await this.recordPlayerTime()
     await this.saveToDB()
   }
 
   async recordPlayerTime(){
     let now = Math.floor(Date.now()/1000)
+    let time = now - this.startTime
+
+    pushPlayfabEvent(
+      SERVER_MESSAGE_TYPES.PLAYTIME, 
+      this, 
+      [{playtime: time}]
+  )
 
     // this.increaseValueInMap(this.stats, 'pt', now-this.playtime)
 

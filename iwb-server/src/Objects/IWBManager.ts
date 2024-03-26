@@ -113,9 +113,16 @@ export class IWBManager{
         }
     }
 
-    async getServerConfigurations(init?:boolean){
+    async getServerConfigurations(init?:boolean, keys?:any[]){
         try{
-            let response = await await getTitleData({Keys: ["Config", "Scenes", "Worlds", "CUSTOM", "Tutorials"]})
+            let serverKeys:any = []
+            if(keys){
+                serverKeys = keys
+            }else{
+                serverKeys = ["Config", "Scenes", "Worlds", "CUSTOM", "Tutorials"]
+            }
+            
+            let response = await await getTitleData({Keys: serverKeys})
             
             let config = JSON.parse(response.Data['Config'])
             this.version = config.v
@@ -219,6 +226,7 @@ export class IWBManager{
             })
             let json = await res.json()
             console.log('world deployment api response is', json)
+            this.createRealmLobby(world, true)
         }
         catch(e){
             console.log('error posting deployment request', e)
@@ -237,7 +245,7 @@ export class IWBManager{
     saveNewWorld(world:any){
         console.log('saving new world', world)
         world.updated = Math.floor(Date.now()/1000)
-        world.builds = 0
+        world.builds = 1
         world.v = this.version
 
         this.rooms.forEach((room:IWBRoom)=>{
@@ -246,7 +254,7 @@ export class IWBManager{
 
         if(world.init){
             delete world.init
-            this.createRealmLobby(world, true)
+            // this.createRealmLobby(world, true)
         }else{
             delete world.init
             let cachedWorld = this.worlds.find((w)=> w.ens === world.ens)

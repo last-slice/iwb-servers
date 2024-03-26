@@ -56,6 +56,12 @@ export function iwbRouter(router:any){
         res.status(200).send({valid: true, msg: "refreshing server config"})
     });
 
+    router.get("/refresh/config/:keys", (req: any, res: any) => {
+        console.log('refresh cached worlds config on server')
+        iwbManager.getServerConfigurations(undefined,  req.params.keys ? req.params.keys.contains("|") ? req.params.keys.split("|") : [req.params.keys] : [])
+        res.status(200).send({valid: true, msg: "refreshing worlds config"})
+    });
+
     router.get("/update/assets/:world", async (req: any, res: any) => {
         console.log('receive ping to update world assets')
         iwbManager.updateRealmPendingAssets(req.params.world)

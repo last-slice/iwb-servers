@@ -1,4 +1,5 @@
 import { addEvent } from "../utils/Playfab"
+import { Player } from "./Player"
 
 
 let eventQueue:any[] = []
