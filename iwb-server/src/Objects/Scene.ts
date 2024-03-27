@@ -420,7 +420,7 @@ export function addItemComponents(item: SceneItem, asset: any) {
                     break;
 
                     case COMPONENT_TYPES.DIALOG_COMPONENT:
-                        console.log('dialog asset', asset.dialComp)
+                        // console.log('dialog asset', asset.dialComp)
                         item.dialComp = new DialogComponent()
                         item.dialComp.id = asset.dialComp.id
                         item.dialComp.name = asset.dialComp.name

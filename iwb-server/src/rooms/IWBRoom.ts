@@ -38,13 +38,13 @@ export class IWBRoom extends Room<IWBRoomState> {
         // // return auth data so we can read in onJoin
         // return {...decodedToken, ...await this.doLogin(client, options, req)}
 
-        return await this.doLogin(client, options, req)//        
+        return await this.doLogin(client, options, req)   
     }
 
     onCreate(options: any) {
         this.setState(new IWBRoomState());
         this.state.world = options.world
-        this.roomId = this.state.world
+        // this.roomId = this.state.world
        //  console.log('room realm is', options.world)
 
         this.state.messageHandler = new RoomMessageHandler(this)
@@ -191,6 +191,7 @@ export class IWBRoom extends Room<IWBRoomState> {
 
     async initializeServerPlayerData(options: any, auth: any) {
 
+            console.log('options are', options)
         //set new user display name
         const result = await updatePlayerDisplayName({
             DisplayName: options.userData.name === "Guest" ? 

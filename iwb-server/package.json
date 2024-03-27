@@ -37,7 +37,7 @@
     "@colyseus/playground": "^0.15.3",
     "@colyseus/tools": "^0.15.0",
     "axios": "^1.5.0",
-    "colyseus": "latest",
+    "colyseus": "^0.15.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "decentraland-crypto-middleware": "^1.2.0",
