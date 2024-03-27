@@ -8,19 +8,53 @@ export async function writeComponentFile(location:string, data:any){
 
 export async function writeComponentFunctions(){
     let scene = `
-import { AudioSource, AudioStream, Entity, GltfContainer, Material, NftShape, TextShape, Transform, VideoPlayer, engine } from "@dcl/sdk/ecs"
+    import {
+        Animator,
+        AudioSource,
+        AudioStream,
+        AvatarShape,
+        ColliderLayer,
+        Entity,
+        GltfContainer,
+        Material,
+        MeshCollider,
+        MeshRenderer,
+        NftShape,
+        TextShape,
+        Transform,
+        VideoPlayer,
+        VisibilityComponent,
+        engine
+    } from "@dcl/sdk/ecs";
 import { Color4 } from "@dcl/sdk/math"
-`
+import {COLLISION_LAYERS, COMPONENT_TYPES, IWBScene, MATERIAL_TYPES, Materials, SCENE_MODES, SceneItem, SelectedItem} from "./types";
 
+`
+    scene = await writeVisibilityComponent(scene)
     scene = await writeTextComponent(scene)
     scene = await writeGLTFComponent(scene)
     scene = await writeImageComponent(scene)
     scene = await writeVideoComponent(scene)
     scene = await writeNFTComponent(scene)
     scene = await writeAudioComponent(scene)
+    scene = await writeAnimationComponent(scene)
     scene = await writeExports(scene)
     return scene
 }
+
+async function writeVisibilityComponent(scene:any){
+    scene += `
+function createVisiblityComponent(entity:Entity, item:any){
+    if(item.comps.includes(COMPONENT_TYPES.VISBILITY_COMPONENT)){
+        VisibilityComponent.create(entity, {
+            visible:  item.visComp.visible
+        })
+    }
+}
+`
+    return scene
+}
+
 async function writeTextComponent(scene:any){
     scene += `
 function updateTextComponent(entity:Entity, item:any){
@@ -47,6 +81,11 @@ function createGltfComponent(entity:Entity, item:any){
         visibleMeshesCollisionMask: item.colComp && item.colComp.vMask ? item.colComp && item.colComp.vMask : undefined
     }
     GltfContainer.create(entity, gltf)
+
+    if(item.animComp && item.animComp.enabled){
+        console.log("item has anim comp", item.animComp)
+        addAnimationComponent(entity, item)
+    }
 }
 `
     return scene
@@ -144,9 +183,33 @@ function updateAudioComponent(entity:Entity, item:any){
     return scene
 }
 
+async function writeAnimationComponent(scene:any){
+    scene +=`
+    function addAnimationComponent(entity:Entity, item:SceneItem){
+        let animations:any[] = []
+    
+        item.animComp.animations.forEach((animation:string, i:number)=>{
+            let anim:any = {
+                clip:animation,
+                playing: false,
+                loop: false
+            }
+            animations.push(anim)
+        })
+    
+        Animator.createOrReplace(entity, {
+            states:animations
+        })
+    }
+`
+    return scene
+}
+
+
 async function writeExports(scene:any){
     scene +=`
 export {
+    createVisiblityComponent,
     createGltfComponent, 
     updateTextComponent, 
     updateImageUrl, 

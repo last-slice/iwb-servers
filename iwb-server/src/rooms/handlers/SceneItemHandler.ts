@@ -546,7 +546,7 @@ export class RoomSceneItemHandler {
         item.comps.push(COMPONENT_TYPES.TRANSFORM_COMPONENT)
         item.comps.push(COMPONENT_TYPES.VISBILITY_COMPONENT)
 
-        // console.log('adding item components to item', item.type, catalogItem)
+        console.log('adding item components to item', item.type, catalogItem)
 
         if(item.type === "SM"){
             switch(catalogItem.n){
@@ -634,6 +634,7 @@ export class RoomSceneItemHandler {
                 switch(catalogItem.n){
                     case 'Click Area':
                         addClickAreaComponent(item)
+                        // addTriggerComponent()
                         break;
 
                     case 'Trigger Area':

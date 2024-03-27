@@ -195,7 +195,7 @@ export class IWBRoom extends Room<IWBRoomState> {
         //set new user display name
         const result = await updatePlayerDisplayName({
             DisplayName: options.userData.name === "Guest" ? 
-            options.userData.name + options.userData.userId.substring(options.userData.userid.length - 5) : 
+            options.userData.name + options.userData.userId.substring(options.userData.userId.length - 5) : 
             options.userData.name,
             
             PlayFabId: auth.playfab.PlayFabId

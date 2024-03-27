@@ -16,6 +16,7 @@ import { Entity, GltfContainer, Material, MeshCollider, MeshRenderer, Transform,
 import { Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { scene } from "./config"
 import * as IWB from './components'
+import { enableSceneEntities } from './playMode'
 `
     return scene
 }
@@ -25,12 +26,16 @@ export async function writeParent(template:any){
 export let sceneParent:Entity
 export let iwbAssets:any[] = []
 
-export function initIWBScene(){
-    createParent()
-    createSceneItems()
+export let itemIdsFromEntities: Map<number, any> = new Map()
+export let entitiesFromItemIds: Map<string, Entity> = new Map()
+
+export async function initIWBScene(){
+    await createParent()
+    await createSceneItems()
+    enableSceneEntities(scene)
 }
 
-function createParent(){
+async function createParent(){
     sceneParent = engine.addEntity()
      const [x1, y1] = scene.bpcl.split(",")
      let x = parseInt(x1)
@@ -44,13 +49,14 @@ function createParent(){
 
 export async function writeItems(template:any){
     template += `
-function createSceneItems(){
+async function createSceneItems(){
+    scene.entities = []
+    
     scene.ass.forEach((item:any)=>{
         let entity = engine.addEntity()
         Transform.create(entity, {parent:sceneParent, position:item.p, rotation:Quaternion.fromEulerDegrees(item.r.x, item.r.y, item.r.z), scale:item.s})
         addAssetComponents(entity, item, item.type, item.n)
     })
-    console.log(iwbAssets)
 }
 `
 return template
@@ -59,7 +65,10 @@ return template
 export async function writeComponents(template:any){
 
     template += `
-function addAssetComponents(entity:Entity, item:any, type:string, name:string){
+async function addAssetComponents(entity:Entity, item:any, type:string, name:string){
+
+    IWB.createVisiblityComponent(entity, item)
+
     switch(type){
 `
     template = await writeGLTFComponent(template)
@@ -71,6 +80,10 @@ function addAssetComponents(entity:Entity, item:any, type:string, name:string){
     template += `
     }
     iwbAssets.push({entity:entity, data:item})
+    scene.entities.push(entity)
+
+    itemIdsFromEntities.set(entity, item.aid)
+    entitiesFromItemIds.set(item.aid, entity)
 }`
 
     return template

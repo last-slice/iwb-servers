@@ -24,10 +24,8 @@ export class RoomSceneHandler {
                 if(scene){
                     for(let i = 0; i < scene.ass.length; i++){
                         let asset = scene.ass[i]
-                        if(asset.type === "2D"){
-                            let itemConfig = itemManager.items.get(asset.id)
-                            asset.n = itemConfig.n
-                        }   
+                        let itemConfig = itemManager.items.get(asset.id)
+                        asset.n = itemConfig.n
                     }
 
                     try{

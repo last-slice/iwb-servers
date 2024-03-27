@@ -41,6 +41,30 @@ export async function copyAssets(location:string, data:any){
     }
 }
 
+export async function copyUITextures(location:string, data:any){
+    if (await checkFileExists(assetDirectory + "atlas1.png")) {
+        try{
+            await fs.copy(assetDirectory + "atlas1.png", location + "atlas1.png")
+        }
+        catch(e){
+            console.error(`Error copying file: ${e}`);
+        }
+    }else{
+        console.log('file doesnt exist', assetDirectory + "atlas1.png")
+    }
+
+    if (await checkFileExists(assetDirectory + "atlas2.png")) {
+        try{
+            await fs.copy(assetDirectory + "atlas2.png", location + "atlas2.png")
+        }
+        catch(e){
+            console.error(`Error copying file: ${e}`);
+        }
+    }else{
+        console.log('file doesnt exist', assetDirectory + "atlas2.png")
+    }
+}
+
 async function checkFileExists(filePath: string) {
     try {
       fs.accessSync(filePath, fs.constants.F_OK);

@@ -1,6 +1,7 @@
 import * as fsExtra from 'fs-extra';
 import { buildScene, temporaryDirectory } from './scripts';
 import { zipScene } from './scripts/zip';
+import { status } from '../config/config';
 const { v4: uuidv4 } = require('uuid');
 
 let downloadQueue:any[] = []
@@ -69,7 +70,7 @@ export async function addDownloadQueue(sceneId:string, user:string, time:number)
     let id = uuidv4()
     downloadQueue.push({user:user, time:time, id:id, sceneId:sceneId})
     try{
-        let res = await fetch(process.env.IWB_PATH + "download/ready",{
+        let res = await fetch((status.DEBUG ? process.env.IWB_DEV_PATH : process.env.PROD_PATH ) + "download/ready",{
             method:"POST",
             headers:{"Content-type":"application/json"},
             body:JSON.stringify({
