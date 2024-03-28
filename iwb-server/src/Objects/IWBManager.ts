@@ -225,8 +225,13 @@ export class IWBManager{
                 })
             })
             let json = await res.json()
-            console.log('world deployment api response is', json)
-            this.createRealmLobby(world, true)
+            console.log('world deployment api response is', json, world)
+            this.createRealmLobby({
+                ens:world.ens,
+                worldName: world.name,
+                owner: world.owner,
+                init:init
+            }, true)
         }
         catch(e){
             console.log('error posting deployment request', e)
@@ -248,14 +253,12 @@ export class IWBManager{
         world.builds = 1
         world.v = this.version
 
-        delete world.init
-
         this.rooms.forEach((room:IWBRoom)=>{
             room.broadcast(SERVER_MESSAGE_TYPES.NEW_WORLD_CREATED, world)
         })
 
         if(world.init){
-            
+            delete world.init
             // this.createRealmLobby(world, true)
         }else{
             delete world.init

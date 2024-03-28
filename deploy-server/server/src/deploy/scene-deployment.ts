@@ -308,7 +308,7 @@ function copyFolder(source:string, destination:string) {
   }
 
 async function successIWBServer(bucket:any, data:DeploymentData){
-    let res = await fetch(process.env.IWB_PATH + "deployment/success",{
+    let res = await fetch((status.DEBUG ? process.env.IWB_DEV_PATH : process.env.IWB_PROD_PATH) + "deployment/success",{
         method:"POST",
         headers:{"content-type":"application/json"},
         body:JSON.stringify({
