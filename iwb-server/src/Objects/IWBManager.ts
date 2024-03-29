@@ -226,12 +226,15 @@ export class IWBManager{
             })
             let json = await res.json()
             console.log('world deployment api response is', json, world)
-            this.createRealmLobby({
-                ens:world.ens,
-                worldName: world.name,
-                owner: world.owner,
-                init:init
-            }, true)
+
+            if(init){
+                this.createRealmLobby({
+                    ens:world.ens,
+                    worldName: world.name,
+                    owner: world.owner,
+                    init:init
+                }, true)
+            }
         }
         catch(e){
             console.log('error posting deployment request', e)
