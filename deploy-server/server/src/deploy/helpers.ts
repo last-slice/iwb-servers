@@ -2,7 +2,6 @@ import path from 'path'
 import { spawn } from 'child_process'
 import fetch from 'node-fetch'
 import fs from 'fs-extra'
-import { workingDirectory } from './gc-deployment'
 
 // import { readJSON } from '../utils/filesystem'
 // import { getNodeModulesPath } from '../utils/project'

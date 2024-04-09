@@ -1,9 +1,7 @@
-import fs from 'fs-extra'
-import path from 'path'
 import ignore from 'ignore'
 
 import { buildTypescript, getSceneFile } from "./helpers"
-import { ContentClient, DeploymentBuilder, createCatalystClient } from 'dcl-catalyst-client'
+import { ContentClient, DeploymentBuilder, createCatalystClient, createContentClient } from 'dcl-catalyst-client'
 import { ChainId, EntityType, getChainName } from '@dcl/schemas'
 import { Authenticator } from '@dcl/crypto'
 import { getCatalystServersFromCache } from 'dcl-catalyst-client/dist/contracts-snapshots'
@@ -12,11 +10,14 @@ import Axios from 'axios'
 import { deployBuckets } from './buckets'
 import { resetBucket } from '.'
 import { buildScene } from '../download/scripts'
+import { status } from "../config/config";
+
 const { v4: uuidv4 } = require('uuid');
 
-export let workingDirectory = "/Users/lastraum/Desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/buckets/gc"
-// export let workingDirectory = "/Users/lastraum/Downloads/scene/"
+const fs = require('fs-extra');
+const path = require('path');
 
+export let dclBucketDirectory = status.DEBUG ? "/Users/lastraum/Desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/buckets/gc/" : "/root/iwb-deployment/buckets/gc/"
 export let pendingDeployments:any = {}
 
 export interface IFile {
@@ -32,8 +33,8 @@ export async function handleGenesisCityDeployment(key:string, data:any){
   bucket.owner = data.user
   bucket.address = data.user
 
-  let bucketDirectory = path.join(workingDirectory, key)
-  console.log('bucket directory is', bucketDirectory)
+  let bucketDirectory = path.join(dclBucketDirectory, key)
+  console.log('dcl bucket directory is', bucketDirectory, data)
 
     try{
       if(pendingDeployments[data.user]){
@@ -41,7 +42,11 @@ export async function handleGenesisCityDeployment(key:string, data:any){
       }else{
         pendingDeployments[data.user] = {
           status:"building",
-          data: data
+          data: data,
+          name: data.name,
+          dest: data.dest,
+          worldName: data.worldName,
+          tokenId: data.tokenId
         }
 
         await buildScene(data.scene, "deploy", bucketDirectory, data.parcel !== null ? data.parcel : undefined, data.worldName !== null ? data.worldName : undefined)
@@ -86,19 +91,36 @@ export async function handleGenesisCityDeployment(key:string, data:any){
           console.log('pending deployments', pendingDeployments)
 
           try{
-            const result = await Axios.post(process.env.IWB_PATH + "scene/deployment/ready", 
-            { user:data.user, 
+            console.log('senging message', {
+              user:data.user, 
               auth:pendingDeployments[data.user].auth, 
               entityId:pendingDeployments[data.user].entityId, 
-              data:pendingDeployments[data.user].data,
+              // data:pendingDeployments[data.user].data,
               bucket: key
-            },
+            })
+            const result = await fetch((status.DEBUG ? process.env.IWB_DEV_PATH : process.env.IWB_PROD_PATH) + "scene/deployment/ready",
             {headers: {                      
-                'Authorization': `Bearer ${process.env.IWB_DEPLOYMENT_AUTH}`,
-            }},
-            );
-            console.log('result is', result.data)
-            if(result.data.valid){
+                'Authorization': `${process.env.IWB_DEPLOYMENT_AUTH}`,
+                "content-type":"application/json"
+            },
+            method:"POST",
+            body: JSON.stringify({
+              user:data.user, 
+              auth:pendingDeployments[data.user].auth, 
+              entityId:pendingDeployments[data.user].entityId, 
+              data:{
+                worldName:pendingDeployments[data.user].worldName,
+                name:pendingDeployments[data.user].name,
+                dest:pendingDeployments[data.user].dest,
+                tokenId: pendingDeployments[data.user].tokenId
+              },
+              bucket: key
+            })
+          });
+          let res = await result.json()
+            console.log('result is', res)
+
+            if(res.valid){
               console.log('valid ping, now wait for user to accept link')
               pendingDeployments[data.user].status = "signature"
             }else{
@@ -106,7 +128,7 @@ export async function handleGenesisCityDeployment(key:string, data:any){
             }
         }
         catch(e:any){
-            console.log('error posting to iwb server', e.message)
+            console.log('error posting to iwb server', e)
             resetDeployment(key)
         }
       }
@@ -122,7 +144,7 @@ export function resetDeployment(key:string){
     console.log('begin resetting bucket', key)
     let bucket = deployBuckets.get(key)
     delete pendingDeployments[bucket.owner]
-    // resetBucket(key)
+    resetBucket(key)
 }
 
 export async function pingCatalyst(req:any, res:any){//entityId:any, address:any, signature:any){
@@ -134,10 +156,6 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
       let target:any
       if(req.body.target){
         target = req.body.target
-        if(req.body.dest === "worlds"){
-          target += "/world/" + req.body.world
-        }
-
         console.log("target is", target)
       }
   
@@ -176,6 +194,13 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
   //     url = 'peer.decentraland.zone'
   //   } else {
 
+  if(req.body.dest === "worlds"){
+      catalyst = createContentClient({
+        url: target,
+        fetcher: createFetchComponent()
+      })
+  }
+  else{
       if(target){
           catalyst = await createCatalystClient({
               url: target,
@@ -199,6 +224,7 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
           url = publicUrl
           break
         }
+      }
       }
     }
   
@@ -283,7 +309,7 @@ async function getFiles({
     skipFileSizeCheck?: boolean
   } = {}, bucketDirectory:string): Promise<IFile[]> {
 
-    console.log('ignored files are ', ignoreFiles)
+    // console.log('ignored files are ', ignoreFiles)
 
     const files = await getAllFilePaths(bucketDirectory, bucketDirectory)
     const filteredFiles = (ignore as any)()
@@ -306,7 +332,7 @@ async function getFiles({
     //   }
 
       const content = await fs.readFile(filePath)
-      console.log('file is', filePath)
+      // console.log('file is', filePath)
 
       data.push({
         path: file.replace(/\\/g, '/'),

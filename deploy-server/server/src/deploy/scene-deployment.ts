@@ -13,7 +13,8 @@ const command = status.DEBUG ? '/Users/lastraum/desktop/programming/decentraland
 
 export let iwbDeploymentQueue:DeploymentData[] = []
 let worldBucketDirectory = status.DEBUG ? "/Users/lastraum/Desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/buckets/iwb/" : "/root/iwb-deployment/buckets/iwb/"
-let assetDirectory = status.DEBUG ? "/Users/lastraum/Desktop/programming/decentraland/lastslice/sdk7/iwb/toolset/" : "/root/iwb-assets/"
+let assetDirectory = status.DEBUG ? "/Users/lastraum/Desktop/programming/decentraland/lastslice/sdk7/iwb/toolset/assets/" : "/root/iwb-assets/"
+let ugcDirectory = status.DEBUG ? "/Users/lastraum/Desktop/programming/decentraland/lastslice/sdk7/iwb" : "/root"
 
 ////cp -r /root/deployment/iwb-template/* /root/deployment/buckets/iwb/bucket1/  need to expose an endpoint so i can copy the template into all of the buckets
 
@@ -43,6 +44,8 @@ export async function checkDeploymentQueue(){
                 console.log('no buckets available for deployment')
             }
           }
+    }else{
+        console.log('deployment queue has no pending deployments')
     }
 }
 
@@ -94,6 +97,9 @@ async function deployBucket(key:string){
 
         deployProcess.stderr.on('data', (data:any) => {
             console.log(`stderr: ${data}`);
+            if(data === "error: Could not upload content:"){
+                deployProcess.kill()
+            }
         });
 
         deployProcess.on('exit', (code:any, signal:any) => {
@@ -105,7 +111,8 @@ async function deployBucket(key:string){
                 console.error(`Child process exited with code ${code}.`);
                 reject()
                 throw new Error("DCL Deployment Error")
-              }        
+              }
+              deployProcess.kill()        
         });
 
       } catch (error) {
@@ -174,6 +181,10 @@ async function deployBucket(key:string){
 
 export async function resetBucket(key:string){
     console.log('resetting iwb world bucket', key)
+
+    let b = iwbBuckets.get(key)
+    b.status = "resetting"
+
     // const projectRoot = "../../"
     // const bucketsFolderPath = path.join(projectRoot, 'buckets'); // Path to the "buckets" folder
     // const dep1FolderPath = path.join(bucketsFolderPath, key); // Path to the "dep1" folder inside "buckets"
@@ -204,7 +215,6 @@ export async function resetBucket(key:string){
         await fs.emptyDir(path.join(worldBucketDirectory, key, "assets"))
         // await fs.emptyDir(path.join(worldBucketDirectory, key, "src", "iwb"))
 
-        let b = iwbBuckets.get(key)
         b.status = "free"
         b.available = true
         b.owner = ""
@@ -256,7 +266,7 @@ async function buildBucket(key:string, bucket:any, world:string){
         await copyFiles(assetDirectory, path.join(bucketPath, "assets"));
 
         try {
-            let ugcPath = path.join('/root', 'ugc-assets', world)
+            let ugcPath = path.join(ugcDirectory, 'ugc-assets', world)
             console.log('ugc path is', ugcPath)
 
             await fs.access(ugcPath, fs.constants.F_OK);

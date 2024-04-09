@@ -15,6 +15,8 @@ import { writeDialogPanelUI } from './dialogUI';
 import { writeHelperFile } from './helper';
 import { writeUIConfigFile } from './uiConfig';
 import { writeResourcesFile } from './resources';
+import { writeUITextComponentFile } from './uiTextComponent';
+import { writeLibrariesFile } from './libraries';
 const path = require('path');
 
 export let templateDirectory = process.env.NODE_ENV === "Development" ? process.env.DEV_DOWNLOAD_TEMPLATE_DIRECTORY : process.env.PROD_DOWNLOAD_TEMPLATE_DIRECTORY
@@ -40,6 +42,8 @@ export async function buildScene(data:any, type:string, bucketDirectory?:string,
         await writeActionsFile(path.join(directory, 'src/iwb/actions.ts'), data)
         await writeUIFile(path.join(directory, 'src/iwb/ui.tsx'), data)
         await writeDialogPanelUI(path.join(directory, 'src/iwb/dialogPanel.tsx'), data)
+        await writeUITextComponentFile(path.join(directory, 'src/iwb/showTextComponent.tsx'), data)
+        await writeLibrariesFile(path.join(directory, 'src/iwb/libraries.ts'), data)
         await writeHelperFile(path.join(directory, 'src/iwb/helpers.ts'), data)
         await writeUIConfigFile(path.join(directory, 'src/iwb/uiConfig.ts'), data)
         await writeResourcesFile(path.join(directory, 'src/iwb/resources.ts'), data)

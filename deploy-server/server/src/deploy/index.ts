@@ -1,5 +1,5 @@
 import { status } from "../config/config";
-import { handleGenesisCityDeployment, pendingDeployments, workingDirectory } from "./gc-deployment";
+import { dclBucketDirectory, handleGenesisCityDeployment, pendingDeployments } from "./gc-deployment";
 import { deployBuckets } from "./buckets";
 import { DCLDeploymentData } from "src/utils/types";
 
@@ -14,8 +14,9 @@ export function checkDCLDeploymentQueue(){
             if(bucket.available && bucket.enabled){
                 console.log('dcl bucket ' + key + " is available")
                 bucket.available = false
-
+                bucket.directory = path.join(dclBucketDirectory, key)
                 let deploymentData:DCLDeploymentData = dclDeploymentQueue.shift()
+
                 try{
                     handleGenesisCityDeployment(key, deploymentData)
                 }
@@ -41,17 +42,20 @@ function failBucket(key:any){
 
 export async function resetBucket(key:string){
     console.log('resetting dcl bucket', key)
-    try{
-         //remove assets files
-         await fs.emptyDir(path.join(workingDirectory, key, "assets"))
-         await fs.emptyDir(path.join(workingDirectory, key, "src", "iwb"))
 
-         let b = deployBuckets.get(key)
-         b.status = "free"
-         b.available = true
-         b.owner = ""
-         b.address = ""
-         checkDCLDeploymentQueue()
+    let b = deployBuckets.get(key)
+    b.status = "resetting"
+
+    try{
+        await fs.emptyDir(path.join(dclBucketDirectory, key, "assets"))
+        await fs.emptyDir(path.join(dclBucketDirectory, key, "src", "iwb"))
+
+        b.status = "free"
+        b.available = true
+        b.owner = ""
+        b.address = ""
+        b.directory = ""
+        checkDCLDeploymentQueue()
 
     }
     catch(e){
@@ -96,7 +100,6 @@ export async function handleDeploymentRequest(req:any, res:any){
             case 'worlds':
                 dclDeploymentQueue.push(req.body)
                 checkDCLDeploymentQueue()
-
                 res.status(200).json({valid: true, msg:"Deployment pending..."})
                 break;
 
@@ -106,12 +109,16 @@ export async function handleDeploymentRequest(req:any, res:any){
         }
     }
     else{
-        if(!req.body || !req.header('Auth')){
+        if(!req.body || (!req.header('Auth') || req.header('Auth') !== process.env.IWB_DEPLOYMENT_AUTH)){
             res.status(200).json({valid:false, msg:"invalid parameters"})
             return
         }
 
-        res.status(200).json({valid:true})
-        handleGenesisCityDeployment(req, res)
+        dclDeploymentQueue.push(req.body)
+        checkDCLDeploymentQueue()
+        res.status(200).json({valid: true, msg:"Deployment pending..."})
+
+        // res.status(200).json({valid:true})
+        // handleGenesisCityDeployment(req, res)
     }
 }

@@ -36,9 +36,12 @@ export default config({
 
         app.use(cors({origin: true}))
         app.options('*', cors());
-        app.use(bodyParser.urlencoded({limit: '50mb', extended: true,  parameterLimit: 50000 }));
+        app.use(bodyParser.urlencoded({limit: '50mb', extended: true }));
+        app.use(bodyParser.json({ limit: '150mb' }));
         app.use(express.static('public'));
         app.use(express.static(path.join(__dirname, '..', 'public')));
+        app.use(express.static(path.join('/root/iwb', 'dapps', 'upload')));
+        app.use(express.static(path.join('/root/iwb', 'dapps', 'deploy')));
         app.use("/", router);
 
 

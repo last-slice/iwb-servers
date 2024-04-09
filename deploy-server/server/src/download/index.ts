@@ -70,7 +70,7 @@ export async function addDownloadQueue(sceneId:string, user:string, time:number)
     let id = uuidv4()
     downloadQueue.push({user:user, time:time, id:id, sceneId:sceneId})
     try{
-        let res = await fetch((status.DEBUG ? process.env.IWB_DEV_PATH : process.env.PROD_PATH ) + "download/ready",{
+        let res = await fetch((status.DEBUG ? process.env.IWB_DEV_PATH : process.env.IWB_PROD_PATH ) + "download/ready",{
             method:"POST",
             headers:{"Content-type":"application/json"},
             body:JSON.stringify({

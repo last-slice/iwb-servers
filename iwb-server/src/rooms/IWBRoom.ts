@@ -191,7 +191,9 @@ export class IWBRoom extends Room<IWBRoomState> {
 
     async initializeServerPlayerData(options: any, auth: any) {
 
-            console.log('options are', options)
+        // console.log('options are', options)
+        options.userData.name.replace(" ", "_").trim()
+
         //set new user display name
         const result = await updatePlayerDisplayName({
             DisplayName: options.userData.name === "Guest" ? 

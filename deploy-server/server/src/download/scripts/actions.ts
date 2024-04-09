@@ -44,6 +44,9 @@ import {COLLISION_LAYERS, COMPONENT_TYPES, IWBScene, MATERIAL_TYPES, Materials, 
 import { scene } from "./config"
 import { iwbAssets, sceneParent, entitiesFromItemIds } from './iwb'
 import { addDelayedActionTimer, checkPointers } from "./playMode";
+import { showDialogPanel } from "./dialogPanel";
+import { addShowText } from "./showTextComponent";
+
 `
     return scene
 }
@@ -114,8 +117,8 @@ export function handleTriggerAction(entity:Entity, asset:SceneItem, action:any, 
         case Actions.TELEPORT_PLAYER:
             let pos = action.teleport.split(",")
             let cam = action.teleCam ? action.teleCam.split(",") : "0,0,0"
-            let scene = Transform.get(sceneParent).position
-            movePlayerTo({newRelativePosition:{x: scene.x + parseFloat(pos[0]), y: scene.y + parseFloat(pos[1]), z:scene.z + parseFloat(pos[2])}, cameraTarget:{x: scene.x + parseFloat(cam[0]), y: scene.y + parseFloat(cam[1]), z:scene.z + parseFloat(cam[2])}})
+            let parent = Transform.get(sceneParent).position
+            movePlayerTo({newRelativePosition:{x: parent.x + parseFloat(pos[0]), y: parent.y + parseFloat(pos[1]), z:parent.z + parseFloat(pos[2])}, cameraTarget:{x: parent.x + parseFloat(cam[0]), y: parent.y + parseFloat(cam[1]), z:parent.z + parseFloat(cam[2])}})
             break;
 
         case Actions.EMOTE:

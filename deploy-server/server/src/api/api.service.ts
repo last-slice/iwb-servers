@@ -7,6 +7,7 @@ import { addDeployment, iwbDeploymentQueue, resetBucket } from "../deploy/scene-
 import { status } from "../config/config";
 import { deployBuckets, iwbBuckets } from "../deploy/buckets";
 import { dclDeploymentQueue } from '../deploy';
+import { resetDeployment } from '../deploy/gc-deployment';
 const jwt = require("jsonwebtoken");
 
 export function handleBucketEnable(req:any, res:any, type:string){
@@ -42,7 +43,12 @@ export function handleBucketReset(req:any, res:any){
             if(bucket.process && bucket.process !== null){
                 bucket.process.kill('SIGTERM')
             }
-            resetBucket(req.params.bucket)
+            if(req.params.type === "gc"){
+              resetDeployment(req.params.bucket)
+            }else{
+              resetBucket(req.params.bucket)
+            }
+            
             res.status(200).json({result: "success"})
         }
         catch(e){

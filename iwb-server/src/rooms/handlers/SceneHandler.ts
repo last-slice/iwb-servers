@@ -25,7 +25,9 @@ export class RoomSceneHandler {
                     for(let i = 0; i < scene.ass.length; i++){
                         let asset = scene.ass[i]
                         let itemConfig = itemManager.items.get(asset.id)
-                        asset.n = itemConfig.n
+                        if(itemConfig && itemConfig.n){
+                            asset.n = itemConfig.n
+                        }
                     }
 
                     try{
@@ -51,7 +53,7 @@ export class RoomSceneHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT, async(client, info)=>{
-            // console.log(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT + " message", info)
+            console.log(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
@@ -276,7 +278,7 @@ export class RoomSceneHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, async(client, info)=>{
-            // console.log(SERVER_MESSAGE_TYPES.SCENE_DEPLOY + " message", info)
+            console.log(SERVER_MESSAGE_TYPES.SCENE_DEPLOY + " message", info)
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
                 let scene:Scene = this.room.state.scenes.get(info.sceneId)
@@ -286,7 +288,10 @@ export class RoomSceneHandler {
                     try{
                         let res = await fetch(deploymentServer + "scene/deploy", {
                             method:"POST",
-                            headers:{"Content-type": "application/json"},
+                            headers:{
+                                "Content-type": "application/json",
+                                "Auth": "" + process.env.IWB_DEPLOYMENT_AUTH
+                            },
                             body: JSON.stringify({
                                 scene:scene,
                                 dest:info.dest,
@@ -299,6 +304,7 @@ export class RoomSceneHandler {
                             })
                         })
                         let json = await res.json()
+                        console.log('json is', json)
                         player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:json.valid, msg:json.valid ? "Your deployment is pending!...Please wait for a link to sign the deployment. This could take a couple minutes." : "Error with your deployment request. Please try again."})
 
                         pushPlayfabEvent(
@@ -308,7 +314,7 @@ export class RoomSceneHandler {
                         )
                     }
                     catch(e){
-                       //  console.log('error pinging deploy server', player.address, e)
+                        console.log('error pinging deploy server', player.address, e)
                         player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:false, msg:"Error pinging the deploy server"})
                     }
                 }else{

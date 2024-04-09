@@ -500,9 +500,16 @@ export class IWBManager{
             console.log('found user, notify them of their deployment', body)
             player.pendingDeployment = body.data.auth
 
-            let link = "http://localhost:3000/" + "deploy/" + body.user + "/" + body.data.dest + "/"
+            // let link = (DEBUG ? "http://localhost:3000/" : "https://dcl-iwb.co/") + "toolset/" + body.user + "/" + body.data.dest + "/"
+            // if(body.data.dest === "gc"){
+            //     link += body.data.tokenId === "" ? ("parcel/" + body.bucket + "/" + body.data.name +"/" + body.data.parcel.split(",")[0] +  "/" + body.data.parcel.split(",")[1]) : ("estate/" +  body.bucket + "/" + body.data.tokenId + "/") 
+            // }else{
+            //     link += body.bucket + "/" + body.data.name +"/" + body.data.worldName
+            // }
+
+            let link = (DEBUG ? "http://localhost:3000/" : "https://dcl-iwb.co/") + "toolset/" + body.user + "/" + body.data.dest + "/"
             if(body.data.dest === "gc"){
-                link += body.data.tokenId === "" ? ("parcel/" + body.bucket + "/" + body.data.name +"/" + body.data.parcel.split(",")[0] +  "/" + body.data.parcel.split(",")[1]) : ("estate/" +  body.bucket + "/" + body.data.tokenId + "/") 
+                link += body.data.tokenId === "" ? ("parcel/" + body.bucket + "/" + body.data.name +"/x/y") : ("estate/" +  body.bucket + "/" + body.data.tokenId + "/") 
             }else{
                 link += body.bucket + "/" + body.data.name +"/" + body.data.worldName
             }

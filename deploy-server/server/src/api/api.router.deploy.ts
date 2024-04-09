@@ -31,5 +31,4 @@ export function deployRouter(router:any){
       router.post("/assets/force", async function(req: express.Request, res: express.Response) {
         forceCopyAssets(req,res)
       })
-      
 }

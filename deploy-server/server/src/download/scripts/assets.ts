@@ -11,7 +11,7 @@ export async function copyAssets(location:string, data:any){
 
             let catalogDirectory:string = asset.ugc ? (ugcDirectory + data.o + "/") : assetDirectory
             
-            console.log('copying asset', asset)
+            // console.log('copying asset', asset)
             switch(asset.type){
                 case '2D':
                     file += ".png"

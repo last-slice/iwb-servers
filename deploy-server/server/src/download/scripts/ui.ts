@@ -23,6 +23,7 @@ import {
     import ReactEcs, { Button, Label, ReactEcsRenderer, UiEntity } from '@dcl/sdk/react-ecs'
     import { uiSizer } from './helpers'
     import { createDialogPanel } from './dialogPanel'
+    import { createShowTextComponent } from './showTextComponent'
 `
 return scene
 }

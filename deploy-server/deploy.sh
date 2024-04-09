@@ -1,6 +1,6 @@
 # deploy.sh
 
-debug=false
+debug=true
 
 # # Access the arguments passed from the Node.js application
 bucket="$1"
@@ -21,6 +21,6 @@ fi
 # npm run build
 
 #deploy with private key
-DCL_PRIVATE_KEY=$PRIVATE_KEY npm run deploy -- --target-content https://worlds.dcl-iwb.co
+DCL_PRIVATE_KEY=$PRIVATE_KEY npm run deploy -- --target-content https://worlds.dcl-iwb.co --skip-build --skip-validations --skip-version-checks --no-browser
 
 echo "Done Deploying"

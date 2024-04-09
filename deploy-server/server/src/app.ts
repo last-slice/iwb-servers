@@ -3,7 +3,7 @@ import cors from 'cors'
 import bodyParser from "body-parser";
 import requestIp from "request-ip";
 import { router } from "./api/api.router";
-
+import path from 'path';
 
 const app = express();
 // const sse = require('sse-express');
@@ -18,9 +18,13 @@ app.use(requestIp.mw());
 
 
 // app.use(sse());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cors({ origin: true}))
+app.options('*', cors());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// app.use(express.static('/root/iwb-deployment/dapps'));
+app.use(express.static(path.join('/root/iwb-deployment/dapps', 'deploy')));
 
 app.use("/", router);
 export default app;

@@ -36,16 +36,16 @@ deployBuckets.set("bucket1", {
     address:""
 })
 deployBuckets.set("bucket2", {
-    enabled: true,
-    available:true,
+    enabled: false,
+    available:false,
     status: "",
     owner:"",
     id:"bucket2",
     address:""
 })
 deployBuckets.set("bucket3", {
-    enabled: true,
-    available:true,
+    enabled: false,
+    available:false,
     status: "",
     owner:"",
     id:"bucket3",

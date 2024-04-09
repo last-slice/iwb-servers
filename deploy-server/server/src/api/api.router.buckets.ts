@@ -7,7 +7,7 @@ export function bucketsRouter(router:any){
         res.status(200).json({result: "success", bucket: iwbBuckets.get(req.params.bucket as string)})
     })
     
-    router.get("/buckets/reset/:bucket/:auth", async function(req: express.Request, res: express.Response) {
+    router.get("/buckets/reset/:type/:bucket/:auth", async function(req: express.Request, res: express.Response) {
       handleBucketReset(req, res)
     })
     
