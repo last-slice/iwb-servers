@@ -72,7 +72,13 @@ export enum SERVER_MESSAGE_TYPES {
     WORLD_TRAVEL = 'world_travel',
     PLAYTIME = 'playtime',
 
-    CUSTOM = "custom"
+    CUSTOM = "custom",
+
+
+
+
+    //GAMING
+    CREATE_GAME_LOBBY = 'create_game_lobby'
 }
 
 export enum SCENE_MODES {

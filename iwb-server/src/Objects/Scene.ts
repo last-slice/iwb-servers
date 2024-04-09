@@ -25,6 +25,7 @@ import {
     VisibilityComponent
 } from "./Components";
 import { IWBRoom } from "../rooms/IWBRoom";
+import { Game } from "./Game";
 
 export class SceneItem extends Schema {
     @type("string") id: string
@@ -57,6 +58,7 @@ export class SceneItem extends Schema {
     @type(AnimationComponent) animComp: AnimationComponent
     @type(NpcComponent) npcComp: NpcComponent
     @type(DialogComponent) dialComp: DialogComponent
+    @type("string") gameId:string
  }
 
 export class TempScene extends Schema {
@@ -99,6 +101,8 @@ export class Scene extends Schema {
     @type("boolean") lim: boolean = true
 
     @type([SceneItem]) ass = new ArraySchema<SceneItem>();
+
+    @type(Game) game:Game
 
     constructor(data?: any, room?:IWBRoom) {
         super()
@@ -164,6 +168,10 @@ export class Scene extends Schema {
                         console.log('error loading asset for scene', this.id, asset)
                     }
                 })
+            }
+
+            if(data.game){
+                addGame(this, data.game)
             }
         }
     }
@@ -444,4 +452,13 @@ export function addItemComponents(item: SceneItem, asset: any) {
                         break;
         }
     })
+}
+
+function addGame(scene:Scene, data:any){
+    scene.game = new Game()
+    scene.game.id = data.id
+    scene.game.type = data.type
+    scene.game.name = data.name
+    scene.game.desc = data.desc
+    scene.game.p = new Vector3(data.p)
 }
