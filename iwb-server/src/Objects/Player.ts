@@ -78,7 +78,7 @@ export class Player extends Schema {
   }
 
   sendPlayerMessage(type:string, data:any){
-    // console.log('sending playing message', type,data)
+    console.log('sending playing message', type,data)
     this.client.send(type,data)
   }
 

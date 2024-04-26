@@ -1,4 +1,4 @@
-import { handlBulkWorldsDeployments, handleSceneDeploymentReady, handleWorldDeployment } from "../Service";
+import { handlBulkWorldsDeployments, handleDeploymentFinished, handleSceneDeploymentReady, handleWorldDeployment } from "../Service";
 
 export function deployRouter(router:any){
     router.post("/deployment/worlds/bulk/:auth", async (req: any, res: any) => {
@@ -14,5 +14,10 @@ export function deployRouter(router:any){
     router.post("/scene/deployment/ready", async (req: any, res: any) => {
         console.log('received deployment ready from server', req.body)
         handleSceneDeploymentReady(req, res)
+    });
+
+    router.post("/scene/deployment/finished", async (req: any, res: any) => {
+        console.log('received deployment finished from server', req.body)
+        handleDeploymentFinished(req, res)
     });
 }

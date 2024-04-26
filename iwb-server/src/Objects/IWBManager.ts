@@ -190,6 +190,12 @@ export class IWBManager{
         return player
     }
 
+    findWorldOwner(world:string){
+        let owner:any
+        owner = this.worlds.find((w)=> w.ens === world).owner
+        return owner
+    }
+
     async updateAllWorlds(){
         for(let i = 0; i < this.worlds.length; i++){
             await this.deployWorld(this.worlds[i], false)
@@ -270,7 +276,7 @@ export class IWBManager{
                 cachedWorld.updated = world.updated
                 cachedWorld.v = this.version
                 cachedWorld.cv += 1
-                this.updateRealmPendingAssets(cachedWorld.owner)
+                this.updateRealmPendingAssets(world.owner, world.ens)
             }
         }
         this.worldsModified = true
@@ -453,7 +459,7 @@ export class IWBManager{
         this.removeWorldPendingSave(world)
     }
 
-    async updateRealmPendingAssets(world:string){
+    async updateRealmPendingAssets(owner:any, world:string){
         console.log("updating realm assets for world", world)
         let found = false
         let assets:any[] = []
@@ -471,16 +477,16 @@ export class IWBManager{
         }
 
         if(found){
-            await itemManager.uploadFile(world, "catalogs.json", [...assets])
+            await itemManager.uploadFile(owner, "catalogs.json", [...assets])
             console.log('finished updating realm assets')
         }else{
             console.log('player not on, need to log in first and get catalog before saving')
-            let metadata = await fetchPlayfabMetadata(world)
+            let metadata = await fetchPlayfabMetadata(owner)
             let catalog = await fetchPlayfabFile(metadata, "catalogs.json")
             catalog.forEach((asset:any)=>{
                 asset.pending = false
             })
-            await itemManager.uploadFile(world, "catalogs.json", [...catalog])
+            await itemManager.uploadFile(owner, "catalogs.json", [...catalog])
         }
     }
 

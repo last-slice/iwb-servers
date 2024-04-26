@@ -60,6 +60,7 @@ export enum SERVER_MESSAGE_TYPES {
     SCENE_DELETE_SPAWN = "scene_delete_spawn",
     SCENE_CLEAR_ASSETS = 'scene_clear_assets',
     SCENE_COPY_ITEM = 'scene_copy_item',
+    SCENE_DEPLOY_FINISHED = 'scene_deploy_finished',
 
     //World
     INIT_WORLD = "init_world",

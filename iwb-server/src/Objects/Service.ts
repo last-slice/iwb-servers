@@ -1,6 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import { itemManager, iwbManager } from "../app.config";
 import { DEBUG } from "../utils/config";
+import { Player } from "./Player";
 
 export function handleAssetUploaderSigning(req:any, res:any){
     if(req.body.user && req.header('Authorization') && req.header('AssetAuth')){
@@ -168,5 +169,14 @@ export function handleSceneDeploymentReady(req:any, res:any){
             res.status(200).send({valid: true})
             iwbManager.sceneReady(req.body)
         }
+    }
+}
+
+export function handleDeploymentFinished(req:any, res:any){
+    res.status(200).send({valid: true})
+    
+    let player:Player = iwbManager.findUser(req.body.user)
+    if(player){
+        player.sendPlayerMessage(req.body.type, {world:req.body.world, valid:req.body.valid})
     }
 }
