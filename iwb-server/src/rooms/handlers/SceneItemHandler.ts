@@ -87,7 +87,7 @@ export class RoomSceneItemHandler {
        
                             scene.ass.push(newItem)
                             scene.pc += sceneItem.pc
-                            scene.si += sceneItem.si
+                            scene.si += scene.ass.find((asset:any)=> asset.id === sceneItem.id) ? 0 : sceneItem.si
                         }
                         else{
                             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.ASSET_OVER_SCENE_LIMIT, {})

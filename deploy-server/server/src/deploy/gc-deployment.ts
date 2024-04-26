@@ -11,6 +11,7 @@ import { deployBuckets } from './buckets'
 import { resetBucket } from '.'
 import { buildScene } from '../download/scripts'
 import { status } from "../config/config";
+import { SERVER_MESSAGE_TYPES } from '../utils/types'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -243,33 +244,46 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
     // const worldNameParam = worldName ? `&realm=${worldName}` : ''
     // const sceneUrl = `https://play.decentraland.org/?NETWORK=${network}&position=${position}&${worldNameParam}`
   
-    try {
-      const response = (await catalyst.deploy(deployData, {
-        timeout: 600000
-      })) as { message?: string }
-      // project.setDeployInfo({ status: 'success' })
-      console.log(`Content uploaded.`)// ${chalk.underline.bold(sceneUrl)}\n`)
-      res.status(200).json({valid:true})
-  
-      if (response.message) {
-        console.log(response.message)
+      try {
+        const response = (await catalyst.deploy(deployData, {
+          timeout: 600000
+        })) as { message?: string }
+        // project.setDeployInfo({ status: 'success' })
+        console.log(`Content uploaded.`)// ${chalk.underline.bold(sceneUrl)}\n`)
+        res.status(200).json({valid:true})
+    
+        if (response.message) {
+          console.log(response.message)
+        }
+        pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, user:req.body.user, world:pendingDeployments[req.body.user].worldName, valid:true})
+        resetDeployment(req.body.key)
+      } catch (error: any) {
+        // debug('\n' + error.stack)
+        console.log('Could not upload content', error)
+
+        res.status(200).json({valid: false, msg:"invalid api call"})
+        pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, user:req.body.user, valid:false})
+        resetDeployment(req.body.key)
       }
-      resetDeployment(req.body.key)
-
-    } catch (error: any) {
-      // debug('\n' + error.stack)
-      console.log('Could not upload content', error)
-      resetDeployment(req.body.key)
-
-      res.status(200).json({valid: false, msg:"invalid api call"})
-    }
-    resetDeployment(req.body.key)
     }else{
       console.log('cannot validate message from signature request')
-      resetDeployment(req.body.key)
 
       res.status(200).json({valid:false})
+      pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, user:req.body.user, valid:false})
+      resetDeployment(req.body.key)
     }
+}
+
+async function pingIWBServer(data:any){
+  let res = await fetch((status.DEBUG ? process.env.IWB_DEV_PATH : process.env.IWB_PROD_PATH) + "scene/deployment/finished",
+    {headers:{
+      "Content-type":"application/json"
+    },
+    method:"POST",
+      body:JSON.stringify(data)
+    })
+  let json = await res.json()
+  console.log('ping iwb server for deployment finished res', json)
 }
 
 function validateSignature(req:any){

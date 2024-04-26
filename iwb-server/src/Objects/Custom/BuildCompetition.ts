@@ -127,7 +127,7 @@ export function createBuildCompetitionRouters(router:any){
         )
     });
 
-    router.get('/custom/competitions/voting/enabled/:auth/:enabled', (req:any, res:any) => {
+    router.get('/custom/competitions/voting/:auth/:enabled', (req:any, res:any) => {
         console.log('setting voting enabled', req.params.enabled)
         if(!req.params.auth || req.params.auth !== process.env.IWB_UPLOAD_AUTH_KEY){
             res.status(200).send({valid: false, msg: "Invalid Auth"})

@@ -3,6 +3,7 @@ import { abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, finalizeUploa
 import { Scene } from "../../Objects/Scene"
 import { iwbManager } from "../../app.config"
 import { SERVER_MESSAGE_TYPES } from "../../utils/types"
+import { Player } from "../../Objects/Player"
 
 export class RoomSceneManager {
     room:IWBRoom
@@ -87,7 +88,7 @@ export class RoomSceneManager {
         let catalog = await fetchPlayfabFile(metadata, "catalogs.json")
         catalog.forEach((item:any)=>{
         //   if(item.v > this.room.state.cv){
-        //     item.pending = true
+        //     item.pending = true//
         //   }
           this.room.state.realmAssets.set(item.id, item)
         })
@@ -95,8 +96,8 @@ export class RoomSceneManager {
 
     loadRealmScenes(scenes:any[]){
         let filter = scenes.filter((scene)=> scene.w === this.room.state.world)
-        this.room.broadcast(SERVER_MESSAGE_TYPES.SCENE_COUNT, filter.length)
-        
+        this.room.state.sceneCount = filter.length
+
         filter.forEach((scene)=>{
             this.room.state.scenes.set(scene.id, new Scene(scene, this.room))
         })

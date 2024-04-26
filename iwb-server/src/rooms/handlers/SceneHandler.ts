@@ -106,6 +106,7 @@ export class RoomSceneHandler {
                 if(this.room.state.temporaryParcels.length > 0){
                     let scene:Scene = this.createScene(player, this.room.state.world, info, [...this.room.state.temporaryParcels])
                     this.room.state.scenes.set(scene.id, scene)
+                    this.room.state.sceneCount += 1
 
                     this.room.state.temporaryParcels.forEach((parcel)=>{
                        this.room.state.occupiedParcels.push(parcel)
@@ -184,7 +185,7 @@ export class RoomSceneHandler {
         })
 
         room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE, async(client, info)=>{
-           //  console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE + " message", info)
+            console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE + " message", info)
     
             let player:Player = room.state.players.get(client.userData.userId)
             if(player){
@@ -203,6 +204,7 @@ export class RoomSceneHandler {
                                 player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE, info)
                             }
                         })
+                        this.room.state.sceneCount -= 1
 
                         pushPlayfabEvent(
                             SERVER_MESSAGE_TYPES.SCENE_DELETE, 
