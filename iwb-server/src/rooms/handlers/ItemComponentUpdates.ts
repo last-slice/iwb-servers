@@ -1,7 +1,8 @@
 import { generateId } from "colyseus";
-import { ActionComponent, Actions, Color4, DialogButtonComponent, DialogInfoComponent, TriggerActionComponent, TriggerComponent, Triggers } from "../../Objects/Components";
+import { ActionComponent, Actions, Color4, DialogButtonComponent, DialogInfoComponent, RewardComponent, TriggerActionComponent, TriggerComponent, Triggers } from "../../Objects/Components";
 import { ACTIONS, COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../../utils/types";
 import { IWBRoom } from "../IWBRoom";
+import { Player } from "../../Objects/Player";
 
 export let updateItemComponentFunctions:any = {
     [COMPONENT_TYPES.VISBILITY_COMPONENT]:(asset:any, info:any)=>{updateVisiblityComponent(asset, info)},
@@ -18,6 +19,7 @@ export let updateItemComponentFunctions:any = {
     [COMPONENT_TYPES.ANIMATION_COMPONENT]:(asset:any, info:any)=>{updateAnimationComponent(asset, info)},
     [COMPONENT_TYPES.NPC_COMPONENT]:(asset:any, info:any)=>{updateNPCComponent(asset, info)},
     [COMPONENT_TYPES.DIALOG_COMPONENT]:(asset:any, info:any)=>{updateDialogComponent(asset, info)},
+    [COMPONENT_TYPES.REWARD_COMPONENT]:(asset:any, info:any, room?:IWBRoom, player?:Player)=>{updateRewardComponent(asset, info, player)},
     [SERVER_MESSAGE_TYPES.UPDATE_ASSET_LOCKED]:(asset:any, info:any)=>{updateBuildLock(asset, info)},
     [SERVER_MESSAGE_TYPES.UPDATE_ASSET_BUILD_VIS]:(asset:any, info:any)=>{updateBuildVis(asset, info)},
 }
@@ -335,6 +337,10 @@ function updateActionComponent(asset:any, info:any, room:IWBRoom){
                     action.twEZ = info.data.value.action.tween.end.z
                     break;
 
+                    case ACTIONS.SHOW_DIALOG:
+                        action.dialID = info.data.value.action.dialID
+                        break;
+
             }
             asset.actComp.actions.set(generateId(5), action)
             break;
@@ -513,6 +519,25 @@ function updateDialogComponent(asset:any, info:any){
 
         case 'remove':
             asset.dialComp.dialogs.splice(info.data.value.index, 1)
+            break;
+    }
+}
+
+function updateRewardComponent(asset:any, info:any, player:Player){
+    console.log('new reward is', info,info.data.value.dialog)
+    
+    switch(info.data.type){
+        case 'update':
+            asset.rComp = new RewardComponent()
+            asset.rComp.id = generateId(5)
+            asset.rComp.type = info.data.value.type
+            asset.rComp.start = info.data.value.start
+            asset.rComp.end = info.data.value.end
+            asset.rComp.ip = info.data.value.ip
+            asset.rComp.amt = info.data.value.amt
+            asset.rComp.key = info.data.value.key
+
+            console.log('rweard asset is', asset.rComp)
             break;
     }
 }

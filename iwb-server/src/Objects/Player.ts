@@ -35,6 +35,7 @@ export class Player extends Schema {
 
   playFabData:any
   dclData:any
+  ip:string
 
   room:IWBRoom
   roomId:string
@@ -55,6 +56,8 @@ export class Player extends Schema {
   pendingDeployment:any = false
   startTime:any
 
+  claimingReward = false
+
   constructor(room:IWBRoom, client:Client){
     super()
     this.room = room
@@ -64,6 +67,7 @@ export class Player extends Schema {
     this.dclData = client.userData
     this.address = client.userData.userId
     this.name = client.userData.name
+    this.ip = client.userData.ip
 
     this.mode = SCENE_MODES.PLAYMODE
 

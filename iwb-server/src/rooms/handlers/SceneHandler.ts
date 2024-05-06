@@ -1,6 +1,6 @@
 import { Player } from "../../Objects/Player"
 import { itemManager, iwbManager } from "../../app.config"
-import { SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types"
+import { ACTIONS, SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types"
 import { IWBRoom } from "../IWBRoom"
 import { Scene, SceneItem } from "../../Objects/Scene";
 import { DEBUG } from "../../utils/config";

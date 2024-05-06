@@ -1,7 +1,8 @@
-import {ArraySchema, Schema, type, MapSchema} from "@colyseus/schema";
-import {COMPONENT_TYPES} from "../utils/types";
+import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
+import {COMPONENT_TYPES, REWARD_TYPES} from "../utils/types";
 import { SceneItem } from "./Scene";
-import { generateId } from "colyseus";
+import { Client, generateId } from "colyseus";
+import { Player } from "./Player";
 
 export class Color4 extends Schema {
     @type("number") r: number = 1
@@ -193,6 +194,31 @@ export class TweenComponent extends Schema {
     @type("string") endPos:string = "0,0,0"
 }
 
+export class RewardComponent extends Schema {
+    @type("string") id:string
+    @type("string") type:string = REWARD_TYPES.DCL_ITEM
+    @type("number") start:number
+    @type("number") end:number
+    @type("number") ip:number
+    @type("number") amt:number
+
+    o:string
+
+    // @filter(function(
+    //     this: RewardComponent, // the instance of the class `@filter` has been defined (instance of `Card`)
+    //     client: Client, // the Room's `client` instance which this data is going to be filtered to
+    //     value: RewardComponent['key'], // the value of the field to be filtered. (value of `number` field)
+    //     root: Schema // the root state Schema instance
+    // ) {
+    //     return this.o === client.userData.userId;//
+    // })
+
+    key:string
+
+    en:boolean
+    claims:any[] = []
+}
+
 
 export function addNFTComponent(item:SceneItem, nft:NFTComponent){
     item.comps.push(COMPONENT_TYPES.NFT_COMPONENT)
@@ -377,5 +403,23 @@ export function addDialogComponent(item:SceneItem, dialComp:DialogComponent){
         // item.npcComp.skinColor = npcComp.skinColor
     }else{
         item.dialComp.id = generateId(5)
+    }
+}
+
+export function addRewardComponent(item:SceneItem, reward:RewardComponent, owner?:string){
+    // item.comps.push(COMPONENT_TYPES.REWARD_COMPONENT)
+    item.rComp = new RewardComponent()
+    item.rComp.id = generateId(5)
+    if(reward !== null){
+        item.rComp.o = owner? owner : ""
+        item.rComp.id = reward.id
+        item.rComp.type = reward.type ? reward.type : REWARD_TYPES.DCL_ITEM
+        item.rComp.start = reward.start
+        item.rComp.end = reward.end
+        item.rComp.ip = reward.ip
+        item.rComp.amt = reward.amt
+        item.rComp.key = reward.key
+        item.rComp.en = reward.en
+        item.rComp.claims = reward.claims
     }
 }

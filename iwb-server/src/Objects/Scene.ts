@@ -1,5 +1,5 @@
 import {ArraySchema, Schema, type} from "@colyseus/schema";
-import {ACTIONS, COMPONENT_TYPES} from "../utils/types";
+import {ACTIONS, COMPONENT_TYPES, REWARD_TYPES} from "../utils/types";
 import {
     ActionComponent,
     Actions,
@@ -15,6 +15,7 @@ import {
     NFTComponent,
     NpcComponent,
     Quaternion,
+    RewardComponent,
     TextComponent,
     TriggerActionComponent,
     TriggerAreaComponent,
@@ -26,9 +27,11 @@ import {
 } from "./Components";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { Game } from "./Game";
+import { generateId } from "colyseus";
 
 export class SceneItem extends Schema {
     @type("string") id: string
+    @type("string") o: string
     @type("number") ent: number
     @type('string') aid: string
     @type("string") n: string
@@ -58,7 +61,10 @@ export class SceneItem extends Schema {
     @type(AnimationComponent) animComp: AnimationComponent
     @type(NpcComponent) npcComp: NpcComponent
     @type(DialogComponent) dialComp: DialogComponent
+    @type(RewardComponent) rComp: RewardComponent
     @type("string") gameId:string
+
+    // rComp: RewardComponent
  }
 
 export class TempScene extends Schema {
@@ -242,8 +248,8 @@ export function addItemComponents(item: SceneItem, asset: any) {
 
              case COMPONENT_TYPES.COLLISION_COMPONENT:
                 item.colComp = new CollisionComponent()
-                item.colComp.iMask = asset.colComp ? asset.colComp.iMask : 2
-                item.colComp.vMask = asset.colComp ? asset.colComp.vMask : 1
+                item.colComp.iMask = asset.colComp ? asset.colComp.iMask : 3
+                item.colComp.vMask = asset.colComp ? asset.colComp.vMask : 0
                 break;
 
             case COMPONENT_TYPES.NFT_COMPONENT:
@@ -449,6 +455,23 @@ export function addItemComponents(item: SceneItem, asset: any) {
                             }
                             item.dialComp.dialogs.push(dialog)
                         })
+                        break;
+
+                    case COMPONENT_TYPES.REWARD_COMPONENT:
+                        console.log('adding reward component', asset.rComp)
+                        item.rComp = new RewardComponent()
+                        if(asset.rComp){
+                            item.rComp.id = asset.rComp.id ? asset.rComp.id : generateId(5)
+                            item.rComp.start = asset.rComp.start ? asset.rComp.start :0
+                            item.rComp.end = asset.rComp.end ? asset.rComp.end :0
+                            item.rComp.ip = asset.rComp.ip ? asset.rComp.ip :0
+                            item.rComp.amt = asset.rComp.amt ? asset.rComp.amt :0
+                            item.rComp.key = asset.rComp.key ? asset.rComp.key : ""
+                            // item.rComp.en = asset.rComp.en ?
+                            item.rComp.type = asset.rComp.type ? asset.rComp.type : REWARD_TYPES.DCL_ITEM
+                            item.rComp.claims = asset.rComp.claims ? asset.rComp.claims : []
+                        //     console.log('item is', item.rComp)
+                        }
                         break;
         }
     })

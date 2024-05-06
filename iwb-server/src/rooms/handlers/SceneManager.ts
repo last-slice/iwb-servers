@@ -1,6 +1,6 @@
 import { IWBRoom } from "../IWBRoom"
 import { abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, finalizeUploadFiles, initializeUploadPlayerFiles, playerLogin, playfabLogin, uploadPlayerFiles } from "../../utils/Playfab"
-import { Scene } from "../../Objects/Scene"
+import { Scene, SceneItem } from "../../Objects/Scene"
 import { iwbManager } from "../../app.config"
 import { SERVER_MESSAGE_TYPES } from "../../utils/types"
 import { Player } from "../../Objects/Player"
@@ -104,13 +104,24 @@ export class RoomSceneManager {
     }
 
     async saveRealmScenes(){
-        let scenes:Scene[] = []
-        this.room.state.scenes.forEach((scene)=>{
-            scene.ass.forEach((asset)=>{
+        let scenes:any[] = []
+        this.room.state.scenes.forEach((scene:Scene)=>{
+            let jsonScene:any = scene.toJSON()
+            jsonScene.ass = []
+
+            scene.ass.forEach((asset:any)=>{
+
                 asset.editing = false
                 asset.editor = ""
+
+                // let ass:any = asset.toJSON()
+                // ass.editing = false
+                // ass.editor = ""//
+
+               let jsonAsset:any = this.checkAssetCacheStates(asset)
+               jsonScene.ass.push(jsonAsset)
             })
-            scenes.push(scene)
+            scenes.push(jsonScene)
         })
 
         let world = iwbManager.worlds.find((w)=>w.ens === this.room.state.world)
@@ -122,6 +133,23 @@ export class RoomSceneManager {
         if(scenes.length > 0){
             iwbManager.backupScene(this.room.state.world, this.realmToken, this.realmTokenType, this.realmId, scenes)
         }
+    }
+
+    checkAssetCacheStates(asset:SceneItem){
+        let item:any = asset.toJSON()
+        if(asset.rComp){
+            item.rComp.id = asset.rComp.id
+            item.rComp.start = asset.rComp.start
+            item.rComp.end = asset.rComp.end
+            item.rComp.ip = asset.rComp.ip
+            item.rComp.amt = asset.rComp.amt
+            item.rComp.key = asset.rComp.key
+            item.rComp.claims = asset.rComp.claims
+        }
+
+        console.log('checking asset cached variables are now', item)
+
+        return item
     }
 
     // async saveWorldScenes(scenes:Map<string, Scene>){

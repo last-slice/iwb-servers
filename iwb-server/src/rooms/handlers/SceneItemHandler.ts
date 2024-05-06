@@ -21,7 +21,8 @@ import {
     addAnimationComponent,
     addNPCComponent,
     addDialogComponent,
-    addClickAreaComponent
+    addClickAreaComponent,
+    addRewardComponent
 } from "../../Objects/Components";
 import { Player } from "../../Objects/Player";
 import { Scene, SceneItem } from "../../Objects/Scene";
@@ -66,7 +67,7 @@ export class RoomSceneItemHandler {
                                     this.addItemComponents(newItem, sceneItem, serverItem)
                                 }else{
     
-                                    this.addItemComponents(newItem, sceneItem, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
+                                    this.addItemComponents(newItem, sceneItem, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined, player.dclData.userId)
                                 }
 
                                 pushPlayfabEvent(
@@ -303,7 +304,7 @@ export class RoomSceneItemHandler {
                 if(scene){
                     let asset = scene.ass.find((a)=> a.aid === info.data.aid)
                     if(asset){
-                        updateItemComponentFunctions[info.component](asset, info, room)
+                        updateItemComponentFunctions[info.component](asset, info, room, player)
                     }
                 }
             }
@@ -542,7 +543,7 @@ export class RoomSceneItemHandler {
         }
     }
 
-    addItemComponents(item:SceneItem, catalogItem:any, selectedAsset?:any){
+    addItemComponents(item:SceneItem, catalogItem:any, selectedAsset?:any, owner?:string){
         item.comps.push(COMPONENT_TYPES.TRANSFORM_COMPONENT)
         item.comps.push(COMPONENT_TYPES.VISBILITY_COMPONENT)
 
@@ -570,6 +571,11 @@ export class RoomSceneItemHandler {
                 case 'Dialog':
                     item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
                     item.comps.push(COMPONENT_TYPES.DIALOG_COMPONENT)
+                    break;
+
+                case 'Reward':
+                    item.comps.push(COMPONENT_TYPES.ACTION_COMPONENT)
+                    item.comps.push(COMPONENT_TYPES.REWARD_COMPONENT)
                     break;
             }
         }else{
@@ -647,6 +653,10 @@ export class RoomSceneItemHandler {
 
                     case 'Dialog':
                         addDialogComponent(item, selectedAsset ? selectedAsset.dialComp : null)
+                        break;
+
+                    case 'Reward':
+                        addRewardComponent(item, selectedAsset ? selectedAsset.rComp : null, owner)
                         break;
                 }
                 break;

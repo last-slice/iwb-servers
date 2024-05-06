@@ -76,7 +76,8 @@ export enum SERVER_MESSAGE_TYPES {
     CUSTOM = "custom",
 
 
-
+    //REMOTE SERVER ACTIONS
+    CLAIM_REWARD = 'claim_reward',
 
     //GAMING
     CREATE_GAME_LOBBY = 'create_game_lobby'
@@ -122,7 +123,8 @@ export enum COMPONENT_TYPES {
     CLICK_AREA_COMPONENT = "Click Area",
     ANIMATION_COMPONENT = "Animation",
     NPC_COMPONENT = 'NPC',
-    DIALOG_COMPONENT = 'Dialog'
+    DIALOG_COMPONENT = 'Dialog',
+    REWARD_COMPONENT ='Reward'
 }
 
 export enum COLLISION_LAYERS {
@@ -192,5 +194,10 @@ export enum ACTIONS {
     HIDE_IMAGE = 'hide_image',
     PLAY_ANIMATION = 'play_animation',
     STOP_ANIMATION = 'stop_animation',
-    SHOW_DIALOG = 'show_dialog'
+    SHOW_DIALOG = 'show_dialog',
+    GIVE_REWARD = 'give_reward'
+}
+
+export enum REWARD_TYPES {
+    DCL_ITEM = 'dcl_item'
 }

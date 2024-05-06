@@ -59,6 +59,7 @@ export class IWBRoom extends Room<IWBRoomState> {
             // console.log(auth.userId, "joined! -", options.userData.name, "Realm -", auth.realm);
 
             client.userData = options.userData;
+            client.userData.ip = client.auth.ip
             // client.userData.userId = auth.userId;
             // client.userData.realm = auth.realm;
 
