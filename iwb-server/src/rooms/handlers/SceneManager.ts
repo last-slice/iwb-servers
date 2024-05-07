@@ -147,7 +147,7 @@ export class RoomSceneManager {
             item.rComp.claims = asset.rComp.claims
         }
 
-        console.log('checking asset cached variables are now', item)
+        // console.log('checking asset cached variables are now', item)
 
         return item
     }
