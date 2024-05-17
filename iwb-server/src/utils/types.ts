@@ -76,6 +76,9 @@ export enum SERVER_MESSAGE_TYPES {
     CUSTOM = "custom",
 
 
+    VERIFY_ACCESS = 'verify_access',
+
+
     //REMOTE SERVER ACTIONS
     CLAIM_REWARD = 'claim_reward',
 
@@ -200,4 +203,18 @@ export enum ACTIONS {
 
 export enum REWARD_TYPES {
     DCL_ITEM = 'dcl_item'
+}
+
+export enum ACCESS_TYPES {
+    NFT_OWNERSHP = 'nft_ownership'
+}
+
+export enum ACCESS_CATEGORIES {
+    HAS_OWNERSHIP = 'has_ownership',
+    HAS_ON = 'has_on'
+}
+
+export enum ACCESS_FILTERS {
+    HAS_ALL = 'has_all',
+    HAS_ANY = 'has_any'
 }

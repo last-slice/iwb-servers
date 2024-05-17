@@ -219,6 +219,16 @@ export class RewardComponent extends Schema {
     claims:any[] = []
 }
 
+export class AccessComponent extends Schema {
+    @type("string") id:string
+    @type("string") type:string
+    @type("string") nftType:string
+    @type("string") category:string
+    @type("string") filter:string
+    @type("string") contract:string
+    @type("string") tokenId:string
+}
+
 
 export function addNFTComponent(item:SceneItem, nft:NFTComponent){
     item.comps.push(COMPONENT_TYPES.NFT_COMPONENT)

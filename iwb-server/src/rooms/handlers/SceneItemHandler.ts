@@ -330,6 +330,13 @@ export class RoomSceneItemHandler {
             // console.log(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS + " message", info)
             // room.broadcast(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, {user:client.userData.userId, y:info.y, aid:info.aid})
         })
+
+        room.onMessage(SERVER_MESSAGE_TYPES.VERIFY_ACCESS, async(client, info)=>{
+            console.log(SERVER_MESSAGE_TYPES.VERIFY_ACCESS + " message", info)
+            info.user = client.userData.userId
+            info.access = true
+            room.broadcast(SERVER_MESSAGE_TYPES.VERIFY_ACCESS, info)
+        })
     }
 
     deleteSceneItem(player:Player, info:any, edit?:boolean){
@@ -547,7 +554,7 @@ export class RoomSceneItemHandler {
         item.comps.push(COMPONENT_TYPES.TRANSFORM_COMPONENT)
         item.comps.push(COMPONENT_TYPES.VISBILITY_COMPONENT)
 
-        console.log('adding item components to item', item.type, catalogItem)
+        // console.log('adding item components to item', item.type, catalogItem)
 
         if(item.type === "SM"){
             switch(catalogItem.n){

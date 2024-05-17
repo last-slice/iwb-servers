@@ -31,6 +31,7 @@ import { generateId } from "colyseus";
 
 export class SceneItem extends Schema {
     @type("string") id: string
+    @type('string') nid: string
     @type("string") o: string
     @type("number") ent: number
     @type('string') aid: string
