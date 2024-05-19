@@ -1,0 +1,253 @@
+[
+    {
+      "id": "mwnJU",
+      "n": "lobby",
+      "d": "",
+      "o": "0x3edfae1ce7aeb54ed6e171c4b13e343ba81669b6",
+      "ona": "BuilderWorld",
+      "cat": "",
+      "bpcl": "1,1",
+      "w": "BuilderWorld.dcl.eth",
+      "im": "",
+      "bps": [],
+      "pcls": [
+        "1,1",
+        "0,1",
+        "0,0",
+        "1,0"
+      ],
+      "sp": [
+        "0,0,0"
+      ],
+      "cp": [
+        "0,0,0"
+      ],
+      "cd": 1711644442,
+      "upd": 1711644442,
+      "si": -691328,
+      "toc": 0,
+      "pc": -1516,
+      "pcnt": 4,
+      "isdl": false,
+      "e": true,
+      "priv": false,
+      "lim": true,
+      "ass": [
+        {
+          "id": "171e29d9-e434-43b9-94f0-5ec189547a2b",
+          "aid": "bEQXB0",
+          "type": "SM",
+          "sty": "Local",
+          "editing": false,
+          "ugc": false,
+          "pending": false,
+          "editor": "",
+          "buildVis": true,
+          "locked": false,
+          "p": {
+            "x": 10.33,
+            "y": 1.06,
+            "z": -2.25
+          },
+          "r": {
+            "x": 0,
+            "y": 342.72,
+            "z": 0
+          },
+          "s": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "comps": [
+            "Transform",
+            "Visibility",
+            "Action",
+            "Reward",
+            "Collision"
+          ],
+          "visComp": {
+            "visible": true
+          },
+          "colComp": {
+            "vMask": 0,
+            "iMask": 3
+          },
+          "actComp": {
+            "actions": {
+              "34QPV": {
+                "name": "aaaaa",
+                "type": "give_reward",
+                "aid": "bEQXB0"
+              }
+            }
+          },
+          "rComp": {
+            "id": "XcUnT",
+            "type": "dcl_item",
+            "start": 1,
+            "end": 1715309037,
+            "ip": 3,
+            "amt": 1,
+            "key": "uoamw59gQ5KddAq0YYF9XIVgCEv8H0zstQAQ23868k4=.M3AZLvapoON2ZG0I9X4/N3taKIf5DY6Y824xjI88y/0=",
+            "claims": [
+              {
+                "ip": "::1",
+                "user": "0x3edfae1ce7aeb54ed6e171c4b13e343ba81669b6"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fc7cfc62-c497-4d10-aad4-b61975e603a0",
+          "aid": "dwZGRV",
+          "type": "3D",
+          "sty": "Local",
+          "editing": false,
+          "ugc": false,
+          "pending": false,
+          "editor": "",
+          "buildVis": true,
+          "locked": false,
+          "p": {
+            "x": 8.08,
+            "y": 0,
+            "z": -5.58
+          },
+          "r": {
+            "x": 0,
+            "y": 326.87,
+            "z": 0
+          },
+          "s": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "comps": [
+            "Transform",
+            "Visibility",
+            "Trigger",
+            "Action",
+            "Collision"
+          ],
+          "visComp": {
+            "visible": true
+          },
+          "colComp": {
+            "vMask": 0,
+            "iMask": 3
+          },
+          "trigComp": {
+            "enabled": true,
+            "triggers": [
+              {
+                "actions": [
+                  {
+                    "aid": "dwZGRV",
+                    "id": "iXuxI"
+                  }
+                ],
+                "type": "on_click",
+                "hoverText": "Click here",
+                "pointer": 0,
+                "distance": 11,
+                "showHover": true
+              }
+            ]
+          },
+          "actComp": {
+            "actions": {
+              "iXuxI": {
+                "name": "access",
+                "type": "verify_access",
+                "aid": "dwZGRV"
+              },
+              "daozK": {
+                "name": "show text",
+                "type": "show_text",
+                "aid": "dwZGRV",
+                "showText": "VERIFIED!",
+                "showTimer": 5,
+                "showSize": 65,
+                "showPos": "middle-center"
+              }
+            }
+          }
+        },
+        {
+          "id": "fc7cfc62-c497-4d10-aad4-b61975e603a0",
+          "aid": "y77Wzc",
+          "type": "3D",
+          "sty": "Local",
+          "editing": false,
+          "ugc": false,
+          "pending": false,
+          "editor": "",
+          "buildVis": true,
+          "locked": false,
+          "p": {
+            "x": 4.85,
+            "y": 0,
+            "z": 2.36
+          },
+          "r": {
+            "x": 0,
+            "y": 317.38,
+            "z": 0
+          },
+          "s": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "comps": [
+            "Transform",
+            "Visibility",
+            "Trigger",
+            "Action",
+            "Collision"
+          ],
+          "visComp": {
+            "visible": true
+          },
+          "colComp": {
+            "vMask": 0,
+            "iMask": 3
+          },
+          "trigComp": {
+            "enabled": true,
+            "triggers": [
+              {
+                "actions": [
+                  {
+                    "aid": "dwZGRV",
+                    "id": "daozK"
+                  }
+                ],
+                "type": "on_access_verified",
+                "hoverText": "Click here",
+                "pointer": 0,
+                "distance": 3,
+                "showHover": true
+              }
+            ]
+          },
+          "actComp": {
+            "actions": {}
+          }
+        }
+      ],
+      "game": {
+        "id": "EqCz1",
+        "name": "awees",
+        "desc": "ddfdffff",
+        "type": 1,
+        "p": {
+          "x": 4.049294048264354,
+          "y": 0.8799999356269836,
+          "z": -8.459858730416467
+        }
+      }
+    }
+  ]
