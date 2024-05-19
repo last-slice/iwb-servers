@@ -127,7 +127,10 @@ export enum COMPONENT_TYPES {
     ANIMATION_COMPONENT = "Animation",
     NPC_COMPONENT = 'NPC',
     DIALOG_COMPONENT = 'Dialog',
-    REWARD_COMPONENT ='Reward'
+    REWARD_COMPONENT ='Reward',
+    PARENTING_COMPONENT = 'Parenting',
+    NAMES_COMPONENT ='Names',
+    POINTER_COMPONENT = 'Pointers'
 }
 
 export enum COLLISION_LAYERS {

@@ -1,32 +1,30 @@
+import {monitor} from "@colyseus/monitor";
 import config from "@colyseus/tools";
 import {IWBRoom} from "./rooms/IWBRoom";
-import {ItemManager} from "./Objects/ItemManager";
-import Listener from "./utils/eventListener";
-import {initPlayFab} from "./utils/Playfab";
 import cors from 'cors'
 import bodyParser from "body-parser";
 import express from 'express';
 import path from 'path';
-import { IWBManager } from "./Objects/IWBManager";
-import { PlayerManager } from "./Objects/PlayerManager";
+// import { IWBManager } from "./Objects/IWBManager";
+// import { PlayerManager } from "./Objects/PlayerManager";
 import { playground } from "@colyseus/playground";
-import { router } from "./Objects/Routers/Router";
+// import { router } from "./Objects/Routers/Router";
 
-export let itemManager: ItemManager
-export let iwbManager: IWBManager
-export let playerManager: PlayerManager
-export let eventListener: Listener
+// export let itemManager: ItemManager
+// export let iwbManager: IWBManager
+// export let playerManager: PlayerManager
+// export let eventListener: Listener
 
 export default config({
 
     initializeGameServer: (gameServer) => {
-        initPlayFab()
+        // initPlayFab()
 
-        eventListener = new Listener()
-        itemManager = new ItemManager()
-        iwbManager = new IWBManager()
+        // eventListener = new Listener()
+        // itemManager = new ItemManager()
+        // iwbManager = new IWBManager()
 
-        playerManager = new PlayerManager()
+        // playerManager = new PlayerManager()
 
         gameServer.define('iwb-world', IWBRoom)
         .filterBy(['world'])
@@ -42,7 +40,8 @@ export default config({
         app.use(express.static(path.join(__dirname, '..', 'public')));
         app.use(express.static(path.join('/root/iwb', 'dapps', 'upload')));
         app.use(express.static(path.join('/root/iwb', 'dapps', 'deploy')));
-        app.use("/", router);
+        // app.use("/", router);
+        app.use('/colyseus', monitor())
 
 
         // ...

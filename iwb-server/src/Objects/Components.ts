@@ -1,8 +1,5 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
-import {COMPONENT_TYPES, REWARD_TYPES} from "../utils/types";
-import { SceneItem } from "./Scene";
-import { Client, generateId } from "colyseus";
-import { Player } from "./Player";
+import { COMPONENT_TYPES } from "../utils/types";
 
 export class Color4 extends Schema {
     @type("number") r: number = 1
@@ -24,87 +21,69 @@ export class Quaternion extends Schema {
     @type("number") w: number
 }
 
-export class CollisionComponent extends Schema {
-    @type("number") vMask: number = 0
-    @type("number") iMask: number = 3
+export class TransformComponent extends Schema{
+    @type(Vector3) p: Vector3
+    @type(Quaternion) r: Quaternion
+    @type(Vector3) s:Vector3
+
+    constructor(data:any){
+        super()
+        this.p = new Vector3(data.p)
+        this.r = new Quaternion(data.r)
+        this.s = new Vector3(data.s)
+    }
 }
 
-export class MaterialComponent extends Schema {
-    @type("boolean") shadows: boolean = true
-    @type("number") metallic: number = 0
-    @type("number") roughness: number = 1
-    @type("number") intensity: number = 0
-    @type("string") emissPath: string = ""
-    @type("boolean") emiss: boolean = true
-    @type('number') emissInt: number = 0
-    @type("string") textPath: string = ""
-    @type("string") type: string = "PBR"
-    @type(['string']) color: ArraySchema = new ArraySchema<string>("1", "1", "1", "1")
-    @type(['string']) emissColor: ArraySchema = new ArraySchema<string>("1", "1", "1", "1")
+export class GltfComponent extends Schema{
+    @type("string") src:string
+    @type("number") v:number
+    @type("number") i:number
 }
 
-export class VisibilityComponent extends Schema {
-    @type("boolean") visible: boolean = true
+export class NameComponent extends Schema{
+    @type("string") value:string
 }
 
-export class ImageComponent extends Schema {
-    @type("string") url: string = ""
+export class VisibilityComponent extends Schema{
+    @type("boolean") visible:boolean
 }
 
-export class NFTComponent extends Schema {
-    @type("string") contract: string = "0xf23e1aa97de9ca4fb76d2fa3fafcf4414b2afed0"
-    @type("string") tokenId: string = "1"
-    @type("string") chain: string = "eth"
-    @type("number") style: number = 22
+export class ParentingComponent extends Schema{
+    @type("string") aid:string
+    @type("string") entity:string
+    @type(["string"]) children:ArraySchema<string> = new ArraySchema<string>()
+
+    constructor(data:any){
+        super()
+        this.aid = data.entity
+        data.children.forEach((child:any)=>{
+            this.children.push(child)
+        })
+    }
 }
 
-export class VideoComponent extends Schema {
-    @type("string") url: string = ""
-    @type("number") volume: number = .5
-    @type("boolean") autostart: boolean = true
-    @type("boolean") loop: boolean = false
-}
-
-export class AudioComponent extends Schema {
-    @type("string") url: string = ""
-    @type("number") volume: number = .5
-    @type("boolean") autostart: boolean = false
-    @type("boolean") loop: boolean = false
-    @type("boolean") attachedPlayer: boolean = false
-}
-
-
-export class TextComponent extends Schema {
-    @type("string") text: string = "Text"
-    @type("number") font: number = 2
-    @type("number") align: number = 4
-    @type("number") fontSize: number = 1
-    @type("number") outlineWidth: number = 0
-    @type(Color4) outlineColor: Color4 = new Color4(1,1,1,1)
-    @type(Color4) color: Color4 = new Color4(1,1,1,1)
-}
-
-export class Actions extends Schema {
-    @type("string") name: string
-    @type("number") entity: number
-    @type("string") url: string
-    @type("string") type: string
-    @type("string") hoverText: string
-    @type("string") aid: string
-    @type("string") animName: string
-    @type("string") teleport: string
-    @type("string") teleCam: string
+export class ActionComponent extends Schema{
+    @type("string") id:string
+    @type("string") name:string
+    @type("string") type:string
+    @type("number") entity:number
+    @type("string") url:string
+    @type("string") hoverText:string
+    @type("string") aid:string
+    @type("string") animName:string
+    @type("string") teleport:string
+    @type("string") teleCam:string
     @type("boolean") animLoop:boolean
-    @type("string") emote: string
+    @type("string") emote:string
     @type("boolean") vis:boolean
     @type("number") vMask:number
     @type("number") iMask:number
-    @type("string") showText: string
-    @type("number") showTimer: string
-    @type("number") showSize: number
-    @type("string") showPos: string
-    @type("number") startDTimer: number
-    @type("string") startDId: string
+    @type("string") showText:string
+    @type("number") showTimer:string
+    @type("number") showSize:number
+    @type("string") showPos:string
+    @type("number") startDTimer:number
+    @type("string") startDId:string
     @type("number") cVMask:number
     @type("number") cIMask:number
     @type("string") dialID:string
@@ -117,319 +96,238 @@ export class Actions extends Schema {
     @type("number") twEZ:number
 }
 
-export class ActionComponent extends Schema {
-    @type({map:Actions}) actions = new MapSchema<Actions>()
+export class CounterComponent extends Schema{
+    @type({map:"number"}) values:MapSchema<number>
 }
 
-export class TriggerActionComponent extends Schema {
-    @type('string') aid:string
-    @type('string') id:string
+export class CounterBarComponent extends Schema{
+    @type("string") p:string
+    @type("string") s:string
+    @type("number") max:number
 }
 
-export class Triggers extends Schema {
-    @type([TriggerActionComponent]) actions = new ArraySchema<TriggerActionComponent>()
-    @type("string") type: string = "on_click"
-    @type("string") hoverText: string = "Click here"
-    @type("number") pointer:number = 0
-    @type("number") distance:number = 3
-    @type("boolean") showHover: boolean = true
+export class StateComponent extends Schema{
+    @type(["string"]) value:ArraySchema<string>
+    @type("string") default:string
 }
 
-export class TriggerComponent extends Schema {
-    @type("boolean") enabled: boolean = false
-    @type([Triggers]) triggers = new ArraySchema<Triggers>()
-}
-
-export class TriggerAreaComponent extends Schema {
-    @type("boolean") enabled: boolean = true
-    @type([TriggerActionComponent]) eActions = new ArraySchema<TriggerActionComponent>()
-    @type([TriggerActionComponent]) lActions = new ArraySchema<TriggerActionComponent>()
-}
-
-export class AnimationComponent extends Schema {
-    @type("boolean") enabled: boolean = true
-    @type("boolean") autostart: boolean = false
-    @type("boolean") autoloop: boolean = false
-    @type("number") startIndex: number = 0
-    @type(['string']) animations = new ArraySchema<string>()
-    @type(['number']) durations = new ArraySchema<number>()
-}
-
-export class NpcComponent extends Schema {
-    @type("string") name:string = ""
-    @type("number") bodyShape:number = 0
-    @type("number") type:number = 0
-    @type("number") change:number = 0
-    @type("boolean") dName: boolean = true
-    @type(['string']) wearables = new ArraySchema<string>()
-    @type(Color4) eyeColor = new Color4(0,0,0,1)
-    @type(Color4) skinColor = new Color4(215,170,105,1)
-    @type(Color4) hairColor = new Color4(0,0,0,1)
-}
-
-export class DialogButtonComponent extends Schema {
-    @type("string") label: string
-    @type(['string']) actions = new ArraySchema<string>()
-}
-
-export class DialogInfoComponent extends Schema {
-    @type("string") text: string
-    @type([DialogButtonComponent]) buttons = new ArraySchema<DialogButtonComponent>
-    //audio
-    //image
-}
-
-export class DialogComponent extends Schema {
-    @type("string") name:string = "Dialog"
-    @type("string") id:string
-    @type("number") i:number = 0
-    @type("number") type:number = 0
-    @type([DialogInfoComponent]) dialogs = new ArraySchema<DialogInfoComponent>()
-}
-
-export class TweenComponent extends Schema {
-    @type("number") type:number = 0
-    @type("number") duration:number = 1
-    @type("number") easing:number = 0
-    @type("string") endPos:string = "0,0,0"
-}
-
-export class RewardComponent extends Schema {
-    @type("string") id:string
-    @type("string") type:string = REWARD_TYPES.DCL_ITEM
-    @type("number") start:number
-    @type("number") end:number
-    @type("number") ip:number
-    @type("number") amt:number
-
-    o:string
-
-    // @filter(function(
-    //     this: RewardComponent, // the instance of the class `@filter` has been defined (instance of `Card`)
-    //     client: Client, // the Room's `client` instance which this data is going to be filtered to
-    //     value: RewardComponent['key'], // the value of the field to be filtered. (value of `number` field)
-    //     root: Schema // the root state Schema instance
-    // ) {
-    //     return this.o === client.userData.userId;//
-    // })
-
-    key:string
-
-    en:boolean
-    claims:any[] = []
-}
-
-export class AccessComponent extends Schema {
+export class TriggerConditionComponent extends Schema{
     @type("string") id:string
     @type("string") type:string
-    @type("string") nftType:string
+    @type("string") value:string
+}
+
+export class TriggerComponent extends Schema{
+    @type("string") id:string
+    @type("string") type:string
+    @type([TriggerConditionComponent]) conditions:ArraySchema<TriggerConditionComponent>
+    @type(["string"]) actions:ArraySchema<string>
+}
+
+export class TextShapeComponent extends Schema{
+    @type("string") id:string
+    @type("string") text:string
+    @type("number") font:number
+    @type("number") fontSize:number
+    @type("number") textAlign:number
+    @type("number") paddingTop:number
+    @type("number") paddingRight:number
+    @type("number") paddingBottom:number
+    @type("number") paddingLeft:number
+    @type("number") lineSpacing:number
+    @type("number") outlineWidth:number
+    @type("boolean") fontAutoSize:boolean
+    @type(["number"]) outlineColor:ArraySchema<number> = new ArraySchema<number>()
+    @type(["number"]) textColor:ArraySchema<number> = new ArraySchema<number>()
+}
+
+export class AnimatorComponentSchema extends Schema{
+    @type("string") clip:string
+    @type("boolean") loop:boolean
+    @type("boolean") playing:boolean
+}
+
+export class AnimatorComponent extends Schema{
+    @type("string") id:string
+    @type([AnimatorComponentSchema]) states:ArraySchema<AnimatorComponentSchema>
+}
+
+export class PointerComponentEvent extends Schema{
+    @type("string") id:string
+    @type("string") hoverText:string
+    @type("number") eventType:number
+    @type("number") button:number
+    @type("number") maxDistance:number
+    @type("boolean") showFeedback:boolean
+}
+
+export class PointerComponent extends Schema{
+    @type("string") id:string
+    @type([PointerComponentEvent]) events:ArraySchema<PointerComponentEvent>
+}
+
+export class IWBCatalogComponent extends Schema{
+    @type("string") id:string
+    @type("string") name:string
+    @type("string") description:string
+    @type("string") owner:string
+    @type("string") ownerAddress:string
     @type("string") category:string
-    @type("string") filter:string
-    @type("string") contract:string
-    @type("string") tokenId:string
+    @type("string") type:string
+    @type("string") style:string
+    @type("boolean") ugc:boolean
+    @type("boolean") pending:boolean
 }
 
+export class IWBComponent extends Schema{
+    @type("string") aid:string
+    @type("boolean") locked:boolean
+    @type("boolean") buildVis:boolean
+    @type("boolean") editing:boolean
+}
 
-export function addNFTComponent(item:SceneItem, nft:NFTComponent){
-    item.comps.push(COMPONENT_TYPES.NFT_COMPONENT)
-    item.nftComp = new NFTComponent()
+export class TempScene extends Schema {
+    @type("string") id: string
+    @type("string") n: string
+    @type("string") d: string
+    @type("string") bpcl: string
+    @type(['string']) pcls = new ArraySchema<string>();
+}
 
-    if(nft !== null){
-        item.nftComp.chain = nft.chain
-        item.nftComp.contract = nft.contract
-        item.nftComp.tokenId = nft.tokenId
-        item.nftComp.style = nft.style
+export class Scene extends Schema {
+    @type("string") id: string
+    @type("string") n: string
+    @type("string") d: string
+    @type("string") o: string
+    @type("string") ona: string
+    @type("string") cat: string
+    @type("string") bpcl: string
+    @type("string") w: string
+    @type("string") im: string
+
+    @type(['string']) bps = new ArraySchema<string>();
+    @type(['string']) rat = new ArraySchema<string>();
+    @type(['string']) rev = new ArraySchema<string>();
+    @type(['string']) pcls = new ArraySchema<string>();
+    @type(['string']) sp = new ArraySchema<string>();
+    @type(['string']) cp = new ArraySchema<string>();
+
+    @type("number") cd: number
+    @type("number") upd: number
+    @type("number") si: number
+    @type("number") toc: number
+    @type("number") pc: number
+    @type("number") pcnt: number
+
+    @type("boolean") isdl: boolean
+    @type("boolean") e: boolean
+    @type("boolean") priv: boolean
+    @type("boolean") lim: boolean = true
+
+    @type({map:TransformComponent}) transforms:MapSchema<TransformComponent>
+    @type({map:GltfComponent}) gltfs:MapSchema<GltfComponent>
+    @type({map:NameComponent}) names:MapSchema<NameComponent>
+    @type({map:VisibilityComponent}) visibilities:MapSchema<VisibilityComponent>
+    @type({map:ActionComponent}) actions:MapSchema<ActionComponent>
+    @type({map:CounterComponent}) counters:MapSchema<CounterComponent>
+    @type({map:CounterBarComponent}) counterbars:MapSchema<CounterBarComponent>
+    @type({map:StateComponent}) states:MapSchema<StateComponent>
+    @type({map:TriggerComponent}) triggers:MapSchema<TriggerComponent>
+    @type({map:TextShapeComponent}) textShapes:MapSchema<TextShapeComponent>
+    @type({map:AnimatorComponent}) animators:MapSchema<AnimatorComponent>
+    @type({map:PointerComponent}) pointers:MapSchema<PointerComponent>
+    @type({map:IWBCatalogComponent}) catalogInfo:MapSchema<IWBCatalogComponent>
+    @type({map:IWBComponent}) itemInfo:MapSchema<IWBComponent>
+
+    @type([ParentingComponent]) parenting:ArraySchema<ParentingComponent>
+
+    //pointer evnts component
+    //sync components
+
+
+    constructor(data?:any) {
+        super(data)
+        if (data){
+            this.pcls = data.pcls
+            this.pcnt = data.pcls.length
+            this.lim = data.hasOwnProperty("lim") ? data.lim : true
+            this.sp = data.sp[0].split(",").length === 2 ? [data.sp[0].split(",")[0] + ",0," + data.sp[0].split(",")[1]] : data.sp
+            this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"]
+
+            this.setComponents(data.components)
+        }
     }
-}
-
-export function addCollisionComponent(item:SceneItem, collision:CollisionComponent){
-    item.colComp = new CollisionComponent()
-
-    if(collision){
-        item.colComp.iMask = collision.iMask
-        item.colComp.vMask = collision.vMask
-    }
-}
-
-export function addVisibilityComponent(item:SceneItem, selectedVisibility:boolean){
-    item.visComp = new VisibilityComponent()
-    item.visComp.visible = selectedVisibility
-}
-
-export function addImageComponent(item:SceneItem, url:string){
-    item.comps.push(COMPONENT_TYPES.IMAGE_COMPONENT)
-    item.imgComp = new ImageComponent()
-    item.imgComp.url = url
-}
-
-export function addVideoComponent(item:SceneItem, data:VideoComponent){
-    item.comps.push(COMPONENT_TYPES.VIDEO_COMPONENT)
-    item.vidComp = new VideoComponent()
-    if(data !== null){
-        item.vidComp.url = data.url
-        item.vidComp.autostart = data.autostart
-        item.vidComp.loop = data.loop
-        item.vidComp.volume = data.volume
-    }
-}
-
-export function addAudioComponent(item:SceneItem, data:any){
-    console.log('adding audio data', item.sty, data)
-    item.comps.push(COMPONENT_TYPES.AUDIO_COMPONENT)
-    item.audComp = new AudioComponent()
-    item.audComp.url = "" + (item.sty !== "stream" ? "assets/" + item.id + ".mp3" : "")
-
-    if(data !== null){
-        item.audComp.url = "" + (item.sty !== "stream" ? "assets/" + item.id + ".mp3" : data.url)
-        item.audComp.autostart = data.autostart
-        item.audComp.loop = data.loop
-        item.audComp.volume = data.volume
-        item.audComp.attachedPlayer = data.attachedPlayer
-    }
-    console.log('new audio asset is', item.audComp.url)
-}
-
-export function addMaterialComponent(item:SceneItem, data:any){
-    item.comps.push(COMPONENT_TYPES.MATERIAL_COMPONENT)
-    item.matComp = new MaterialComponent()
-    if(data !== null){
-        console.log('maerial component is not null')
     
-    }
+    setComponents(components:any){
+        for (const key in components) {
+            if (components.hasOwnProperty(key)) {
+                switch(key){
+                    case COMPONENT_TYPES.NAMES_COMPONENT:
+                        this.names = new MapSchema<NameComponent>()
+                        for (const aid in components[key]) {
+                            this.names.set(aid, new NameComponent(components[key][aid]))
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.VISBILITY_COMPONENT:
+                        this.visibilities = new MapSchema<VisibilityComponent>()
+                        for (const aid in components[key]) {
+                            let vis = new VisibilityComponent(components[key][aid])
+                            vis.visible = true
+                            this.visibilities.set(aid, new VisibilityComponent(components[key][aid]))
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.PARENTING_COMPONENT:
+                        this.parenting = new ArraySchema<ParentingComponent>()
+                        components[key].forEach((info:any) => {
+                            console.log('parenting info', info)
+                            this.parenting.push(new ParentingComponent(info))
+                        });
+                        break;
+
+                    case COMPONENT_TYPES.TRANSFORM_COMPONENT:
+                        this.transforms = new MapSchema<TransformComponent>()
+                        for (const aid in components[key]) {
+                            this.transforms.set(aid, new TransformComponent(components[key][aid]))
+                        }
+                        break;
 
 
-    // @type("boolean") shadows: boolean = true
-    // @type("number") metallic: number = 0
-    // @type("number") roughness: number = 1
-    // @type("number") intensity: number = 0
-    // @type("string") emissPath: string = ""
-    // @type('number') emissInt: number = 0
-    // @type("string") textPath: string = ""
-    // @type("string") type: string = "pbr"
+                    case COMPONENT_TYPES.POINTER_COMPONENT:
+                        this.pointers = new MapSchema<PointerComponent>()
+                        for (const aid in components[key]) {
+                            let pointerEvents = new PointerComponent()
+                            pointerEvents.events = new ArraySchema<PointerComponentEvent>()
+                            components[key][aid].pointerEvents.forEach((event:any)=>{
+                                console.log('pointer event is', event)
+                                let pointerEvent = new PointerComponentEvent()
+                                pointerEvent.hoverText = event.eventInfo.hoverText
+                                pointerEvent.maxDistance = event.eventInfo.maxDistance
+                                pointerEvent.showFeedback = event.eventInfo.showFeedback
+                                pointerEvent.eventType = event.eventType
+                                pointerEvent.button = event.eventInfo.button
+                                pointerEvents.events.push(pointerEvent)
+                            })
+                            this.pointers.set(aid, pointerEvents)
+                        }
+                        break;
 
-    
-}
-
-export function addTextComponent(item:SceneItem, textComp:TextComponent){
-    console.log('adding text component', item, textComp)
-    
-    item.comps.push(COMPONENT_TYPES.TEXT_COMPONENT)
-    item.textComp = new TextComponent()
-    if(textComp){
-        item.textComp.text = textComp.text
-        item.textComp.font = textComp.font
-        item.textComp.fontSize = textComp.fontSize
-
-        item.textComp.color = new Color4()
-        item.textComp.color.r = textComp.color.r
-        item.textComp.color.g = textComp.color.g
-        item.textComp.color.b = textComp.color.b
-        item.textComp.color.a = textComp.color.a
-
-        item.textComp.align = textComp.align
-        item.textComp.outlineWidth = textComp.outlineWidth
-        item.textComp.outlineColor = textComp.outlineColor
-    }
-}
-
-export function addTriggerComponent(item:SceneItem, trigComp:TriggerComponent){
-    item.trigComp = new TriggerComponent()
-    if(trigComp){
-        item.trigComp.enabled = trigComp.enabled
-        trigComp.triggers.forEach((trigger:any)=>{
-            item.trigComp.triggers.push(trigger)
-        })
-    }
-}
-
-export function addActionComponent(item:SceneItem, actComp:ActionComponent){
-    item.actComp = new ActionComponent()
-    if(actComp){
-        actComp.actions.forEach((action, key)=>{
-            item.actComp.actions.set(key, action)
-        })
-    }
-}
-
-export function addTriggerAreaComponent(item:SceneItem, trigArComp:TriggerAreaComponent){
-    console.log('adding trigger area component')
-    item.trigArComp = new TriggerAreaComponent()
-    if(trigArComp){
-        item.trigArComp.enabled = trigArComp.enabled
-        trigArComp.eActions.forEach((action)=>{
-            item.trigArComp.eActions.push(action)
-        })
-        trigArComp.lActions.forEach((action)=>{
-            item.trigArComp.lActions.push(action)
-        })
-    }
-}
-
-export function addClickAreaComponent(item:SceneItem){
-    console.log('adding click area component')
-    item.colComp.iMask = 0
-    item.colComp.vMask = 1
-}
-
-export function addAnimationComponent(item:SceneItem, animations:any){
-    item.animComp = new AnimationComponent()
-    item.animComp.enabled = true
-    item.animComp.autostart = false
-    item.animComp.autoloop = false
-
-    animations.forEach((animation:any)=>{
-        item.animComp.animations.push(animation.name)
-        item.animComp.durations.push(animation.duration)
-    })
-}
-
-export function addNPCComponent(item:SceneItem, npcComp:NpcComponent){
-    console.log('adding npc component')
-    item.npcComp = new NpcComponent()
-    if(npcComp){
-        item.npcComp.name = npcComp.name
-        item.npcComp.dName = npcComp.dName
-        item.npcComp.bodyShape = npcComp.bodyShape
-        item.npcComp.wearables = npcComp.wearables
-
-        item.npcComp.eyeColor = npcComp.eyeColor
-        item.npcComp.hairColor = npcComp.hairColor
-        item.npcComp.skinColor = npcComp.skinColor
-    }
-}
-
-export function addDialogComponent(item:SceneItem, dialComp:DialogComponent){
-    console.log('adding npc component')
-    item.dialComp = new DialogComponent()
-    if(dialComp){
-        item.dialComp.id = dialComp.id
-        // item.npcComp.name = npcComp.name
-        // item.npcComp.dName = npcComp.dName
-        // item.npcComp.bodyShape = npcComp.bodyShape
-        // item.npcComp.wearables = npcComp.wearables
-
-        // item.npcComp.eyeColor = npcComp.eyeColor
-        // item.npcComp.hairColor = npcComp.hairColor
-        // item.npcComp.skinColor = npcComp.skinColor
-    }else{
-        item.dialComp.id = generateId(5)
-    }
-}
-
-export function addRewardComponent(item:SceneItem, reward:RewardComponent, owner?:string){
-    // item.comps.push(COMPONENT_TYPES.REWARD_COMPONENT)
-    item.rComp = new RewardComponent()
-    item.rComp.id = generateId(5)
-    if(reward !== null){
-        item.rComp.o = owner? owner : ""
-        item.rComp.id = reward.id
-        item.rComp.type = reward.type ? reward.type : REWARD_TYPES.DCL_ITEM
-        item.rComp.start = reward.start
-        item.rComp.end = reward.end
-        item.rComp.ip = reward.ip
-        item.rComp.amt = reward.amt
-        item.rComp.key = reward.key
-        item.rComp.en = reward.en
-        item.rComp.claims = reward.claims
+                    case COMPONENT_TYPES.TEXT_COMPONENT:
+                        this.textShapes = new MapSchema<TextShapeComponent>()
+                        for (const aid in components[key]) {
+                            let textShape = new TextShapeComponent(components[key][aid]) 
+                            components[key][aid].outlineColor.forEach((color:number)=>{
+                                textShape.outlineColor.push(color)
+                            })
+                            components[key][aid].textColor.forEach((color:number)=>{
+                                textShape.textColor.push(color)
+                            })
+                            this.textShapes.set(aid, textShape)
+                        }
+                        break;
+                }
+            }
+        }
     }
 }
