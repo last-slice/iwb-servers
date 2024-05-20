@@ -68,23 +68,47 @@ export let testData:any =
             "y": 1,
             "z": 1
           }
+        },
+        "bEQXB1":{
+          "p": {
+            "x": 10.33,
+            "y": 1.06,
+            "z": 2.25
+          },
+          "r": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "s": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
         }
       },
       "Names":{
         "bEQXB0":{
           "value":"Test Catalog Item"
+        },
+        "bEQXB1":{
+          "value":"Test Catalog Item 2"
         }
       },
       "Visibility":{
         "bEQXB0":{
           "visible":true
+        },
+        "bEQXB1":{
+          "visible":false
         }
       },
       "Parenting":[
-        {"entity":"0", "children":["bEQXB0"]},
+        {"entity":"0", "children":["bEQXB0", "bEQXB1"]},
         {"entity":"1", "children":[]},
         {"entity":"2", "children":[]},
-        {"entity":"bEQXB0", "children":[]}
+        {"entity":"bEQXB0", "children":[]},
+        {"entity":"bEQXB1", "children":[]},
       ],
       "Text":{
         "bEQXB0":{
@@ -101,6 +125,41 @@ export let testData:any =
           "outlineWidth": 0,
           "outlineColor": [1,1,1],
           "textColor": [1,1,1,1]
+        }
+      },
+      "Counters":{
+        "bEQXB0":{
+          "counters":{
+            "lives":3,
+            "score":4
+          }
+        }
+      },
+      "Triggers":{
+        "bEQXB0":{
+          "triggers":[
+            {
+              "type":"on_input_action",
+              "conditions":[],
+              "actions":[
+                {
+                  "id":"3xi2k3"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "Actions":{
+        "bEQXB1":{
+          "actions":[
+            {
+              "id":"3xi2k3",
+              "name":"Test Action 1",
+              "type":"show_text",
+              "text":"Hello"
+            }
+          ]
         }
       }
     }

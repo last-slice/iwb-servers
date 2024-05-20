@@ -62,7 +62,7 @@ export class ParentingComponent extends Schema{
     }
 }
 
-export class ActionComponent extends Schema{
+export class ActionComponentSchema extends Schema{
     @type("string") id:string
     @type("string") name:string
     @type("string") type:string
@@ -96,8 +96,17 @@ export class ActionComponent extends Schema{
     @type("number") twEZ:number
 }
 
+export class ActionComponent extends Schema {
+    @type([ActionComponentSchema]) actions:ArraySchema<ActionComponentSchema>
+}
+
+export class CounterComponentSchema extends Schema{
+    @type("number") currentValue:number
+    @type("number") previousValue:number
+}
+
 export class CounterComponent extends Schema{
-    @type({map:"number"}) values:MapSchema<number>
+    @type({map:CounterComponentSchema}) values:MapSchema<CounterComponentSchema>
 }
 
 export class CounterBarComponent extends Schema{
@@ -117,11 +126,15 @@ export class TriggerConditionComponent extends Schema{
     @type("string") value:string
 }
 
-export class TriggerComponent extends Schema{
+export class TriggerComponentSchema extends Schema{
     @type("string") id:string
     @type("string") type:string
     @type([TriggerConditionComponent]) conditions:ArraySchema<TriggerConditionComponent>
     @type(["string"]) actions:ArraySchema<string>
+}
+
+export class TriggerComponent extends Schema{
+    @type([TriggerComponentSchema]) triggers:ArraySchema<TriggerComponentSchema>
 }
 
 export class TextShapeComponent extends Schema{
@@ -281,7 +294,6 @@ export class Scene extends Schema {
                     case COMPONENT_TYPES.PARENTING_COMPONENT:
                         this.parenting = new ArraySchema<ParentingComponent>()
                         components[key].forEach((info:any) => {
-                            console.log('parenting info', info)
                             this.parenting.push(new ParentingComponent(info))
                         });
                         break;
@@ -292,7 +304,6 @@ export class Scene extends Schema {
                             this.transforms.set(aid, new TransformComponent(components[key][aid]))
                         }
                         break;
-
 
                     case COMPONENT_TYPES.POINTER_COMPONENT:
                         this.pointers = new MapSchema<PointerComponent>()
@@ -324,6 +335,76 @@ export class Scene extends Schema {
                                 textShape.textColor.push(color)
                             })
                             this.textShapes.set(aid, textShape)
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.COUNTER_COMPONENT:
+                        this.counters = new MapSchema<CounterComponent>()
+                        for (const aid in components[key]) {
+                            let counter = new CounterComponent()
+                            counter.values = new MapSchema<CounterComponentSchema>()
+
+                            let counters = components[key][aid].counters
+                            for(let name in counters){
+                                let counterSchema = new CounterComponentSchema()
+                                counterSchema.currentValue =  counters[name]
+                                counterSchema.previousValue =  counters[name]
+
+                                counter.values.set(name, counterSchema)
+                            }
+
+                            this.counters.set(aid, counter)
+                        }
+                        break;
+                
+                    case COMPONENT_TYPES.TRIGGER_COMPONENT:
+                        this.triggers = new MapSchema<TriggerComponent>()
+                        for (const aid in components[key]) {
+                            let data = components[key][aid]
+
+                            let trigger = new TriggerComponent()
+                            trigger.triggers = new ArraySchema<TriggerComponentSchema>()
+
+                            data.triggers.forEach((data:any)=>{
+                                let schema = new TriggerComponentSchema()
+                                schema.type = data.type
+                                schema.conditions = new ArraySchema<TriggerConditionComponent>()
+                                schema.actions = new ArraySchema<string>()
+
+                                data.conditions.forEach((condition:any)=>{
+                                    schema.conditions.push(new TriggerConditionComponent(condition))
+                                })
+
+                                data.actions.forEach((action:any)=>{
+                                    schema.actions.push(action.id)
+                                })
+                                trigger.triggers.push(schema)
+                            })
+
+                            this.triggers.set(aid, trigger)
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.ACTION_COMPONENT:
+                        this.actions = new MapSchema<ActionComponent>()
+                        for (const aid in components[key]) {
+                            let data = components[key][aid]
+
+                            let action = new ActionComponent()
+                            action.actions = new ArraySchema<ActionComponentSchema>()
+
+                            
+                            data.actions.forEach((data:any)=>{
+                                console.log('action data is', action)
+                                let schema = new ActionComponentSchema()
+                                schema.id = data.id
+                                schema.name = data.name
+                                schema.type = data.type
+                                schema.showText = data.text
+                                action.actions.push(schema)
+                            })     
+
+                            this.actions.set(aid, action)
                         }
                         break;
                 }

@@ -120,8 +120,8 @@ export enum COMPONENT_TYPES {
     TRANSFORM_COMPONENT = "Transform",
     NFT_COMPONENT = "NFT",
     TEXT_COMPONENT = "Text",
-    TRIGGER_COMPONENT = "Trigger",
-    ACTION_COMPONENT = 'Action',
+    TRIGGER_COMPONENT = "Triggers",
+    ACTION_COMPONENT = 'Actions',
     TRIGGER_AREA_COMPONENT = "Trigger Area",
     CLICK_AREA_COMPONENT = "Click Area",
     ANIMATION_COMPONENT = "Animation",
@@ -130,7 +130,8 @@ export enum COMPONENT_TYPES {
     REWARD_COMPONENT ='Reward',
     PARENTING_COMPONENT = 'Parenting',
     NAMES_COMPONENT ='Names',
-    POINTER_COMPONENT = 'Pointers'
+    POINTER_COMPONENT = 'Pointers',
+    COUNTER_COMPONENT = 'Counters'
 }
 
 export enum COLLISION_LAYERS {
