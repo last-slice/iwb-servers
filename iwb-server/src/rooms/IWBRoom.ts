@@ -3,16 +3,7 @@ import {IWBRoomState} from "./IWBRoomState";
 import { Scene } from "../Objects/Components";
 import { iwbItemHandler } from "./messaging/ItemHandler";
 import { testData } from "../tests/data";
-// import {Player} from "../Objects/Player";
-// import {RoomMessageHandler} from "./handlers/MessageHandler";
-// import {itemManager, iwbManager, playerManager} from "../app.config";
-// import {SERVER_MESSAGE_TYPES} from "../utils/types";
-// import {playerLogin, updatePlayerDisplayName, updatePlayerInternalData} from "../utils/Playfab";
-// import * as jwt from "jsonwebtoken";
-// import { RoomSceneManager } from "./handlers/SceneManager";
-// import { createCustomObjects, destroyCustomObjects } from "../Objects/Custom";
-// import { pushPlayfabEvent } from "../Objects/PlayfabEvents";
-
+import { iwbSceneActionHandler } from "./messaging/ActionHandler";
 
 export class IWBRoom extends Room<IWBRoomState> {
 
@@ -26,6 +17,7 @@ export class IWBRoom extends Room<IWBRoomState> {
         this.state.world = options.world
 
         iwbItemHandler(this)
+        iwbSceneActionHandler(this)
 
         // this.state.messageHandler = new RoomMessageHandler(this)
         // this.state.sceneManager = new RoomSceneManager(this, options.world)

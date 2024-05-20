@@ -36,8 +36,8 @@ export class TransformComponent extends Schema{
 
 export class GltfComponent extends Schema{
     @type("string") src:string
-    @type("number") v:number
-    @type("number") i:number
+    @type("number") visibleCollision:number
+    @type("number") invisibleCollision:number
 }
 
 export class NameComponent extends Schema{
@@ -94,6 +94,11 @@ export class ActionComponentSchema extends Schema{
     @type("number") twEX:number
     @type("number") twEY:number
     @type("number") twEZ:number
+
+    ///amount for add/subtract actions
+    @type("number") value:number
+    @type("string") counter:string
+    @type("string") state:string
 }
 
 export class ActionComponent extends Schema {
@@ -116,19 +121,21 @@ export class CounterBarComponent extends Schema{
 }
 
 export class StateComponent extends Schema{
-    @type(["string"]) value:ArraySchema<string>
-    @type("string") default:string
+    @type(["string"]) values:ArraySchema<string>
+    @type("string") defaultValue:string
 }
 
 export class TriggerConditionComponent extends Schema{
     @type("string") id:string
     @type("string") type:string
     @type("string") value:string
+    @type("string") counter:string
 }
 
 export class TriggerComponentSchema extends Schema{
     @type("string") id:string
     @type("string") type:string
+    @type("number") input:number
     @type([TriggerConditionComponent]) conditions:ArraySchema<TriggerConditionComponent>
     @type(["string"]) actions:ArraySchema<string>
 }
@@ -368,6 +375,7 @@ export class Scene extends Schema {
                             data.triggers.forEach((data:any)=>{
                                 let schema = new TriggerComponentSchema()
                                 schema.type = data.type
+                                schema.input = data.input
                                 schema.conditions = new ArraySchema<TriggerConditionComponent>()
                                 schema.actions = new ArraySchema<string>()
 
@@ -401,10 +409,36 @@ export class Scene extends Schema {
                                 schema.name = data.name
                                 schema.type = data.type
                                 schema.showText = data.text
+                                schema.value = data.value
+                                schema.counter = data.counter
+                                schema.state = data.state
                                 action.actions.push(schema)
                             })     
 
                             this.actions.set(aid, action)
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.GLTF_COMPONENT:
+                        this.gltfs = new MapSchema<GltfComponent>()
+                        for (const aid in components[key]) {
+                            this.gltfs.set(aid, new GltfComponent(components[key][aid]))
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.STATE_COMPONENT:
+                        this.states = new MapSchema<StateComponent>()
+                        for (const aid in components[key]) {
+                            let data = components[key][aid]
+
+                            let state = new StateComponent()
+                            state.defaultValue = data.defaultValue
+
+                            state.values = new ArraySchema<string>()
+                            data.values.forEach((value:string)=>{
+                                state.values.push(value)
+                            })
+                            this.states.set(aid, state)
                         }
                         break;
                 }

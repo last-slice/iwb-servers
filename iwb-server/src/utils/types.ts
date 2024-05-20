@@ -61,6 +61,7 @@ export enum SERVER_MESSAGE_TYPES {
     SCENE_CLEAR_ASSETS = 'scene_clear_assets',
     SCENE_COPY_ITEM = 'scene_copy_item',
     SCENE_DEPLOY_FINISHED = 'scene_deploy_finished',
+    SCENE_ACTION = 'scene_action',
 
     //World
     INIT_WORLD = "init_world",
@@ -131,7 +132,9 @@ export enum COMPONENT_TYPES {
     PARENTING_COMPONENT = 'Parenting',
     NAMES_COMPONENT ='Names',
     POINTER_COMPONENT = 'Pointers',
-    COUNTER_COMPONENT = 'Counters'
+    COUNTER_COMPONENT = 'Counters',
+    GLTF_COMPONENT = 'Gltf',
+    STATE_COMPONENT ='States',
 }
 
 export enum COLLISION_LAYERS {
@@ -202,7 +205,24 @@ export enum ACTIONS {
     PLAY_ANIMATION = 'play_animation',
     STOP_ANIMATION = 'stop_animation',
     SHOW_DIALOG = 'show_dialog',
-    GIVE_REWARD = 'give_reward'
+    GIVE_REWARD = 'give_reward',
+    VERIFY_ACCESS = 'verify_access',
+
+
+
+    ADD_NUMBER = 'add_number',
+    SET_NUMBER = 'set_number',
+    SUBTRACT_NUMBER = 'subtract_number',
+    CHANGE_LEVEL = 'change_level',
+    END_LEVEL = 'end_level',
+    START_TIMER = 'start_timer',
+    STOP_TIMER = 'stop_timer',
+    LOCK_PLAYER = 'lock_player',
+    UNLOCK_PLAYER = 'unlock_player',
+    SET_POSITION = 'set_position',
+    SET_ROTATION = 'set_rotation',
+    SET_SCALE = 'set_scale',
+
 }
 
 export enum REWARD_TYPES {

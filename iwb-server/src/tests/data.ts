@@ -43,7 +43,16 @@ export let testData:any =
               "eventType":1,
               "eventInfo":{
                 "button":0,
-                "hoverText":"Testing Click",
+                "hoverText":"Check Lives",
+                "maxDistance":20,
+                "showFeedback":true
+              }
+            },
+            {
+              "eventType":1,
+              "eventInfo":{
+                "button":1,
+                "hoverText":"Add Lives",
                 "maxDistance":20,
                 "showFeedback":true
               }
@@ -140,10 +149,33 @@ export let testData:any =
           "triggers":[
             {
               "type":"on_input_action",
-              "conditions":[],
+              "input":0,
+              "conditions":[
+                {
+                  "type":"when_counter_is_greater_than",
+                  "value":"3",
+                  "counter":"lives"
+                }
+              ],
               "actions":[
                 {
                   "id":"3xi2k3"
+                }
+              ]
+            },
+            {
+              "type":"on_input_action",
+              "input":1,
+              "conditions":[
+                {
+                  "type":"when_counter_is_less_than",
+                  "value":"4",
+                  "counter":"lives"
+                }
+              ],
+              "actions":[
+                {
+                  "id":"3xi2k4"
                 }
               ]
             }
@@ -151,15 +183,37 @@ export let testData:any =
         }
       },
       "Actions":{
-        "bEQXB1":{
+        "bEQXB0":{
           "actions":[
             {
               "id":"3xi2k3",
               "name":"Test Action 1",
               "type":"show_text",
               "text":"Hello"
+            },
+            {
+              "id":"3xi2k4",
+              "name":"Activate State",
+              "type":"set_state",
+              "state":"Activated",
             }
           ]
+        }
+      },
+      "Gltf":{
+        "bEQXB0":{
+          "src":"0dfc4868-5e82-49c8-8eac-c878617bef23",
+          "visibleCollision":1,
+          "invisibleCollision":2
+        }
+      },
+      "States":{
+        "bEQXB0":{
+          values:[
+            "Activated",
+            "Deactivated"
+          ],
+          defaultValue:"Deactivated"
         }
       }
     }
