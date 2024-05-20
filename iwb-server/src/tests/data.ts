@@ -108,9 +108,6 @@ export let testData:any =
         "bEQXB0":{
           "visible":true
         },
-        "bEQXB1":{
-          "visible":false
-        }
       },
       "Parenting":[
         {"entity":"0", "children":["bEQXB0", "bEQXB1"]},
@@ -147,6 +144,19 @@ export let testData:any =
       "Triggers":{
         "bEQXB0":{
           "triggers":[
+            {
+              "type":"on_input_action",
+              "input":0,
+              "conditions":[],
+              "actions":[
+                {
+                  "id":"3xi2k5"
+                },
+                {
+                  "id":"31i219"
+                },
+              ]
+            },
             {
               "type":"on_input_action",
               "input":0,
@@ -196,7 +206,56 @@ export let testData:any =
               "name":"Activate State",
               "type":"set_state",
               "state":"Activated",
-            }
+            },
+            {
+              "id":"3xi219",
+              "name":"Move Object",
+              "type":"set_position",
+              "movePos":"0,0,5",
+              "moveRel":true
+            },
+            {
+              "id":"31i219",
+              "name":"Attach Player",
+              "type":"attach_player",
+              "anchor":3
+            },
+          ]
+        },
+        "bEQXB1":{
+          actions:[
+            {
+              "id":"3xi2k5",
+              "name":"Play Sound",
+              "type":"play_sound",
+            },
+            {
+              "id":"3xi2k6",
+              "name":"Set Visibility",
+              "type":"set_visibility",
+              "visible":false,
+              "vMask":2,
+              "iMask":0
+            },
+            {
+              "id":"3xi2k7",
+              "name":"Open Link",
+              "type":"open_link",
+              "url":"https://www.google.com",
+            },
+            {
+              "id":"3xi2k8",
+              "name":"Move Player",
+              "type":"move_player",
+              "movePos":"0,0,0",
+              "moveCam":"0,0,-10"
+            },
+            {
+              "id":"3xi2k9",
+              "name":"Play Wave",
+              "type":"emote",
+              "emote":"wave"
+            },
           ]
         }
       },
@@ -214,6 +273,15 @@ export let testData:any =
             "Deactivated"
           ],
           defaultValue:"Deactivated"
+        }
+      },
+      "Sounds":{
+        "bEQXB1":{
+          url:"8481bfaa-15be-4ebf-83c7-ceec60ae575b",
+          volume: 0.3,
+          autostart:false,
+          loop:false,
+          attach:true
         }
       }
     }

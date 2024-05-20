@@ -63,22 +63,15 @@ export class ParentingComponent extends Schema{
 }
 
 export class ActionComponentSchema extends Schema{
-    @type("string") id:string
-    @type("string") name:string
-    @type("string") type:string
+
     @type("number") entity:number
-    @type("string") url:string
+
     @type("string") hoverText:string
     @type("string") aid:string
     @type("string") animName:string
     @type("string") teleport:string
     @type("string") teleCam:string
     @type("boolean") animLoop:boolean
-    @type("string") emote:string
-    @type("boolean") vis:boolean
-    @type("number") vMask:number
-    @type("number") iMask:number
-    @type("string") showText:string
     @type("number") showTimer:string
     @type("number") showSize:number
     @type("string") showPos:string
@@ -94,6 +87,29 @@ export class ActionComponentSchema extends Schema{
     @type("number") twEX:number
     @type("number") twEY:number
     @type("number") twEZ:number
+
+
+
+
+
+
+
+
+
+
+    @type("string") id:string
+    @type("string") name:string
+    @type("string") type:string
+    @type("number") anchor:number
+    @type("string") emote:string
+    @type("boolean") visible:boolean
+    @type("number") vMask:number
+    @type("number") iMask:number
+    @type("string") showText:string
+    @type("string") url:string
+    @type("string") movePos:string
+    @type("string") moveCam:string
+    @type("boolean") moveRel:boolean
 
     ///amount for add/subtract actions
     @type("number") value:number
@@ -186,6 +202,14 @@ export class PointerComponent extends Schema{
     @type([PointerComponentEvent]) events:ArraySchema<PointerComponentEvent>
 }
 
+export class SoundComponent extends Schema {
+    @type("string") url:string
+    @type("number") volume:number
+    @type("boolean") autostart:boolean
+    @type("boolean") loop:boolean
+    @type("boolean") attach:boolean
+}
+
 export class IWBCatalogComponent extends Schema{
     @type("string") id:string
     @type("string") name:string
@@ -256,6 +280,9 @@ export class Scene extends Schema {
     @type({map:TextShapeComponent}) textShapes:MapSchema<TextShapeComponent>
     @type({map:AnimatorComponent}) animators:MapSchema<AnimatorComponent>
     @type({map:PointerComponent}) pointers:MapSchema<PointerComponent>
+    @type({map:SoundComponent}) sounds:MapSchema<SoundComponent>
+
+
     @type({map:IWBCatalogComponent}) catalogInfo:MapSchema<IWBCatalogComponent>
     @type({map:IWBComponent}) itemInfo:MapSchema<IWBComponent>
 
@@ -318,7 +345,6 @@ export class Scene extends Schema {
                             let pointerEvents = new PointerComponent()
                             pointerEvents.events = new ArraySchema<PointerComponentEvent>()
                             components[key][aid].pointerEvents.forEach((event:any)=>{
-                                console.log('pointer event is', event)
                                 let pointerEvent = new PointerComponentEvent()
                                 pointerEvent.hoverText = event.eventInfo.hoverText
                                 pointerEvent.maxDistance = event.eventInfo.maxDistance
@@ -403,7 +429,6 @@ export class Scene extends Schema {
 
                             
                             data.actions.forEach((data:any)=>{
-                                console.log('action data is', action)
                                 let schema = new ActionComponentSchema()
                                 schema.id = data.id
                                 schema.name = data.name
@@ -412,6 +437,15 @@ export class Scene extends Schema {
                                 schema.value = data.value
                                 schema.counter = data.counter
                                 schema.state = data.state
+                                schema.visible = data.visible
+                                schema.vMask = data.vMask
+                                schema.iMask = data.iMask
+                                schema.url = data.url
+                                schema.moveCam = data.moveCam
+                                schema.movePos = data.movePos
+                                schema.emote = data.emote
+                                schema.moveRel = data.moveRel
+                                schema.anchor = data.anchor
                                 action.actions.push(schema)
                             })     
 
@@ -441,6 +475,14 @@ export class Scene extends Schema {
                             this.states.set(aid, state)
                         }
                         break;
+
+                    case COMPONENT_TYPES.SOUND_COMPONENT:
+                        this.sounds = new MapSchema<SoundComponent>()
+                        for (const aid in components[key]) {
+                            this.sounds.set(aid, new SoundComponent(components[key][aid]))
+                        }
+                        break;
+
                 }
             }
         }

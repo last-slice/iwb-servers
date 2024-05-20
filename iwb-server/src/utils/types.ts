@@ -135,6 +135,7 @@ export enum COMPONENT_TYPES {
     COUNTER_COMPONENT = 'Counters',
     GLTF_COMPONENT = 'Gltf',
     STATE_COMPONENT ='States',
+    SOUND_COMPONENT = 'Sounds',
 }
 
 export enum COLLISION_LAYERS {
