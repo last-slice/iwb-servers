@@ -50,12 +50,12 @@ export class VisibilityComponent extends Schema{
 
 export class ParentingComponent extends Schema{
     @type("string") aid:string
-    @type("string") entity:string
+    @type("number") entity:number
     @type(["string"]) children:ArraySchema<string> = new ArraySchema<string>()
 
     constructor(data:any){
         super()
-        this.aid = data.entity
+        this.aid = data.aid
         data.children.forEach((child:any)=>{
             this.children.push(child)
         })
@@ -228,6 +228,7 @@ export class IWBComponent extends Schema{
     @type("boolean") locked:boolean
     @type("boolean") buildVis:boolean
     @type("boolean") editing:boolean
+    @type("boolean") priv:boolean
 }
 
 export class TempScene extends Schema {
@@ -290,6 +291,9 @@ export class Scene extends Schema {
 
     //pointer evnts component
     //sync components
+
+    parentEntity:any
+    entities:any[] = []
 
 
     constructor(data?:any) {

@@ -4,6 +4,8 @@ import { Scene } from "../Objects/Components";
 import { iwbItemHandler } from "./messaging/ItemHandler";
 import { testData } from "../tests/data";
 import { iwbSceneActionHandler } from "./messaging/ActionHandler";
+import { Player } from "../Objects/Player";
+import { SERVER_MESSAGE_TYPES } from "../utils/types";
 
 export class IWBRoom extends Room<IWBRoomState> {
 
@@ -33,10 +35,7 @@ export class IWBRoom extends Room<IWBRoomState> {
             delete client.userData.avatar
             client.userData.roomId = this.roomId
 
-            // this.getPlayerInfo(client, options)
-
-
-
+            this.getPlayerInfo(client, options)
 
 
 
@@ -48,9 +47,9 @@ export class IWBRoom extends Room<IWBRoomState> {
     }
 
     async onLeave(client: Client, consented: boolean) {
-        // let player:Player = this.state.players.get(client.userData.userId)
-        // if(player){
-        //     this.state.players.delete(client.userData.userId)
+        let player:Player = this.state.players.get(client.userData.userId)
+        if(player){
+            this.state.players.delete(client.userData.userId)
 
         //     this.state.messageHandler.sceneHandler.checkAssetsForEditByPlayer(client.userData.userid)
             
@@ -64,8 +63,7 @@ export class IWBRoom extends Room<IWBRoomState> {
             // playerManager.savePlayerCache(player)
         //     this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
         //   }, 1000 * 5)
-
-        // }
+        }
     }
 
     onDispose() {
@@ -76,20 +74,20 @@ export class IWBRoom extends Room<IWBRoomState> {
     }
 
     async getPlayerInfo(client: Client, options: any) {
-        // client.send(SERVER_MESSAGE_TYPES.INIT, {
-        //     catalog: itemManager.items,
-        //     realmAssets: this.state.realmAssets,
-        //     styles: iwbManager.styles,
-        //     worlds: iwbManager.worlds,
-        //     iwb: {v: iwbManager.version, updates:iwbManager.versionUpdates},
-        //     tutorials: {
-        //         videos: iwbManager.tutorials,
-        //         cid: iwbManager.tutorialsCID
-        //     }
-        // })
+        client.send(SERVER_MESSAGE_TYPES.INIT, {
+            catalog: [],//itemManager.items,
+            realmAssets: [],//this.state.realmAssets,
+            styles: [],//iwbManager.styles,
+            worlds: [],//iwbManager.worlds,
+            iwb: {v:0, updates:[]},// {v: iwbManager.version, updates:iwbManager.versionUpdates},
+            tutorials: {
+                videos: [], //iwbManager.tutorials,
+                cid: "" //iwbManager.tutorialsCID
+            }
+        })
 
-        // let player = new Player(this, client)
-        // this.state.players.set(options.userData.userId, player)
+        let player = new Player(this, client)
+        this.state.players.set(options.userData.userId, player)
         // playerManager.addPlayerToWorld(player)
 
         // pushPlayfabEvent(

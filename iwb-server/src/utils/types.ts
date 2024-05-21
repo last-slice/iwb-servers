@@ -93,6 +93,11 @@ export enum SCENE_MODES {
     BUILD_MODE
 }
 
+export enum VIEW_MODES {
+    AVATAR,
+    GOD
+}
+
 export enum EDIT_MODES {
     GRAB,
     EDIT

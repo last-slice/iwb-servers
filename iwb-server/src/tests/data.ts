@@ -113,8 +113,8 @@ export let testData:any =
         {"entity":"0", "children":["bEQXB0", "bEQXB1"]},
         {"entity":"1", "children":[]},
         {"entity":"2", "children":[]},
-        {"entity":"bEQXB0", "children":[]},
-        {"entity":"bEQXB1", "children":[]},
+        {"entity":"500", aid:"bEQXB0", "children":[]},
+        {"entity":"600",  aid:"bEQXB1", "children":[]},
       ],
       "Text":{
         "bEQXB0":{
