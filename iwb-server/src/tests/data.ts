@@ -155,6 +155,9 @@ export let testData:any =
                 {
                   "id":"31i219"
                 },
+                {
+                  "id":"31i212"
+                }
               ]
             },
             {
@@ -219,6 +222,14 @@ export let testData:any =
               "name":"Attach Player",
               "type":"attach_player",
               "anchor":3
+            },
+            {
+              "id":"31i212",
+              "name":"Set Visibility",
+              "type":"set_visibility",
+              "visible":true,
+              iMask:0,
+              vMask:0
             },
           ]
         },
