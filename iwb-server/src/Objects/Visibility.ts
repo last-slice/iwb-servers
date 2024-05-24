@@ -1,5 +1,10 @@
+import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Client } from "colyseus";
-import { Scene } from "./Components";
+import { Scene } from "./Scene";
+
+export class VisibilityComponent extends Schema{
+    @type("boolean") visible:boolean
+}
 
 export function editVisibility(client:Client, info:any, scene:Scene){
     let visibilty = scene.visibilities.get(info.aid)

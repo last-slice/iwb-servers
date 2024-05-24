@@ -1,11 +1,16 @@
 import {Client, Room} from "@colyseus/core";
 import {IWBRoomState} from "./IWBRoomState";
-import { Scene } from "../Objects/Components";
+import { Scene, initServerAssets, initServerScenes, saveRealmScenes } from "../Objects/Scene";
 import { iwbItemHandler } from "./messaging/ItemHandler";
 import { testData } from "../tests/data";
 import { iwbSceneActionHandler } from "./messaging/ActionHandler";
 import { Player } from "../Objects/Player";
 import { SERVER_MESSAGE_TYPES } from "../utils/types";
+import { iwbRewardHandler } from "./messaging/RewardHandler";
+import { addPlayerToWorld, iwbPlayerHandler, removePlayer, savePlayerCache } from "./messaging/PlayerHandler";
+import { itemManager, iwbManager } from "../app.config";
+import { pushPlayfabEvent } from "../utils/Playfab";
+import { checkAssetsForEditByPlayer } from "./messaging/SceneHandler";
 
 export class IWBRoom extends Room<IWBRoomState> {
 
@@ -20,11 +25,15 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         iwbItemHandler(this)
         iwbSceneActionHandler(this)
+        iwbRewardHandler(this)
+        iwbPlayerHandler(this)
 
-        // this.state.messageHandler = new RoomMessageHandler(this)
-        // this.state.sceneManager = new RoomSceneManager(this, options.world)
+        initServerScenes(this)
+        initServerAssets(this)
 
         // createCustomObjects(this)
+
+        iwbManager.addRoom(this)
     }
 
     onJoin(client: Client, options: any) {
@@ -51,50 +60,50 @@ export class IWBRoom extends Room<IWBRoomState> {
         if(player){
             this.state.players.delete(client.userData.userId)
 
-        //     this.state.messageHandler.sceneHandler.checkAssetsForEditByPlayer(client.userData.userid)
+            checkAssetsForEditByPlayer(this, client.userData.userid)
             
-        //     if(!player.pendingDeployment){}
-        //     else{
-        //         player.cancelPendingDeployment()
-        //     }
+            if(!player.pendingDeployment){}
+            else{
+                player.cancelPendingDeployment()
+            }
 
-        //   setTimeout(()=>{
-            // playerManager.removePlayer(player.dclData.userId)
-            // playerManager.savePlayerCache(player)
-        //     this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
-        //   }, 1000 * 5)
+          setTimeout(()=>{
+            removePlayer(player.dclData.userId)
+            savePlayerCache(player)
+            this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
+          }, 1000 * 5)
         }
     }
 
     onDispose() {
         console.log("room", this.roomId, "disposing...");
-        // iwbManager.removeRoom(this)
-        // this.state.sceneManager.saveRealmScenes()
+        iwbManager.removeRoom(this)
+        saveRealmScenes(this)
         // destroyCustomObjects(this)
     }
 
     async getPlayerInfo(client: Client, options: any) {
         client.send(SERVER_MESSAGE_TYPES.INIT, {
-            catalog: [],//itemManager.items,
-            realmAssets: [],//this.state.realmAssets,
-            styles: [],//iwbManager.styles,
-            worlds: [],//iwbManager.worlds,
-            iwb: {v:0, updates:[]},// {v: iwbManager.version, updates:iwbManager.versionUpdates},
+            catalog: itemManager.items,
+            realmAssets: this.state.realmAssets,
+            styles: iwbManager.styles,
+            worlds: iwbManager.worlds,
+            iwb: {v: iwbManager.version, updates:iwbManager.versionUpdates},
             tutorials: {
-                videos: [], //iwbManager.tutorials,
-                cid: "" //iwbManager.tutorialsCID
+                videos: iwbManager.tutorials,
+                cid: iwbManager.tutorialsCID
             }
         })
 
         let player = new Player(this, client)
         this.state.players.set(options.userData.userId, player)
-        // playerManager.addPlayerToWorld(player)
+        addPlayerToWorld(player)
 
-        // pushPlayfabEvent(
-        //     SERVER_MESSAGE_TYPES.PLAYER_JOINED, 
-        //     player, 
-        //     [{world:options.world}]
-        // )
+        pushPlayfabEvent(
+            SERVER_MESSAGE_TYPES.PLAYER_JOINED, 
+            player, 
+            [{world:options.world}]
+        )
     }
 
     // async doLogin(client: any, options: any, request: any) {

@@ -5,26 +5,25 @@ import cors from 'cors'
 import bodyParser from "body-parser";
 import express from 'express';
 import path from 'path';
-// import { IWBManager } from "./Objects/IWBManager";
 // import { PlayerManager } from "./Objects/PlayerManager";
 import { playground } from "@colyseus/playground";
+import { initPlayFab } from "./utils/Playfab";
+import { IWBManager } from "./Objects/IWBManager";
+import { ItemManager } from "./Objects/ItemManager";
 // import { router } from "./Objects/Routers/Router";
 
-// export let itemManager: ItemManager
-// export let iwbManager: IWBManager
+export let itemManager: ItemManager
+export let iwbManager: IWBManager
 // export let playerManager: PlayerManager
 // export let eventListener: Listener
 
 export default config({
 
     initializeGameServer: (gameServer) => {
-        // initPlayFab()
+        initPlayFab()
 
-        // eventListener = new Listener()
-        // itemManager = new ItemManager()
-        // iwbManager = new IWBManager()
-
-        // playerManager = new PlayerManager()
+        itemManager = new ItemManager()
+        iwbManager = new IWBManager()
 
         gameServer.define('iwb-world', IWBRoom)
         .filterBy(['world'])

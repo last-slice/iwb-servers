@@ -1,234 +1,29 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { COMPONENT_TYPES } from "../utils/types";
+import { ActionComponent, ActionComponentSchema } from "./Actions";
+import { AnimatorComponent } from "./Animator";
+import { CounterComponent, CounterBarComponent, CounterComponentSchema } from "./Counter";
+import { GltfComponent } from "./Gltf";
+import { IWBCatalogComponent, IWBComponent } from "./IWB";
+import { NameComponent } from "./Names";
+import { ParentingComponent } from "./Parenting";
+import { PointerComponent, PointerComponentEvent } from "./Pointers";
+import { SoundComponent } from "./Sound";
+import { StateComponent } from "./State";
+import { TextShapeComponent } from "./TextShape";
+import { TransformComponent } from "./Transform";
+import { TriggerComponent, TriggerComponentSchema, TriggerConditionComponent } from "./Trigger";
+import { VisibilityComponent } from "./Visibility";
+import { IWBRoom } from "../rooms/IWBRoom";
+import { iwbManager } from "../app.config";
+import { fetchPlayfabMetadata, fetchPlayfabFile } from "../utils/Playfab";
+import { RewardComponent } from "./Rewards";
 
 export class Color4 extends Schema {
     @type("number") r: number = 1
     @type("number") g: number = 1
     @type("number") b: number = 1
     @type("number") a: number = 1
-}
-
-export class Vector3 extends Schema {
-    @type("number") x: number
-    @type("number") y: number
-    @type("number") z: number
-}
-
-export class Quaternion extends Schema {
-    @type("number") x: number
-    @type("number") y: number
-    @type("number") z: number
-    @type("number") w: number
-}
-
-export class TransformComponent extends Schema{
-    @type(Vector3) p: Vector3
-    @type(Quaternion) r: Quaternion
-    @type(Vector3) s:Vector3
-
-    constructor(data:any){
-        super()
-        this.p = new Vector3(data.p)
-        this.r = new Quaternion(data.r)
-        this.s = new Vector3(data.s)
-    }
-}
-
-export class GltfComponent extends Schema{
-    @type("string") src:string
-    @type("number") visibleCollision:number
-    @type("number") invisibleCollision:number
-}
-
-export class NameComponent extends Schema{
-    @type("string") value:string
-}
-
-export class VisibilityComponent extends Schema{
-    @type("boolean") visible:boolean
-}
-
-export class ParentingComponent extends Schema{
-    @type("string") aid:string
-    @type("number") entity:number
-    @type(["string"]) children:ArraySchema<string> = new ArraySchema<string>()
-
-    constructor(data:any){
-        super()
-        this.aid = data.aid
-        data.children.forEach((child:any)=>{
-            this.children.push(child)
-        })
-    }
-}
-
-export class ActionComponentSchema extends Schema{
-
-    @type("number") entity:number
-
-    @type("string") hoverText:string
-    @type("string") aid:string
-    @type("string") animName:string
-    @type("string") teleport:string
-    @type("string") teleCam:string
-    @type("boolean") animLoop:boolean
-    @type("number") showTimer:string
-    @type("number") showSize:number
-    @type("string") showPos:string
-    @type("number") startDTimer:number
-    @type("string") startDId:string
-    @type("number") cVMask:number
-    @type("number") cIMask:number
-    @type("string") dialID:string
-    @type("number") twT:number
-    @type("number") twE:number
-    @type("number") twD:number
-    @type("number") twL:number
-    @type("number") twEX:number
-    @type("number") twEY:number
-    @type("number") twEZ:number
-
-
-
-
-
-
-
-
-
-
-    @type("string") id:string
-    @type("string") name:string
-    @type("string") type:string
-    @type("number") anchor:number
-    @type("string") emote:string
-    @type("boolean") visible:boolean
-    @type("number") vMask:number
-    @type("number") iMask:number
-    @type("string") showText:string
-    @type("string") url:string
-    @type("string") movePos:string
-    @type("string") moveCam:string
-    @type("boolean") moveRel:boolean
-
-    ///amount for add/subtract actions
-    @type("number") value:number
-    @type("string") counter:string
-    @type("string") state:string
-}
-
-export class ActionComponent extends Schema {
-    @type([ActionComponentSchema]) actions:ArraySchema<ActionComponentSchema>
-}
-
-export class CounterComponentSchema extends Schema{
-    @type("number") currentValue:number
-    @type("number") previousValue:number
-}
-
-export class CounterComponent extends Schema{
-    @type({map:CounterComponentSchema}) values:MapSchema<CounterComponentSchema>
-}
-
-export class CounterBarComponent extends Schema{
-    @type("string") p:string
-    @type("string") s:string
-    @type("number") max:number
-}
-
-export class StateComponent extends Schema{
-    @type(["string"]) values:ArraySchema<string>
-    @type("string") defaultValue:string
-}
-
-export class TriggerConditionComponent extends Schema{
-    @type("string") id:string
-    @type("string") type:string
-    @type("string") value:string
-    @type("string") counter:string
-}
-
-export class TriggerComponentSchema extends Schema{
-    @type("string") id:string
-    @type("string") type:string
-    @type("number") input:number
-    @type([TriggerConditionComponent]) conditions:ArraySchema<TriggerConditionComponent>
-    @type(["string"]) actions:ArraySchema<string>
-}
-
-export class TriggerComponent extends Schema{
-    @type([TriggerComponentSchema]) triggers:ArraySchema<TriggerComponentSchema>
-}
-
-export class TextShapeComponent extends Schema{
-    @type("string") id:string
-    @type("string") text:string
-    @type("number") font:number
-    @type("number") fontSize:number
-    @type("number") textAlign:number
-    @type("number") paddingTop:number
-    @type("number") paddingRight:number
-    @type("number") paddingBottom:number
-    @type("number") paddingLeft:number
-    @type("number") lineSpacing:number
-    @type("number") outlineWidth:number
-    @type("boolean") fontAutoSize:boolean
-    @type(["number"]) outlineColor:ArraySchema<number> = new ArraySchema<number>()
-    @type(["number"]) textColor:ArraySchema<number> = new ArraySchema<number>()
-}
-
-export class AnimatorComponentSchema extends Schema{
-    @type("string") clip:string
-    @type("boolean") loop:boolean
-    @type("boolean") playing:boolean
-}
-
-export class AnimatorComponent extends Schema{
-    @type("string") id:string
-    @type([AnimatorComponentSchema]) states:ArraySchema<AnimatorComponentSchema>
-}
-
-export class PointerComponentEvent extends Schema{
-    @type("string") id:string
-    @type("string") hoverText:string
-    @type("number") eventType:number
-    @type("number") button:number
-    @type("number") maxDistance:number
-    @type("boolean") showFeedback:boolean
-}
-
-export class PointerComponent extends Schema{
-    @type("string") id:string
-    @type([PointerComponentEvent]) events:ArraySchema<PointerComponentEvent>
-}
-
-export class SoundComponent extends Schema {
-    @type("string") url:string
-    @type("number") volume:number
-    @type("boolean") autostart:boolean
-    @type("boolean") loop:boolean
-    @type("boolean") attach:boolean
-}
-
-export class IWBCatalogComponent extends Schema{
-    @type("string") id:string
-    @type("string") name:string
-    @type("string") description:string
-    @type("string") owner:string
-    @type("string") ownerAddress:string
-    @type("string") category:string
-    @type("string") type:string
-    @type("string") style:string
-    @type("boolean") ugc:boolean
-    @type("boolean") pending:boolean
-}
-
-export class IWBComponent extends Schema{
-    @type("string") aid:string
-    @type("boolean") locked:boolean
-    @type("boolean") buildVis:boolean
-    @type("boolean") editing:boolean
-    @type("boolean") priv:boolean
 }
 
 export class TempScene extends Schema {
@@ -282,6 +77,7 @@ export class Scene extends Schema {
     @type({map:AnimatorComponent}) animators:MapSchema<AnimatorComponent>
     @type({map:PointerComponent}) pointers:MapSchema<PointerComponent>
     @type({map:SoundComponent}) sounds:MapSchema<SoundComponent>
+    @type({map:RewardComponent}) rewards:MapSchema<RewardComponent>
 
 
     @type({map:IWBCatalogComponent}) catalogInfo:MapSchema<IWBCatalogComponent>
@@ -492,3 +288,111 @@ export class Scene extends Schema {
         }
     }
 }
+
+export function initServerScenes(room:IWBRoom){
+    if(iwbManager.pendingSaves.includes((room.state.world))){
+        let timeout = setTimeout(()=>{
+            clearTimeout(timeout)
+            initServerScenes(room)
+        }, 1000 * 1)
+    }else{
+        setTimeout(()=>{
+            let world = iwbManager.worlds.find((w)=> w.ens === room.state.realm)
+            if(world){
+                iwbManager.initiateRealm(world.owner)
+                .then((realmData)=>{
+                    // console.log('realm data is', realmData)
+                    room.state.realmToken = realmData.EntityToken.EntityToken
+                    room.state.realmId = realmData.EntityToken.Entity.Id
+                    room.state.realmTokenType = realmData.EntityToken.Entity.Type
+    
+                    iwbManager.fetchRealmData(realmData)
+                    .then((realmScenes)=>{
+                       //  console.log('realm scenes are ', realmScenes)
+                        iwbManager.fetchRealmScenes(room.state.world, realmScenes)
+                        .then((sceneData)=>{
+
+                            loadRealmScenes(room, sceneData)
+                        })
+                    })   
+                })
+                .catch((error)=>{
+                    console.log('error initating realm', error)
+                })
+            }
+        }, 1000)
+    }
+}
+
+export async function initServerAssets(room:IWBRoom){
+    let metadata = await fetchPlayfabMetadata(iwbManager.worlds.find((w:any)=> w.ens === room.state.world).owner)
+
+    let catalog = await fetchPlayfabFile(metadata, "catalogs.json")
+    catalog.forEach((item:any)=>{
+    //   if(item.v > this.room.state.cv){
+    //     item.pending = true//
+    //   }
+      room.state.realmAssets.set(item.id, item)
+    })
+}
+
+export function loadRealmScenes(room:IWBRoom, scenes:any[]){
+    let filter = scenes.filter((scene)=> scene.w === room.state.world)
+    room.state.sceneCount = filter.length
+
+    filter.forEach((scene)=>{
+        room.state.scenes.set(scene.id, new Scene(scene))
+    })
+}
+
+export async function saveRealmScenes(room:IWBRoom){
+    let scenes:any[] = []
+    room.state.scenes.forEach(async (scene:Scene)=>{
+        let jsonScene:any = scene.toJSON()
+        await checkAssetCacheStates(scene, jsonScene)
+        scenes.push(jsonScene)
+    })
+
+    let world = iwbManager.worlds.find((w)=>w.ens === room.state.world)
+    if(world){
+        world.builds = scenes.length
+        world.updated = Math.floor(Date.now()/1000)
+    }
+
+    if(scenes.length > 0){
+        iwbManager.backupScene(room.state.world, room.state.realmToken, room.state.realmTokenType, room.state.realmId, scenes)
+    }
+}
+
+export function checkAssetCacheStates(scene:Scene, jsonScene:any){
+    scene.parenting.forEach((assetItem:any, index:number)=>{
+        let iwbAsset = scene.itemInfo.get(assetItem.aid)
+        iwbAsset.editing = false
+        iwbAsset.editor = ""
+
+        //Reward Component
+        let rewardInfo = scene.rewards.get(assetItem.aid)
+        if(rewardInfo){
+            let jsonItem = rewardInfo.toJSON()
+            jsonScene[COMPONENT_TYPES.REWARD_COMPONENT][assetItem.aid] = jsonItem
+        }
+    })
+}
+
+// async saveWorldScenes(scenes:Map<string, Scene>){
+//     scenes.forEach((scene:Scene, key)=>{
+//         let sceneIndex = this.scenes.findIndex((sc:any) =>sc.id === scene.id)
+//         if(sceneIndex >= 0){
+//             this.scenes[sceneIndex] = scene
+//         }else{
+//             this.scenes.push(scene)
+//         }
+//         this.modified = true
+//     })
+
+//     console.log('saved world scenes', this.scenes)
+// }
+
+// addNewScene(scene:Scene){
+//     this.room.state.scenes.set(scene, s)
+// }
