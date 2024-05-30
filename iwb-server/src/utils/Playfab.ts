@@ -31,14 +31,23 @@ async function checkEventQueue(){
 }
 
 export function pushPlayfabEvent(type:any, player:any, data:any){
-    let event:any = {
-        EventName: type,
-        PlayFabId: player.playFabData.PlayFabId,
-        body:{
-            player: player.dclData.name,
-            wallet: player.dclData.userId,
+  if(DEBUG){
+    return 
+  }
+
+    let event:any = {}
+
+    let account = player
+    if(player !== PLAYFAB_DATA_ACCOUNT){
+        account = player.playFabData.PlayFabId
+        event.body = {
+            player: player.name,
+            wallet: player.userId,
         }
     }
+
+    event.EventName = type,
+    event.PlayFabId = account
 
     for(let key in data[0]){
         event.body[key] = data[0][key]

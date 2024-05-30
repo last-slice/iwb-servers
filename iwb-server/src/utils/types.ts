@@ -1,3 +1,11 @@
+import {Schema, type} from "@colyseus/schema";
+
+export class Color4 extends Schema {
+    @type("number") r: number
+    @type("number") g: number
+    @type("number") b: number
+    @type("number") a: number
+}
 
 
 export enum SERVER_MESSAGE_TYPES {
@@ -141,6 +149,8 @@ export enum COMPONENT_TYPES {
     GLTF_COMPONENT = 'Gltf',
     STATE_COMPONENT ='States',
     SOUND_COMPONENT = 'Sounds',
+    IWB_COMPONENT = 'IWB',
+    MESH_COMPONENT = 'Mesh'
 }
 
 export enum COLLISION_LAYERS {

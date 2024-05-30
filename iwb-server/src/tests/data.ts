@@ -61,11 +61,11 @@ export let testData:any =
         }
       },
       "Transform":{
-        "bEQXB0":{
+        "aEQXB0":{
           "p": {
             "x": 10.33,
             "y": 1.06,
-            "z": -2.25
+            "z": 12.25
           },
           "r": {
             "x": 0,
@@ -110,11 +110,11 @@ export let testData:any =
         },
       },
       "Parenting":[
-        {"entity":"0", "children":["bEQXB0", "bEQXB1"]},
+        {"entity":"0", "children":["bEQXB0", "bEQXB1", "aEQXB0"]},
         {"entity":"1", "children":[]},
         {"entity":"2", "children":[]},
-        {"entity":"500", aid:"bEQXB0", "children":[]},
-        {"entity":"600",  aid:"bEQXB1", "children":[]},
+        {"entity":"500", aid:"aEQXB0", "children":[]},
+        // {"entity":"600",  aid:"bEQXB1", "children":[]},
       ],
       "Text":{
         "bEQXB0":{
@@ -275,6 +275,21 @@ export let testData:any =
           "src":"0dfc4868-5e82-49c8-8eac-c878617bef23",
           "visibleCollision":1,
           "invisibleCollision":2
+        }
+      },
+      "Mesh":{
+        "aEQXB0":{
+          "type":"plane",
+          "collision":2
+        }
+      },
+      "Material":{
+        "aEQXB0":{
+          type:"pbr",
+          albedoColor:{r:1, g:0, b:0, a:1}
+          // texture:{
+          //   src:"https://bafkreihxmbloqwqgjljwtq4wzhmo5pclxavyedugdafn2dhuzghgpszuim.ipfs.nftstorage.link/"
+          // },
         }
       },
       "States":{

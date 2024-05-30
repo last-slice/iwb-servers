@@ -37,8 +37,7 @@ export function iwbPlayerHandler(room:IWBRoom){
          let player:Player = room.state.players.get(client.userData.userId)
          if(player){
              player.updatePlayMode(info.mode)
-             // room.broadcast(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED, info)       
-
+            //  room.broadcast(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED, info)       
          }
      })
 

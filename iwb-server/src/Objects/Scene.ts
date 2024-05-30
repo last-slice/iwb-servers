@@ -3,8 +3,8 @@ import { COMPONENT_TYPES } from "../utils/types";
 import { ActionComponent, ActionComponentSchema } from "./Actions";
 import { AnimatorComponent } from "./Animator";
 import { CounterComponent, CounterBarComponent, CounterComponentSchema } from "./Counter";
-import { GltfComponent } from "./Gltf";
-import { IWBCatalogComponent, IWBComponent } from "./IWB";
+import { GltfComponent, createGLTFComponent } from "./Gltf";
+import { IWBComponent } from "./IWB";
 import { NameComponent } from "./Names";
 import { ParentingComponent } from "./Parenting";
 import { PointerComponent, PointerComponentEvent } from "./Pointers";
@@ -18,13 +18,8 @@ import { IWBRoom } from "../rooms/IWBRoom";
 import { iwbManager } from "../app.config";
 import { fetchPlayfabMetadata, fetchPlayfabFile } from "../utils/Playfab";
 import { RewardComponent } from "./Rewards";
-
-export class Color4 extends Schema {
-    @type("number") r: number = 1
-    @type("number") g: number = 1
-    @type("number") b: number = 1
-    @type("number") a: number = 1
-}
+import { MeshComponent } from "./Meshes";
+import { MaterialComponent, createMaterialComponent } from "./Materials";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -66,6 +61,8 @@ export class Scene extends Schema {
 
     @type({map:TransformComponent}) transforms:MapSchema<TransformComponent>
     @type({map:GltfComponent}) gltfs:MapSchema<GltfComponent>
+    @type({map:MeshComponent}) meshes:MapSchema<MeshComponent>
+    @type({map:MaterialComponent}) materials:MapSchema<MaterialComponent>
     @type({map:NameComponent}) names:MapSchema<NameComponent>
     @type({map:VisibilityComponent}) visibilities:MapSchema<VisibilityComponent>
     @type({map:ActionComponent}) actions:MapSchema<ActionComponent>
@@ -78,9 +75,6 @@ export class Scene extends Schema {
     @type({map:PointerComponent}) pointers:MapSchema<PointerComponent>
     @type({map:SoundComponent}) sounds:MapSchema<SoundComponent>
     @type({map:RewardComponent}) rewards:MapSchema<RewardComponent>
-
-
-    @type({map:IWBCatalogComponent}) catalogInfo:MapSchema<IWBCatalogComponent>
     @type({map:IWBComponent}) itemInfo:MapSchema<IWBComponent>
 
     @type([ParentingComponent]) parenting:ArraySchema<ParentingComponent>
@@ -90,7 +84,6 @@ export class Scene extends Schema {
 
     parentEntity:any
     entities:any[] = []
-
 
     constructor(data?:any) {
         super(data)
@@ -109,6 +102,13 @@ export class Scene extends Schema {
         for (const key in components) {
             if (components.hasOwnProperty(key)) {
                 switch(key){
+                    case COMPONENT_TYPES.IWB_COMPONENT:
+                        this.itemInfo = new MapSchema<IWBComponent>()
+                        for (const aid in components[key]) {
+                            this.itemInfo.set(aid, new IWBComponent(components[key][aid]))
+                        }
+                        break;
+
                     case COMPONENT_TYPES.NAMES_COMPONENT:
                         this.names = new MapSchema<NameComponent>()
                         for (const aid in components[key]) {
@@ -257,6 +257,20 @@ export class Scene extends Schema {
                         this.gltfs = new MapSchema<GltfComponent>()
                         for (const aid in components[key]) {
                             this.gltfs.set(aid, new GltfComponent(components[key][aid]))
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.MESH_COMPONENT:
+                        this.meshes = new MapSchema<MeshComponent>()
+                        for (const aid in components[key]) {
+                            this.meshes.set(aid, new MeshComponent(components[key][aid]))
+                        }
+                        break;
+
+                     case COMPONENT_TYPES.MATERIAL_COMPONENT:
+                        this.materials = new MapSchema<MaterialComponent>()
+                        for (const aid in components[key]) {
+                            createMaterialComponent(this, aid, components[key][aid])
                         }
                         break;
 

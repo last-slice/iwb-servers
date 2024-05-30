@@ -36,11 +36,29 @@ export class PlayerManager {
   }
 }
 
+export class SelectedAsset extends Schema {
+  @type("string") catalogId: string
+  @type("string") assetId: string
+  @type("boolean") catalogAsset:boolean = false
+  // @type(SceneItem) componentData:SceneItem
+  @type("boolean") grabbed:boolean
+  @type(SelectedAsset) selectedAsset: SelectedAsset
+
+  constructor(info:any){
+    super()
+    // this.componentData = info.componentData
+    this.catalogId = info.catalogId
+    this.assetId = info.assetId
+    this.catalogAsset = info.catalogAsset
+    this.grabbed = info.grabbed ? info.grabbed : undefined
+  }
+}
+
 export class Player extends Schema {
     @type("string") userId:string;
     @type("string") address:string
     @type("string") name:string 
-    // @type(SelectedAsset) selectedAsset: SelectedAsset
+    @type(SelectedAsset) selectedAsset: SelectedAsset
 
     playFabData:any
     ip:string
@@ -106,6 +124,14 @@ export class Player extends Schema {
         this.startTime = Math.floor(Date.now()/1000)
 
         // this.setSettings(this.playFabData.InfoResultPayload.UserData)
+      }
+
+      addSelectedAsset(info:any){
+        this.selectedAsset = new SelectedAsset(info)
+      }
+    
+      removeSelectedAsset(){
+        this.selectedAsset = null
       }
 
       getPlayerData(){
