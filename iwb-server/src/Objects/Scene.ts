@@ -1,7 +1,7 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { COMPONENT_TYPES } from "../utils/types";
 import { ActionComponent, ActionComponentSchema } from "./Actions";
-import { AnimatorComponent } from "./Animator";
+import { AnimatorComponent, createAnimationComponent } from "./Animator";
 import { CounterComponent, CounterBarComponent, CounterComponentSchema } from "./Counter";
 import { GltfComponent, createGLTFComponent } from "./Gltf";
 import { IWBComponent } from "./IWB";
@@ -20,6 +20,7 @@ import { fetchPlayfabMetadata, fetchPlayfabFile } from "../utils/Playfab";
 import { RewardComponent } from "./Rewards";
 import { MeshComponent } from "./Meshes";
 import { MaterialComponent, createMaterialComponent } from "./Materials";
+import { VideoComponent } from "./Video";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -74,6 +75,7 @@ export class Scene extends Schema {
     @type({map:AnimatorComponent}) animators:MapSchema<AnimatorComponent>
     @type({map:PointerComponent}) pointers:MapSchema<PointerComponent>
     @type({map:SoundComponent}) sounds:MapSchema<SoundComponent>
+    @type({map:VideoComponent}) videos:MapSchema<VideoComponent>
     @type({map:RewardComponent}) rewards:MapSchema<RewardComponent>
     @type({map:IWBComponent}) itemInfo:MapSchema<IWBComponent>
 
@@ -294,6 +296,20 @@ export class Scene extends Schema {
                         this.sounds = new MapSchema<SoundComponent>()
                         for (const aid in components[key]) {
                             this.sounds.set(aid, new SoundComponent(components[key][aid]))
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.VIDEO_COMPONENT:
+                        this.videos = new MapSchema<VideoComponent>()
+                        for (const aid in components[key]) {
+                            this.videos.set(aid, new VideoComponent(components[key][aid]))
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.ANIMATION_COMPONENT:
+                        this.animators = new MapSchema<AnimatorComponent>()
+                        for (const aid in components[key]) {
+                            createAnimationComponent(this, aid, components[key][aid])
                         }
                         break;
 

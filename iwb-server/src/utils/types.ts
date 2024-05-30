@@ -138,7 +138,7 @@ export enum COMPONENT_TYPES {
     ACTION_COMPONENT = 'Actions',
     TRIGGER_AREA_COMPONENT = "Trigger Area",
     CLICK_AREA_COMPONENT = "Click Area",
-    ANIMATION_COMPONENT = "Animation",
+    ANIMATION_COMPONENT = "Animator",
     NPC_COMPONENT = 'NPC',
     DIALOG_COMPONENT = 'Dialog',
     REWARD_COMPONENT ='Reward',
