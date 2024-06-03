@@ -3,7 +3,7 @@ import { IWBRoom } from "../IWBRoom";
 import { COMPONENT_TYPES, SCENE_MODES, SERVER_MESSAGE_TYPES } from "../../utils/types";
 import { Quaternion, Vector3, createTransformComponent, editTransform } from "../../Objects/Transform";
 import { createVisibilityComponent, editVisibility } from "../../Objects/Visibility";
-import { editTextShape } from "../../Objects/TextShape";
+import { createTextComponent, editTextShape } from "../../Objects/TextShape";
 import { Player } from "../../Objects/Player";
 import { pushPlayfabEvent } from "../../utils/Playfab";
 import { itemManager, iwbManager } from "../../app.config";
@@ -12,6 +12,11 @@ import { IWBComponent, createIWBComponent } from "../../Objects/IWB";
 import { createNameComponent } from "../../Objects/Names";
 import { GltfComponent, createGLTFComponent } from "../../Objects/Gltf";
 import { createParentingComponent } from "../../Objects/Parenting";
+import { AnimatorComponentSchema, createAnimationComponent } from "../../Objects/Animator";
+import { createSoundComponent } from "../../Objects/Sound";
+import { createMaterialComponent } from "../../Objects/Materials";
+import { createMeshComponent } from "../../Objects/Meshes";
+import { createVideoComponent } from "../../Objects/Video";
 
 export function iwbItemHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, (client:Client, info:any)=>{
@@ -74,16 +79,25 @@ export function iwbItemHandler(room:IWBRoom){
 
                 let scene = room.state.scenes.get(info.item.sceneId)
                 if(scene){
-                    let sceneItem = item.ugc ? room.state.realmAssets.get(item.id) : itemManager.items.get(item.id)
-                    // console.log('scene item is', sceneItem)
-                    if(sceneItem){
-                        if(checkSceneLimits(scene, sceneItem)){
+                    let catalogItem = item.ugc ? room.state.realmAssets.get(item.id) : itemManager.items.get(item.id)
+                    console.log('catalog item is', catalogItem)
+                    if(catalogItem){
+                        if(checkSceneLimits(scene, catalogItem)){
 
-                            createNewItem(scene, item, sceneItem)
+                            scene.pc += catalogItem.pc
 
-                            // const newItem = createNewItem(item, sceneItem)
-    
-                            // if(item.duplicate !== null){
+                            let size = catalogItem.si
+                            scene.itemInfo.forEach((item:IWBComponent, aid:string)=>{
+                                if(item.id === catalogItem.id){
+                                    size = 0
+                                }
+                            })
+                            scene.si += size
+
+                            createNewItem(scene, item, catalogItem)
+
+                            if(item.duplicate){
+                                console.log('need to copy item')
                             //     let serverItem = scene.ass.find((as)=> as.aid === item.duplicate)
                             //     if(serverItem){
                             //         this.addItemComponents(newItem, sceneItem, serverItem)
@@ -98,27 +112,24 @@ export function iwbItemHandler(room:IWBRoom){
                             //         [{name:sceneItem.n, type:sceneItem.ty}]
                             //     )
 
-                            // }else{
-                            //     this.addItemComponents(newItem, sceneItem, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined)
-                                
-                            //     pushPlayfabEvent(
-                            //         SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, 
-                            //         player, 
-                            //         [{name:sceneItem.n, type:sceneItem.ty}]
-                            //     )
-                            // }
-       
-                            // scene.ass.push(newItem)
-                            // scene.pc += sceneItem.pc
-                            // scene.si += scene.ass.find((asset:any)=> asset.id === sceneItem.id) ? 0 : sceneItem.si
-                        
+                            }
+
+                            else{
+                                addItemComponents(scene, item, catalogItem)
+
+                                pushPlayfabEvent(
+                                    SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, 
+                                    player, 
+                                    [{name:catalogItem.n, type:catalogItem.ty}]
+                                )
+                            }
                         }
                         else{
                             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.ASSET_OVER_SCENE_LIMIT, {})
                             pushPlayfabEvent(
                                 SERVER_MESSAGE_TYPES.ASSET_OVER_SCENE_LIMIT, 
                                 player, 
-                                [{name: sceneItem.n}]
+                                [{name: catalogItem.n}]
                             )
                         }
                     }
@@ -163,20 +174,91 @@ function checkSceneLimits(scene:Scene, item:any){
     }
 }
 
-function createNewItem(scene:Scene, item:any, sceneItem:any){
+function createNewItem(scene:Scene, item:any, catalogItemInfo:any){
     createParentingComponent(scene, item)
-    createIWBComponent(scene, {scene:item, item:sceneItem})
-    createNameComponent(scene, {scene:item, item:sceneItem})
+    createIWBComponent(scene, {scene:item, item:catalogItemInfo})
+    createNameComponent(scene, {scene:item, item:catalogItemInfo})
     createVisibilityComponent(scene, item)
     createTransformComponent(scene, item)
+}
 
-    console.log('scne item', sceneItem)
+function addItemComponents(scene:Scene, item:any, catalogItemInfo:any){
+    // if(item.type === "SM"){}
+    // else{
 
-    switch(sceneItem.ty){
+    // }
+
+    switch(catalogItemInfo.ty){
         case '3D':
-            createGLTFComponent(scene, {aid:item.aid, src:sceneItem.id, visibleCollision:1, invisibleCollision:2})
+            if(catalogItemInfo.anim){
+                let states:any[] = [] 
+                catalogItemInfo.anim.forEach((animation:any)=>{
+                    states.push({
+                        clip:animation.name,
+                        playing:false,
+                        loop:false
+                    })
+                })
+
+                createAnimationComponent(scene, item.aid, {states:states})
+            }
+            createGLTFComponent(scene, {aid:item.aid, src:catalogItemInfo.id, visibleCollision:1, invisibleCollision:2})
+            break;
+
+        case '2D':
+            switch(catalogItemInfo.n){
+                case 'Text':
+                    createTextComponent(scene, item.aid, catalogItemInfo)
+                    break;
+
+                case 'Video':
+                    createVideoComponent(scene, item.aid, catalogItemInfo)
+                    createMeshComponent(scene, 
+                        {
+                            aid:item.aid, 
+                            type:0, 
+                            collision:-500
+                        }
+                    )
+                    createMaterialComponent(scene, item.aid,
+                        {
+                            type:"video",
+                            // texture:{
+                            //     src:""
+                            // },
+                            // emissive:{
+                            //     src:"",
+                            //     intensity:1,
+                            //     color:{r:1,g:1,b:1,a:1}
+                            // }
+                        }
+                    )
+
+                    break;
+
+                case 'Image':
+                    createMeshComponent(scene, 
+                        {
+                            aid:item.aid, 
+                            type:0, 
+                            collision:-500
+                        }
+                    )
+                    createMaterialComponent(scene, item.aid,
+                        {
+                            type:"pbr",
+                            texture:{
+                                src:""
+                            }
+                        }
+                    )
+                    break;
+            }
+            break;
+
+        case 'Audio':
+            createSoundComponent(scene, item.aid, catalogItemInfo)
             break;
     }
-
 }
 

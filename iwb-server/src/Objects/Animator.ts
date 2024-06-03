@@ -9,16 +9,15 @@ export class AnimatorComponentSchema extends Schema{
 }
 
 export class AnimatorComponent extends Schema{
-    @type("string") id:string
+    // @type("string") id:string
     @type([AnimatorComponentSchema]) states:ArraySchema<AnimatorComponentSchema>
 }
 
 export function createAnimationComponent(scene:Scene, aid:string, data:any){
     let component = new AnimatorComponent()
-    component.id = data.id
+    // component.id = data.id
     data.states.forEach((state:any)=>{
         component.states.push(new AnimatorComponentSchema(state))
     })
     scene.animators.set(aid, component)
 }
-

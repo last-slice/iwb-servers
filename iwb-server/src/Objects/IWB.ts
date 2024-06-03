@@ -2,25 +2,26 @@ import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
 
 export class IWBComponent extends Schema{
-    @type("string") id:string
-    @type("string") aid:string
-    @type("string") n:string
-    @type("string") editor:string
-    @type("string") description:string
-    @type("string") owner:string
-    @type("string") ownerAddress:string
-    @type("string") category:string
-    @type("string") type:string
-    @type("string") style:string
-    @type("boolean") ugc:boolean
-    @type("boolean") pending:boolean
-    @type("boolean") locked:boolean
-    @type("boolean") buildVis:boolean
-    @type("boolean") editing:boolean
-    @type("boolean") priv:boolean
+    id:string
+    aid:string
+    n:string
+    editor:string
+    description:string
+    owner:string
+    ownerAddress:string
+    category:string
+    type:string
+    style:string
+    ugc:boolean
+    pending:boolean
+    locked:boolean
+    buildVis:boolean
+    editing:boolean
+    priv:boolean
 }
 
 export function createIWBComponent(scene:Scene, data:any){
+    console.log('creating iwb item info component')
     let component = new IWBComponent()
     component.aid = data.scene.aid
     component.id = data.scene.id
@@ -31,4 +32,12 @@ export function createIWBComponent(scene:Scene, data:any){
     component.style = data.item.sty
     component.buildVis = true
     scene.itemInfo.set(data.scene.aid, component)
+}
+
+export function setIWBComponent(scene:Scene, key:string, components:any){
+    for (const aid in components[key]) {
+        let component = new IWBComponent(components[key][aid])
+        // component.id = 
+        scene.itemInfo.set(aid, component)
+    }
 }

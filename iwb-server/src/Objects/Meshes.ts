@@ -2,7 +2,7 @@ import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
 
 export class MeshComponent extends Schema{
-    @type("string") type:string
+    @type("number") type:number //0 - plane, 1 - box
     @type("number") collision:number
 }
 

@@ -4,7 +4,7 @@ import { ActionComponent, ActionComponentSchema } from "./Actions";
 import { AnimatorComponent, createAnimationComponent } from "./Animator";
 import { CounterComponent, CounterBarComponent, CounterComponentSchema } from "./Counter";
 import { GltfComponent, createGLTFComponent } from "./Gltf";
-import { IWBComponent } from "./IWB";
+import { IWBComponent, setIWBComponent } from "./IWB";
 import { NameComponent } from "./Names";
 import { ParentingComponent } from "./Parenting";
 import { PointerComponent, PointerComponentEvent } from "./Pointers";
@@ -50,9 +50,9 @@ export class Scene extends Schema {
 
     @type("number") cd: number
     @type("number") upd: number
-    @type("number") si: number
+    @type("number") si: number = 0
     @type("number") toc: number
-    @type("number") pc: number
+    @type("number") pc: number = 0
     @type("number") pcnt: number
 
     @type("boolean") isdl: boolean
@@ -106,9 +106,7 @@ export class Scene extends Schema {
                 switch(key){
                     case COMPONENT_TYPES.IWB_COMPONENT:
                         this.itemInfo = new MapSchema<IWBComponent>()
-                        for (const aid in components[key]) {
-                            this.itemInfo.set(aid, new IWBComponent(components[key][aid]))
-                        }
+                        setIWBComponent(this, key, components)
                         break;
 
                     case COMPONENT_TYPES.NAMES_COMPONENT:

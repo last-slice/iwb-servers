@@ -1,4 +1,6 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
+import { Scene } from "./Scene";
+
 
 export class SoundComponent extends Schema {
     @type("string") url:string
@@ -7,4 +9,15 @@ export class SoundComponent extends Schema {
     @type("boolean") autostart:boolean
     @type("boolean") loop:boolean
     @type("boolean") attach:boolean
+}
+
+export function createSoundComponent(scene:Scene, aid:string, data:any){
+    let component = new SoundComponent()
+    component.url = data.id
+    component.type = data.ty === "Audio" ? 0 : 1
+    component.volume = 1
+    component.autostart = false
+    component.loop = false
+    component.attach = false
+    scene.sounds.set(aid, component)
 }

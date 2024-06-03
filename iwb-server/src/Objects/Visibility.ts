@@ -17,6 +17,6 @@ export function editVisibility(client:Client, info:any, scene:Scene){
 
 export function createVisibilityComponent(scene:Scene, data:any){
     let component = new VisibilityComponent()
-    component.visible = false
+    component.visible = true
     scene.visibilities.set(data.aid, component)
 }
