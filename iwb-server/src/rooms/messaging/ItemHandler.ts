@@ -8,7 +8,7 @@ import { Player } from "../../Objects/Player";
 import { pushPlayfabEvent } from "../../utils/Playfab";
 import { itemManager, iwbManager } from "../../app.config";
 import { Scene } from "../../Objects/Scene";
-import { IWBComponent, createIWBComponent } from "../../Objects/IWB";
+import { IWBComponent, createIWBComponent, editIWBComponent } from "../../Objects/IWB";
 import { createNameComponent } from "../../Objects/Names";
 import { GltfComponent, createGLTFComponent } from "../../Objects/Gltf";
 import { createParentingComponent } from "../../Objects/Parenting";
@@ -34,6 +34,10 @@ export function iwbItemHandler(room:IWBRoom){
 
                 case COMPONENT_TYPES.TEXT_COMPONENT:
                     editTextShape(client, info, scene)
+                    break;
+
+                case COMPONENT_TYPES.IWB_COMPONENT:
+                    editIWBComponent(info, scene)
                     break;
             }
         }

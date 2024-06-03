@@ -4,7 +4,7 @@ import { IWBRoom } from "../rooms/IWBRoom";
 import { Client } from "colyseus";
 import { Scene } from "@gltf-transform/core";
 import { fetchPlayfabFile, fetchUserMetaData, pushPlayfabEvent, updatePlayerData } from "../utils/Playfab";
-import { itemManager } from "../app.config";
+import { itemManager, iwbManager } from "../app.config";
 import axios from "axios";
 
 export class PlayerManager {
@@ -123,7 +123,7 @@ export class Player extends Schema {
     
         this.startTime = Math.floor(Date.now()/1000)
 
-        // this.setSettings(this.playFabData.InfoResultPayload.UserData)
+        this.setSettings(this.playFabData.InfoResultPayload.UserData)
       }
 
       addSelectedAsset(info:any){
@@ -281,5 +281,27 @@ export class Player extends Schema {
           catch(e){
             console.log('error validating deployment')
           }
+      }
+
+      async setSettings(server:any){
+        // console.log('setting player settings')
+        if(!server.hasOwnProperty("Settings")){
+         //  console.log('player doesnt have settings, need to initiliaze')
+          this.settings = iwbManager.defaultPlayerSettings
+          await this.saveSetttingsDB()
+        }
+        else{
+            let settings = JSON.parse(server.Settings.Value)
+            this.settings = settings
+    
+            if(this.settings.length === 0){
+              console.log('settings are empty, add some')
+              this.settings = iwbManager.defaultPlayerSettings
+            }
+    
+           //  console.log('player settings are ', this.settings)
+        }
+    
+        this.client.send(SERVER_MESSAGE_TYPES.PLAYER_SETTINGS, {action:"load", value:this.settings})
       }
 }

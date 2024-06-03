@@ -39,6 +39,8 @@ export let testData:any =
       "IWB":{
         "bEQXB0":{
           "id": "e6991f31-4b1e-4c17-82c2-2e484f53a124",
+          "locked":false,
+          "buildVis":true,
         },
       },
       "Pointers":{
@@ -102,6 +104,15 @@ export let testData:any =
         // }
       },
       "Names":{
+        "0":{
+          "value":"Scene Root"
+        },
+        "1":{
+          "value":"Player Root"
+        },
+        "2":{
+          "value":"Camera Root"
+        },
         "bEQXB0":{
           "value":"Test Catalog Audio"
         },
@@ -115,9 +126,9 @@ export let testData:any =
         },
       },
       "Parenting":[
-        {"entity":"0", "children":["bEQXB0", "bEQXB1", "aEQXB0"]},
-        {"entity":"1", "children":[]},
-        {"entity":"2", "children":[]},
+        {"entity":"0", "aid":"0", "children":["bEQXB0", "bEQXB1", "aEQXB0"]},
+        {"entity":"1", "aid":"1", "children":[]},
+        {"entity":"2", "aid":"2", "children":[]},
         {"entity":"500", aid:"bEQXB0", "children":[]},
         // {"entity":"500", aid:"aEQXB0", "children":[]},
         // {"entity":"600",  aid:"bEQXB1", "children":[]},
