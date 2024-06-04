@@ -10,7 +10,7 @@ import { itemManager, iwbManager } from "../../app.config";
 import { Scene } from "../../Objects/Scene";
 // import { IWBComponent, createIWBComponent, editIWBComponent } from "../../Objects/IWB";
 import { NameComponent, createNameComponent, editNameComponent } from "../../Objects/Names";
-import { GltfComponent, createGLTFComponent } from "../../Objects/Gltf";
+import { GltfComponent, createGLTFComponent, editGltfComponent } from "../../Objects/Gltf";
 import { ParentingComponent, createParentingComponent } from "../../Objects/Parenting";
 import { AnimatorComponentSchema, createAnimationComponent } from "../../Objects/Animator";
 import { createSoundComponent, editAudioComponent } from "../../Objects/Sound";
@@ -54,6 +54,10 @@ export function iwbItemHandler(room:IWBRoom){
 
                 case COMPONENT_TYPES.NFT_COMPONENT:
                     editNftShape(info, scene)
+                    break;
+
+                case COMPONENT_TYPES.GLTF_COMPONENT:
+                    editGltfComponent(info, scene)
                     break;
             }
         }

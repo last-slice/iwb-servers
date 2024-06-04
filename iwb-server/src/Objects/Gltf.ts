@@ -15,3 +15,13 @@ export function createGLTFComponent(scene:Scene, data:any){
     scene.gltfs.set(data.aid, component)
 }
 
+export function editGltfComponent(info:any, scene:Scene){
+    let itemInfo:any = scene.gltfs.get(info.aid)
+    if(itemInfo){
+        for(let key in info){
+            if(itemInfo.hasOwnProperty(key)){
+                itemInfo[key] = info[key]
+            }
+        }
+    }
+}
