@@ -143,7 +143,7 @@ export enum COMPONENT_TYPES {
     DIALOG_COMPONENT = 'Dialog',
     REWARD_COMPONENT ='Reward',
     PARENTING_COMPONENT = 'Parenting',
-    NAMES_COMPONENT ='Names',
+    NAMES_COMPONENT ='Name',
     POINTER_COMPONENT = 'Pointers',
     COUNTER_COMPONENT = 'Counters',
     GLTF_COMPONENT = 'Gltf',

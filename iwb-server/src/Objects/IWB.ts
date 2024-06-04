@@ -45,16 +45,13 @@ export function setIWBComponent(scene:Scene, key:string, components:any){
     }
 }
 export function editIWBComponent(info:any, scene:Scene){
-    console.log('editing iwb info')
     let itemInfo:any = scene.itemInfo.get(info.aid)
     if(itemInfo){
-        console.log('found iwb info to edit')
-        delete info.component
-        delete info.aid
-        delete info.sceneId
         for(let key in info){
-            console.log('key is', key)
-            itemInfo[key] = info[key]
+            if(itemInfo.hasOwnProperty(key)){
+                console.log('key is', key)
+                itemInfo[key] = info[key]
+            }
         }
     }
 }

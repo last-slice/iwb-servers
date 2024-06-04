@@ -21,3 +21,15 @@ export function createSoundComponent(scene:Scene, aid:string, data:any){
     component.attach = false
     scene.sounds.set(aid, component)
 }
+
+export function editAudioComponent(info:any, scene:Scene){
+    let itemInfo:any = scene.sounds.get(info.aid)
+    if(itemInfo){
+        for(let key in info){
+            if(itemInfo.hasOwnProperty(key)){
+                console.log('key is', key)
+                itemInfo[key] = info[key]
+            }
+        }
+    }
+}

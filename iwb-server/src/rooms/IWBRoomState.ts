@@ -20,17 +20,16 @@ export class IWBRoomState extends Schema {
   @type({ map: Player }) players = new MapSchema<Player>();
 
   realm:string = ""
-    version:number = 0
-    // scenes: Scene[] = []
-    // occupiedParcels: string[] = []
-    reservedParcels: string[] = ["0,0", "0,1", "1,0", "1,1"]
+  version:number = 0
+  // scenes: Scene[] = []
+  // occupiedParcels: string[] = []
+  reservedParcels: string[] = ["0,0", "0,1", "1,0", "1,1"]
 
-    backupQueue:any[] = []
-    backingUp:boolean = false
-    modified:boolean = false
+  backupQueue:any[] = []
+  backingUp:boolean = false
+  modified:boolean = false
 
-    realmToken:string
-    realmId:string
-    realmTokenType:string
-
+  realmToken:string
+  realmId:string
+  realmTokenType:string
 }

@@ -4,7 +4,7 @@ import { ActionComponent, ActionComponentSchema } from "./Actions";
 import { AnimatorComponent, createAnimationComponent } from "./Animator";
 import { CounterComponent, CounterBarComponent, CounterComponentSchema } from "./Counter";
 import { GltfComponent, createGLTFComponent } from "./Gltf";
-import { IWBComponent, setIWBComponent } from "./IWB";
+// import { IWBComponent, setIWBComponent } from "./IWB";
 import { NameComponent } from "./Names";
 import { ParentingComponent } from "./Parenting";
 import { PointerComponent, PointerComponentEvent } from "./Pointers";
@@ -21,6 +21,7 @@ import { RewardComponent } from "./Rewards";
 import { MeshComponent } from "./Meshes";
 import { MaterialComponent, createMaterialComponent } from "./Materials";
 import { VideoComponent } from "./Video";
+import { IWBComponent, setIWBComponent } from "./IWB";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -78,7 +79,6 @@ export class Scene extends Schema {
     @type({map:VideoComponent}) videos:MapSchema<VideoComponent>
     @type({map:RewardComponent}) rewards:MapSchema<RewardComponent>
     @type({map:IWBComponent}) itemInfo:MapSchema<IWBComponent>
-
     @type([ParentingComponent]) parenting:ArraySchema<ParentingComponent>
 
     //pointer evnts component
@@ -101,23 +101,40 @@ export class Scene extends Schema {
     }
     
     setComponents(components:any){
+        this.itemInfo = new MapSchema<IWBComponent>()
+        this.names = new MapSchema<NameComponent>()
+        this.visibilities = new MapSchema<VisibilityComponent>()
+        this.parenting = new ArraySchema<ParentingComponent>()
+        this.transforms = new MapSchema<TransformComponent>()
+        this.pointers = new MapSchema<PointerComponent>()
+        this.textShapes = new MapSchema<TextShapeComponent>()
+        this.counters = new MapSchema<CounterComponent>()
+        this.triggers = new MapSchema<TriggerComponent>()
+        this.actions = new MapSchema<ActionComponent>()
+        this.gltfs = new MapSchema<GltfComponent>()
+        this.meshes = new MapSchema<MeshComponent>()
+        this.materials = new MapSchema<MaterialComponent>()
+        this.states = new MapSchema<StateComponent>()
+        this.sounds = new MapSchema<SoundComponent>()
+        this.videos = new MapSchema<VideoComponent>()
+        this.animators = new MapSchema<AnimatorComponent>()
+
         for (const key in components) {
             if (components.hasOwnProperty(key)) {
                 switch(key){
                     case COMPONENT_TYPES.IWB_COMPONENT:
-                        this.itemInfo = new MapSchema<IWBComponent>()
                         setIWBComponent(this, key, components)
                         break;
 
                     case COMPONENT_TYPES.NAMES_COMPONENT:
-                        this.names = new MapSchema<NameComponent>()
+                        
                         for (const aid in components[key]) {
                             this.names.set(aid, new NameComponent(components[key][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.VISBILITY_COMPONENT:
-                        this.visibilities = new MapSchema<VisibilityComponent>()
+                        
                         for (const aid in components[key]) {
                             let vis = new VisibilityComponent(components[key][aid])
                             vis.visible = true
@@ -126,21 +143,21 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.PARENTING_COMPONENT:
-                        this.parenting = new ArraySchema<ParentingComponent>()
+                       
                         components[key].forEach((info:any) => {
                             this.parenting.push(new ParentingComponent(info))
                         });
                         break;
 
                     case COMPONENT_TYPES.TRANSFORM_COMPONENT:
-                        this.transforms = new MapSchema<TransformComponent>()
+                        
                         for (const aid in components[key]) {
                             this.transforms.set(aid, new TransformComponent(components[key][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.POINTER_COMPONENT:
-                        this.pointers = new MapSchema<PointerComponent>()
+                       
                         for (const aid in components[key]) {
                             let pointerEvents = new PointerComponent()
                             pointerEvents.events = new ArraySchema<PointerComponentEvent>()
@@ -158,7 +175,7 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.TEXT_COMPONENT:
-                        this.textShapes = new MapSchema<TextShapeComponent>()
+                        
                         for (const aid in components[key]) {
                             let textShape = new TextShapeComponent(components[key][aid]) 
                             components[key][aid].outlineColor.forEach((color:number)=>{
@@ -172,7 +189,7 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.COUNTER_COMPONENT:
-                        this.counters = new MapSchema<CounterComponent>()
+                        
                         for (const aid in components[key]) {
                             let counter = new CounterComponent()
                             counter.values = new MapSchema<CounterComponentSchema>()
@@ -191,7 +208,7 @@ export class Scene extends Schema {
                         break;
                 
                     case COMPONENT_TYPES.TRIGGER_COMPONENT:
-                        this.triggers = new MapSchema<TriggerComponent>()
+                       
                         for (const aid in components[key]) {
                             let data = components[key][aid]
 
@@ -220,7 +237,7 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.ACTION_COMPONENT:
-                        this.actions = new MapSchema<ActionComponent>()
+                        
                         for (const aid in components[key]) {
                             let data = components[key][aid]
 
@@ -254,28 +271,28 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.GLTF_COMPONENT:
-                        this.gltfs = new MapSchema<GltfComponent>()
+                        
                         for (const aid in components[key]) {
                             this.gltfs.set(aid, new GltfComponent(components[key][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.MESH_COMPONENT:
-                        this.meshes = new MapSchema<MeshComponent>()
+                        
                         for (const aid in components[key]) {
                             this.meshes.set(aid, new MeshComponent(components[key][aid]))
                         }
                         break;
 
                      case COMPONENT_TYPES.MATERIAL_COMPONENT:
-                        this.materials = new MapSchema<MaterialComponent>()
+                      
                         for (const aid in components[key]) {
                             createMaterialComponent(this, aid, components[key][aid])
                         }
                         break;
 
                     case COMPONENT_TYPES.STATE_COMPONENT:
-                        this.states = new MapSchema<StateComponent>()
+                     
                         for (const aid in components[key]) {
                             let data = components[key][aid]
 
@@ -291,21 +308,21 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.SOUND_COMPONENT:
-                        this.sounds = new MapSchema<SoundComponent>()
+                   
                         for (const aid in components[key]) {
                             this.sounds.set(aid, new SoundComponent(components[key][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.VIDEO_COMPONENT:
-                        this.videos = new MapSchema<VideoComponent>()
+                      
                         for (const aid in components[key]) {
                             this.videos.set(aid, new VideoComponent(components[key][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.ANIMATION_COMPONENT:
-                        this.animators = new MapSchema<AnimatorComponent>()
+                      
                         for (const aid in components[key]) {
                             createAnimationComponent(this, aid, components[key][aid])
                         }

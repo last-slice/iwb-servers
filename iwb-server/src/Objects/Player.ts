@@ -40,6 +40,7 @@ export class SelectedAsset extends Schema {
   @type("string") catalogId: string
   @type("string") assetId: string
   @type("boolean") catalogAsset:boolean = false
+  @type("string") type:string
   // @type(SceneItem) componentData:SceneItem
   @type("boolean") grabbed:boolean
   @type(SelectedAsset) selectedAsset: SelectedAsset
@@ -50,6 +51,7 @@ export class SelectedAsset extends Schema {
     this.catalogId = info.catalogId
     this.assetId = info.assetId
     this.catalogAsset = info.catalogAsset
+    // this.type = info.type
     this.grabbed = info.grabbed ? info.grabbed : undefined
   }
 }
@@ -98,13 +100,14 @@ export class Player extends Schema {
     objects:any[]
     selectedEntity:any
     homeWorld:boolean = false
-    cameraParent?:any
+    cameraParent:any
     uploads:any[] = []
     landsAvailable:any[] = []
     worldsAvailable:any[] = []
     deploymentLink:string
     rotation:number
     parent:any
+    parentEntity:any
 
     constructor(room:IWBRoom, client:Client){
         super()

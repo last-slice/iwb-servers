@@ -10,3 +10,10 @@ export function createNameComponent(scene:Scene, data:any){
     component.value = data.item.n
     scene.names.set(data.scene.aid, component)
 }
+
+export function editNameComponent(info:any, scene:Scene){
+    let itemInfo:any = scene.names.get(info.aid)
+    if(itemInfo){
+        itemInfo.value = info.value
+    }
+}

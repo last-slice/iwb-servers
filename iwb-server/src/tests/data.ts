@@ -103,7 +103,7 @@ export let testData:any =
         //   }
         // }
       },
-      "Names":{
+      "Name":{
         "0":{
           "value":"Scene Root"
         },
@@ -115,7 +115,7 @@ export let testData:any =
         },
         "bEQXB0":{
           "value":"Test Catalog Audio"
-        },
+        }
         // "bEQXB1":{
         //   "value":"Test Catalog Item 2"
         // }

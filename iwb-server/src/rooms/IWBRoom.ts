@@ -1,7 +1,6 @@
 import {Client, Room} from "@colyseus/core";
 import {IWBRoomState} from "./IWBRoomState";
 import { Scene, initServerAssets, initServerScenes, saveRealmScenes } from "../Objects/Scene";
-import { iwbItemHandler } from "./messaging/ItemHandler";
 import { testData } from "../tests/data";
 import { iwbSceneActionHandler } from "./messaging/ActionHandler";
 import { Player } from "../Objects/Player";
@@ -11,6 +10,7 @@ import { addPlayerToWorld, iwbPlayerHandler, removePlayer, savePlayerCache } fro
 import { itemManager, iwbManager } from "../app.config";
 import { playerLogin, pushPlayfabEvent, updatePlayerDisplayName, updatePlayerInternalData } from "../utils/Playfab";
 import { checkAssetsForEditByPlayer } from "./messaging/SceneHandler";
+import { iwbItemHandler } from "./messaging/ItemHandler";
 
 export class IWBRoom extends Room<IWBRoomState> {
 
@@ -23,9 +23,10 @@ export class IWBRoom extends Room<IWBRoomState> {
         this.setState(new IWBRoomState());
         this.state.world = options.world
 
+        
         iwbItemHandler(this)
-        iwbSceneActionHandler(this)
-        iwbRewardHandler(this)
+        // iwbSceneActionHandler(this)
+        // iwbRewardHandler(this)
         iwbPlayerHandler(this)
 
         initServerScenes(this)
@@ -34,6 +35,10 @@ export class IWBRoom extends Room<IWBRoomState> {
         // createCustomObjects(this)
 
         iwbManager.addRoom(this)
+
+
+
+        createTestScene(this)
     }
 
     onJoin(client: Client, options: any) {
@@ -45,11 +50,6 @@ export class IWBRoom extends Room<IWBRoomState> {
             client.userData.roomId = this.roomId
 
             this.getPlayerInfo(client, options)
-
-
-
-
-            createTestScene(this)
         } catch (e) {
             console.log('on join error', e)
         }
@@ -83,6 +83,10 @@ export class IWBRoom extends Room<IWBRoomState> {
     }
 
     async getPlayerInfo(client: Client, options: any) {
+        let player = new Player(this, client)
+        this.state.players.set(options.userData.userId, player)
+        addPlayerToWorld(player)
+
         client.send(SERVER_MESSAGE_TYPES.INIT, {
             catalog: itemManager.items,
             realmAssets: this.state.realmAssets,
@@ -94,10 +98,6 @@ export class IWBRoom extends Room<IWBRoomState> {
                 cid: iwbManager.tutorialsCID
             }
         })
-
-        let player = new Player(this, client)
-        this.state.players.set(options.userData.userId, player)
-        addPlayerToWorld(player)
 
         pushPlayfabEvent(
             SERVER_MESSAGE_TYPES.PLAYER_JOINED, 
