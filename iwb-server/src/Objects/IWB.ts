@@ -5,7 +5,6 @@ export class IWBComponent extends Schema{
     @type("string") id:string
     aid:string
     n:string
-    editor:string
     description:string
     owner:string
     ownerAddress:string
@@ -17,6 +16,7 @@ export class IWBComponent extends Schema{
     @type("boolean") locked:boolean
     @type("boolean") buildVis:boolean
     @type("boolean") editing:boolean
+    @type("string") editor:string
     @type("boolean") priv:boolean
 }
 

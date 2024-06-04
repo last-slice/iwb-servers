@@ -37,11 +37,11 @@ export let testData:any =
     "components":{
       "Animator":{},
       "IWB":{
-        "bEQXB0":{
-          "id": "e6991f31-4b1e-4c17-82c2-2e484f53a124",
-          "locked":false,
-          "buildVis":true,
-        },
+        // "bEQXB0":{
+        //   "id": "e6991f31-4b1e-4c17-82c2-2e484f53a124",
+        //   "locked":false,
+        //   "buildVis":true,
+        // },
       },
       "Pointers":{
         // "bEQXB0":{
@@ -68,23 +68,23 @@ export let testData:any =
         // }
       },
       "Transform":{
-        "bEQXB0":{
-          "p": {
-            "x": 10.33,
-            "y": 1.06,
-            "z": 12.25
-          },
-          "r": {
-            "x": 0,
-            "y": 0,
-            "z": 0
-          },
-          "s": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-          }
-        },
+        // "bEQXB0":{
+        //   "p": {
+        //     "x": 10.33,
+        //     "y": 1.06,
+        //     "z": 12.25
+        //   },
+        //   "r": {
+        //     "x": 0,
+        //     "y": 0,
+        //     "z": 0
+        //   },
+        //   "s": {
+        //     "x": 1,
+        //     "y": 1,
+        //     "z": 1
+        //   }
+        // },
         // "bEQXB1":{
         //   "p": {
         //     "x": 10.33,
@@ -113,23 +113,23 @@ export let testData:any =
         "2":{
           "value":"Camera Root"
         },
-        "bEQXB0":{
-          "value":"Test Catalog Audio"
-        }
+        // "bEQXB0":{
+        //   "value":"Test Catalog Audio"
+        // }
         // "bEQXB1":{
         //   "value":"Test Catalog Item 2"
         // }
       },
       "Visibility":{
-        "bEQXB0":{
-          "visible":true
-        },
+        // "bEQXB0":{
+        //   "visible":true
+        // },
       },
       "Parenting":[
-        {"entity":"0", "aid":"0", "children":["bEQXB0", "bEQXB1", "aEQXB0"]},
+        {"entity":"0", "aid":"0", "children":[] /*["bEQXB0", "bEQXB1", "aEQXB0"]*/},
         {"entity":"1", "aid":"1", "children":[]},
         {"entity":"2", "aid":"2", "children":[]},
-        {"entity":"500", aid:"bEQXB0", "children":[]},
+        // {"entity":"500", aid:"bEQXB0", "children":[]},
         // {"entity":"500", aid:"aEQXB0", "children":[]},
         // {"entity":"600",  aid:"bEQXB1", "children":[]},
       ],
@@ -151,16 +151,16 @@ export let testData:any =
         // }
       },
       "NftShape":{
-        "bEQXB0":{
-          "urn":"decentraland:ethereum:erc721:0xf23e1aa97de9ca4fb76d2fa3fafcf4414b2afed0:1",
-          style:12,
-          color:{
-            "r": 1,
-            "g": 1,
-            "b": 1,
-            "a": 1
-        }
-        }
+        // "bEQXB0":{
+        //   "urn":"decentraland:ethereum:erc721:0xf23e1aa97de9ca4fb76d2fa3fafcf4414b2afed0:1",
+        //   style:12,
+        //   color:{
+        //     "r": 1,
+        //     "g": 1,
+        //     "b": 1,
+        //     "a": 1
+        // }
+        // }
       },
       "Counters":{
         // "bEQXB0":{
@@ -306,7 +306,13 @@ export let testData:any =
         //   "invisibleCollision":2
         // }
       },
-      "Mesh":{
+      "MeshRenderer":{
+        // "aEQXB0":{
+        //   "type":"plane",
+        //   "collision":2
+        // }
+      },
+      "MeshCollider":{
         // "aEQXB0":{
         //   "type":"plane",
         //   "collision":2

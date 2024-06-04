@@ -150,7 +150,10 @@ export enum COMPONENT_TYPES {
     STATE_COMPONENT ='States',
     SOUND_COMPONENT = 'Sounds',
     IWB_COMPONENT = 'IWB',
-    MESH_COMPONENT = 'Mesh'
+    MESH_RENDER_COMPONENT = 'MeshRenderer',
+    MESH_COLLIDER_COMPONENT = 'MeshCollider',
+    TEXTURE_COMPONENT = 'Texture',
+    EMISSIVE_TEXTURE_COMPONENT = 'Emissive'
 }
 
 export enum COLLISION_LAYERS {

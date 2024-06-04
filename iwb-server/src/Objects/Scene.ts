@@ -18,11 +18,14 @@ import { IWBRoom } from "../rooms/IWBRoom";
 import { iwbManager } from "../app.config";
 import { fetchPlayfabMetadata, fetchPlayfabFile } from "../utils/Playfab";
 import { RewardComponent } from "./Rewards";
-import { MeshComponent } from "./Meshes";
+import { MeshRendererComponent } from "./MeshRenderers";
 import { MaterialComponent, createMaterialComponent } from "./Materials";
 import { VideoComponent } from "./Video";
 import { IWBComponent, setIWBComponent } from "./IWB";
 import { NftShapeComponent, createNftShapeComponent } from "./NftShape";
+import { MeshColliderComponent } from "./MeshColliders";
+import { TextureComponent } from "./Textures";
+import { EmissiveComponent, createEmissiveComponent } from "./Emissive";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -64,7 +67,10 @@ export class Scene extends Schema {
 
     @type({map:TransformComponent}) transforms:MapSchema<TransformComponent>
     @type({map:GltfComponent}) gltfs:MapSchema<GltfComponent>
-    @type({map:MeshComponent}) meshes:MapSchema<MeshComponent>
+    @type({map:MeshRendererComponent}) meshRenders:MapSchema<MeshRendererComponent>
+    @type({map:MeshColliderComponent}) meshColliders:MapSchema<MeshColliderComponent>
+    @type({map:TextureComponent}) textures:MapSchema<TextureComponent>
+    @type({map:EmissiveComponent}) emissives:MapSchema<EmissiveComponent>
     @type({map:MaterialComponent}) materials:MapSchema<MaterialComponent>
     @type({map:NameComponent}) names:MapSchema<NameComponent>
     @type({map:VisibilityComponent}) visibilities:MapSchema<VisibilityComponent>
@@ -114,7 +120,10 @@ export class Scene extends Schema {
         this.triggers = new MapSchema<TriggerComponent>()
         this.actions = new MapSchema<ActionComponent>()
         this.gltfs = new MapSchema<GltfComponent>()
-        this.meshes = new MapSchema<MeshComponent>()
+        this.meshRenders = new MapSchema<MeshRendererComponent>()
+        this.meshColliders = new MapSchema<MeshColliderComponent>()
+        this.textures = new MapSchema<TextureComponent>()
+        this.emissives = new MapSchema<EmissiveComponent>()
         this.materials = new MapSchema<MaterialComponent>()
         this.states = new MapSchema<StateComponent>()
         this.sounds = new MapSchema<SoundComponent>()
@@ -130,14 +139,12 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.NAMES_COMPONENT:
-                        
                         for (const aid in components[key]) {
                             this.names.set(aid, new NameComponent(components[key][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.VISBILITY_COMPONENT:
-                        
                         for (const aid in components[key]) {
                             let vis = new VisibilityComponent(components[key][aid])
                             vis.visible = true
@@ -146,14 +153,12 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.PARENTING_COMPONENT:
-                       
                         components[key].forEach((info:any) => {
                             this.parenting.push(new ParentingComponent(info))
                         });
                         break;
 
                     case COMPONENT_TYPES.TRANSFORM_COMPONENT:
-                        
                         for (const aid in components[key]) {
                             this.transforms.set(aid, new TransformComponent(components[key][aid]))
                         }
@@ -275,9 +280,27 @@ export class Scene extends Schema {
                         }
                         break;
 
-                    case COMPONENT_TYPES.MESH_COMPONENT:
+                    case COMPONENT_TYPES.MESH_RENDER_COMPONENT:
                         for (const aid in components[key]) {
-                            this.meshes.set(aid, new MeshComponent(components[key][aid]))
+                            this.meshRenders.set(aid, new MeshRendererComponent(components[key][aid]))
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.MESH_COLLIDER_COMPONENT:
+                        for (const aid in components[key]) {
+                            this.meshColliders.set(aid, new MeshColliderComponent(components[key][aid]))
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.TEXTURE_COMPONENT:
+                        for (const aid in components[key]) {
+                            this.textures.set(aid, new TextureComponent(components[key][aid]))
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT:
+                        for (const aid in components[key]) {
+                            createEmissiveComponent(this, aid, components[key][aid])
                         }
                         break;
 

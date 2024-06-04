@@ -15,10 +15,13 @@ import { ParentingComponent, createParentingComponent } from "../../Objects/Pare
 import { AnimatorComponentSchema, createAnimationComponent } from "../../Objects/Animator";
 import { createSoundComponent, editAudioComponent } from "../../Objects/Sound";
 import { createMaterialComponent } from "../../Objects/Materials";
-import { createMeshComponent } from "../../Objects/Meshes";
-import { createVideoComponent } from "../../Objects/Video";
+import { createVideoComponent, editVideoComponent } from "../../Objects/Video";
 import { IWBComponent, createIWBComponent, editIWBComponent } from "../../Objects/IWB";
 import { editNftShape } from "../../Objects/NftShape";
+import { createMeshRendererComponent, editMeshRendererComponent } from "../../Objects/MeshRenderers";
+import { createMeshColliderComponent, editMeshColliderComponent } from "../../Objects/MeshColliders";
+import { createTextureComponent, editTextureComponent } from "../../Objects/Textures";
+import { createEmissiveComponent } from "../../Objects/Emissive";
 
 export function iwbItemHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, (client:Client, info:any)=>{
@@ -27,41 +30,78 @@ export function iwbItemHandler(room:IWBRoom){
         let player = room.state.players.get(client.userData.userId)
 
         if(scene && canBuild(room, player.address, scene.id)){
-            switch(info.component){
-                case COMPONENT_TYPES.TRANSFORM_COMPONENT:
-                    editTransform(client, info, scene)
-                    break;
+            let itemInfo = scene.itemInfo.get(info.aid)
+            if(itemInfo){
+                itemInfo.editing = true
+                itemInfo.editor = client.userData.userId
 
-                case COMPONENT_TYPES.VISBILITY_COMPONENT:
-                    editVisibility(client, info, scene)
-                    break;
-
-                case COMPONENT_TYPES.TEXT_COMPONENT:
-                    editTextShape(client, info, scene)
-                    break;
-
-                case COMPONENT_TYPES.IWB_COMPONENT:
-                    editIWBComponent(info, scene)
-                    break;
-
-                case COMPONENT_TYPES.NAMES_COMPONENT:
-                    editNameComponent(info, scene)
-                    break;
-                    
-                case COMPONENT_TYPES.AUDIO_COMPONENT:
-                    editAudioComponent(info, scene)
-                    break;
-
-                case COMPONENT_TYPES.NFT_COMPONENT:
-                    editNftShape(info, scene)
-                    break;
-
-                case COMPONENT_TYPES.GLTF_COMPONENT:
-                    editGltfComponent(info, scene)
-                    break;
+                switch(info.component){
+                    case COMPONENT_TYPES.TRANSFORM_COMPONENT:
+                        editTransform(client, info, scene)
+                        break;
+    
+                    case COMPONENT_TYPES.VISBILITY_COMPONENT:
+                        editVisibility(client, info, scene)
+                        break;
+    
+                    case COMPONENT_TYPES.TEXT_COMPONENT:
+                        editTextShape(client, info, scene)
+                        break;
+    
+                    case COMPONENT_TYPES.IWB_COMPONENT:
+                        editIWBComponent(info, scene)
+                        break;
+    
+                    case COMPONENT_TYPES.NAMES_COMPONENT:
+                        editNameComponent(info, scene)
+                        break;
+                        
+                    case COMPONENT_TYPES.AUDIO_COMPONENT:
+                        editAudioComponent(info, scene)
+                        break;
+    
+                    case COMPONENT_TYPES.NFT_COMPONENT:
+                        editNftShape(info, scene)
+                        break;
+    
+                    case COMPONENT_TYPES.GLTF_COMPONENT:
+                        editGltfComponent(info, scene)
+                        break;
+    
+                    case COMPONENT_TYPES.VIDEO_COMPONENT:
+                        editVideoComponent(info, scene)
+                        break;
+    
+                    case COMPONENT_TYPES.MESH_COLLIDER_COMPONENT:
+                        editMeshColliderComponent(info, scene)
+                        break;
+    
+                    case COMPONENT_TYPES.MESH_RENDER_COMPONENT:
+                        editMeshRendererComponent(info, scene)
+                        break;
+    
+                    case COMPONENT_TYPES.TEXTURE_COMPONENT:
+                        editTextureComponent(info, scene)
+                        break;
+                }
             }
         }
       })
+
+    room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_DONE, (client:Client, info:any)=>{
+        console.log("edit asset message", info)
+        let scene = room.state.scenes.get(info.sceneId)
+        if(scene){
+            let player = room.state.players.get(client.userData.userId)
+            let itemInfo = scene.itemInfo.get(info.aid)
+            if(itemInfo && itemInfo.editing && itemInfo.editor === client.userData.userId){
+                itemInfo.editing = false
+                itemInfo.editor = undefined
+            }
+        }
+        
+
+    })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET, async(client, info)=>{
             console.log(SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET + " message", info)
@@ -121,7 +161,6 @@ export function iwbItemHandler(room:IWBRoom){
                         scene.si += size
 
                         createNewItem(scene, item, catalogItem)
-                        scene.parenting.push(new ParentingComponent())
 
                         if(item.duplicate){
                             console.log('need to copy item')
@@ -242,7 +281,6 @@ function addItemComponents(scene:Scene, item:any, catalogItemInfo:any){
                         loop:false
                     })
                 })
-
                 createAnimationComponent(scene, item.aid, {states:states})
             }
             createGLTFComponent(scene, {aid:item.aid, src:catalogItemInfo.id, visibleCollision:1, invisibleCollision:2})
@@ -256,45 +294,19 @@ function addItemComponents(scene:Scene, item:any, catalogItemInfo:any){
 
                 case 'Video':
                     createVideoComponent(scene, item.aid, catalogItemInfo)
-                    createMeshComponent(scene, 
-                        {
-                            aid:item.aid, 
-                            type:0, 
-                            collision:-500
-                        }
-                    )
-                    createMaterialComponent(scene, item.aid,
-                        {
-                            type:"video",
-                            // texture:{
-                            //     src:""
-                            // },
-                            // emissive:{
-                            //     src:"",
-                            //     intensity:1,
-                            //     color:{r:1,g:1,b:1,a:1}
-                            // }
-                        }
-                    )
-
+                    createMeshRendererComponent(scene, {aid:item.aid, shape:0})
+                    createMeshColliderComponent(scene, {aid:item.aid, shape:0, layer:3})
+                    createTextureComponent(scene, {aid:item.aid, type:1})
+                    createEmissiveComponent(scene, item.aid, {type:0})
+                    createMaterialComponent(scene, item.aid, {type:0})
                     break;
 
                 case 'Image':
-                    createMeshComponent(scene, 
-                        {
-                            aid:item.aid, 
-                            type:0, 
-                            collision:-500
-                        }
-                    )
-                    createMaterialComponent(scene, item.aid,
-                        {
-                            type:"pbr",
-                            texture:{
-                                src:""
-                            }
-                        }
-                    )
+                    createMeshRendererComponent(scene, {aid:item.aid, shape:0})
+                    createMeshColliderComponent(scene, {aid:item.aid, shape:0, layer:3})
+                    createTextureComponent(scene, {aid:item.aid, type:0, path:""})
+                    createEmissiveComponent(scene, item.aid, {type:0})
+                    createMaterialComponent(scene, item.aid, {type:0})
                     break;
             }
             break;
@@ -356,8 +368,11 @@ function deleteSceneItem(room:IWBRoom, player:Player, info:any, edit?:boolean){
 function removeAllAssetComponents(scene:Scene, aid:string){
     scene.transforms.delete(aid)
     scene.gltfs.delete(aid)
-    scene.meshes.delete(aid)
+    scene.meshRenders.delete(aid)
+    scene.meshColliders.delete(aid)
     scene.materials.delete(aid)
+    scene.textures.delete(aid)
+    scene.emissives.delete(aid)
     scene.names.delete(aid)
     scene.visibilities.delete(aid)
     scene.actions.delete(aid)

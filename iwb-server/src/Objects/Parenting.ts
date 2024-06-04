@@ -21,5 +21,5 @@ export function createParentingComponent(scene:Scene, data:any){
     let component = new ParentingComponent()
     component.aid = data.aid
     scene.parenting.push(component)
-    scene.parenting[0].children.push(data.aid)
+    // scene.parenting[0].children.push(data.aid)
 }
