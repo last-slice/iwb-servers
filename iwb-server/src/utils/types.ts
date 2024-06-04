@@ -132,7 +132,7 @@ export enum COMPONENT_TYPES {
     MATERIAL_COMPONENT = "Material",
     COLLISION_COMPONENT = "Collision",
     TRANSFORM_COMPONENT = "Transform",
-    NFT_COMPONENT = "NFT",
+    NFT_COMPONENT = "NftShape",
     TEXT_COMPONENT = "Text",
     TRIGGER_COMPONENT = "Triggers",
     ACTION_COMPONENT = 'Actions',

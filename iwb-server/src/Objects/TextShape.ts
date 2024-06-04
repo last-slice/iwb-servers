@@ -1,6 +1,7 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Client } from "colyseus";
 import { Scene } from "./Scene";
+import { Color4 } from "../utils/types";
 
 
 export class TextShapeComponent extends Schema{
@@ -17,13 +18,13 @@ export class TextShapeComponent extends Schema{
     @type("number") outlineWidth:number
     @type("boolean") fontAutoSize:boolean
     @type("boolean") billboard:boolean
-    @type(["number"]) outlineColor:ArraySchema<number> = new ArraySchema<number>()
-    @type(["number"]) textColor:ArraySchema<number> = new ArraySchema<number>()
+    @type(Color4) outlineColor:Color4 = new Color4({r:1, g:1, b:1, a:1})
+    @type(Color4) color:Color4 = new Color4({r:1, g:1, b:1, a:1})
 }
 
 export function createTextComponent(scene:Scene, aid:string, data:any){
     let component = new TextShapeComponent()
-    component.text = "Text"
+    component.text = ""
     component.font = 2
     component.fontSize = 3
     component.fontAutoSize = false
@@ -35,19 +36,25 @@ export function createTextComponent(scene:Scene, aid:string, data:any){
     component.lineSpacing = 0
     component.outlineWidth = 0
     component.billboard = false
-    component.textColor = new ArraySchema(1,1,1,1)
 
     scene.textShapes.set(aid, component)
 }
 
 export function editTextShape(client:Client, info:any, scene:Scene){
-    let textShape:any = scene.textShapes.get(info.aid)
-    if(textShape){
-        for(let option in info.data){
-            if(option === "outlineColor"){}
-            else if(option === "textColor"){}//
-            else{
-                textShape[option] = info.data[option]
+    let itemInfo:any = scene.textShapes.get(info.aid)
+    if(itemInfo){
+        for(let key in info){
+            if(itemInfo.hasOwnProperty(key)){
+                switch(key){
+                    case 'color':
+                        itemInfo[key] = new Color4(info[key])
+                        break;
+
+                    default:
+                        itemInfo[key] = info[key]
+                        break;
+                }
+                
             }
         }
     }

@@ -18,6 +18,7 @@ import { createMaterialComponent } from "../../Objects/Materials";
 import { createMeshComponent } from "../../Objects/Meshes";
 import { createVideoComponent } from "../../Objects/Video";
 import { IWBComponent, createIWBComponent, editIWBComponent } from "../../Objects/IWB";
+import { editNftShape } from "../../Objects/NftShape";
 
 export function iwbItemHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, (client:Client, info:any)=>{
@@ -49,6 +50,10 @@ export function iwbItemHandler(room:IWBRoom){
                     
                 case COMPONENT_TYPES.AUDIO_COMPONENT:
                     editAudioComponent(info, scene)
+                    break;
+
+                case COMPONENT_TYPES.NFT_COMPONENT:
+                    editNftShape(info, scene)
                     break;
             }
         }
@@ -363,6 +368,7 @@ function removeAllAssetComponents(scene:Scene, aid:string){
     scene.videos.delete(aid)
     // scene.rewards.delete(aid)
     scene.itemInfo.delete(aid)
+    scene.nftShapes.delete(aid)
 
     let parentIndex = scene.parenting.findIndex($ => $.aid === aid)
     if(parentIndex >= 0){

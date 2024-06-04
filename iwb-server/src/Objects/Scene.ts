@@ -1,5 +1,5 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
-import { COMPONENT_TYPES } from "../utils/types";
+import { COMPONENT_TYPES, Color4 } from "../utils/types";
 import { ActionComponent, ActionComponentSchema } from "./Actions";
 import { AnimatorComponent, createAnimationComponent } from "./Animator";
 import { CounterComponent, CounterBarComponent, CounterComponentSchema } from "./Counter";
@@ -22,6 +22,7 @@ import { MeshComponent } from "./Meshes";
 import { MaterialComponent, createMaterialComponent } from "./Materials";
 import { VideoComponent } from "./Video";
 import { IWBComponent, setIWBComponent } from "./IWB";
+import { NftShapeComponent, createNftShapeComponent } from "./NftShape";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -73,6 +74,7 @@ export class Scene extends Schema {
     @type({map:StateComponent}) states:MapSchema<StateComponent>
     @type({map:TriggerComponent}) triggers:MapSchema<TriggerComponent>
     @type({map:TextShapeComponent}) textShapes:MapSchema<TextShapeComponent>
+    @type({map:NftShapeComponent}) nftShapes:MapSchema<NftShapeComponent>
     @type({map:AnimatorComponent}) animators:MapSchema<AnimatorComponent>
     @type({map:PointerComponent}) pointers:MapSchema<PointerComponent>
     @type({map:SoundComponent}) sounds:MapSchema<SoundComponent>
@@ -118,6 +120,7 @@ export class Scene extends Schema {
         this.sounds = new MapSchema<SoundComponent>()
         this.videos = new MapSchema<VideoComponent>()
         this.animators = new MapSchema<AnimatorComponent>()
+        this.nftShapes = new MapSchema<NftShapeComponent>()
 
         for (const key in components) {
             if (components.hasOwnProperty(key)) {
@@ -178,12 +181,8 @@ export class Scene extends Schema {
                         
                         for (const aid in components[key]) {
                             let textShape = new TextShapeComponent(components[key][aid]) 
-                            components[key][aid].outlineColor.forEach((color:number)=>{
-                                textShape.outlineColor.push(color)
-                            })
-                            components[key][aid].textColor.forEach((color:number)=>{
-                                textShape.textColor.push(color)
-                            })
+                            textShape.outlineColor = new Color4(components[key][aid].outlineColor)
+                            textShape.color = new Color4(components[key][aid].color)
                             this.textShapes.set(aid, textShape)
                         }
                         break;
@@ -271,23 +270,26 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.GLTF_COMPONENT:
-                        
                         for (const aid in components[key]) {
                             this.gltfs.set(aid, new GltfComponent(components[key][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.MESH_COMPONENT:
-                        
                         for (const aid in components[key]) {
                             this.meshes.set(aid, new MeshComponent(components[key][aid]))
                         }
                         break;
 
                      case COMPONENT_TYPES.MATERIAL_COMPONENT:
-                      
                         for (const aid in components[key]) {
                             createMaterialComponent(this, aid, components[key][aid])
+                        }
+                        break;
+
+                     case COMPONENT_TYPES.NFT_COMPONENT:
+                        for (const aid in components[key]) {
+                            createNftShapeComponent(this, aid, components[key][aid])
                         }
                         break;
 

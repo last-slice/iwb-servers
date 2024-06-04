@@ -146,9 +146,21 @@ export let testData:any =
         //   "paddingLeft": 0,
         //   "lineSpacing": 0,
         //   "outlineWidth": 0,
-        //   "outlineColor": [1,1,1],
-        //   "textColor": [1,1,1,1]
+        //   "outlineColor": {r:1, g:0, b:0, a:1},
+        //   "color": {r:1, g:0, b:0, a:1}
         // }
+      },
+      "NftShape":{
+        "bEQXB0":{
+          "urn":"decentraland:ethereum:erc721:0xf23e1aa97de9ca4fb76d2fa3fafcf4414b2afed0:1",
+          style:12,
+          color:{
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+        }
+        }
       },
       "Counters":{
         // "bEQXB0":{
@@ -319,14 +331,14 @@ export let testData:any =
         // }
       },
       "Sounds":{
-        "bEQXB0":{
-          url:"8481bfaa-15be-4ebf-83c7-ceec60ae575b",
-          volume: 0.3,
-          autostart:false,
-          loop:false,
-          attach:true,
-          type:0
-        }
+        // "bEQXB0":{
+        //   url:"8481bfaa-15be-4ebf-83c7-ceec60ae575b",
+        //   volume: 0.3,
+        //   autostart:false,
+        //   loop:false,
+        //   attach:true,
+        //   type:0
+        // }
       },
       "Video":{}
     }

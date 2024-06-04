@@ -49,7 +49,6 @@ export function editIWBComponent(info:any, scene:Scene){
     if(itemInfo){
         for(let key in info){
             if(itemInfo.hasOwnProperty(key)){
-                console.log('key is', key)
                 itemInfo[key] = info[key]
             }
         }
