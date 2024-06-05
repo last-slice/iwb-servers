@@ -11,7 +11,7 @@ import { Scene } from "../../Objects/Scene";
 // import { IWBComponent, createIWBComponent, editIWBComponent } from "../../Objects/IWB";
 import { NameComponent, createNameComponent, editNameComponent } from "../../Objects/Names";
 import { GltfComponent, createGLTFComponent, editGltfComponent } from "../../Objects/Gltf";
-import { ParentingComponent, createParentingComponent } from "../../Objects/Parenting";
+import { ParentingComponent, createParentingComponent, editParentingComponent } from "../../Objects/Parenting";
 import { AnimatorComponentSchema, createAnimationComponent } from "../../Objects/Animator";
 import { createSoundComponent, editAudioComponent } from "../../Objects/Sound";
 import { createMaterialComponent } from "../../Objects/Materials";
@@ -82,6 +82,10 @@ export function iwbItemHandler(room:IWBRoom){
     
                     case COMPONENT_TYPES.TEXTURE_COMPONENT:
                         editTextureComponent(info, scene)
+                        break;
+
+                    case COMPONENT_TYPES.PARENTING_COMPONENT:
+                        editParentingComponent(info, scene)
                         break;
                 }
             }
@@ -257,11 +261,11 @@ function checkSceneLimits(scene:Scene, item:any){
 }
 
 function createNewItem(scene:Scene, item:any, catalogItemInfo:any){
-    createParentingComponent(scene, item)
     createIWBComponent(scene, {scene:item, item:catalogItemInfo})
     createNameComponent(scene, {scene:item, item:catalogItemInfo})
     createVisibilityComponent(scene, item)
     createTransformComponent(scene, item)
+    createParentingComponent(scene, item)
 }
 
 function addItemComponents(scene:Scene, item:any, catalogItemInfo:any){
