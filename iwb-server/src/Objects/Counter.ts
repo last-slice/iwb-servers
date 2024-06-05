@@ -2,13 +2,9 @@ import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Client } from "colyseus";
 import { Scene } from "./Scene";
 
-export class CounterComponentSchema extends Schema{
-    @type("number") currentValue:number
-    @type("number") previousValue:number
-}
-
 export class CounterComponent extends Schema{
-    @type({map:CounterComponentSchema}) values:MapSchema<CounterComponentSchema>
+    @type("number") currentValue:number = 0
+    @type("number") previousValue:number = 0
 }
 
 export class CounterBarComponent extends Schema{
@@ -17,9 +13,15 @@ export class CounterBarComponent extends Schema{
     @type("number") max:number
 }
 
-export function addNumber(scene:Scene, info:any){
-    let counters:CounterComponent = scene.counters.get(info.aid)
+export function createCounterComponent(scene:Scene, aid:string, data:any){
+    let component = new CounterComponent()
+    component.currentValue = data.currentValue ? data.currentValue : 0
+    component.previousValue = data.previousValue ? data.previousValue : 0
+    scene.counters.set(aid, component)
+}
 
-    let counter = counters.values.get(info.action.counter)
+export function addNumber(scene:Scene, info:any){
+    let counter:CounterComponent = scene.counters.get(info.aid)
+    counter.previousValue = counter.currentValue
     counter.currentValue += info.action.value
 }

@@ -2,7 +2,7 @@ import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { COMPONENT_TYPES, Color4 } from "../utils/types";
 import { ActionComponent, ActionComponentSchema } from "./Actions";
 import { AnimatorComponent, createAnimationComponent } from "./Animator";
-import { CounterComponent, CounterBarComponent, CounterComponentSchema } from "./Counter";
+import { CounterComponent, CounterBarComponent, createCounterComponent } from "./Counter";
 import { GltfComponent, createGLTFComponent } from "./Gltf";
 // import { IWBComponent, setIWBComponent } from "./IWB";
 import { NameComponent } from "./Names";
@@ -94,6 +94,7 @@ export class Scene extends Schema {
 
     parentEntity:any
     entities:any[] = []
+    components:any
 
     constructor(data?:any) {
         super(data)
@@ -193,21 +194,8 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.COUNTER_COMPONENT:
-                        
                         for (const aid in components[key]) {
-                            let counter = new CounterComponent()
-                            counter.values = new MapSchema<CounterComponentSchema>()
-
-                            let counters = components[key][aid].counters
-                            for(let name in counters){
-                                let counterSchema = new CounterComponentSchema()
-                                counterSchema.currentValue =  counters[name]
-                                counterSchema.previousValue =  counters[name]
-
-                                counter.values.set(name, counterSchema)
-                            }
-
-                            this.counters.set(aid, counter)
+                            createCounterComponent(this, aid, components[key][aid])
                         }
                         break;
                 

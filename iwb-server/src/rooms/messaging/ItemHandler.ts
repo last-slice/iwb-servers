@@ -22,6 +22,7 @@ import { createMeshRendererComponent, editMeshRendererComponent } from "../../Ob
 import { createMeshColliderComponent, editMeshColliderComponent } from "../../Objects/MeshColliders";
 import { createTextureComponent, editTextureComponent } from "../../Objects/Textures";
 import { createEmissiveComponent } from "../../Objects/Emissive";
+import { createCounterComponent } from "../../Objects/Counter";
 
 export function iwbItemHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, (client:Client, info:any)=>{
@@ -36,6 +37,10 @@ export function iwbItemHandler(room:IWBRoom){
                 itemInfo.editor = client.userData.userId
 
                 switch(info.component){
+                    case 'Add':
+                        addNewComponent(scene, info)
+                        break;
+
                     case COMPONENT_TYPES.TRANSFORM_COMPONENT:
                         editTransform(client, info, scene)
                         break;
@@ -266,6 +271,17 @@ function createNewItem(scene:Scene, item:any, catalogItemInfo:any){
     createVisibilityComponent(scene, item)
     createTransformComponent(scene, item)
     createParentingComponent(scene, item)
+}
+
+function addNewComponent(scene:Scene, item:any){
+    switch(item.type){
+        case COMPONENT_TYPES.COUNTER_COMPONENT:
+            console.log('adding new counter component')
+            if(!scene.counters.has(item.aid)){
+                createCounterComponent(scene, item.aid, {})
+            }
+            break;
+    }
 }
 
 function addItemComponents(scene:Scene, item:any, catalogItemInfo:any){
