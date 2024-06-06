@@ -1,5 +1,6 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
+import { generateRandomId } from "../utils/functions";
 
 export class TriggerConditionComponent extends Schema{
     @type("string") id:string
@@ -43,4 +44,30 @@ export function createTriggerComponent(scene:Scene, aid:string, data:any){
 
 
     scene.triggers.set(aid, component)
+}
+
+export function editTriggerComponent(data:any, scene:Scene){
+    let triggers = scene.triggers.get(data.aid)
+    if(triggers){
+        switch(data.action){
+            case 'add':
+                let schema = new TriggerComponentSchema()
+                schema.type = data.data.type
+                schema.input = data.data.input ? data.data.input : undefined
+                schema.conditions = new ArraySchema<TriggerConditionComponent>()
+                schema.actions = new ArraySchema<string>()
+        
+                schema['id'] = generateRandomId(6)
+                triggers.triggers.push(schema)
+                break;
+
+            case 'delete':
+                // let toDelete = actions.actions.findIndex($=> $.id === data.data.id)
+                // if(toDelete >= 0){
+                //     actions.actions.splice(toDelete, 1)
+                // }
+                break;
+
+        }
+    }
 }

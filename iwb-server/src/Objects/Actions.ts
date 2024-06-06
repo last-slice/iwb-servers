@@ -80,3 +80,30 @@ export function createActionComponent(scene:Scene, aid:string, data:any){
 
     scene.actions.set(aid, component)
 }
+
+export function editActionComponent(data:any, scene:Scene){
+    let actions = scene.actions.get(data.aid)
+    if(actions){
+        switch(data.action){
+            case 'add':
+                let newAction:any = new ActionComponentSchema()
+                let action = data.data
+                for(let key in action){
+                    if(action.hasOwnProperty(key)){
+                        newAction[key] = action[key]
+                    }
+                }
+                newAction['id'] = generateRandomId(6)
+                actions.actions.push(newAction)
+                break;
+
+            case 'delete':
+                let toDelete = actions.actions.findIndex($=> $.id === data.data.id)
+                if(toDelete >= 0){
+                    actions.actions.splice(toDelete, 1)
+                }
+                break;
+
+        }
+    }
+}

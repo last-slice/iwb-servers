@@ -23,8 +23,8 @@ import { createMeshColliderComponent, editMeshColliderComponent } from "../../Ob
 import { createTextureComponent, editTextureComponent } from "../../Objects/Textures";
 import { createEmissiveComponent } from "../../Objects/Emissive";
 import { createCounterComponent } from "../../Objects/Counter";
-import { createActionComponent } from "../../Objects/Actions";
-import { createTriggerComponent } from "../../Objects/Trigger";
+import { createActionComponent, editActionComponent } from "../../Objects/Actions";
+import { createTriggerComponent, editTriggerComponent } from "../../Objects/Trigger";
 
 export function iwbItemHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, (client:Client, info:any)=>{
@@ -93,6 +93,14 @@ export function iwbItemHandler(room:IWBRoom){
 
                     case COMPONENT_TYPES.PARENTING_COMPONENT:
                         editParentingComponent(info, scene)
+                        break;
+
+                    case COMPONENT_TYPES.ACTION_COMPONENT:
+                        editActionComponent(info, scene)
+                        break;
+
+                    case COMPONENT_TYPES.TRIGGER_COMPONENT:
+                        editTriggerComponent(info, scene)
                         break;
                 }
             }
@@ -282,6 +290,13 @@ function addNewComponent(scene:Scene, item:any){
             console.log('adding new counter component')
             if(!scene.counters.has(item.aid)){
                 createCounterComponent(scene, item.aid, {})
+            }
+            break;
+
+        case COMPONENT_TYPES.ACTION_COMPONENT:
+            console.log('adding new action component')
+            if(!scene.actions.has(item.aid)){
+                createActionComponent(scene, item.aid, undefined)
             }
             break;
     }
