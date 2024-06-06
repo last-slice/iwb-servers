@@ -20,6 +20,7 @@ export class TransformComponent extends Schema{
   @type(Vector3) p: Vector3
   @type(Quaternion) r: Quaternion
   @type(Vector3) s:Vector3
+  @type("number") delta:number = 0
 
   constructor(data?:any){
       super()

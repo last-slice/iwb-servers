@@ -19,11 +19,11 @@ export function iwbSceneHandler(room:IWBRoom){
             if(scene){
 
                 scene.parenting.forEach((assetItem:any, index:number)=>{
-                    let iwbAsset = scene.catalogInfo.get(assetItem.aid)
-                    let itemConfig = itemManager.items.get(assetItem.aid)
-                    if(itemConfig && itemConfig.n){
-                        iwbAsset.n = itemConfig.n
-                    }
+                    // let iwbAsset = scene.catalogInfo.get(assetItem.aid)
+                    // let itemConfig = itemManager.items.get(assetItem.aid)
+                    // if(itemConfig && itemConfig.n){
+                    //     iwbAsset.n = itemConfig.n
+                    // }
                 })
 
                 try{
@@ -55,7 +55,7 @@ export function iwbSceneHandler(room:IWBRoom){
         if(player){
             let world = iwbManager.worlds.find((w)=> w.ens === room.state.world)
             if(world && world.owner === client.userData.userId){
-                iwbManager.deployWorld(world, false)
+                iwbManager.deployWorld(world, room)
             }
         }
     })
@@ -100,7 +100,7 @@ export function iwbSceneHandler(room:IWBRoom){
 
         if(player && player.mode === SCENE_MODES.CREATE_SCENE_MODE){
             if(room.state.temporaryParcels.length > 0){
-                let scene:Scene = createScene(player, room.state.world, info, [...room.state.temporaryParcels])
+                let scene:Scene = createScene(player, room, info, [...room.state.temporaryParcels])
                 room.state.scenes.set(scene.id, scene)
                 room.state.sceneCount += 1
 
@@ -443,9 +443,9 @@ export function checkAssetsForEditByPlayer(room:IWBRoom, user:string){
     })
 }
 
-export function createScene(player:Player, world:string, info:any, parcels:string[]){
+export function createScene(player:Player, room:IWBRoom, info:any, parcels:string[]){
     let sceneData:any = {
-      w: world,
+      w: room.state.world,
       id: "" + generateId(5),
       im: info.image ? info.image : "",
       n: info.name,
@@ -470,6 +470,7 @@ export function createScene(player:Player, world:string, info:any, parcels:strin
     }
 
     // console.log('creating new scene with data', sceneData)
+    sceneData.room = room
     let scene = new Scene(sceneData)
     return scene
   }

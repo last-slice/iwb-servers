@@ -1,4 +1,5 @@
 import { iwbManager } from "../app.config"
+import { testCatalog } from "../tests/catalog"
 import { PLAYFAB_DATA_ACCOUNT, abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playfabLogin, pushPlayfabEvent, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
@@ -13,19 +14,28 @@ export class ItemManager{
     }
 
     async initServerItems(){
-        try{
-            let metadata = await fetchPlayfabMetadata(PLAYFAB_DATA_ACCOUNT)
-            let catalogData = await fetchPlayfabFile(metadata, "catalog.json")
-            catalogData.forEach((item:any)=>{
-                if(!this.items.has(item.id)){
-                    this.items.set(item.id, item)
-                }
-            })
-            console.log('catalog size is', this.items.size)
-        }
-        catch(e){
-            console.log('error fetching data account')
-        }
+        // try{
+        //     let metadata = await fetchPlayfabMetadata(PLAYFAB_DATA_ACCOUNT)
+        //     let catalogData = await fetchPlayfabFile(metadata, "catalog.json")
+        //     catalogData.forEach((item:any)=>{
+        //         if(!this.items.has(item.id)){
+        //             this.items.set(item.id, item)
+        //         }
+        //     })
+        //     console.log('catalog size is', this.items.size)
+        // }
+        // catch(e){
+        //     console.log('error fetching data account')
+        // }
+
+        testCatalog.forEach((item:any)=>{
+            if(!this.items.has(item.id)){
+                this.items.set(item.id, item)
+            }
+        })
+
+
+        console.log('catalog size is', this.items.size)
     }
 
     async getServerItems(init?:boolean){

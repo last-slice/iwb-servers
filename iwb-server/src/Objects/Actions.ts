@@ -1,4 +1,6 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
+import { Scene } from "./Scene";
+import { generateRandomId } from "../utils/functions";
 
 export class ActionComponentSchema extends Schema{
 
@@ -56,5 +58,25 @@ export class ActionComponentSchema extends Schema{
 }
 
 export class ActionComponent extends Schema {
-    @type([ActionComponentSchema]) actions:ArraySchema<ActionComponentSchema>
+    @type([ActionComponentSchema]) actions:ArraySchema<ActionComponentSchema> = new ArraySchema<ActionComponentSchema>()
+}
+
+export function createActionComponent(scene:Scene, aid:string, data:any){
+    let component:any = new ActionComponent()
+    let actions:any[] = []
+    if(data){
+        data.actions.forEach((action:any)=>{
+            let newAction:any = new ActionComponentSchema()
+            for(let key in action){
+                if(action.hasOwnProperty(key)){
+                    newAction[key] = action[key]
+                }
+            }
+            newAction['id'] = generateRandomId(6)
+            actions.push(newAction)
+        })
+    }
+    component.actions = actions
+
+    scene.actions.set(aid, component)
 }

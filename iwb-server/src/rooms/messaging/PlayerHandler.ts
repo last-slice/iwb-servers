@@ -47,7 +47,7 @@ export function iwbPlayerHandler(room:IWBRoom){
          let player:Player = room.state.players.get(client.userData.userId)
          if(player){
             //  console.log('need to initiate deployment to world')
-             iwbManager.initWorld(info.world)
+             iwbManager.initWorld(room, info.world)
          }
      })
 

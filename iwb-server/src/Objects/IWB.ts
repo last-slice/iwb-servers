@@ -1,5 +1,7 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
+import { itemManager } from "../app.config";
+import { IWBRoom } from "../rooms/IWBRoom";
 
 export class IWBComponent extends Schema{
     @type("string") id:string
@@ -37,13 +39,26 @@ export function createIWBComponent(scene:Scene, data:any){
     scene.itemInfo.set(data.scene.aid, component)
 }
 
-export function setIWBComponent(scene:Scene, key:string, components:any){
+export function setIWBComponent(room:IWBRoom, scene:Scene, key:string, components:any){
     for (const aid in components[key]) {
         let component = new IWBComponent(components[key][aid])
         // component.id = 
         scene.itemInfo.set(aid, component)
+
+        let catalogItem = component.ugc ? room.state.realmAssets.get(component.id) : itemManager.items.get(component.id)
+        if(catalogItem){
+            console.log('catalog item is', catalogItem)
+            let size = catalogItem.si
+            scene.itemInfo.forEach((item:IWBComponent, aid:string)=>{
+                if(item.id === catalogItem.id){
+                    size = 0
+                }
+            })
+            scene.si += size
+       }
     }
 }
+
 export function editIWBComponent(info:any, scene:Scene){
     let itemInfo:any = scene.itemInfo.get(info.aid)
     if(itemInfo){

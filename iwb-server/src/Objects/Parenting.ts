@@ -37,6 +37,10 @@ export function editParentingComponent(info:any, scene:Scene){
 
         if(info.parent >= 0){
             scene.parenting[info.parent].children.push(info.aid)
+            let transform = scene.transforms.get(info.aid)
+            if(transform){
+                transform.delta++
+            }
         }
     }
 }

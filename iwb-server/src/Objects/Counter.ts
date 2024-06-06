@@ -3,6 +3,7 @@ import { Client } from "colyseus";
 import { Scene } from "./Scene";
 
 export class CounterComponent extends Schema{
+    @type("number") defaultValue:number = 0
     @type("number") currentValue:number = 0
     @type("number") previousValue:number = 0
 }
@@ -15,6 +16,7 @@ export class CounterBarComponent extends Schema{
 
 export function createCounterComponent(scene:Scene, aid:string, data:any){
     let component = new CounterComponent()
+    component.currentValue = data.defaultValue ? data.defaultValue : 0
     component.currentValue = data.currentValue ? data.currentValue : 0
     component.previousValue = data.previousValue ? data.previousValue : 0
     scene.counters.set(aid, component)

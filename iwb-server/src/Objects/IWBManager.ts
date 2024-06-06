@@ -197,11 +197,11 @@ export class IWBManager{
 
     async updateAllWorlds(){
         for(let i = 0; i < this.worlds.length; i++){
-            await this.deployWorld(this.worlds[i], false)
+            await this.deployWorld(this.worlds[i])
         }
     }
 
-    async deployWorld(world:any, init:boolean){
+    async deployWorld(world:any, room?:IWBRoom){
         try{
             console.log('deploying world')
             // let response = await axios.post("https://" + PlayfabId + ".playfabapi.com/File/GetFiles",
@@ -225,19 +225,20 @@ export class IWBManager{
                         ens:world.ens,
                         worldName: world.name,
                         owner: world.owner,
-                        init:init
+                        init: room ? false : true
                     }
                 })
             })
             let json = await res.json()
             console.log('world deployment api response is', json, world)
 
-            if(init){
-                this.createRealmLobby({
+            if(room){
+                this.createRealmLobby(room,
+                    {
                     ens:world.ens,
                     worldName: world.name,
                     owner: world.owner,
-                    init:init
+                    init:true
                 }, true)
             }
         }
@@ -247,11 +248,11 @@ export class IWBManager{
 
     }
 
-    async initWorld(world:any){
+    async initWorld(room:IWBRoom, world:any){
         let current = this.initQueue.find((w)=>w.ens === world.ens)
         if(!current){
             this.initQueue.push(world)
-            await this.deployWorld(world,true)
+            await this.deployWorld(world,room)
         }
     }
 
@@ -297,13 +298,13 @@ export class IWBManager{
         }
     }
 
-    async createRealmLobby(world:any, newWorld:boolean){
+    async createRealmLobby(room:IWBRoom, world:any, newWorld:boolean){
         try{
             let user = await playfabLogin(world.owner)
             let realmMetadata = await fetchUserMetaData(user)
             let scenes = await fetchPlayfabFile(realmMetadata, world +'-scenes.json')
 
-            scenes.push(this.createLobbyScene(world))
+            scenes.push(this.createLobbyScene(room, world))
     
             if(newWorld){
                 world.builds = 1
@@ -395,8 +396,9 @@ export class IWBManager{
         }
     }
 
-    createLobbyScene(world:any){
+    createLobbyScene(room:IWBRoom, world:any){
         let lobby:Scene = new Scene({
+            room:room,
             w: world.ens,
             id: "" + generateId(5),
             n: "Realm Lobby",

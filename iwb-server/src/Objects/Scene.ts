@@ -4,7 +4,6 @@ import { ActionComponent, ActionComponentSchema } from "./Actions";
 import { AnimatorComponent, createAnimationComponent } from "./Animator";
 import { CounterComponent, CounterBarComponent, createCounterComponent } from "./Counter";
 import { GltfComponent, createGLTFComponent } from "./Gltf";
-// import { IWBComponent, setIWBComponent } from "./IWB";
 import { NameComponent } from "./Names";
 import { ParentingComponent } from "./Parenting";
 import { PointerComponent, PointerComponentEvent } from "./Pointers";
@@ -26,6 +25,7 @@ import { NftShapeComponent, createNftShapeComponent } from "./NftShape";
 import { MeshColliderComponent } from "./MeshColliders";
 import { TextureComponent } from "./Textures";
 import { EmissiveComponent, createEmissiveComponent } from "./Emissive";
+import { AvatarShapeComponent, createAvatarShapeComponent } from "./AvatarShape";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -84,10 +84,13 @@ export class Scene extends Schema {
     @type({map:AnimatorComponent}) animators:MapSchema<AnimatorComponent>
     @type({map:PointerComponent}) pointers:MapSchema<PointerComponent>
     @type({map:SoundComponent}) sounds:MapSchema<SoundComponent>
+    @type({map:AvatarShapeComponent}) avatarShapes:MapSchema<AvatarShapeComponent>
     @type({map:VideoComponent}) videos:MapSchema<VideoComponent>
     @type({map:RewardComponent}) rewards:MapSchema<RewardComponent>
     @type({map:IWBComponent}) itemInfo:MapSchema<IWBComponent>
     @type([ParentingComponent]) parenting:ArraySchema<ParentingComponent>
+
+    @type({map:"string"}) clickAreas:MapSchema<string>
 
     //pointer evnts component
     //sync components
@@ -105,11 +108,11 @@ export class Scene extends Schema {
             this.sp = data.sp[0].split(",").length === 2 ? [data.sp[0].split(",")[0] + ",0," + data.sp[0].split(",")[1]] : data.sp
             this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"]
 
-            this.setComponents(data.components)
+            this.setComponents(data.room, data.components)
         }
     }
     
-    setComponents(components:any){
+    setComponents(room:IWBRoom, components:any){
         this.itemInfo = new MapSchema<IWBComponent>()
         this.names = new MapSchema<NameComponent>()
         this.visibilities = new MapSchema<VisibilityComponent>()
@@ -131,12 +134,23 @@ export class Scene extends Schema {
         this.videos = new MapSchema<VideoComponent>()
         this.animators = new MapSchema<AnimatorComponent>()
         this.nftShapes = new MapSchema<NftShapeComponent>()
+        this.avatarShapes = new MapSchema<AvatarShapeComponent>()
+        this.clickAreas = new MapSchema<string>()
 
         for (const key in components) {
             if (components.hasOwnProperty(key)) {
                 switch(key){
+                    case COMPONENT_TYPES.CLICK_AREA_COMPONENT:
+                        for (const aid in components[key]) {
+                            this.clickAreas.set(aid, aid)
+                        }
+                        break;
+                    case COMPONENT_TYPES.AVATAR_SHAPE:
+                        createAvatarShapeComponent(this, key, components)
+                        break;
+
                     case COMPONENT_TYPES.IWB_COMPONENT:
-                        setIWBComponent(this, key, components)
+                        setIWBComponent(room, this, key, components)
                         break;
 
                     case COMPONENT_TYPES.NAMES_COMPONENT:
@@ -166,7 +180,6 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.POINTER_COMPONENT:
-                       
                         for (const aid in components[key]) {
                             let pointerEvents = new PointerComponent()
                             pointerEvents.events = new ArraySchema<PointerComponentEvent>()
@@ -196,6 +209,12 @@ export class Scene extends Schema {
                     case COMPONENT_TYPES.COUNTER_COMPONENT:
                         for (const aid in components[key]) {
                             createCounterComponent(this, aid, components[key][aid])
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT:
+                        for (const aid in components[key]) {
+                            createAvatarShapeComponent(this, aid, components[key][aid])
                         }
                         break;
                 

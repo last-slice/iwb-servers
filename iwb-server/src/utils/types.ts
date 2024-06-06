@@ -140,6 +140,7 @@ export enum COMPONENT_TYPES {
     CLICK_AREA_COMPONENT = "Click Area",
     ANIMATION_COMPONENT = "Animator",
     NPC_COMPONENT = 'NPC',
+    AVATAR_SHAPE = 'AvatarShape',
     DIALOG_COMPONENT = 'Dialog',
     REWARD_COMPONENT ='Reward',
     PARENTING_COMPONENT = 'Parenting',
@@ -150,10 +151,11 @@ export enum COMPONENT_TYPES {
     STATE_COMPONENT ='States',
     SOUND_COMPONENT = 'Sounds',
     IWB_COMPONENT = 'IWB',
-    MESH_RENDER_COMPONENT = 'MeshRenderer',
-    MESH_COLLIDER_COMPONENT = 'MeshCollider',
+    MESH_RENDER_COMPONENT = 'Mesh Renderer',
+    MESH_COLLIDER_COMPONENT = 'Mesh Collider',
     TEXTURE_COMPONENT = 'Texture',
-    EMISSIVE_TEXTURE_COMPONENT = 'Emissive'
+    EMISSIVE_TEXTURE_COMPONENT = 'Emissive',
+    AVATAR_SHAPE_COMPONENT = 'Avatar Shape',
 }
 
 export enum COLLISION_LAYERS {
@@ -260,4 +262,8 @@ export enum ACCESS_CATEGORIES {
 export enum ACCESS_FILTERS {
     HAS_ALL = 'has_all',
     HAS_ANY = 'has_any'
+}
+
+export enum TRIGGER_TYPES {
+    ON_INPUT_ACTION = 'on_input_action'
 }
