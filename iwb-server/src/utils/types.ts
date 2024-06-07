@@ -243,7 +243,34 @@ export enum ACTIONS {
     SET_POSITION = 'set_position',
     SET_ROTATION = 'set_rotation',
     SET_SCALE = 'set_scale',
+    SET_STATE = 'set_state',
+    MOVE_PLAYER = 'move_player',
+    SHOW_NOTIFICATION = 'show_notification',
+    PLACE_PLAYER_POSITION = 'place_player_position',
+}
 
+export enum Triggers {
+    ON_CLICK = "on_click",
+    ON_ENTER = "on_enter",
+    ON_LEAVE = "on_leave",
+
+
+
+    //new triggers
+    ON_ACCESS_VERIFIED ='on_access_verified',
+    ON_ACCESS_DENIED ='on_access_denied',
+    ON_INPUT_ACTION = 'on_input_action',
+    // ON_TWEEN_END,
+    // ON_DELAY,
+    // ON_LOOP
+    // ON_CLONE
+    // ON_CLICK_IMAGE
+    // ON_DAMAGE
+    // ON_GLOBAL_CLICK
+    // ON_TICK
+    // ON_HEAL//
+    ON_STATE_CHANGE = "on_state_change",
+    ON_COUNTER_CHANGE = "on_counter_change",
 }
 
 export enum REWARD_TYPES {

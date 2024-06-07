@@ -163,58 +163,58 @@ export let testData:any =
         // }
       },
       "Triggers":{
-        "bEQXB0":{
-          "triggers":[
-            {
-              "type":"on_input_action",
-              "input":0,
-              "conditions":[],
-              "actions":[
-                {
-                  "id":"3xi2k3"
-                },
-                // {
-                //   "id":"31i219"
-                // },
-                // {
-                //   "id":"31i212"
-                // }
-              ]
-            },
-            // {
-            //   "type":"on_input_action",
-            //   "input":0,
-            //   "conditions":[
-            //     {
-            //       "type":"when_counter_is_greater_than",
-            //       "value":"3",
-            //       "counter":"lives"
-            //     }
-            //   ],
-            //   "actions":[
-            //     {
-            //       "id":"3xi2k3"
-            //     }
-            //   ]
-            // },
-            // {
-            //   "type":"on_input_action",
-            //   "input":1,
-            //   "conditions":[
-            //     {
-            //       "type":"when_counter_is_less_than",
-            //       "value":"4",
-            //       "counter":"lives"
-            //     }
-            //   ],
-            //   "actions":[
-            //     {
-            //       "id":"3xi2k4"
-            //     }
-            //   ]
-            // }
-          ]
-        }
+        // "bEQXB0":{
+        //   "triggers":[
+        //     {
+        //       "type":"on_input_action",
+        //       "input":0,
+        //       "conditions":[],
+        //       "actions":[
+        //         {
+        //           "id":"3xi2k3"
+        //         },
+        //         // {
+        //         //   "id":"31i219"
+        //         // },
+        //         // {
+        //         //   "id":"31i212"
+        //         // }
+        //       ]
+        //     },
+        //     // {
+        //     //   "type":"on_input_action",
+        //     //   "input":0,
+        //     //   "conditions":[
+        //     //     {
+        //     //       "type":"when_counter_is_greater_than",
+        //     //       "value":"3",
+        //     //       "counter":"lives"
+        //     //     }
+        //     //   ],
+        //     //   "actions":[
+        //     //     {
+        //     //       "id":"3xi2k3"
+        //     //     }
+        //     //   ]
+        //     // },
+        //     // {
+        //     //   "type":"on_input_action",
+        //     //   "input":1,
+        //     //   "conditions":[
+        //     //     {
+        //     //       "type":"when_counter_is_less_than",
+        //     //       "value":"4",
+        //     //       "counter":"lives"
+        //     //     }
+        //     //   ],
+        //     //   "actions":[
+        //     //     {
+        //     //       "id":"3xi2k4"
+        //     //     }
+        //     //   ]
+        //     // }
+        //   ]
+        // }
       },
       "Actions":{
         "bEQXB0":{

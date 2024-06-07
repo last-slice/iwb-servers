@@ -305,7 +305,13 @@ function addNewComponent(scene:Scene, item:any){
 
         case COMPONENT_TYPES.POINTER_COMPONENT:
             if(!scene.pointers.has(item.aid)){
-                createPointerComponent(scene, item.aid, {})
+                createPointerComponent(scene, item.aid)
+            }
+            break;
+
+        case COMPONENT_TYPES.TRIGGER_COMPONENT:
+            if(!scene.triggers.has(item.aid)){
+                createTriggerComponent(scene, item.aid)
             }
             break;
     }

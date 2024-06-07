@@ -8,6 +8,7 @@ export class PointerComponentEvent extends Schema{
     @type("number") eventType:number = 0
     @type("number") button:number = 0
     @type("number") maxDistance:number = 3
+    @type("number") tick:number = 0
     @type("boolean") showFeedback:boolean = true
 }
 
@@ -16,7 +17,7 @@ export class PointerComponent extends Schema{
     @type([PointerComponentEvent]) events:ArraySchema<PointerComponentEvent>
 }
 
-export function createPointerComponent(scene:Scene, aid:string, data:any){
+export function createPointerComponent(scene:Scene, aid:string, data?:any){
     let component:any = new PointerComponent()
     component.events = new ArraySchema<PointerComponentEvent>()
     if(data){
@@ -51,8 +52,9 @@ export function editPointerComponent(data:any, scene:Scene){
             case 'edit':
                 let pointerEvent:any = pointerInfo.events.find(event => event.id === pointer.id)
                 if(pointerEvent){
+                    pointerEvent.tick++
                     for(let key in pointer){
-                        if(pointer.hasOwnProperty(key)){
+                        if(pointer.hasOwnProperty(key) && key !== "tick"){
                             pointerEvent[key] = pointer[key]
                         }
                     }
