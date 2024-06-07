@@ -25,6 +25,7 @@ import { createEmissiveComponent } from "../../Objects/Emissive";
 import { createCounterComponent } from "../../Objects/Counter";
 import { createActionComponent, editActionComponent } from "../../Objects/Actions";
 import { createTriggerComponent, editTriggerComponent } from "../../Objects/Trigger";
+import { createPointerComponent, editPointerComponent } from "../../Objects/Pointers";
 
 export function iwbItemHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, (client:Client, info:any)=>{
@@ -101,6 +102,10 @@ export function iwbItemHandler(room:IWBRoom){
 
                     case COMPONENT_TYPES.TRIGGER_COMPONENT:
                         editTriggerComponent(info, scene)
+                        break;
+
+                    case COMPONENT_TYPES.POINTER_COMPONENT:
+                        editPointerComponent(info, scene)
                         break;
                 }
             }
@@ -287,16 +292,20 @@ function createNewItem(scene:Scene, item:any, catalogItemInfo:any){
 function addNewComponent(scene:Scene, item:any){
     switch(item.type){
         case COMPONENT_TYPES.COUNTER_COMPONENT:
-            console.log('adding new counter component')
             if(!scene.counters.has(item.aid)){
                 createCounterComponent(scene, item.aid, {})
             }
             break;
 
         case COMPONENT_TYPES.ACTION_COMPONENT:
-            console.log('adding new action component')
             if(!scene.actions.has(item.aid)){
                 createActionComponent(scene, item.aid, undefined)
+            }
+            break;
+
+        case COMPONENT_TYPES.POINTER_COMPONENT:
+            if(!scene.pointers.has(item.aid)){
+                createPointerComponent(scene, item.aid, {})
             }
             break;
     }

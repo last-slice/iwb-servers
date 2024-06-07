@@ -45,16 +45,16 @@ export let testData:any =
       },
       "Pointers":{
         // "bEQXB0":{
-        //   "pointerEvents":[
-        //     {
-        //       "eventType":1,
-        //       "eventInfo":{
-        //         "button":0,
-        //         "hoverText":"Check Lives",
-        //         "maxDistance":20,
-        //         "showFeedback":true
-        //       }
-        //     },
+          // "pointerEvents":[
+          //   {
+          //     "eventType":1,
+          //     "eventInfo":{
+          //       "button":0,
+          //       "hoverText":"Check Lives",
+          //       "maxDistance":20,
+          //       "showFeedback":true
+          //     }
+          //   },
         //     {
         //       "eventType":1,
         //       "eventInfo":{
@@ -64,7 +64,7 @@ export let testData:any =
         //         "showFeedback":true
         //       }
         //     }
-        //   ]
+          // ]
         // }
       },
       "Transform":{
@@ -170,9 +170,9 @@ export let testData:any =
               "input":0,
               "conditions":[],
               "actions":[
-                // {
-                //   "id":"3xi2k5"
-                // },
+                {
+                  "id":"3xi2k3"
+                },
                 // {
                 //   "id":"31i219"
                 // },
@@ -217,14 +217,14 @@ export let testData:any =
         }
       },
       "Actions":{
-        // "bEQXB0":{
-        //   "actions":[
-        //     {
-        //       "id":"3xi2k3",
-        //       "name":"Test Action 1",
-        //       "type":"show_text",
-        //       "text":"Hello"
-        //     },
+        "bEQXB0":{
+          "actions":[
+            {
+              "id":"3xi2k3",
+              "name":"Test Action 1",
+              "type":"show_text",
+              "text":"Hello"
+            },
         //     {
         //       "id":"3xi2k4",
         //       "name":"Activate State",
@@ -252,8 +252,8 @@ export let testData:any =
         //       iMask:0,
         //       vMask:0
         //     },
-        //   ]
-        // },
+          ]
+        },
         // "bEQXB1":{
         //   actions:[
         //     {

@@ -41,8 +41,6 @@ export function createTriggerComponent(scene:Scene, aid:string, data:any){
         })
         component.triggers.push(schema)
     })
-
-
     scene.triggers.set(aid, component)
 }
 
