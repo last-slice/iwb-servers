@@ -47,6 +47,19 @@ export function createTriggerComponent(scene:Scene, aid:string, data?:any){
     scene.triggers.set(aid, component)
 }
 
+export function removeActionFromTriggers(scene:Scene, actionId:string){
+    scene.triggers.forEach((trigger:TriggerComponent)=>{
+        trigger.triggers.forEach((trigger:TriggerComponentSchema)=>{
+            if(trigger.actions && trigger.actions.length > 0){
+                let toDelete = trigger.actions.findIndex($=> $ === actionId)
+                if(toDelete >= 0){
+                    trigger.actions.splice(toDelete, 1)
+                }
+            }
+        })
+    })
+}
+
 export function editTriggerComponent(data:any, scene:Scene){
     let triggers = scene.triggers.get(data.aid)
     if(triggers){
@@ -103,7 +116,7 @@ export function editTriggerComponent(data:any, scene:Scene){
                     let toDelete = t.actions.findIndex($=> $ === triggerData.actionId)
                     if(toDelete >= 0){
                         t.actions.splice(toDelete, 1)
-                        trigger.tick++
+                        t.tick++
                     }
                 }
                 break;

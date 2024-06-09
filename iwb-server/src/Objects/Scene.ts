@@ -258,22 +258,22 @@ export class Scene extends Schema {
                             
                             data.actions.forEach((data:any)=>{
                                 let schema = new ActionComponentSchema()
-                                schema.id = data.id
-                                schema.name = data.name
-                                schema.type = data.type
-                                schema.showText = data.text
-                                schema.value = data.value
-                                schema.counter = data.counter
-                                schema.state = data.state
-                                schema.visible = data.visible
-                                schema.vMask = data.vMask
-                                schema.iMask = data.iMask
-                                schema.url = data.url
-                                schema.moveCam = data.moveCam
-                                schema.movePos = data.movePos
-                                schema.emote = data.emote
-                                schema.moveRel = data.moveRel
-                                schema.anchor = data.anchor
+                                // schema.id = data.id
+                                // schema.name = data.name
+                                // schema.type = data.type
+                                // schema.showText = data.text
+                                // schema.value = data.value
+                                // schema.counter = data.counter
+                                // schema.state = data.state
+                                // schema.visible = data.visible
+                                // schema.vMask = data.vMask
+                                // schema.iMask = data.iMask
+                                // schema.url = data.url
+                                // schema.moveCam = data.moveCam
+                                // schema.movePos = data.movePos
+                                // schema.emote = data.emote
+                                // schema.moveRel = data.moveRel
+                                // schema.anchor = data.anchor
                                 action.actions.push(schema)
                             })     
 

@@ -26,6 +26,7 @@ import { createCounterComponent } from "../../Objects/Counter";
 import { createActionComponent, editActionComponent } from "../../Objects/Actions";
 import { createTriggerComponent, editTriggerComponent } from "../../Objects/Trigger";
 import { createPointerComponent, editPointerComponent } from "../../Objects/Pointers";
+import { createStateComponent, editStateComponent } from "../../Objects/State";
 
 export function iwbItemHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, (client:Client, info:any)=>{
@@ -106,6 +107,10 @@ export function iwbItemHandler(room:IWBRoom){
 
                     case COMPONENT_TYPES.POINTER_COMPONENT:
                         editPointerComponent(info, scene)
+                        break;
+
+                    case COMPONENT_TYPES.STATE_COMPONENT:
+                        editStateComponent(info, scene)
                         break;
                 }
             }
@@ -314,6 +319,12 @@ function addNewComponent(scene:Scene, item:any){
                 createTriggerComponent(scene, item.aid)
             }
             break;
+
+        case COMPONENT_TYPES.STATE_COMPONENT:
+            if(!scene.states.has(item.aid)){
+                createStateComponent(scene, item.aid)
+            }
+            break;
     }
 }
 
@@ -334,7 +345,7 @@ function addItemComponents(scene:Scene, item:any, catalogItemInfo:any){
                         loop:false
                     })
                 })
-                createAnimationComponent(scene, item.aid, {states:states})
+                // createAnimationComponent(scene, item.aid, {states:states})
             }
             createGLTFComponent(scene, {aid:item.aid, src:catalogItemInfo.id, visibleCollision:1, invisibleCollision:2})
             break;
