@@ -1,3 +1,5 @@
+import { COMPONENT_TYPES } from "../utils/types";
+
 export let testCatalog:any = [
   {
       "id": "8ea38701-2790-48a5-a32e-37c241e20787",
@@ -90680,5 +90682,30 @@ export let testCatalog:any = [
           "z": 1
       },
       "sty": "Smart Items"
-  }
+  },
+  {
+    "id": "b9768002-c662-4b80-97a0-fb0d0b714fab",
+    "m": "",
+    "n": "Empty Entity",
+    "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
+    "d": "Add a blank entity to your scene",
+    "cat": "Gallery/Venue",
+    "on": "IWB Builder",
+    "o": "IWB Team",
+    "isdl": true,
+    "ty": "SM",
+    "pc": 0,
+    "si": 0,
+    "tag": [],
+    "v": 20,
+    "bb": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+    },
+    "sty": "Smart Items",
+    components:[
+        {type:COMPONENT_TYPES.MESH_RENDER_COMPONENT, data:{shape:1}}
+    ]
+}
 ]

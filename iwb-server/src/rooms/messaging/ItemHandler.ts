@@ -286,7 +286,7 @@ function checkSceneLimits(scene:Scene, item:any){
     }
 }
 
-function createNewItem(scene:Scene, item:any, catalogItemInfo:any){
+export function createNewItem(scene:Scene, item:any, catalogItemInfo:any){
     createIWBComponent(scene, {scene:item, item:catalogItemInfo})
     createNameComponent(scene, {scene:item, item:catalogItemInfo})
     createVisibilityComponent(scene, item)
@@ -328,7 +328,7 @@ function addNewComponent(scene:Scene, item:any){
     }
 }
 
-function addItemComponents(scene:Scene, item:any, catalogItemInfo:any){
+export function addItemComponents(scene:Scene, item:any, catalogItemInfo:any){
     // if(item.type === "SM"){}
     // else{
 
@@ -351,7 +351,7 @@ function addItemComponents(scene:Scene, item:any, catalogItemInfo:any){
             break;
 
             case 'Text':
-             createTextComponent(scene, item.aid, catalogItemInfo)
+             createTextComponent(scene, item.aid, catalogItemInfo, true)
             break;
 
             case 'Video':
@@ -372,13 +372,20 @@ function addItemComponents(scene:Scene, item:any, catalogItemInfo:any){
             break;
 
         case 'Audio':
+            createMeshRendererComponent(scene, {aid:item.aid, shape:1})
+            createMeshColliderComponent(scene, {aid:item.aid, shape:1, layer:3})
+            createTextComponent(scene, item.aid, catalogItemInfo, false)
             createSoundComponent(scene, item.aid, {url:catalogItemInfo.m})
             createActionComponent(scene, item.aid, {actions:[{name:"Play Sound", type:"play_sound"}, {name:"Stop Sound", type:"stop_sound"}]})
             break;
     }
 
     catalogItemInfo.components && catalogItemInfo.components.forEach((component:any)=>{
-        switch(component){
+        switch(component.type){
+            case COMPONENT_TYPES.MESH_RENDER_COMPONENT:
+                component.data.aid = item.aid
+                createMeshRendererComponent(scene, component.data)
+                break;
             case COMPONENT_TYPES.CLICK_AREA_COMPONENT:
                 scene.clickAreas.set(item.aid, item.aid)
                 createTriggerComponent(scene, item.aid, {
@@ -644,7 +651,11 @@ function deleteSceneItem(room:IWBRoom, player:Player, info:any, edit?:boolean){
 
                     if(edit){}
                     else{
-                        player.removeSelectedAsset()
+                        if(info.childDelete){}
+                        else{
+                            player.removeSelectedAsset()
+                        }
+                        
                         pushPlayfabEvent(
                             SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM, 
                             player, 
@@ -687,5 +698,15 @@ function removeAllAssetComponents(scene:Scene, aid:string){
     let parentIndex = scene.parenting.findIndex($ => $.aid === aid)
     if(parentIndex >= 0){
         scene.parenting.splice(parentIndex,1)
+    }
+
+    for(const parent of scene.parenting){
+        if(parent.children.includes(aid)){
+            let childIndex = parent.children.findIndex(($:any)=> $ === aid)
+            if(childIndex >= 0){
+                parent.children.splice(childIndex, 1)
+                return
+            }
+        }
     }
 }

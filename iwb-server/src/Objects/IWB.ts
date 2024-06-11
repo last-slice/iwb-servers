@@ -23,7 +23,6 @@ export class IWBComponent extends Schema{
 }
 
 export function createIWBComponent(scene:Scene, data:any){
-    console.log('creating iwb item info component')
     let component = new IWBComponent()
     component.aid = data.scene.aid
     component.id = data.scene.id

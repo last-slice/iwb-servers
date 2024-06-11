@@ -62,7 +62,6 @@ export function iwbSceneHandler(room:IWBRoom){
 
     room.onMessage(SERVER_MESSAGE_TYPES.SELECT_PARCEL, async(client, info)=>{
         // console.log(SERVER_MESSAGE_TYPES.SELECT_PARCEL + " message", info)
-
         let player:Player = room.state.players.get(client.userData.userId)
         if(player && (player.mode === SCENE_MODES.CREATE_SCENE_MODE || info.current)){
 
@@ -80,11 +79,9 @@ export function iwbSceneHandler(room:IWBRoom){
                 if(!isOccupied(room, info.parcel)){
                     if(info.current){}
                     if(hasTemporaryParcel(room, info.parcel)){
-                     //    console.log('player has temporary parcel', info.parcel)
                         removeTemporaryParcel(room, info.parcel)
                         }else{
                         if(!hasTemporaryParcel(room, info.parcel)){
-                           //  console.log('scene doesnt have temp parcel')
                             addTempParcel(room, info.parcel) 
                         }
                     }
@@ -94,7 +91,7 @@ export function iwbSceneHandler(room:IWBRoom){
     })   
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_SAVE_NEW, async(client, info)=>{
-        // console.log(SERVER_MESSAGE_TYPES.SCENE_SAVE_NEW + " message", info)
+        console.log(SERVER_MESSAGE_TYPES.SCENE_SAVE_NEW + " message", info)
 
         let player:Player = room.state.players.get(client.userData.userId)
 
@@ -117,9 +114,10 @@ export function iwbSceneHandler(room:IWBRoom){
 
                 player.updatePlayMode(SCENE_MODES.BUILD_MODE)
                 client.send(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED, {mode:player.mode})
+                room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ADDED_NEW, {name:player.name, sceneName:scene.n})
 
                 pushPlayfabEvent(
-                    SERVER_MESSAGE_TYPES.SCENE_SAVE_NEW, 
+                    SERVER_MESSAGE_TYPES.SCENE_ADDED_NEW, 
                     player, 
                     [{scene: scene.n, world:world.ens}]
                 )
@@ -128,6 +126,58 @@ export function iwbSceneHandler(room:IWBRoom){
           //   console.log('player is not in create scene mode')
         }
     })
+
+    room.onMessage(SERVER_MESSAGE_TYPES.WORLD_ADD_BP, async(client, info)=>{
+        // console.log(SERVER_MESSAGE_TYPES.WORLD_ADD_BP + " message", info)
+
+        let player:Player = room.state.players.get(client.userData.userId)
+        if(player){
+            let world = iwbManager.worlds.find(($=> $.ens === room.state.world))
+            if(world && world.owner === player.address){
+                world.bps.push(info.user)
+
+                client.send(SERVER_MESSAGE_TYPES.WORLD_ADD_BP, info)
+                let otherPlayer = room.state.players.get(info.user)
+                if(otherPlayer){
+                    otherPlayer.sendPlayerMessage(SERVER_MESSAGE_TYPES.WORLD_ADD_BP, info)
+                }
+
+                iwbManager.worldsModified = true
+
+                pushPlayfabEvent(
+                    SERVER_MESSAGE_TYPES.WORLD_ADD_BP, 
+                    player, 
+                    [{world:room.state.world, permissions: info.user, owner:client.userData.userId}]
+                )
+            }
+        }
+    })
+
+    room.onMessage(SERVER_MESSAGE_TYPES.WORLD_DELETE_BP, async(client, info)=>{
+         let player:Player = room.state.players.get(client.userData.userId)
+         if(player){
+            let world = iwbManager.worlds.find(($=> $.ens === room.state.world))
+            if(world && world.bps.includes(info.user)){
+                let userIndex = world.bps.findIndex(($:any)=> $ === info.user)
+                if(userIndex >= 0){
+                    world.bps.splice(userIndex, 1)
+                    client.send(SERVER_MESSAGE_TYPES.WORLD_DELETE_BP, info)
+                    let otherPlayer = room.state.players.get(info.user)
+                    if(otherPlayer){
+                        otherPlayer.sendPlayerMessage(SERVER_MESSAGE_TYPES.WORLD_DELETE_BP, info)
+                    }
+
+                    iwbManager.worldsModified = true
+
+                    pushPlayfabEvent(
+                       SERVER_MESSAGE_TYPES.WORLD_DELETE_BP, 
+                       player, 
+                       [{world:room.state.world, permissions: info.newBuilder, owner:client.userData.userId}]
+                   )
+                }
+            }
+         }
+     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADD_BP, async(client, info)=>{
         // console.log(SERVER_MESSAGE_TYPES.SCENE_ADD_BP + " message", info)
@@ -138,6 +188,8 @@ export function iwbSceneHandler(room:IWBRoom){
             if(scene){
                 if(!scene.bps.includes(info.user)){
                     scene.bps.push(info.user)
+                    info.sceneName = scene.n
+                    
                     client.send(SERVER_MESSAGE_TYPES.SCENE_ADD_BP, info)
                     let otherPlayer = room.state.players.get(info.user)
                     if(otherPlayer){
@@ -444,6 +496,7 @@ export function checkAssetsForEditByPlayer(room:IWBRoom, user:string){
 }
 
 export function createScene(player:Player, room:IWBRoom, info:any, parcels:string[]){
+    console.log('creating scene')
     let sceneData:any = {
       w: room.state.world,
       id: "" + generateId(5),
@@ -466,11 +519,18 @@ export function createScene(player:Player, room:IWBRoom, info:any, parcels:strin
       pcls:parcels,
       sp:["0,0,0"],
       cp:["0,0,0"],
-      priv:info.private
+      priv:info.private,
     }
 
     // console.log('creating new scene with data', sceneData)
     sceneData.room = room
+    sceneData.components = {
+        Parenting:[
+            {"entity":"0", "aid":"0", "children":[]},
+            {"entity":"1", "aid":"1", "children":[]},
+            {"entity":"2", "aid":"2", "children":[]},
+        ]
+    }
     let scene = new Scene(sceneData)
     return scene
   }

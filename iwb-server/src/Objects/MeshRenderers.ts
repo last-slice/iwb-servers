@@ -3,9 +3,11 @@ import { Scene } from "./Scene";
 
 export class MeshRendererComponent extends Schema{
     @type("number") shape:number //0 - plane, 1 - box
+    @type("boolean") onPlay:boolean = false
 }
 
 export function createMeshRendererComponent(scene:Scene, data:any){
+    console.log('creating mesh renderer', data)
     let component = new MeshRendererComponent()
     component.shape = data.shape
     scene.meshRenders.set(data.aid, component)

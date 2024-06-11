@@ -81,6 +81,8 @@ export enum SERVER_MESSAGE_TYPES {
     UPDATED_TUTORIAL_CID = 'updated_tutorial_cid', 
     WORLD_TRAVEL = 'world_travel',
     PLAYTIME = 'playtime',
+    WORLD_ADD_BP = 'world_add_build_permissions',
+    WORLD_DELETE_BP = 'world_delete_build_permissions',
 
     CUSTOM = "custom",
 

@@ -9,7 +9,7 @@ import { iwbRewardHandler } from "./messaging/RewardHandler";
 import { addPlayerToWorld, iwbPlayerHandler, removePlayer, savePlayerCache } from "./messaging/PlayerHandler";
 import { itemManager, iwbManager } from "../app.config";
 import { playerLogin, pushPlayfabEvent, updatePlayerDisplayName, updatePlayerInternalData } from "../utils/Playfab";
-import { checkAssetsForEditByPlayer } from "./messaging/SceneHandler";
+import { checkAssetsForEditByPlayer, iwbSceneHandler } from "./messaging/SceneHandler";
 import { iwbItemHandler } from "./messaging/ItemHandler";
 
 export class IWBRoom extends Room<IWBRoomState> {
@@ -28,6 +28,7 @@ export class IWBRoom extends Room<IWBRoomState> {
         // iwbSceneActionHandler(this)
         // iwbRewardHandler(this)
         iwbPlayerHandler(this)
+        iwbSceneHandler(this)
 
         initServerScenes(this)
         initServerAssets(this)

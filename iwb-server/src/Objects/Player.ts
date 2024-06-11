@@ -97,9 +97,10 @@ export class Player extends Schema {
     activeScene: Scene | null
     activeSceneId:string = ""
     canBuild:boolean = false
+    homeWorld:boolean = false
+    worldPermissions:boolean = false
     objects:any[]
     selectedEntity:any
-    homeWorld:boolean = false
     cameraParent:any
     uploads:any[] = []
     landsAvailable:any[] = []
