@@ -1,21 +1,28 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
 import { generateRandomId } from "../utils/functions";
+import { COMPONENT_TYPES } from "../utils/types";
 
 export class TriggerConditionComponent extends Schema{
-    @type("string") id:string
+    @type("string") aid:string
     @type("string") type:string
     @type("string") value:string
-    @type("string") counter:string
+    @type("number") counter:number
 }
 
 export class TriggerComponentSchema extends Schema{
     @type("string") id:string
     @type("string") type:string
     @type("number") input:number
+    @type("number") pointer:number
     @type("number") tick:number = 0
     @type([TriggerConditionComponent]) conditions:ArraySchema<TriggerConditionComponent>
     @type(["string"]) actions:ArraySchema<string>
+
+    @type(["string"]) caid:ArraySchema<string>
+    @type(["string"]) ctype:ArraySchema<string>
+    @type(["string"]) cvalue:ArraySchema<string>
+    @type(["number"]) ccounter:ArraySchema<number>
 }
 
 export class TriggerComponent extends Schema{
@@ -23,6 +30,7 @@ export class TriggerComponent extends Schema{
 }
 
 export function createTriggerComponent(scene:Scene, aid:string, data?:any){
+    console.log('creating new trigger component', data)
     let component:any = new TriggerComponent()
     component.triggers = new ArraySchema<TriggerComponentSchema>()
 
@@ -30,12 +38,23 @@ export function createTriggerComponent(scene:Scene, aid:string, data?:any){
         data.triggers.forEach((data:any)=>{
             let schema = new TriggerComponentSchema()
             schema.type = data.type
-            schema.input = data.input
-            schema.conditions = new ArraySchema<TriggerConditionComponent>()
+            schema.input = data.input ? data.input : undefined
+            schema.pointer = data.input ? data.pointer : undefined
+
+            schema.caid = new ArraySchema<string>()
+            schema.ctype = new ArraySchema<string>()
+            schema.cvalue = new ArraySchema<string>()
+            schema.ccounter = new ArraySchema<number>()
+
+            // schema.conditions = new ArraySchema<TriggerConditionComponent>()
             schema.actions = new ArraySchema<string>()
     
             data.conditions.forEach((condition:any)=>{
-                schema.conditions.push(new TriggerConditionComponent(condition))
+                // schema.conditions.push(new TriggerConditionComponent(condition))
+                schema.caid.push(condition.aid)
+                schema.ctype.push(condition.ctype)
+                schema.cvalue.push(condition.cvalue)
+                schema.ccounter.push(condition.ccounter)
             })
     
             data.actions.forEach((action:any)=>{
@@ -44,11 +63,11 @@ export function createTriggerComponent(scene:Scene, aid:string, data?:any){
             component.triggers.push(schema)
         })
     }
-    scene.triggers.set(aid, component)
+    scene[COMPONENT_TYPES.TRIGGER_COMPONENT].set(aid, component)
 }
 
 export function removeActionFromTriggers(scene:Scene, actionId:string){
-    scene.triggers.forEach((trigger:TriggerComponent)=>{
+    scene[COMPONENT_TYPES.TRIGGER_COMPONENT].forEach((trigger:TriggerComponent)=>{
         trigger.triggers.forEach((trigger:TriggerComponentSchema)=>{
             if(trigger.actions && trigger.actions.length > 0){
                 let toDelete = trigger.actions.findIndex($=> $ === actionId)
@@ -61,15 +80,22 @@ export function removeActionFromTriggers(scene:Scene, actionId:string){
 }
 
 export function editTriggerComponent(data:any, scene:Scene){
-    let triggers = scene.triggers.get(data.aid)
+    let triggers = scene[COMPONENT_TYPES.TRIGGER_COMPONENT].get(data.aid)
     if(triggers){
         let triggerData = data.data
         switch(data.action){
             case 'add':
                 let schema = new TriggerComponentSchema()
                 schema.type = triggerData.type
-                schema.input = 0
-                schema.conditions = new ArraySchema<TriggerConditionComponent>()
+                schema.input = 0    
+                schema.pointer = 1
+
+                schema.caid = new ArraySchema<string>()
+                schema.ctype = new ArraySchema<string>()
+                schema.cvalue = new ArraySchema<string>()
+                schema.ccounter = new ArraySchema<number>()
+
+                // schema.conditions = new ArraySchema<TriggerConditionComponent>()
                 schema.actions = new ArraySchema<string>()
         
                 schema['id'] = generateRandomId(6)
@@ -79,9 +105,8 @@ export function editTriggerComponent(data:any, scene:Scene){
             case 'edit':
                 let editTrigger:any = triggers.triggers.find(trigger => trigger.id === triggerData.id)
                 if(editTrigger){
-                    editTrigger.tick++
-                    for(let key in triggerData.data){
-                        let update = triggerData.data[key]
+                    for(let key in triggerData){
+                        let update = triggerData[key]
                         if(key !== "tick"){
                             if(key === "condtions"){
 
@@ -92,6 +117,7 @@ export function editTriggerComponent(data:any, scene:Scene){
                             }
                         }
                     }
+                    editTrigger.tick++
                 }
                 break;
 
@@ -103,21 +129,52 @@ export function editTriggerComponent(data:any, scene:Scene){
                 break;
             
             case 'addaction':
-                let trigger = triggers.triggers.find(trigger => trigger.id === triggerData.id)
+                console.log('trying to add an action')
+                let trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
                 if(trigger){
-                    trigger.actions.push(triggerData.actions[triggerData.actions.length-1])
+                    trigger.actions.push(triggerData.id)
                     trigger.tick++
                 }
                 break;
 
             case 'deleteaction':
-                let t = triggers.triggers.find(trigger => trigger.id === triggerData.id)
+                let t = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
                 if(t){
                     let toDelete = t.actions.findIndex($=> $ === triggerData.actionId)
                     if(toDelete >= 0){
                         t.actions.splice(toDelete, 1)
                         t.tick++
                     }
+                }
+                break;
+
+            case 'addcondition':
+                let conditionTrigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
+                if(conditionTrigger){
+                    conditionTrigger.caid.push(triggerData.aid)
+                    conditionTrigger.ctype.push(triggerData.condition.condition)
+                    switch(triggerData.condition.type){
+                        case COMPONENT_TYPES.COUNTER_COMPONENT:
+                            conditionTrigger.ccounter.push(triggerData.counter)
+                            conditionTrigger.cvalue.push("")
+                            break;
+
+                        case COMPONENT_TYPES.STATE_COMPONENT:
+                            conditionTrigger.ccounter.push(0)
+                            conditionTrigger.cvalue.push(triggerData.value)
+                            break;
+                    }
+                    conditionTrigger.tick++
+                }
+                break;
+
+            case 'deletecondition':
+                let deleteCondition = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
+                if(deleteCondition){
+                    deleteCondition.caid.splice(triggerData.index, 1)
+                    deleteCondition.ctype.splice(triggerData.index, 1)
+                    deleteCondition.cvalue.splice(triggerData.index, 1)
+                    deleteCondition.ccounter.splice(triggerData.index, 1)
                 }
                 break;
         }

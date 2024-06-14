@@ -2,6 +2,7 @@ import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
 import { itemManager } from "../app.config";
 import { IWBRoom } from "../rooms/IWBRoom";
+import { COMPONENT_TYPES } from "../utils/types";
 
 export class IWBComponent extends Schema{
     @type("string") id:string
@@ -15,6 +16,7 @@ export class IWBComponent extends Schema{
     style:string
     ugc:boolean
     pending:boolean
+    components:any
     @type("boolean") locked:boolean
     @type("boolean") buildVis:boolean
     @type("boolean") editing:boolean
@@ -22,7 +24,7 @@ export class IWBComponent extends Schema{
     @type("boolean") priv:boolean
 }
 
-export function createIWBComponent(scene:Scene, data:any){
+export function createIWBComponent(room:IWBRoom, scene:Scene, data:any){
     let component = new IWBComponent()
     component.aid = data.scene.aid
     component.id = data.scene.id
@@ -35,31 +37,22 @@ export function createIWBComponent(scene:Scene, data:any){
     component.locked = false
     component.editing = false
     component.priv = false
-    scene.itemInfo.set(data.scene.aid, component)
+
+    checkAssetPolyAndSize(room, scene, {ugc:data.item.ugc, id:data.item.id})
+    scene[COMPONENT_TYPES.IWB_COMPONENT].set(data.scene.aid, component)
 }
 
-export function setIWBComponent(room:IWBRoom, scene:Scene, key:string, components:any){
-    for (const aid in components[key]) {
-        let component = new IWBComponent(components[key][aid])
-        // component.id = 
-        scene.itemInfo.set(aid, component)
+export function setIWBComponent(room:IWBRoom, scene:Scene, iwbComponent:any){
+    for (const aid in iwbComponent) {
+        let component = new IWBComponent(iwbComponent[aid])
 
-        let catalogItem = component.ugc ? room.state.realmAssets.get(component.id) : itemManager.items.get(component.id)
-        if(catalogItem){
-            console.log('catalog item is', catalogItem)
-            let size = catalogItem.si
-            scene.itemInfo.forEach((item:IWBComponent, aid:string)=>{
-                if(item.id === catalogItem.id){
-                    size = 0
-                }
-            })
-            scene.si += size
-       }
+        checkAssetPolyAndSize(room, scene, component)
+       scene[COMPONENT_TYPES.IWB_COMPONENT].set(aid, component)
     }
 }
 
 export function editIWBComponent(info:any, scene:Scene){
-    let itemInfo:any = scene.itemInfo.get(info.aid)
+    let itemInfo:any = scene[COMPONENT_TYPES.IWB_COMPONENT].get(info.aid)
     if(itemInfo){
         for(let key in info){
             if(itemInfo.hasOwnProperty(key)){
@@ -67,4 +60,21 @@ export function editIWBComponent(info:any, scene:Scene){
             }
         }
     }
+}
+
+function checkAssetPolyAndSize(room:IWBRoom, scene:Scene, component:any){
+    let catalogItem = component.ugc ? room.state.realmAssets.get(component.id) : itemManager.items.get(component.id)
+    console.log('catalog item is', catalogItem)
+    if(catalogItem){
+        let size = catalogItem.si
+        scene.pc += catalogItem.pc
+
+        scene[COMPONENT_TYPES.IWB_COMPONENT].forEach((item:IWBComponent, aid:string)=>{
+            if(item.id === catalogItem.id){
+                console.log('we found same item in scene')
+                size = 0
+            }
+        })
+        scene.si += size
+   }
 }

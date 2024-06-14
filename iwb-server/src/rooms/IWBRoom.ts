@@ -79,7 +79,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     onDispose() {
         console.log("room", this.roomId, "disposing...");
         iwbManager.removeRoom(this)
-        // saveRealmScenes(this)
+        saveRealmScenes(this)
         // destroyCustomObjects(this)
     }
 

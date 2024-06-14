@@ -1,5 +1,6 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
+import { COMPONENT_TYPES } from "../utils/types";
 
 export class StateComponent extends Schema{
     @type(["string"]) values:ArraySchema<string> = new ArraySchema<string>()
@@ -10,16 +11,16 @@ export class StateComponent extends Schema{
 
 export function createStateComponent(scene:Scene, aid:string){
     let component = new StateComponent()
-    scene.states.set(aid, component)
+    scene[COMPONENT_TYPES.STATE_COMPONENT].set(aid, component)
 }
 
 export function editStateComponent(data:any, scene:Scene){
-    let states = scene.states.get(data.aid)
+    let states = scene[COMPONENT_TYPES.STATE_COMPONENT].get(data.aid)
     if(!states){
-        scene.states.set(data.aid, new StateComponent())
+        scene[COMPONENT_TYPES.STATE_COMPONENT].set(data.aid, new StateComponent())
     }
 
-    states = scene.states.get(data.aid)
+    states = scene[COMPONENT_TYPES.STATE_COMPONENT].get(data.aid)
 
     switch(data.action){
         case 'add':

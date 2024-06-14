@@ -34,7 +34,7 @@ export let testCatalog:any = [
       "o": "IWB Team",
       "isdl": true,
       "ty": "Text",
-      "pc": 4,
+      "pc": 0,
       "si": 0,
       "tag": [],
       "v": 2,
@@ -56,7 +56,7 @@ export let testCatalog:any = [
       "o": "IWB Team",
       "isdl": true,
       "ty": "NFT",
-      "pc": 4,
+      "pc": 0,
       "si": 0,
       "tag": [],
       "v": 2,
@@ -78,7 +78,7 @@ export let testCatalog:any = [
       "o": "IWB Team",
       "isdl": true,
       "ty": "Image",
-      "pc": 4,
+      "pc": 0,
       "si": 0,
       "tag": [],
       "v": 2,
@@ -100,7 +100,7 @@ export let testCatalog:any = [
       "o": "IWB Team",
       "isdl": true,
       "ty": "Video",
-      "pc": 4,
+      "pc": 0,
       "si": 0,
       "tag": [],
       "v": 2,
@@ -122,7 +122,7 @@ export let testCatalog:any = [
       "o": "IWB Team",
       "isdl": true,
       "ty": "Audio Stream",
-      "pc": 4,
+      "pc": 0,
       "si": 0,
       "tag": [
           "Audio"
@@ -72805,9 +72805,47 @@ export let testCatalog:any = [
           "z": 1
       },
       "sty": "Smart Items",
-      "components": [
-          "Click Area"
-      ]
+      "components":{
+        "Material":{
+          "type":0,
+          "onPlay":false,
+          "albedoColor":{r:.212, g:.87, b:.753, a:.5}
+        },
+        "Text":{
+            "text":"Click Area",
+            "onPlay":false
+        },
+        "Mesh_Collider":{
+          "shape":1,
+          "layer":1,
+          "onPlay":true
+          },
+          "Mesh_Renderer":{
+            "shape":1,
+            "layer":2
+        },
+        "Pointers":{
+          "events":[
+            {
+              "eventType":1,
+                "button":0,
+                "hoverText":"Click Here",
+                "maxDistance":5,
+                "showFeedback":true
+            }
+            ]
+        },
+         "Triggers":{
+          "triggers":[
+            {
+              "type":"on_input_action",
+              "input":0,
+              "conditions":[],
+              "actions":[]
+            }
+            ]
+        },
+       }
   },
   {
       "n": "Abstract Christmas Tree",

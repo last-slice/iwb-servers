@@ -1,7 +1,7 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Client } from "colyseus";
 import { Scene } from "./Scene";
-import { EDIT_MODIFIERS } from "../utils/types";
+import { COMPONENT_TYPES, EDIT_MODIFIERS } from "../utils/types";
 
 export class Vector3 extends Schema {
   @type("number") x: number
@@ -33,7 +33,7 @@ export class TransformComponent extends Schema{
 }
 
 export function editTransform(client:Client, data:any, scene:Scene){
-    let transform = scene.transforms.get(data.aid)
+    let transform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(data.aid)
     if(transform){
       switch(data.modifier){
         case EDIT_MODIFIERS.POSITION:
@@ -128,5 +128,5 @@ export function createTransformComponent(scene:Scene, data:any){
   component.p = new Vector3(data.position)
   component.r = new Quaternion(data.rotation)
   component.s = new Vector3(data.scale)
-  scene.transforms.set(data.aid, component)
+  scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].set(data.aid, component)
 }

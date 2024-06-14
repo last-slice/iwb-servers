@@ -1,6 +1,6 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
-import { Color4 } from "../utils/types";
+import { COMPONENT_TYPES, Color4 } from "../utils/types";
 import { Client } from "colyseus";
 
 export class NftShapeComponent extends Schema{
@@ -14,11 +14,11 @@ export function createNftShapeComponent(scene:Scene, aid:string, data:any){
     component.urn = data.urn
     component.style = data.style
     data.color ? component.color = new Color4(data.color) : null
-    scene.nftShapes.set(aid, component)
+    scene[COMPONENT_TYPES.NFT_COMPONENT].set(aid, component)
 }
 
 export function editNftShape(info:any, scene:Scene){
-    let itemInfo:any = scene.nftShapes.get(info.aid)
+    let itemInfo:any = scene[COMPONENT_TYPES.NFT_COMPONENT].get(info.aid)
     if(itemInfo){
         console.log('editing nft shape')
         for(let key in info){

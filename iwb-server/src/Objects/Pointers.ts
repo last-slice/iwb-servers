@@ -1,6 +1,7 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
 import { generateRandomId } from "../utils/functions";
+import { COMPONENT_TYPES } from "../utils/types";
 
 export class PointerComponentEvent extends Schema{
     @type("string") id:string
@@ -18,21 +19,37 @@ export class PointerComponent extends Schema{
 }
 
 export function createPointerComponent(scene:Scene, aid:string, data?:any){
-    let component:any = new PointerComponent()
-    component.events = new ArraySchema<PointerComponentEvent>()
+    let pointerEvents = new PointerComponent()
+    pointerEvents.events = new ArraySchema<PointerComponentEvent>()
     if(data){
-        for(let key in data.pointers){
-            let pointer = data.pointers[key]
-            if(pointer.hasOwnProperty(key)){
-                component[key] = pointer[key]
-            }
-        }
+        data.events.forEach((event:any)=>{
+            let pointerEvent = new PointerComponentEvent()
+            pointerEvent.eventType = event.eventType
+            pointerEvent.hoverText = event.hoverText
+            pointerEvent.maxDistance = event.maxDistance
+            pointerEvent.showFeedback = event.showFeedback
+            pointerEvent.button = event.button
+            pointerEvents.events.push(pointerEvent)
+        })
     }
-    scene.pointers.set(aid, component)
+    scene[COMPONENT_TYPES.POINTER_COMPONENT].set(aid, pointerEvents)
+
+    // let component:any = new PointerComponent()
+    // component.events = new ArraySchema<PointerComponentEvent>()
+    // if(data){
+    //     let pointerComponentEvent = new PointerComponentEvent(data)
+    //     for(let key in data.pointers){
+    //         let pointer = data.pointers[key]
+    //         if(pointer.hasOwnProperty(key)){
+    //             component[key] = pointer[key]
+    //         }
+    //     }
+    // }
+    // scene[COMPONENT_TYPES.POINTER_COMPONENT].set(aid, component)
 }
 
 export function editPointerComponent(data:any, scene:Scene){
-    let pointerInfo = scene.pointers.get(data.aid)
+    let pointerInfo = scene[COMPONENT_TYPES.POINTER_COMPONENT].get(data.aid)
     if(pointerInfo){
 
         let pointer = data.data

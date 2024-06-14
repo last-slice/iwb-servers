@@ -1,6 +1,6 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
-import { Color4 } from "../utils/types";
+import { COMPONENT_TYPES, Color4 } from "../utils/types";
 
 export class EmissiveComponent extends Schema{
     @type("number") type:number //0 - texture, 1 - video
@@ -15,11 +15,11 @@ export function createEmissiveComponent(scene:Scene, aid:string, data:any){
     component.path = data.path ? data.path : undefined
     data.color ? component.color = new Color4(data.color) : null
     component.intensity = data.intensity ? data.intensity : 0
-    scene.emissives.set(aid, component)
+    scene[COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT].set(aid, component)
 }
 
 export function editEmissiveComponent(info:any, scene:Scene){
-    let itemInfo:any = scene.emissives.get(info.aid)
+    let itemInfo:any = scene[COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT].get(info.aid)
     if(itemInfo){
         for(let key in info){
             if(itemInfo.hasOwnProperty(key)){

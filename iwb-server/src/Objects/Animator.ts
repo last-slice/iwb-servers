@@ -1,5 +1,6 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
+import { COMPONENT_TYPES } from "../utils/types";
 
 
 export class AnimatorComponentSchema extends Schema{
@@ -16,8 +17,8 @@ export class AnimatorComponent extends Schema{
 export function createAnimationComponent(scene:Scene, aid:string, data:any){
     let component = new AnimatorComponent()
     // component.id = data.id
-    data.states.forEach((state:any)=>{
+    data && data.states && data.states.forEach((state:any)=>{
         component.states.push(new AnimatorComponentSchema(state))
     })
-    scene.animators.set(aid, component)
+    scene[COMPONENT_TYPES.ANIMATION_COMPONENT].set(aid, component)
 }

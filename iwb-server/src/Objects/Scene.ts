@@ -6,10 +6,10 @@ import { CounterComponent, CounterBarComponent, createCounterComponent } from ".
 import { GltfComponent, createGLTFComponent } from "./Gltf";
 import { NameComponent } from "./Names";
 import { ParentingComponent } from "./Parenting";
-import { PointerComponent, PointerComponentEvent } from "./Pointers";
+import { PointerComponent, PointerComponentEvent, createPointerComponent } from "./Pointers";
 import { SoundComponent } from "./Sound";
 import { StateComponent } from "./State";
-import { TextShapeComponent } from "./TextShape";
+import { TextShapeComponent, createTextComponent } from "./TextShape";
 import { TransformComponent } from "./Transform";
 import { TriggerComponent, TriggerComponentSchema, TriggerConditionComponent } from "./Trigger";
 import { VisibilityComponent } from "./Visibility";
@@ -65,32 +65,33 @@ export class Scene extends Schema {
     @type("boolean") priv: boolean
     @type("boolean") lim: boolean = true
 
-    @type({map:TransformComponent}) transforms:MapSchema<TransformComponent>
-    @type({map:GltfComponent}) gltfs:MapSchema<GltfComponent>
-    @type({map:MeshRendererComponent}) meshRenders:MapSchema<MeshRendererComponent>
-    @type({map:MeshColliderComponent}) meshColliders:MapSchema<MeshColliderComponent>
-    @type({map:TextureComponent}) textures:MapSchema<TextureComponent>
-    @type({map:EmissiveComponent}) emissives:MapSchema<EmissiveComponent>
-    @type({map:MaterialComponent}) materials:MapSchema<MaterialComponent>
-    @type({map:NameComponent}) names:MapSchema<NameComponent>
-    @type({map:VisibilityComponent}) visibilities:MapSchema<VisibilityComponent>
-    @type({map:ActionComponent}) actions:MapSchema<ActionComponent>
-    @type({map:CounterComponent}) counters:MapSchema<CounterComponent>
+    @type({map:TransformComponent}) [COMPONENT_TYPES.TRANSFORM_COMPONENT]:MapSchema<TransformComponent>
+    @type({map:GltfComponent}) [COMPONENT_TYPES.GLTF_COMPONENT]:MapSchema<GltfComponent>
+    @type({map:MeshRendererComponent}) [COMPONENT_TYPES.MESH_RENDER_COMPONENT]:MapSchema<MeshRendererComponent>
+    @type({map:MeshColliderComponent}) [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:MapSchema<MeshColliderComponent>
+    @type({map:TextureComponent}) [COMPONENT_TYPES.TEXTURE_COMPONENT]:MapSchema<TextureComponent>
+    @type({map:EmissiveComponent}) [COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT]:MapSchema<EmissiveComponent>
+    @type({map:MaterialComponent}) [COMPONENT_TYPES.MATERIAL_COMPONENT]:MapSchema<MaterialComponent>
+    @type({map:NameComponent}) [COMPONENT_TYPES.NAMES_COMPONENT]:MapSchema<NameComponent>
+    @type({map:VisibilityComponent}) [COMPONENT_TYPES.VISBILITY_COMPONENT]:MapSchema<VisibilityComponent>
+    @type({map:ActionComponent}) [COMPONENT_TYPES.ACTION_COMPONENT]:MapSchema<ActionComponent>
+    @type({map:CounterComponent}) [COMPONENT_TYPES.COUNTER_COMPONENT]:MapSchema<CounterComponent>
     @type({map:CounterBarComponent}) counterbars:MapSchema<CounterBarComponent>
-    @type({map:StateComponent}) states:MapSchema<StateComponent>
-    @type({map:TriggerComponent}) triggers:MapSchema<TriggerComponent>
-    @type({map:TextShapeComponent}) textShapes:MapSchema<TextShapeComponent>
-    @type({map:NftShapeComponent}) nftShapes:MapSchema<NftShapeComponent>
-    @type({map:AnimatorComponent}) animators:MapSchema<AnimatorComponent>
-    @type({map:PointerComponent}) pointers:MapSchema<PointerComponent>
-    @type({map:SoundComponent}) sounds:MapSchema<SoundComponent>
-    @type({map:AvatarShapeComponent}) avatarShapes:MapSchema<AvatarShapeComponent>
-    @type({map:VideoComponent}) videos:MapSchema<VideoComponent>
+    @type({map:StateComponent}) [COMPONENT_TYPES.STATE_COMPONENT]:MapSchema<StateComponent>
+    @type({map:TriggerComponent}) [COMPONENT_TYPES.TRIGGER_COMPONENT]:MapSchema<TriggerComponent>
+    @type({map:TextShapeComponent}) [COMPONENT_TYPES.TEXT_COMPONENT]:MapSchema<TextShapeComponent>
+    @type({map:NftShapeComponent}) [COMPONENT_TYPES.NFT_COMPONENT]:MapSchema<NftShapeComponent>
+    @type({map:AnimatorComponent}) [COMPONENT_TYPES.ANIMATION_COMPONENT]:MapSchema<AnimatorComponent>
+    @type({map:PointerComponent}) [COMPONENT_TYPES.POINTER_COMPONENT]:MapSchema<PointerComponent>
+    @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:MapSchema<SoundComponent>
+    @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:MapSchema<SoundComponent>
+    @type({map:AvatarShapeComponent}) [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:MapSchema<AvatarShapeComponent>
+    @type({map:VideoComponent}) [COMPONENT_TYPES.VIDEO_COMPONENT]:MapSchema<VideoComponent>
     @type({map:RewardComponent}) rewards:MapSchema<RewardComponent>
-    @type({map:IWBComponent}) itemInfo:MapSchema<IWBComponent>
-    @type([ParentingComponent]) parenting:ArraySchema<ParentingComponent>
+    @type({map:IWBComponent}) [COMPONENT_TYPES.IWB_COMPONENT]:MapSchema<IWBComponent>
+    @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent>
 
-    @type({map:"string"}) clickAreas:MapSchema<string>
+    // @type({map:"string"}) [COMPONENT_TYPES.CLICK_AREA_COMPONENT]:MapSchema<string>
 
     //pointer evnts component
     //sync components
@@ -108,261 +109,250 @@ export class Scene extends Schema {
             this.sp = data.sp[0].split(",").length === 2 ? [data.sp[0].split(",")[0] + ",0," + data.sp[0].split(",")[1]] : data.sp
             this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"]
 
-            this.setComponents(data.room, data.components)
+            this.setComponents(data)
         }
     }
     
-    setComponents(room:IWBRoom, components:any){
-        this.itemInfo = new MapSchema<IWBComponent>()
-        this.names = new MapSchema<NameComponent>()
-        this.visibilities = new MapSchema<VisibilityComponent>()
-        this.parenting = new ArraySchema<ParentingComponent>()
-        this.transforms = new MapSchema<TransformComponent>()
-        this.pointers = new MapSchema<PointerComponent>()
-        this.textShapes = new MapSchema<TextShapeComponent>()
-        this.counters = new MapSchema<CounterComponent>()
-        this.triggers = new MapSchema<TriggerComponent>()
-        this.actions = new MapSchema<ActionComponent>()
-        this.gltfs = new MapSchema<GltfComponent>()
-        this.meshRenders = new MapSchema<MeshRendererComponent>()
-        this.meshColliders = new MapSchema<MeshColliderComponent>()
-        this.textures = new MapSchema<TextureComponent>()
-        this.emissives = new MapSchema<EmissiveComponent>()
-        this.materials = new MapSchema<MaterialComponent>()
-        this.states = new MapSchema<StateComponent>()
-        this.sounds = new MapSchema<SoundComponent>()
-        this.videos = new MapSchema<VideoComponent>()
-        this.animators = new MapSchema<AnimatorComponent>()
-        this.nftShapes = new MapSchema<NftShapeComponent>()
-        this.avatarShapes = new MapSchema<AvatarShapeComponent>()
-        this.clickAreas = new MapSchema<string>()
+    setComponents(data:any){
+        this[COMPONENT_TYPES.IWB_COMPONENT] = new MapSchema<IWBComponent>()
+        this[COMPONENT_TYPES.NAMES_COMPONENT] = new MapSchema<NameComponent>()
+        this[COMPONENT_TYPES.VISBILITY_COMPONENT] = new MapSchema<VisibilityComponent>()
+        this[COMPONENT_TYPES.PARENTING_COMPONENT] = new ArraySchema<ParentingComponent>()
+        this[COMPONENT_TYPES.TRANSFORM_COMPONENT] = new MapSchema<TransformComponent>()
+        this[COMPONENT_TYPES.POINTER_COMPONENT] = new MapSchema<PointerComponent>()
+        this[COMPONENT_TYPES.TEXT_COMPONENT] = new MapSchema<TextShapeComponent>()
+        this[COMPONENT_TYPES.COUNTER_COMPONENT] = new MapSchema<CounterComponent>()
+        this[COMPONENT_TYPES.TRIGGER_COMPONENT] = new MapSchema<TriggerComponent>()
+        this[COMPONENT_TYPES.ACTION_COMPONENT] = new MapSchema<ActionComponent>()
+        this[COMPONENT_TYPES.GLTF_COMPONENT] = new MapSchema<GltfComponent>()
+        this[COMPONENT_TYPES.MESH_RENDER_COMPONENT] = new MapSchema<MeshRendererComponent>()
+        this[COMPONENT_TYPES.MESH_COLLIDER_COMPONENT] = new MapSchema<MeshColliderComponent>()
+        this[COMPONENT_TYPES.TEXTURE_COMPONENT] = new MapSchema<TextureComponent>()
+        this[COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT] = new MapSchema<EmissiveComponent>()
+        this[COMPONENT_TYPES.MATERIAL_COMPONENT] = new MapSchema<MaterialComponent>()
+        this[COMPONENT_TYPES.STATE_COMPONENT] = new MapSchema<StateComponent>()
+        this[COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT] = new MapSchema<SoundComponent>()
+        this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT] = new MapSchema<SoundComponent>()
+        this[COMPONENT_TYPES.VIDEO_COMPONENT] = new MapSchema<VideoComponent>()
+        this[COMPONENT_TYPES.ANIMATION_COMPONENT] = new MapSchema<AnimatorComponent>()
+        this[COMPONENT_TYPES.NFT_COMPONENT] = new MapSchema<NftShapeComponent>()
+        this[COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT] = new MapSchema<AvatarShapeComponent>()
+        // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()
 
-        for (const key in components) {
-            if (components.hasOwnProperty(key)) {
-                switch(key){
-                    case COMPONENT_TYPES.CLICK_AREA_COMPONENT:
-                        for (const aid in components[key]) {
-                            this.clickAreas.set(aid, aid)
-                        }
-                        break;
-                    case COMPONENT_TYPES.AVATAR_SHAPE:
-                        createAvatarShapeComponent(this, key, components)
-                        break;
+        Object.values(COMPONENT_TYPES).forEach((component:any)=>{
+            if(data[component]){
+                switch(component){
+                    // case COMPONENT_TYPES.CLICK_AREA_COMPONENT:
+                    //     for (const aid in data[component]) {
+                    //         this[COMPONENT_TYPES.CLICK_AREA_COMPONENT].set(aid, aid)
+                    //     }
+                    //     break;
 
                     case COMPONENT_TYPES.IWB_COMPONENT:
-                        setIWBComponent(room, this, key, components)
+                        setIWBComponent(data.room, this, data[component])
                         break;
 
                     case COMPONENT_TYPES.NAMES_COMPONENT:
-                        for (const aid in components[key]) {
-                            this.names.set(aid, new NameComponent(components[key][aid]))
+                        for (const aid in data[component]) {
+                            this[COMPONENT_TYPES.NAMES_COMPONENT].set(aid, new NameComponent(data[component][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.VISBILITY_COMPONENT:
-                        for (const aid in components[key]) {
-                            let vis = new VisibilityComponent(components[key][aid])
+                        for (const aid in data[component]) {
+                            let vis = new VisibilityComponent(data[component][aid])
                             vis.visible = true
-                            this.visibilities.set(aid, new VisibilityComponent(components[key][aid]))
+                            this[COMPONENT_TYPES.VISBILITY_COMPONENT].set(aid, new VisibilityComponent(data[component][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.PARENTING_COMPONENT:
-                        components[key].forEach((info:any) => {
-                            this.parenting.push(new ParentingComponent(info))
+                        data[component].forEach((info:any) => {
+                            this[COMPONENT_TYPES.PARENTING_COMPONENT].push(new ParentingComponent(info))
                         });
                         break;
 
                     case COMPONENT_TYPES.TRANSFORM_COMPONENT:
-                        for (const aid in components[key]) {
-                            this.transforms.set(aid, new TransformComponent(components[key][aid]))
+                        for (const aid in data[component]) {
+                            this[COMPONENT_TYPES.TRANSFORM_COMPONENT].set(aid, new TransformComponent(data[component][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.POINTER_COMPONENT:
-                        for (const aid in components[key]) {
-                            let pointerEvents = new PointerComponent()
-                            pointerEvents.events = new ArraySchema<PointerComponentEvent>()
-                            components[key][aid].pointerEvents.forEach((event:any)=>{
-                                let pointerEvent = new PointerComponentEvent()
-                                pointerEvent.hoverText = event.eventInfo.hoverText
-                                pointerEvent.maxDistance = event.eventInfo.maxDistance
-                                pointerEvent.showFeedback = event.eventInfo.showFeedback
-                                pointerEvent.eventType = event.eventType
-                                pointerEvent.button = event.eventInfo.button
-                                pointerEvents.events.push(pointerEvent)
-                            })
-                            this.pointers.set(aid, pointerEvents)
+                        for (const aid in data[component]) {
+                            createPointerComponent(this, aid, data[component][aid])
                         }
                         break;
 
                     case COMPONENT_TYPES.TEXT_COMPONENT:
-                        
-                        for (const aid in components[key]) {
-                            let textShape = new TextShapeComponent(components[key][aid]) 
-                            textShape.outlineColor = new Color4(components[key][aid].outlineColor)
-                            textShape.color = new Color4(components[key][aid].color)
-                            this.textShapes.set(aid, textShape)
+                        for (const aid in data[component]) {
+                            createTextComponent(this, aid, data[component][aid])
                         }
                         break;
 
                     case COMPONENT_TYPES.COUNTER_COMPONENT:
-                        for (const aid in components[key]) {
-                            createCounterComponent(this, aid, components[key][aid])
+                        for (const aid in data[component]) {
+                            createCounterComponent(this, aid, data[component][aid])
                         }
                         break;
 
                     case COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT:
-                        for (const aid in components[key]) {
-                            createAvatarShapeComponent(this, aid, components[key][aid])
+                        for (const aid in data[component]) {
+                            createAvatarShapeComponent(this, aid, data[component][aid])
                         }
                         break;
                 
                     case COMPONENT_TYPES.TRIGGER_COMPONENT:
                        
-                        for (const aid in components[key]) {
-                            let data = components[key][aid]
+                        for (const aid in data[component]) {
+                            let triggerData = data[component][aid]
+                            console.log('trigger data is', triggerData)
 
                             let trigger = new TriggerComponent()
                             trigger.triggers = new ArraySchema<TriggerComponentSchema>()
 
-                            data.triggers.forEach((data:any)=>{
+                            triggerData.triggers.forEach((data:any)=>{
                                 let schema = new TriggerComponentSchema()
+                                schema.id = data.id
                                 schema.type = data.type
                                 schema.input = data.input
-                                schema.conditions = new ArraySchema<TriggerConditionComponent>()
-                                schema.actions = new ArraySchema<string>()
+                                schema.pointer = data.pointer
 
-                                data.conditions.forEach((condition:any)=>{
-                                    schema.conditions.push(new TriggerConditionComponent(condition))
+                                schema.caid = new ArraySchema<string>()
+                                schema.ctype = new ArraySchema<string>()
+                                schema.cvalue = new ArraySchema<string>()
+                                schema.ccounter = new ArraySchema<number>()
+
+                                data.caid.forEach((caid:any)=>{
+                                    schema.caid.push(caid)
+                                })
+                                data.ctype.forEach((ctype:any)=>{
+                                    schema.ctype.push(ctype)
+                                })
+                                data.cvalue.forEach((cvalue:any)=>{
+                                    schema.cvalue.push(cvalue)
+                                })
+                                data.ccounter.forEach((ccounter:any)=>{
+                                    schema.ccounter.push(ccounter)
                                 })
 
+                                schema.actions = new ArraySchema<string>()
                                 data.actions.forEach((action:any)=>{
-                                    schema.actions.push(action.id)
+                                    schema.actions.push(action)
                                 })
                                 trigger.triggers.push(schema)
                             })
 
-                            this.triggers.set(aid, trigger)
+                            this[COMPONENT_TYPES.TRIGGER_COMPONENT].set(aid, trigger)
                         }
                         break;
 
                     case COMPONENT_TYPES.ACTION_COMPONENT:
                         
-                        for (const aid in components[key]) {
-                            let data = components[key][aid]
+                        for (const aid in data[component]) {
+                            let actionData = data[component][aid]
 
                             let action = new ActionComponent()
-                            action.actions = new ArraySchema<ActionComponentSchema>()
 
-                            
-                            data.actions.forEach((data:any)=>{
-                                let schema = new ActionComponentSchema()
-                                // schema.id = data.id
-                                // schema.name = data.name
-                                // schema.type = data.type
-                                // schema.showText = data.text
-                                // schema.value = data.value
-                                // schema.counter = data.counter
-                                // schema.state = data.state
-                                // schema.visible = data.visible
-                                // schema.vMask = data.vMask
-                                // schema.iMask = data.iMask
-                                // schema.url = data.url
-                                // schema.moveCam = data.moveCam
-                                // schema.movePos = data.movePos
-                                // schema.emote = data.emote
-                                // schema.moveRel = data.moveRel
-                                // schema.anchor = data.anchor
+                            action.actions = new ArraySchema<ActionComponentSchema>()
+                            actionData.actions.forEach((data:any)=>{
+                                let schema:any = new ActionComponentSchema()
+                                for(let key in data){
+                                    schema[key] = data[key]
+                                }
                                 action.actions.push(schema)
                             })     
-
-                            this.actions.set(aid, action)
+                            this[COMPONENT_TYPES.ACTION_COMPONENT].set(aid, action)
                         }
                         break;
 
                     case COMPONENT_TYPES.GLTF_COMPONENT:
-                        for (const aid in components[key]) {
-                            this.gltfs.set(aid, new GltfComponent(components[key][aid]))
+                        for (const aid in data[component]) {
+                            this[COMPONENT_TYPES.GLTF_COMPONENT].set(aid, new GltfComponent(data[component][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.MESH_RENDER_COMPONENT:
-                        for (const aid in components[key]) {
-                            this.meshRenders.set(aid, new MeshRendererComponent(components[key][aid]))
+                        for (const aid in data[component]) {
+                            this[COMPONENT_TYPES.MESH_RENDER_COMPONENT].set(aid, new MeshRendererComponent(data[component][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.MESH_COLLIDER_COMPONENT:
-                        for (const aid in components[key]) {
-                            this.meshColliders.set(aid, new MeshColliderComponent(components[key][aid]))
+                        for (const aid in data[component]) {
+                            this[COMPONENT_TYPES.MESH_COLLIDER_COMPONENT].set(aid, new MeshColliderComponent(data[component][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.TEXTURE_COMPONENT:
-                        for (const aid in components[key]) {
-                            this.textures.set(aid, new TextureComponent(components[key][aid]))
+                        for (const aid in data[component]) {
+                            this[COMPONENT_TYPES.TEXTURE_COMPONENT].set(aid, new TextureComponent(data[component][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT:
-                        for (const aid in components[key]) {
-                            createEmissiveComponent(this, aid, components[key][aid])
+                        for (const aid in data[component]) {
+                            createEmissiveComponent(this, aid, data[component][aid])
                         }
                         break;
 
                      case COMPONENT_TYPES.MATERIAL_COMPONENT:
-                        for (const aid in components[key]) {
-                            createMaterialComponent(this, aid, components[key][aid])
+                        for (const aid in data[component]) {
+                            createMaterialComponent(this, aid, data[component][aid])
                         }
                         break;
 
                      case COMPONENT_TYPES.NFT_COMPONENT:
-                        for (const aid in components[key]) {
-                            createNftShapeComponent(this, aid, components[key][aid])
+                        for (const aid in data[component]) {
+                            createNftShapeComponent(this, aid, data[component][aid])
                         }
                         break;
 
                     case COMPONENT_TYPES.STATE_COMPONENT:
                      
-                        for (const aid in components[key]) {
-                            let data = components[key][aid]
+                        for (const aid in data[component]) {
+                            let stateData = data[component][aid]
 
                             let state = new StateComponent()
-                            state.defaultValue = data.defaultValue
+                            state.defaultValue = data[component][aid].defaultValue
 
                             state.values = new ArraySchema<string>()
-                            data.values.forEach((value:string)=>{
+                            stateData.values.forEach((value:string)=>{
                                 state.values.push(value)
                             })
-                            this.states.set(aid, state)
+                            this[COMPONENT_TYPES.STATE_COMPONENT].set(aid, state)
                         }
                         break;
 
-                    case COMPONENT_TYPES.SOUND_COMPONENT:
-                   
-                        for (const aid in components[key]) {
-                            this.sounds.set(aid, new SoundComponent(components[key][aid]))
+                    case COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT:
+                        for (const aid in data[component]) {
+                            this[COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT].set(aid, new SoundComponent(data[component][aid]))
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.AUDIO_STREAM_COMPONENT:
+                        for (const aid in data[component]) {
+                            this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT].set(aid, new SoundComponent(data[component][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.VIDEO_COMPONENT:
                       
-                        for (const aid in components[key]) {
-                            this.videos.set(aid, new VideoComponent(components[key][aid]))
+                        for (const aid in data[component]) {
+                            this[COMPONENT_TYPES.VIDEO_COMPONENT].set(aid, new VideoComponent(data[component][aid]))
                         }
                         break;
 
                     case COMPONENT_TYPES.ANIMATION_COMPONENT:
                       
-                        for (const aid in components[key]) {
-                            createAnimationComponent(this, aid, components[key][aid])
+                        for (const aid in data[component]) {
+                            createAnimationComponent(this, aid, data[component][aid])
                         }
                         break;
 
                 }
             }
-        }
+        })
     }
 }
 
@@ -374,21 +364,18 @@ export function initServerScenes(room:IWBRoom){
         }, 1000 * 1)
     }else{
         setTimeout(()=>{
-            let world = iwbManager.worlds.find((w)=> w.ens === room.state.realm)
+            let world = iwbManager.worlds.find((w)=> w.ens === room.state.world)
             if(world){
                 iwbManager.initiateRealm(world.owner)
                 .then((realmData)=>{
-                    // console.log('realm data is', realmData)
                     room.state.realmToken = realmData.EntityToken.EntityToken
                     room.state.realmId = realmData.EntityToken.Entity.Id
                     room.state.realmTokenType = realmData.EntityToken.Entity.Type
     
                     iwbManager.fetchRealmData(realmData)
                     .then((realmScenes)=>{
-                       //  console.log('realm scenes are ', realmScenes)
                         iwbManager.fetchRealmScenes(room.state.world, realmScenes)
                         .then((sceneData)=>{
-
                             loadRealmScenes(room, sceneData)
                         })
                     })   
@@ -407,7 +394,7 @@ export async function initServerAssets(room:IWBRoom){
     let catalog = await fetchPlayfabFile(metadata, "catalogs.json")
     catalog.forEach((item:any)=>{
     //   if(item.v > this.room.state.cv){
-    //     item.pending = true//
+    //     item.pending = true
     //   }
       room.state.realmAssets.set(item.id, item)
     })
@@ -424,11 +411,24 @@ export function loadRealmScenes(room:IWBRoom, scenes:any[]){
 
 export async function saveRealmScenes(room:IWBRoom){
     let scenes:any[] = []
-    room.state.scenes.forEach(async (scene:Scene)=>{
+    room.state.scenes.forEach(async (scene:any)=>{
         let jsonScene:any = scene.toJSON()
-        await checkAssetCacheStates(scene, jsonScene)
+        // console.log('scene is', jsonScene)
+        // await checkAssetCacheStates(scene, jsonScene)
+
+
+        // Object.values(COMPONENT_TYPES).forEach((component:any)=>{
+        //     if(data[component]){
+        //         for(let aid in data[component]){
+
+        //         }
+        //     }
+        // })
+
         scenes.push(jsonScene)
     })
+
+    // console.log('scenes are', scenes)
 
     let world = iwbManager.worlds.find((w)=>w.ens === room.state.world)
     if(world){
@@ -442,18 +442,18 @@ export async function saveRealmScenes(room:IWBRoom){
 }
 
 export function checkAssetCacheStates(scene:Scene, jsonScene:any){
-    scene.parenting.forEach((assetItem:any, index:number)=>{
-        let iwbAsset = scene.itemInfo.get(assetItem.aid)
-        iwbAsset.editing = false
-        iwbAsset.editor = ""
+    // scene.parenting.forEach((assetItem:any, index:number)=>{
+    //     let iwbAsset = scene.itemInfo.get(assetItem.aid)
+    //     iwbAsset.editing = false
+    //     iwbAsset.editor = ""
 
-        //Reward Component
-        let rewardInfo = scene.rewards.get(assetItem.aid)
-        if(rewardInfo){
-            let jsonItem = rewardInfo.toJSON()
-            jsonScene[COMPONENT_TYPES.REWARD_COMPONENT][assetItem.aid] = jsonItem
-        }
-    })
+    //     //Reward Component
+    //     let rewardInfo = scene.rewards.get(assetItem.aid)
+    //     if(rewardInfo){
+    //         let jsonItem = rewardInfo.toJSON()
+    //         jsondata[COMPONENT_TYPES.REWARD_COMPONENT][assetItem.aid] = jsonItem
+    //     }
+    // })
 }
 
 // async saveWorldScenes(scenes:Map<string, Scene>){

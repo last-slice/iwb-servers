@@ -2,6 +2,7 @@ import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
 import { generateRandomId } from "../utils/functions";
 import { removeActionFromTriggers } from "./Trigger";
+import { COMPONENT_TYPES } from "../utils/types";
 
 export class ActionComponentSchema extends Schema{
 
@@ -60,6 +61,7 @@ export class ActionComponentSchema extends Schema{
     @type("number") value:number
     @type("string") counter:string
     @type("string") state:string
+    @type("string") message:string
     @type(["string"]) actions:ArraySchema<string>
 }
 
@@ -84,16 +86,16 @@ export function createActionComponent(scene:Scene, aid:string, data:any){
     }
     component.actions = actions
 
-    scene.actions.set(aid, component)
+    scene[COMPONENT_TYPES.ACTION_COMPONENT].set(aid, component)
 }
 
 export function editActionComponent(data:any, scene:Scene){
-    let actions = scene.actions.get(data.aid)
+    let actions = scene[COMPONENT_TYPES.ACTION_COMPONENT].get(data.aid)
     if(!actions){
-        scene.actions.set(data.aid, new ActionComponent())
+        scene[COMPONENT_TYPES.ACTION_COMPONENT].set(data.aid, new ActionComponent())
     }
 
-    actions = scene.actions.get(data.aid)
+    actions = scene[COMPONENT_TYPES.ACTION_COMPONENT].get(data.aid)
 
     switch(data.action){
         case 'add':

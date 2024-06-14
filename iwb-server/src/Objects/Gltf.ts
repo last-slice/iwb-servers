@@ -1,5 +1,6 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
+import { COMPONENT_TYPES } from "../utils/types";
 
 export class GltfComponent extends Schema{
     @type("string") src:string
@@ -12,11 +13,11 @@ export function createGLTFComponent(scene:Scene, data:any){
     component.src = data.src
     component.visibleCollision = data.visibleCollision
     component.invisibleCollision = data.invisibleCollision
-    scene.gltfs.set(data.aid, component)
+    scene[COMPONENT_TYPES.GLTF_COMPONENT].set(data.aid, component)
 }
 
 export function editGltfComponent(info:any, scene:Scene){
-    let itemInfo:any = scene.gltfs.get(info.aid)
+    let itemInfo:any = scene[COMPONENT_TYPES.GLTF_COMPONENT].get(info.aid)
     if(itemInfo){
         for(let key in info){
             if(itemInfo.hasOwnProperty(key)){

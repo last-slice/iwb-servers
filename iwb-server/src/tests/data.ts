@@ -298,13 +298,13 @@ export let testData:any =
           "invisibleCollision":2
         }
       },
-      "MeshRenderer":{
+      "Mesh_Renderer":{
         // "aEQXB0":{
         //   "type":"plane",
         //   "collision":2
         // }
       },
-      "MeshCollider":{
+      "Mesh_Collider":{
         // "aEQXB0":{
         //   "type":"plane",
         //   "collision":2

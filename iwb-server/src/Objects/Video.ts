@@ -1,5 +1,6 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
+import { COMPONENT_TYPES } from "../utils/types";
 
 export class VideoComponent extends Schema {
     @type("string") url:string
@@ -14,11 +15,11 @@ export function createVideoComponent(scene:Scene, aid:string, data:any){
     component.volume = 1
     component.autostart = false
     component.loop = false
-    scene.videos.set(aid, component)
+    scene[COMPONENT_TYPES.VIDEO_COMPONENT].set(aid, component)
 }
 
 export function editVideoComponent(info:any, scene:Scene){
-    let itemInfo:any = scene.videos.get(info.aid)
+    let itemInfo:any = scene[COMPONENT_TYPES.VIDEO_COMPONENT].get(info.aid)
     if(itemInfo){
         for(let key in info){
             if(itemInfo.hasOwnProperty(key)){

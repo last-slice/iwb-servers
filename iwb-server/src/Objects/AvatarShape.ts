@@ -1,6 +1,6 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
-import { Color4 } from "../utils/types";
+import { COMPONENT_TYPES, Color4 } from "../utils/types";
 
 export class AvatarShapeComponent extends Schema{
     @type("string") name:string = "NPC"
@@ -24,11 +24,11 @@ export function createAvatarShapeComponent(scene:Scene, aid:string, data:any){
     component.skinColor = new Color4(data.skinColor)
     component.hairColor = new Color4(data.hairColor)
     
-    scene.avatarShapes.set(aid, component)
+    scene[COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT].set(aid, component)
 }
 
 export function editAvatarShapeComponent(info:any, scene:Scene){
-    let itemInfo:any = scene.itemInfo.get(info.aid)
+    let itemInfo:any = scene[COMPONENT_TYPES.IWB_COMPONENT].get(info.aid)
     if(itemInfo){
         for(let key in info){
             if(itemInfo.hasOwnProperty(key)){

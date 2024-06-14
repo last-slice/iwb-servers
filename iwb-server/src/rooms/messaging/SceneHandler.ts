@@ -1,11 +1,12 @@
 import { Player } from "../../Objects/Player";
 import { itemManager, iwbManager } from "../../app.config";
 import { pushPlayfabEvent } from "../../utils/Playfab";
-import { SERVER_MESSAGE_TYPES, SCENE_MODES } from "../../utils/types";
+import { SERVER_MESSAGE_TYPES, SCENE_MODES, COMPONENT_TYPES } from "../../utils/types";
 import { IWBRoom } from "../IWBRoom";
 import { DEBUG } from "../../utils/config";
 import { Scene } from "../../Objects/Scene";
 import { generateId } from "colyseus";
+import { removeAllAssetComponents } from "./ItemHandler";
 
 let deploymentServer:any = DEBUG ? process.env.DEPLOYMENT_SERVER_DEV : process.env.DEPLOYMENT_SERVER_PROD
 
@@ -18,7 +19,7 @@ export function iwbSceneHandler(room:IWBRoom){
             let scene = room.state.scenes.get(info.sceneId)
             if(scene){
 
-                scene.parenting.forEach((assetItem:any, index:number)=>{
+                scene[COMPONENT_TYPES.PARENTING_COMPONENT].forEach((assetItem:any, index:number)=>{
                     // let iwbAsset = scene.catalogInfo.get(assetItem.aid)
                     // let itemConfig = itemManager.items.get(assetItem.aid)
                     // if(itemConfig && itemConfig.n){
@@ -189,7 +190,7 @@ export function iwbSceneHandler(room:IWBRoom){
                 if(!scene.bps.includes(info.user)){
                     scene.bps.push(info.user)
                     info.sceneName = scene.n
-                    
+
                     client.send(SERVER_MESSAGE_TYPES.SCENE_ADD_BP, info)
                     let otherPlayer = room.state.players.get(info.user)
                     if(otherPlayer){
@@ -216,6 +217,8 @@ export function iwbSceneHandler(room:IWBRoom){
                     let userIndex = scene.bps.findIndex((us)=> us === info.user)
                     if(userIndex >= 0){
                         scene.bps.splice(userIndex, 1)
+                        info.sceneName = scene.n
+                        
                         client.send(SERVER_MESSAGE_TYPES.SCENE_DELETE_BP, info)
                         let otherPlayer = room.state.players.get(info.user)
                         if(otherPlayer){
@@ -271,11 +274,6 @@ export function iwbSceneHandler(room:IWBRoom){
             let scene = room.state.scenes.get(info.sceneId)
             if(scene){
                 if(scene.o === client.userData.userId){
-                    // let worldConfig = iwbManager.worlds.find((w)=> w.ens === this.room.state.world)
-                    // if(worldConfig){
-                    //     worldConfig.builds -= 1
-                    //     worldConfig.updated = Math.floor(Date.now()/1000)
-                    // }
                     clearSceneAssets(scene)
 
                     scene.si = 0
@@ -487,8 +485,8 @@ export function hasTemporaryParcel(room:IWBRoom, parcel: any) {
 
 export function checkAssetsForEditByPlayer(room:IWBRoom, user:string){
     room.state.scenes.forEach((scene, key)=>{
-        scene.parenting.forEach((assetItem:any, index:number)=>{
-            let iwbAsset = scene.itemInfo.get(assetItem.aid)
+        scene[COMPONENT_TYPES.PARENTING_COMPONENT].forEach((assetItem:any, index:number)=>{
+            let iwbAsset = scene[COMPONENT_TYPES.IWB_COMPONENT].get(assetItem.aid)
             iwbAsset.editing = false
             iwbAsset.editor = ""
         })
@@ -524,17 +522,23 @@ export function createScene(player:Player, room:IWBRoom, info:any, parcels:strin
 
     // console.log('creating new scene with data', sceneData)
     sceneData.room = room
-    sceneData.components = {
-        Parenting:[
+    sceneData["Parenting"]= [
             {"entity":"0", "aid":"0", "children":[]},
             {"entity":"1", "aid":"1", "children":[]},
             {"entity":"2", "aid":"2", "children":[]},
         ]
-    }
     let scene = new Scene(sceneData)
     return scene
   }
 
-  function clearSceneAssets(scene:Scene){
-
+  function clearSceneAssets(scene:any){
+    Object.values(COMPONENT_TYPES).forEach((component:any)=>{
+        console.log('component is', component)
+        if(scene[component] && component !== COMPONENT_TYPES.PARENTING_COMPONENT){
+            scene[component].forEach((component:any, aid:string)=>{
+                console.log('aid is', aid)
+                removeAllAssetComponents(scene, aid)
+            })
+        }
+    })
   }

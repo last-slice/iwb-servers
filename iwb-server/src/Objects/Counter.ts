@@ -1,6 +1,7 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Client } from "colyseus";
 import { Scene } from "./Scene";
+import { COMPONENT_TYPES } from "../utils/types";
 
 export class CounterComponent extends Schema{
     @type("number") defaultValue:number = 0
@@ -16,14 +17,14 @@ export class CounterBarComponent extends Schema{
 
 export function createCounterComponent(scene:Scene, aid:string, data:any){
     let component = new CounterComponent()
-    component.currentValue = data.defaultValue ? data.defaultValue : 0
+    component.defaultValue = data.defaultValue ? data.defaultValue : 0
     component.currentValue = data.currentValue ? data.currentValue : 0
     component.previousValue = data.previousValue ? data.previousValue : 0
-    scene.counters.set(aid, component)
+    scene[COMPONENT_TYPES.COUNTER_COMPONENT].set(aid, component)
 }
 
 export function addNumber(scene:Scene, info:any){
-    let counter:CounterComponent = scene.counters.get(info.aid)
+    let counter:CounterComponent = scene[COMPONENT_TYPES.COUNTER_COMPONENT].get(info.aid)
     counter.previousValue = counter.currentValue
     counter.currentValue += info.action.value
 }
