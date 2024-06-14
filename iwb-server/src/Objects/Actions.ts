@@ -3,6 +3,11 @@ import { Scene } from "./Scene";
 import { generateRandomId } from "../utils/functions";
 import { removeActionFromTriggers } from "./Trigger";
 import { COMPONENT_TYPES } from "../utils/types";
+import { generateId } from "colyseus";
+import { itemManager } from "../app.config";
+import { IWBRoom } from "../rooms/IWBRoom";
+import { createNewItem } from "../rooms/messaging/ItemHandler";
+import { createGLTFComponent } from "./Gltf";
 
 export class ActionComponentSchema extends Schema{
 
@@ -127,5 +132,46 @@ export function editActionComponent(data:any, scene:Scene){
             }
             break;
 
+    }
+}
+
+export function handleCloneAction(room:IWBRoom, scene:any, aid:string, action:ActionComponentSchema){
+    let iwbInfo:any = scene[COMPONENT_TYPES.IWB_COMPONENT].get(aid)
+    let nameInfo:any = scene[COMPONENT_TYPES.NAMES_COMPONENT].get(aid)
+    if(iwbInfo && nameInfo){
+        let clonedItemInfo:any = {...iwbInfo}
+        let catalogItem:any = iwbInfo.ugc ? room.state.realmAssets.get(iwbInfo.id) : itemManager.items.get(iwbInfo.id)
+        if(catalogItem){
+            clonedItemInfo.aid = generateId(6)
+            clonedItemInfo.n = nameInfo.value + " Clone"
+
+            let transform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(aid)
+            if(transform){
+                clonedItemInfo.position = {x:action.x, y:action.y, z:action.z}
+                clonedItemInfo.rotation = {...transform.r}
+                clonedItemInfo.scale = {...transform.s}
+
+                createNewItem(room, scene, clonedItemInfo, catalogItem)
+
+                let omittedComponents:COMPONENT_TYPES[] = [
+                    COMPONENT_TYPES.NAMES_COMPONENT,
+                    COMPONENT_TYPES.IWB_COMPONENT,
+                    COMPONENT_TYPES.TRANSFORM_COMPONENT,
+                    COMPONENT_TYPES.VISBILITY_COMPONENT,
+                    COMPONENT_TYPES.PARENTING_COMPONENT,
+                ]
+
+                Object.values(COMPONENT_TYPES).forEach((sceneComponent:any)=>{
+                    let component:any = scene[sceneComponent] && scene[sceneComponent][aid]
+                    if(component && !omittedComponents.includes(sceneComponent)){
+                        switch(sceneComponent){
+                            case COMPONENT_TYPES.GLTF_COMPONENT:
+                                createGLTFComponent(scene, {...component, ...{aid:clonedItemInfo.aid}})
+                                break
+                        }
+                    }
+                })
+            }
+        }
     }
 }

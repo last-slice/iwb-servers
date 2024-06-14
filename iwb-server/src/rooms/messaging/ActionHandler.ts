@@ -1,40 +1,41 @@
-import { Client } from "colyseus";
+import { Client, generateId } from "colyseus";
 import { IWBRoom } from "../IWBRoom";
 import { ACTIONS, COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../../utils/types";
 import { editTransform } from "../../Objects/Transform";
 import { editVisibility } from "../../Objects/Visibility";
 import { editTextShape } from "../../Objects/TextShape";
 import { addNumber } from "../../Objects/Counter";
+import { Scene } from "../../Objects/Scene";
+import { ActionComponent, ActionComponentSchema, handleCloneAction } from "../../Objects/Actions";
+import { itemManager } from "../../app.config";
+import { createNewItem } from "./ItemHandler";
 
 export function iwbSceneActionHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ACTION, (client:Client, info:any)=>{
         console.log(SERVER_MESSAGE_TYPES.SCENE_ACTION + " received", info)
-        if(!info || !info.sceneId){
+        let {sceneId, actionId, aid} = info
+
+        if(!info || !sceneId || !aid || !actionId){
             return
         }
 
-        let scene = room.state.scenes.get(info.sceneId)
-        if(scene){
-            let action = info.action
-
-            switch(action.type){
-                case ACTIONS.ADD_NUMBER:
-                    addNumber(scene, info)
-                    break;
+        let scene = room.state.scenes.get(sceneId)
+        if(scene && scene[COMPONENT_TYPES.ACTION_COMPONENT]){
+            let assetActions = scene[COMPONENT_TYPES.ACTION_COMPONENT].get(aid)
+            if(assetActions){
+                let action = assetActions.actions.find(($:any)=> $.id === actionId)
+                if(action){
+                    switch(action.type){
+                        case ACTIONS.ADD_NUMBER:
+                            // addNumber(scene, info)
+                            break;
+        
+                        case ACTIONS.CLONE:
+                            handleCloneAction(room, scene, aid, action)
+                            break;
+                    }
+                }
             }
-            // switch(info.component){
-            //     case COMPONENT_TYPES.TRANSFORM_COMPONENT:
-            //         editTransform(client, info, scene)
-            //         break;
-
-            //     case COMPONENT_TYPES.VISBILITY_COMPONENT:
-            //         editVisibility(client, info, scene)
-            //         break;
-
-            //     case COMPONENT_TYPES.TEXT_COMPONENT:
-            //         editTextShape(client, info, scene)
-            //         break;
-            // }
         }
       })
 }

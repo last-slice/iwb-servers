@@ -25,7 +25,7 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         
         iwbItemHandler(this)
-        // iwbSceneActionHandler(this)
+        iwbSceneActionHandler(this)
         // iwbRewardHandler(this)
         iwbPlayerHandler(this)
         iwbSceneHandler(this)

@@ -13,7 +13,6 @@ export class Quaternion extends Schema {
   @type("number") x: number
   @type("number") y: number
   @type("number") z: number
-  @type("number") w: number
 }
 
 export class TransformComponent extends Schema{

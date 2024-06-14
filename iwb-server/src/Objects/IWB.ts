@@ -30,8 +30,8 @@ export function createIWBComponent(room:IWBRoom, scene:Scene, data:any){
     component.id = data.scene.id
     component.n = data.scene.n
     component.type = data.item.ty
-    component.ugc = data.item.ugc
-    component.pending = data.item.pending
+    component.ugc = data.item.hasOwnProperty("ugc") ? data.item.ugc : false
+    component.pending = data.item.hasOwnProperty("pending") ? data.item.pending : false
     component.style = data.item.sty
     component.buildVis = true
     component.locked = false
