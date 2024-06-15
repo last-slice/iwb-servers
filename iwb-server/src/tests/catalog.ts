@@ -50,7 +50,7 @@ export let testCatalog:any = [
       "m": "",
       "n": "NFT Frame",
       "im": "https://bafkreihxmbloqwqgjljwtq4wzhmo5pclxavyedugdafn2dhuzghgpszuim.ipfs.nftstorage.link/",
-      "d": "Place an image in your scene",
+      "d": "Place an NFT in your scene",
       "cat": "Gallery/Venue",
       "on": "IWB Builder",
       "o": "IWB Team",
@@ -90745,5 +90745,65 @@ export let testCatalog:any = [
     components:[
         {type:COMPONENT_TYPES.MESH_RENDER_COMPONENT, data:{shape:1}}
     ]
+},
+{
+    "id": "13b63e57-a636-4cf2-8449-488a5fd6d03e",
+    "m": "13b63e57-a636-4cf2-8449-488a5fd6d03e",
+    "n": "UI Text",
+    "im": "https://bafkreihxmbloqwqgjljwtq4wzhmo5pclxavyedugdafn2dhuzghgpszuim.ipfs.nftstorage.link/",
+    "d": "Place UI Text in your scene",
+    "cat": "Gallery/Venue",
+    "on": "IWB Builder",
+    "o": "IWB Team",
+    "isdl": true,
+    "ty": "UI",
+    "pc": 0,
+    "si": 0,
+    "tag": [],
+    "v": 2,
+    "bb": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+    },
+    "sty": "Smart Items",
+    components:{
+            "UI_Text":{
+                "src": "13b63e57-a636-4cf2-8449-488a5fd6d03e"
+            },
+            "Material":{
+                "type":0,
+                "onPlay":false,
+                "albedoColor":{r:0.498, g:1, b:0.749, a:.5}
+              },
+              "Text":{
+                  "text":"UI Text",
+                  "onPlay":false
+              },
+              "Mesh_Collider":{
+                "shape":1,
+                "layer":1,
+                },
+                "Mesh_Renderer":{
+                  "shape":1,
+                  "layer":2
+              },
+              "Actions":{
+                "actions":[
+                    {
+                        "name":"Show Text",
+                        "type":"show_text"
+                    },
+                    {
+                        "name":"Hide Text",
+                        "type":"hide_text"
+                    },
+                    {
+                        "name":"Set Text",
+                        "type":"set_text"
+                    }
+                ]
+              }
+        }
 }
 ]

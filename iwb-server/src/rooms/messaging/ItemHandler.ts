@@ -27,6 +27,7 @@ import { createActionComponent, editActionComponent } from "../../Objects/Action
 import { createTriggerComponent, editTriggerComponent } from "../../Objects/Trigger";
 import { createPointerComponent, editPointerComponent } from "../../Objects/Pointers";
 import { createStateComponent, editStateComponent } from "../../Objects/State";
+import { createUITextComponent } from "../../Objects/UIText";
 
 export function iwbItemHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, (client:Client, info:any)=>{
@@ -421,6 +422,14 @@ export function addItemComponents(scene:Scene, item:any, data:any){
 
                 case COMPONENT_TYPES.MATERIAL_COMPONENT:
                     createMaterialComponent(scene, item.aid, componentData)
+                    break;
+
+                case COMPONENT_TYPES.UI_TEXT_COMPONENT:
+                    createUITextComponent(scene, item.aid, componentData)
+                    break;
+
+                case COMPONENT_TYPES.ACTION_COMPONENT:
+                    createActionComponent(scene, item.aid, componentData)
                     break;
     
                 // case COMPONENT_TYPES.AVATAR_SHAPE:

@@ -26,6 +26,7 @@ import { MeshColliderComponent } from "./MeshColliders";
 import { TextureComponent } from "./Textures";
 import { EmissiveComponent, createEmissiveComponent } from "./Emissive";
 import { AvatarShapeComponent, createAvatarShapeComponent } from "./AvatarShape";
+import { UITextComponent, createUITextComponent } from "./UIText";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -89,6 +90,7 @@ export class Scene extends Schema {
     @type({map:VideoComponent}) [COMPONENT_TYPES.VIDEO_COMPONENT]:MapSchema<VideoComponent>
     @type({map:RewardComponent}) rewards:MapSchema<RewardComponent>
     @type({map:IWBComponent}) [COMPONENT_TYPES.IWB_COMPONENT]:MapSchema<IWBComponent>
+    @type({map:UITextComponent}) [COMPONENT_TYPES.UI_TEXT_COMPONENT]:MapSchema<UITextComponent>
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent>
 
     // @type({map:"string"}) [COMPONENT_TYPES.CLICK_AREA_COMPONENT]:MapSchema<string>
@@ -137,6 +139,7 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.ANIMATION_COMPONENT] = new MapSchema<AnimatorComponent>()
         this[COMPONENT_TYPES.NFT_COMPONENT] = new MapSchema<NftShapeComponent>()
         this[COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT] = new MapSchema<AvatarShapeComponent>()
+        this[COMPONENT_TYPES.UI_TEXT_COMPONENT] = new MapSchema<UITextComponent>()
         // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()
 
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
@@ -147,6 +150,12 @@ export class Scene extends Schema {
                     //         this[COMPONENT_TYPES.CLICK_AREA_COMPONENT].set(aid, aid)
                     //     }
                     //     break;
+
+                    case COMPONENT_TYPES.UI_TEXT_COMPONENT:
+                        for (const aid in data[component]) {
+                            createUITextComponent(this, aid,  data[component][aid])
+                        }
+                        break;
 
                     case COMPONENT_TYPES.IWB_COMPONENT:
                         setIWBComponent(data.room, this, data[component])

@@ -145,6 +145,7 @@ export enum COMPONENT_TYPES {
     PARENTING_COMPONENT = 'Parenting',
     NAMES_COMPONENT ='Name',
     POINTER_COMPONENT = 'Pointers',
+    UI_TEXT_COMPONENT = 'UI_Text',
     COUNTER_COMPONENT = 'Counters',
     GLTF_COMPONENT = 'Gltf',
     STATE_COMPONENT ='States',
