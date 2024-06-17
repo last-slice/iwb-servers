@@ -157,6 +157,8 @@ export enum COMPONENT_TYPES {
     TEXTURE_COMPONENT = 'Texture',
     EMISSIVE_TEXTURE_COMPONENT = 'Emissive',
     AVATAR_SHAPE_COMPONENT = 'Avatar_Shape',
+    GAME_COMPONENT = 'Game',
+    LEVEL_COMPONENT = 'Levels',
 }
 
 export enum COLLISION_LAYERS {

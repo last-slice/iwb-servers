@@ -22,12 +22,12 @@ import { createMeshRendererComponent, editMeshRendererComponent } from "../../Ob
 import { MeshColliderComponent, createMeshColliderComponent, editMeshColliderComponent } from "../../Objects/MeshColliders";
 import { createTextureComponent, editTextureComponent } from "../../Objects/Textures";
 import { createEmissiveComponent } from "../../Objects/Emissive";
-import { createCounterComponent } from "../../Objects/Counter";
+import { createCounterComponent, editCounterComponent } from "../../Objects/Counter";
 import { createActionComponent, editActionComponent } from "../../Objects/Actions";
 import { createTriggerComponent, editTriggerComponent } from "../../Objects/Trigger";
 import { createPointerComponent, editPointerComponent } from "../../Objects/Pointers";
 import { createStateComponent, editStateComponent } from "../../Objects/State";
-import { createUITextComponent } from "../../Objects/UIText";
+import { createUITextComponent, editUIComponent } from "../../Objects/UIText";
 
 export function iwbItemHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, (client:Client, info:any)=>{
@@ -116,6 +116,14 @@ export function iwbItemHandler(room:IWBRoom){
 
                     case COMPONENT_TYPES.STATE_COMPONENT:
                         editStateComponent(info, scene)
+                        break;
+
+                    case COMPONENT_TYPES.UI_TEXT_COMPONENT:
+                        editUIComponent(info, scene)
+                        break;
+
+                    case COMPONENT_TYPES.COUNTER_COMPONENT:
+                        editCounterComponent(info, scene)
                         break;
                 }
             }

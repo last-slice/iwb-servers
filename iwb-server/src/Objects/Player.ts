@@ -2,10 +2,10 @@ import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { COMPONENT_TYPES, SCENE_MODES, SERVER_MESSAGE_TYPES, VIEW_MODES } from "../utils/types";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { Client } from "colyseus";
-import { Scene } from "@gltf-transform/core";
 import { fetchPlayfabFile, fetchUserMetaData, pushPlayfabEvent, updatePlayerData } from "../utils/Playfab";
 import { itemManager, iwbManager } from "../app.config";
 import axios from "axios";
+import { Scene } from "./Scene";
 
 export class PlayerManager {
     

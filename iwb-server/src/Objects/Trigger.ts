@@ -26,6 +26,7 @@ export class TriggerComponentSchema extends Schema{
 }
 
 export class TriggerComponent extends Schema{
+    @type("boolean") isArea:boolean
     @type([TriggerComponentSchema]) triggers:ArraySchema<TriggerComponentSchema>
 }
 
@@ -35,6 +36,7 @@ export function createTriggerComponent(scene:Scene, aid:string, data?:any){
     component.triggers = new ArraySchema<TriggerComponentSchema>()
 
     if(data){
+        component.isArea = data.isArea
         data.triggers.forEach((data:any)=>{
             let schema = new TriggerComponentSchema()
             schema.type = data.type

@@ -27,6 +27,7 @@ import { TextureComponent } from "./Textures";
 import { EmissiveComponent, createEmissiveComponent } from "./Emissive";
 import { AvatarShapeComponent, createAvatarShapeComponent } from "./AvatarShape";
 import { UITextComponent, createUITextComponent } from "./UIText";
+import { GameComponent } from "./Game";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -91,7 +92,9 @@ export class Scene extends Schema {
     @type({map:RewardComponent}) rewards:MapSchema<RewardComponent>
     @type({map:IWBComponent}) [COMPONENT_TYPES.IWB_COMPONENT]:MapSchema<IWBComponent>
     @type({map:UITextComponent}) [COMPONENT_TYPES.UI_TEXT_COMPONENT]:MapSchema<UITextComponent>
+    @type({map:GameComponent}) [COMPONENT_TYPES.GAME_COMPONENT]:MapSchema<GameComponent>
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent>
+
 
     // @type({map:"string"}) [COMPONENT_TYPES.CLICK_AREA_COMPONENT]:MapSchema<string>
 
@@ -140,6 +143,8 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.NFT_COMPONENT] = new MapSchema<NftShapeComponent>()
         this[COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT] = new MapSchema<AvatarShapeComponent>()
         this[COMPONENT_TYPES.UI_TEXT_COMPONENT] = new MapSchema<UITextComponent>()
+        this[COMPONENT_TYPES.UI_TEXT_COMPONENT] = new MapSchema<UITextComponent>()
+        this[COMPONENT_TYPES.GAME_COMPONENT] = new MapSchema<GameComponent>()
         // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()
 
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
@@ -215,10 +220,10 @@ export class Scene extends Schema {
                        
                         for (const aid in data[component]) {
                             let triggerData = data[component][aid]
-                            console.log('trigger data is', triggerData)
 
                             let trigger = new TriggerComponent()
                             trigger.triggers = new ArraySchema<TriggerComponentSchema>()
+                            trigger.isArea = data.isArea
 
                             triggerData.triggers.forEach((data:any)=>{
                                 let schema = new TriggerComponentSchema()
