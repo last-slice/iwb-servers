@@ -25,6 +25,7 @@ export class IWBComponent extends Schema{
 }
 
 export function createIWBComponent(room:IWBRoom, scene:Scene, data:any){
+    console.log('creating iwb component', data)
     let component = new IWBComponent()
     component.aid = data.scene.aid
     component.id = data.scene.id
@@ -64,7 +65,7 @@ export function editIWBComponent(info:any, scene:Scene){
 
 function checkAssetPolyAndSize(room:IWBRoom, scene:Scene, component:any){
     let catalogItem = component.ugc ? room.state.realmAssets.get(component.id) : itemManager.items.get(component.id)
-    console.log('catalog item is', catalogItem)
+    // console.log('catalog item is', catalogItem)
     if(catalogItem){
         let size = catalogItem.si
         scene.pc += catalogItem.pc

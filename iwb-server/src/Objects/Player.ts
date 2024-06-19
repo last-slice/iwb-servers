@@ -6,6 +6,7 @@ import { fetchPlayfabFile, fetchUserMetaData, pushPlayfabEvent, updatePlayerData
 import { itemManager, iwbManager } from "../app.config";
 import axios from "axios";
 import { Scene } from "./Scene";
+import { IWBComponent } from "./IWB";
 
 export class PlayerManager {
     
@@ -41,18 +42,18 @@ export class SelectedAsset extends Schema {
   @type("string") assetId: string
   @type("boolean") catalogAsset:boolean = false
   @type("string") type:string
-  // @type(SceneItem) componentData:SceneItem
+  @type(IWBComponent) iwbData:IWBComponent
   @type("boolean") grabbed:boolean
-  @type(SelectedAsset) selectedAsset: SelectedAsset
+  @type("boolean") ugc:boolean
 
   constructor(info:any){
     super()
-    // this.componentData = info.componentData
+    this.iwbData = new IWBComponent(info.componentData)
     this.catalogId = info.catalogId
     this.assetId = info.assetId
     this.catalogAsset = info.catalogAsset
-    // this.type = info.type
     this.grabbed = info.grabbed ? info.grabbed : undefined
+    this.ugc = this.iwbData.ugc
   }
 }
 
@@ -131,6 +132,7 @@ export class Player extends Schema {
       }
 
       addSelectedAsset(info:any){
+        console.log('player selected asset', info)
         this.selectedAsset = new SelectedAsset(info)
       }
     

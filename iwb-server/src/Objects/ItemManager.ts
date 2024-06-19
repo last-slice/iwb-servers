@@ -1,8 +1,8 @@
 import { iwbManager } from "../app.config"
-import { testCatalog } from "../tests/catalog"
 import { PLAYFAB_DATA_ACCOUNT, abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playfabLogin, pushPlayfabEvent, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
+import data from '../tests/catalog.json'
 
 export class ItemManager{
     
@@ -28,7 +28,8 @@ export class ItemManager{
         //     console.log('error fetching data account')
         // }
 
-        testCatalog.forEach((item:any)=>{
+        //for local testing when you need to quickly modify the catalog items
+        data.forEach((item:any)=>{
             if(!this.items.has(item.id)){
                 this.items.set(item.id, item)
             }

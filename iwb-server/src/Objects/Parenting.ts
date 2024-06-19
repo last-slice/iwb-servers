@@ -24,7 +24,7 @@ export class ParentingComponent extends Schema{
 }
 
 export function createParentingComponent(scene:Scene, data:any){
-    console.log('creaging parenting component', data)
+    console.log('creaging parenting component', data)//
     let component = new ParentingComponent()
     component.aid = data.aid
     scene[COMPONENT_TYPES.PARENTING_COMPONENT][data.parent ? data.parent : 0].children.push(data.aid)

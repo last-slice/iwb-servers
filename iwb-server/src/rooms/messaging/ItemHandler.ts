@@ -28,8 +28,66 @@ import { createTriggerComponent, editTriggerComponent } from "../../Objects/Trig
 import { createPointerComponent, editPointerComponent } from "../../Objects/Pointers";
 import { createStateComponent, editStateComponent } from "../../Objects/State";
 import { createUITextComponent, editUIComponent } from "../../Objects/UIText";
+import { createUIImageComponent, editUIImageComponent } from "../../Objects/UIImage";
+import { createBillboardComponent } from "../../Objects/Billboard";
+
+
+let updateComponentFunctions:any = {
+    ['Delete']: (scene:any, info:any)=>{deleteComponent(scene, info)},
+    ['Add']: (scene:any, info:any)=>{addNewComponent(scene, info)},
+    [COMPONENT_TYPES.TRANSFORM_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editTransform(client,info, scene)}, 
+    [COMPONENT_TYPES.VISBILITY_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editVisibility(client, info, scene)}, 
+    [COMPONENT_TYPES.TEXT_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editTextShape(client, info, scene)}, 
+    [COMPONENT_TYPES.IWB_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editIWBComponent(info, scene)}, 
+    [COMPONENT_TYPES.NAMES_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{ editNameComponent(info, scene)}, 
+    [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
+    [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
+    [COMPONENT_TYPES.NFT_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editNftShape(info, scene)}, 
+    [COMPONENT_TYPES.GLTF_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editGltfComponent(info, scene)}, 
+    [COMPONENT_TYPES.VIDEO_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editVideoComponent(info, scene)}, 
+    [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editMeshColliderComponent(info, scene)}, 
+    [COMPONENT_TYPES.MESH_RENDER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editMeshRendererComponent(info, scene)}, 
+    [COMPONENT_TYPES.TEXTURE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editTextureComponent(info, scene)},
+    [COMPONENT_TYPES.PARENTING_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editParentingComponent(room, info, scene)},
+    [COMPONENT_TYPES.ACTION_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editActionComponent(info, scene)},
+    [COMPONENT_TYPES.TRIGGER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editTriggerComponent(info, scene)},
+    [COMPONENT_TYPES.POINTER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{ editPointerComponent(info, scene)},
+    [COMPONENT_TYPES.STATE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editStateComponent(info, scene)},
+    [COMPONENT_TYPES.UI_TEXT_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editUIComponent(info, scene)},
+    [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editUIImageComponent(info, scene)},
+    [COMPONENT_TYPES.COUNTER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editCounterComponent(info, scene)}, 
+}
+
+let createComponentFunctions:any = {
+    ['Delete']: (scene:any, info:any)=>{deleteComponent(scene, info)},
+    ['Add']: (scene:any, info:any)=>{addNewComponent(scene, info)},
+    [COMPONENT_TYPES.TEXT_COMPONENT]:(scene:any, aid:string, info:any)=>{createTextComponent(scene, aid, info)}, 
+    // [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
+    // [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
+    // [COMPONENT_TYPES.NFT_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editNftShape(info, scene)}, 
+    [COMPONENT_TYPES.GLTF_COMPONENT]:(scene:any, aid:string, info:any)=>{createGLTFComponent(scene, info)}, 
+    // [COMPONENT_TYPES.VIDEO_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editVideoComponent(info, scene)}, 
+    [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:(scene:any, aid:string, info:any)=>{createMeshColliderComponent(scene, info)}, 
+    [COMPONENT_TYPES.MESH_RENDER_COMPONENT]:(scene:any, aid:string, info:any)=>{createMeshRendererComponent(scene, info)}, 
+    [COMPONENT_TYPES.TEXTURE_COMPONENT]:(scene:any, aid:string, info:any)=>{createTextureComponent(scene, info)},
+    [COMPONENT_TYPES.ACTION_COMPONENT]:(scene:any, aid:string, info:any)=>{createActionComponent(scene, aid, info)},
+    [COMPONENT_TYPES.TRIGGER_COMPONENT]:(scene:any, aid:string, info:any)=>{ createTriggerComponent(scene, aid, info)},
+    [COMPONENT_TYPES.POINTER_COMPONENT]:(scene:any, aid:string, info:any)=>{createPointerComponent(scene, aid, info)},
+    [COMPONENT_TYPES.STATE_COMPONENT]:(scene:any, aid:string, info:any)=>{createStateComponent(scene, aid)},
+    [COMPONENT_TYPES.UI_TEXT_COMPONENT]:(scene:any, aid:string, info:any)=>{createUITextComponent(scene, aid, info)},
+    [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:(scene:any, aid:string, info:any)=>{createUIImageComponent(scene, aid, info)},
+    [COMPONENT_TYPES.COUNTER_COMPONENT]:(scene:any, aid:string, info:any)=>{createCounterComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.MATERIAL_COMPONENT]:(scene:any, aid:string, info:any)=>{createMaterialComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.BILLBOARD_COMPONENT]:(scene:any, aid:string, info:any)=>{createBillboardComponent(scene, aid, info)}, 
+    
+}
 
 export function iwbItemHandler(room:IWBRoom){
+    room.onMessage(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, async(client, info)=>{
+        // console.log(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS + " message", info)
+        // room.broadcast(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, {user:client.userData.userId, y:info.y, aid:info.aid})
+    })
+
     room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, (client:Client, info:any)=>{
         console.log("edit asset message", info)
         let scene = room.state.scenes.get(info.sceneId)
@@ -40,92 +98,7 @@ export function iwbItemHandler(room:IWBRoom){
             if(itemInfo){
                 itemInfo.editing = true
                 itemInfo.editor = client.userData.userId
-
-                switch(info.component){
-                    case 'Delete':
-                        deleteComponent(scene, info)
-                        break;
-                    case 'Add':
-                        addNewComponent(scene, info)
-                        break;
-
-                    case COMPONENT_TYPES.TRANSFORM_COMPONENT:
-                        editTransform(client, info, scene)
-                        break;
-    
-                    case COMPONENT_TYPES.VISBILITY_COMPONENT:
-                        editVisibility(client, info, scene)
-                        break;
-    
-                    case COMPONENT_TYPES.TEXT_COMPONENT:
-                        editTextShape(client, info, scene)
-                        break;
-    
-                    case COMPONENT_TYPES.IWB_COMPONENT:
-                        editIWBComponent(info, scene)
-                        break;
-    
-                    case COMPONENT_TYPES.NAMES_COMPONENT:
-                        editNameComponent(info, scene)
-                        break;
-                    
-                    case COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT:
-                    case COMPONENT_TYPES.AUDIO_STREAM_COMPONENT:
-                        editAudioComponent(info, scene, info.component)
-                        break;
-    
-                    case COMPONENT_TYPES.NFT_COMPONENT:
-                        editNftShape(info, scene)
-                        break;
-    
-                    case COMPONENT_TYPES.GLTF_COMPONENT:
-                        editGltfComponent(info, scene)
-                        break;
-    
-                    case COMPONENT_TYPES.VIDEO_COMPONENT:
-                        editVideoComponent(info, scene)
-                        break;
-    
-                    case COMPONENT_TYPES.MESH_COLLIDER_COMPONENT:
-                        editMeshColliderComponent(info, scene)
-                        break;
-    
-                    case COMPONENT_TYPES.MESH_RENDER_COMPONENT:
-                        editMeshRendererComponent(info, scene)
-                        break;
-    
-                    case COMPONENT_TYPES.TEXTURE_COMPONENT:
-                        editTextureComponent(info, scene)
-                        break;
-
-                    case COMPONENT_TYPES.PARENTING_COMPONENT:
-                        editParentingComponent(room, info, scene)
-                        break;
-
-                    case COMPONENT_TYPES.ACTION_COMPONENT:
-                        editActionComponent(info, scene)
-                        break;
-
-                    case COMPONENT_TYPES.TRIGGER_COMPONENT:
-                        editTriggerComponent(info, scene)
-                        break;
-
-                    case COMPONENT_TYPES.POINTER_COMPONENT:
-                        editPointerComponent(info, scene)
-                        break;
-
-                    case COMPONENT_TYPES.STATE_COMPONENT:
-                        editStateComponent(info, scene)
-                        break;
-
-                    case COMPONENT_TYPES.UI_TEXT_COMPONENT:
-                        editUIComponent(info, scene)
-                        break;
-
-                    case COMPONENT_TYPES.COUNTER_COMPONENT:
-                        editCounterComponent(info, scene)
-                        break;
-                }
+                updateComponentFunctions[info.component](scene, info, client, room)
             }
         }else{
             console.log('cannot build')
@@ -153,15 +126,15 @@ export function iwbItemHandler(room:IWBRoom){
             let player:Player = room.state.players.get(client.userData.userId)
 
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
-                console.log('player is in build mode, can select item')
                 info.catalogAsset = true
                 info.grabbed = true
+                info.editor = 
                 // let catalogItem = item.ugc ? room.state.realmAssets.get(item.id) : itemManager.items.get(item.id)
 
                 player.addSelectedAsset(info)
 
                 // pushPlayfabEvent(
-                //     SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, 
+                //     SERVER_MESSAGE_TYPES.SELECT_CATALOG_ASSET, 
                 //     player, 
                 //     [{name:info.catalogId, type:sceneItem.ty}]
                 // )
@@ -186,32 +159,26 @@ export function iwbItemHandler(room:IWBRoom){
 
         let player:Player = room.state.players.get(client.userData.userId)
         if(player && player.mode === SCENE_MODES.BUILD_MODE && canBuild(room, client.userData.userId, info.item.sceneId)){
+            console.log('player can add assets')
             const {item} = info
 
             let scene = room.state.scenes.get(info.item.sceneId)
             if(scene){
                 let catalogItem = item.ugc ? room.state.realmAssets.get(item.id) : itemManager.items.get(item.id)
-                console.log('catalog item is', catalogItem)
+                // console.log('catalog item is', catalogItem)
                 if(catalogItem){
                     if(checkSceneLimits(scene, catalogItem)){
                         createNewItem(room, scene, item, catalogItem)
 
                         if(item.duplicate){
                             console.log('need to copy item')
-                        //     let serverItem = scene.ass.find((as)=> as.aid === item.duplicate)
-                        //     if(serverItem){
-                        //         sceneaddItemComponents(newItem, sceneItem, serverItem)
-                        //     }else{
+                            copyItem(room, scene, info, catalogItem)
 
-                        //         sceneaddItemComponents(newItem, sceneItem, player.selectedAsset && player.selectedAsset !== null && player.selectedAsset.componentData ? player.selectedAsset.componentData : undefined, player.dclData.userId)
-                        //     }
-
-                        //     pushPlayfabEvent(
-                        //         SERVER_MESSAGE_TYPES.SCENE_COPY_ITEM, 
-                        //         player, 
-                        //         [{name:sceneItem.n, type:sceneItem.ty}]
-                        //     )
-
+                            pushPlayfabEvent(
+                                SERVER_MESSAGE_TYPES.SCENE_COPY_ITEM, 
+                                player, 
+                                [{name:catalogItem.n, type:catalogItem.ty}]
+                            )
                         }
 
                         else{
@@ -236,7 +203,7 @@ export function iwbItemHandler(room:IWBRoom){
             }
 
             info.user = client.userData.userId
-            // room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, info)
+            room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, info)
 
             player.removeSelectedAsset()
         }else{
@@ -250,6 +217,12 @@ export function iwbItemHandler(room:IWBRoom){
         deleteSceneItem(room, player, info)
     })
 
+    room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE_GRABBED_ITEM, async(client, info)=>{
+        // console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_GRABBED_ITEM + " message", info)
+        let player:Player = room.state.players.get(client.userData.userId)
+        deleteGrabbedItem(room, player)
+    })
+
     room.onMessage(SERVER_MESSAGE_TYPES.PLAYER_CANCELED_CATALOG_ASSET, async(client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.PLAYER_CANCELED_CATALOG_ASSET + " message", info)
 
@@ -257,6 +230,41 @@ export function iwbItemHandler(room:IWBRoom){
         let scene = room.state.scenes.get(info.sceneId)
         if(scene && player && player.mode === SCENE_MODES.BUILD_MODE && canBuild(room, player.address, scene.id)){
             player.removeSelectedAsset()
+        }
+    })
+
+    room.onMessage(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET, async(client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET + " message", info)
+
+        let player:Player = room.state.players.get(client.userData.userId)
+
+        if(player && player.mode === SCENE_MODES.BUILD_MODE){
+            let scene = room.state.scenes.get(info.sceneId)
+            if(scene && canBuild(room, player.address, scene.id)){
+                console.log("player can build here and select scene asset")
+                let itemInfo = scene[COMPONENT_TYPES.IWB_COMPONENT].get(info.assetId)
+                console.log('item info selected is', itemInfo)
+
+                if(itemInfo && !itemInfo.editing){
+                    let data:any = {}
+
+                    itemInfo.editing = true
+                    itemInfo.editor = client.userData.userId
+                    data.assetId = info.assetId,
+                    data.catalogId = itemInfo.id
+                    data.grabbed = true
+                    data.componentData = {...itemInfo}
+                    player.addSelectedAsset(data)
+                    // player.selectedAsset.componentData.comps.includes(COMPONENT_TYPES.IMAGE_COMPONENT) ? addImageComponent(player.selectedAsset.componentData, player.selectedAsset.componentData.imgComp.url) : null
+                    // player.selectedAsset.componentData.comps.includes(COMPONENT_TYPES.NFT_COMPONENT) ? addNFTComponent(player.selectedAsset.componentData, player.selectedAsset.componentData.nftComp) : null
+                    deleteSceneItem(room, player, info,true)
+                }
+                // client.send(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET, {valid:true, reason:"", player:player.address})
+            }else{
+                client.send(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET, {valid:false, reason:"", player:player.address})
+            }
+        }else{
+            client.send(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET, {valid:false, reason:"", player:player.address})
         }
     })
 }
@@ -307,7 +315,7 @@ function checkSceneLimits(scene:Scene, item:any){
 
 export function createNewItem(room:IWBRoom, scene:Scene, item:any, catalogItemInfo:any){
     createIWBComponent(room, scene, {scene:item, item:catalogItemInfo})
-    createNameComponent(scene, {scene:item, item:catalogItemInfo})
+    createNameComponent(scene, {aid:item.aid, value:catalogItemInfo.n})
     createVisibilityComponent(scene, item)
     createTransformComponent(scene, item)
     createParentingComponent(scene, item)
@@ -318,11 +326,16 @@ function deleteComponent(scene:any, item:any){
 }
 
 function addNewComponent(scene:Scene, item:any){
-    console.log('adding new component', item)
     switch(item.type){
+        case COMPONENT_TYPES.BILLBOARD_COMPONENT:
+            if(!scene[COMPONENT_TYPES.BILLBOARD_COMPONENT].has(item.aid)){
+                createBillboardComponent(scene, item.aid, {mode:2})
+            }
+            break;
+            
         case COMPONENT_TYPES.COUNTER_COMPONENT:
             if(!scene[COMPONENT_TYPES.COUNTER_COMPONENT].has(item.aid)){
-                createCounterComponent(scene, item.aid, {})
+                createCounterComponent(scene, item.aid, {defaultValue:0})
             }
             break;
 
@@ -410,492 +423,26 @@ export function addItemComponents(scene:Scene, item:any, data:any){
         for(let componentType in catalogItemInfo.components){
             let componentData = {...catalogItemInfo.components[componentType]}
             componentData.aid = item.aid
-            switch(componentType){
-                case COMPONENT_TYPES.MESH_RENDER_COMPONENT:
-                    createMeshRendererComponent(scene, componentData)
-                    break;
-                case COMPONENT_TYPES.MESH_COLLIDER_COMPONENT:
-                    createMeshColliderComponent(scene, componentData)
-                    break
-                case COMPONENT_TYPES.POINTER_COMPONENT:
-                    createPointerComponent(scene, item.aid, componentData)
-                    break;
-                case COMPONENT_TYPES.TRIGGER_COMPONENT:
-                    createTriggerComponent(scene, item.aid, componentData)
-                    break;
-                case COMPONENT_TYPES.TEXT_COMPONENT:
-                    componentData.onPlay = false
-                    createTextComponent(scene, item.aid, componentData)
-                    break;
-
-                case COMPONENT_TYPES.MATERIAL_COMPONENT:
-                    createMaterialComponent(scene, item.aid, componentData)
-                    break;
-
-                case COMPONENT_TYPES.UI_TEXT_COMPONENT:
-                    createUITextComponent(scene, item.aid, componentData)
-                    break;
-
-                case COMPONENT_TYPES.ACTION_COMPONENT:
-                    createActionComponent(scene, item.aid, componentData)
-                    break;
-    
-                // case COMPONENT_TYPES.AVATAR_SHAPE:
-                //     createAvatarShapeComponent(scene, key, components)
-                //     break;
-    
-                // case COMPONENT_TYPES.IWB_COMPONENT:
-                //     setIWBComponent(scene, key, components)
-                //     break;
-    
-                // case COMPONENT_TYPES.NAMES_COMPONENT:
-                //     for (const aid in components[key]) {
-                //         scenenames.set(aid, new NameComponent(components[key][aid]))
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.VISBILITY_COMPONENT:
-                //     for (const aid in components[key]) {
-                //         let vis = new VisibilityComponent(components[key][aid])
-                //         vis.visible = true
-                //         scenevisibilities.set(aid, new VisibilityComponent(components[key][aid]))
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.PARENTING_COMPONENT:
-                //     components[key].forEach((info:any) => {
-                //         sceneparenting.push(new ParentingComponent(info))
-                //     });
-                //     break;
-    
-                // case COMPONENT_TYPES.TRANSFORM_COMPONENT:
-                //     for (const aid in components[key]) {
-                //         scenetransforms.set(aid, new TransformComponent(components[key][aid]))
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.POINTER_COMPONENT:
-                //     for (const aid in components[key]) {
-                //         let pointerEvents = new PointerComponent()
-                //         pointerEvents.events = new ArraySchema<PointerComponentEvent>()
-                //         components[key][aid].pointerEvents.forEach((event:any)=>{
-                //             let pointerEvent = new PointerComponentEvent()
-                //             pointerEvent.hoverText = event.eventInfo.hoverText
-                //             pointerEvent.maxDistance = event.eventInfo.maxDistance
-                //             pointerEvent.showFeedback = event.eventInfo.showFeedback
-                //             pointerEvent.eventType = event.eventType
-                //             pointerEvent.button = event.eventInfo.button
-                //             pointerEvents.events.push(pointerEvent)
-                //         })
-                //         scenepointers.set(aid, pointerEvents)
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.TEXT_COMPONENT:
-                    
-                //     for (const aid in components[key]) {
-                //         let textShape = new TextShapeComponent(components[key][aid]) 
-                //         textShape.outlineColor = new Color4(components[key][aid].outlineColor)
-                //         textShape.color = new Color4(components[key][aid].color)
-                //         scenetextShapes.set(aid, textShape)
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.COUNTER_COMPONENT:
-                //     for (const aid in components[key]) {
-                //         createCounterComponent(scene, aid, components[key][aid])
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT:
-                //     for (const aid in components[key]) {
-                //         createAvatarShapeComponent(scene, aid, components[key][aid])
-                //     }
-                //     break;
-            
-                // case COMPONENT_TYPES.TRIGGER_COMPONENT:
-                   
-                //     for (const aid in components[key]) {
-                //         let data = components[key][aid]
-    
-                //         let trigger = new TriggerComponent()
-                //         trigger.triggers = new ArraySchema<TriggerComponentSchema>()
-    
-                //         data.triggers.forEach((data:any)=>{
-                //             let schema = new TriggerComponentSchema()
-                //             schema.type = data.type
-                //             schema.input = data.input
-                //             schema.conditions = new ArraySchema<TriggerConditionComponent>()
-                //             schema.actions = new ArraySchema<string>()
-    
-                //             data.conditions.forEach((condition:any)=>{
-                //                 schema.conditions.push(new TriggerConditionComponent(condition))
-                //             })
-    
-                //             data.actions.forEach((action:any)=>{
-                //                 schema.actions.push(action.id)
-                //             })
-                //             trigger.triggers.push(schema)
-                //         })
-    
-                //         scenetriggers.set(aid, trigger)
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.ACTION_COMPONENT:
-                    
-                //     for (const aid in components[key]) {
-                //         let data = components[key][aid]
-    
-                //         let action = new ActionComponent()
-                //         action.actions = new ArraySchema<ActionComponentSchema>()
-    
-                        
-                //         data.actions.forEach((data:any)=>{
-                //             let schema = new ActionComponentSchema()
-                //             schema.id = data.id
-                //             schema.name = data.name
-                //             schema.type = data.type
-                //             schema.showText = data.text
-                //             schema.value = data.value
-                //             schema.counter = data.counter
-                //             schema.state = data.state
-                //             schema.visible = data.visible
-                //             schema.vMask = data.vMask
-                //             schema.iMask = data.iMask
-                //             schema.url = data.url
-                //             schema.moveCam = data.moveCam
-                //             schema.movePos = data.movePos
-                //             schema.emote = data.emote
-                //             schema.moveRel = data.moveRel
-                //             schema.anchor = data.anchor
-                //             action.actions.push(schema)
-                //         })     
-    
-                //         sceneactions.set(aid, action)
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.GLTF_COMPONENT:
-                //     for (const aid in components[key]) {
-                //         scenegltfs.set(aid, new GltfComponent(components[key][aid]))
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.MESH_RENDER_COMPONENT:
-                //     for (const aid in components[key]) {
-                //         scenemeshRenders.set(aid, new MeshRendererComponent(components[key][aid]))
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.MESH_COLLIDER_COMPONENT:
-                //     for (const aid in components[key]) {
-                //         scenemeshColliders.set(aid, new MeshColliderComponent(components[key][aid]))
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.TEXTURE_COMPONENT:
-                //     for (const aid in components[key]) {
-                //         scenetextures.set(aid, new TextureComponent(components[key][aid]))
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT:
-                //     for (const aid in components[key]) {
-                //         createEmissiveComponent(scene, aid, components[key][aid])
-                //     }
-                //     break;
-    
-                //  case COMPONENT_TYPES.MATERIAL_COMPONENT:
-                //     for (const aid in components[key]) {
-                //         createMaterialComponent(scene, aid, components[key][aid])
-                //     }
-                //     break;
-    
-                //  case COMPONENT_TYPES.NFT_COMPONENT:
-                //     for (const aid in components[key]) {
-                //         createNftShapeComponent(scene, aid, components[key][aid])
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.STATE_COMPONENT:
-                 
-                //     for (const aid in components[key]) {
-                //         let data = components[key][aid]
-    
-                //         let state = new StateComponent()
-                //         state.defaultValue = data.defaultValue
-    
-                //         state.values = new ArraySchema<string>()
-                //         data.values.forEach((value:string)=>{
-                //             state.values.push(value)
-                //         })
-                //         scenestates.set(aid, state)
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.SOUND_COMPONENT:
-               
-                //     for (const aid in components[key]) {
-                //         scenesounds.set(aid, new SoundComponent(components[key][aid]))
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.VIDEO_COMPONENT:
-                  
-                //     for (const aid in components[key]) {
-                //         scenevideos.set(aid, new VideoComponent(components[key][aid]))
-                //     }
-                //     break;
-    
-                // case COMPONENT_TYPES.ANIMATION_COMPONENT:
-                  
-                //     for (const aid in components[key]) {
-                //         createAnimationComponent(scene, aid, components[key][aid])
-                //     }
-                //     break;
-    
-            }
+            createComponentFunctions[componentType](scene, item.aid, componentData)
         }
     }
+}
 
-    // catalogItemInfo.components && catalogItemInfo.components.forEach((component:any)=>{
-    //     switch(component.type){
-    //         case COMPONENT_TYPES.MESH_RENDER_COMPONENT:
-    //             component.data.aid = item.aid
-    //             createMeshRendererComponent(scene, component.data)
-    //             break;
-    //         case COMPONENT_TYPES.CLICK_AREA_COMPONENT:
-    //             scene[COMPONENT_TYPES.CLICK_AREA_COMPONENT].set(item.aid, item.aid)
-    //             createTriggerComponent(scene, item.aid, {
-    //                 triggers:[
-    //                     {
-    //                         type: TRIGGER_TYPES.ON_INPUT_ACTION,
-    //                         input:0,
-    //                         conditions:[],
-    //                         actions:[]
-    //                     }
-    //                 ]
-    //             })
-    //             break;
+function deleteGrabbedItem(room:IWBRoom, player:Player){
+    try{
+        if(player && player.mode === SCENE_MODES.BUILD_MODE){
+            player.removeSelectedAsset()
 
-    //         // case COMPONENT_TYPES.AVATAR_SHAPE:
-    //         //     createAvatarShapeComponent(scene, key, components)
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.IWB_COMPONENT:
-    //         //     setIWBComponent(scene, key, components)
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.NAMES_COMPONENT:
-    //         //     for (const aid in components[key]) {
-    //         //         scenenames.set(aid, new NameComponent(components[key][aid]))
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.VISBILITY_COMPONENT:
-    //         //     for (const aid in components[key]) {
-    //         //         let vis = new VisibilityComponent(components[key][aid])
-    //         //         vis.visible = true
-    //         //         scenevisibilities.set(aid, new VisibilityComponent(components[key][aid]))
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.PARENTING_COMPONENT:
-    //         //     components[key].forEach((info:any) => {
-    //         //         sceneparenting.push(new ParentingComponent(info))
-    //         //     });
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.TRANSFORM_COMPONENT:
-    //         //     for (const aid in components[key]) {
-    //         //         scenetransforms.set(aid, new TransformComponent(components[key][aid]))
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.POINTER_COMPONENT:
-    //         //     for (const aid in components[key]) {
-    //         //         let pointerEvents = new PointerComponent()
-    //         //         pointerEvents.events = new ArraySchema<PointerComponentEvent>()
-    //         //         components[key][aid].pointerEvents.forEach((event:any)=>{
-    //         //             let pointerEvent = new PointerComponentEvent()
-    //         //             pointerEvent.hoverText = event.eventInfo.hoverText
-    //         //             pointerEvent.maxDistance = event.eventInfo.maxDistance
-    //         //             pointerEvent.showFeedback = event.eventInfo.showFeedback
-    //         //             pointerEvent.eventType = event.eventType
-    //         //             pointerEvent.button = event.eventInfo.button
-    //         //             pointerEvents.events.push(pointerEvent)
-    //         //         })
-    //         //         scenepointers.set(aid, pointerEvents)
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.TEXT_COMPONENT:
-                
-    //         //     for (const aid in components[key]) {
-    //         //         let textShape = new TextShapeComponent(components[key][aid]) 
-    //         //         textShape.outlineColor = new Color4(components[key][aid].outlineColor)
-    //         //         textShape.color = new Color4(components[key][aid].color)
-    //         //         scenetextShapes.set(aid, textShape)
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.COUNTER_COMPONENT:
-    //         //     for (const aid in components[key]) {
-    //         //         createCounterComponent(scene, aid, components[key][aid])
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT:
-    //         //     for (const aid in components[key]) {
-    //         //         createAvatarShapeComponent(scene, aid, components[key][aid])
-    //         //     }
-    //         //     break;
-        
-    //         // case COMPONENT_TYPES.TRIGGER_COMPONENT:
-               
-    //         //     for (const aid in components[key]) {
-    //         //         let data = components[key][aid]
-
-    //         //         let trigger = new TriggerComponent()
-    //         //         trigger.triggers = new ArraySchema<TriggerComponentSchema>()
-
-    //         //         data.triggers.forEach((data:any)=>{
-    //         //             let schema = new TriggerComponentSchema()
-    //         //             schema.type = data.type
-    //         //             schema.input = data.input
-    //         //             schema.conditions = new ArraySchema<TriggerConditionComponent>()
-    //         //             schema.actions = new ArraySchema<string>()
-
-    //         //             data.conditions.forEach((condition:any)=>{
-    //         //                 schema.conditions.push(new TriggerConditionComponent(condition))
-    //         //             })
-
-    //         //             data.actions.forEach((action:any)=>{
-    //         //                 schema.actions.push(action.id)
-    //         //             })
-    //         //             trigger.triggers.push(schema)
-    //         //         })
-
-    //         //         scenetriggers.set(aid, trigger)
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.ACTION_COMPONENT:
-                
-    //         //     for (const aid in components[key]) {
-    //         //         let data = components[key][aid]
-
-    //         //         let action = new ActionComponent()
-    //         //         action.actions = new ArraySchema<ActionComponentSchema>()
-
-                    
-    //         //         data.actions.forEach((data:any)=>{
-    //         //             let schema = new ActionComponentSchema()
-    //         //             schema.id = data.id
-    //         //             schema.name = data.name
-    //         //             schema.type = data.type
-    //         //             schema.showText = data.text
-    //         //             schema.value = data.value
-    //         //             schema.counter = data.counter
-    //         //             schema.state = data.state
-    //         //             schema.visible = data.visible
-    //         //             schema.vMask = data.vMask
-    //         //             schema.iMask = data.iMask
-    //         //             schema.url = data.url
-    //         //             schema.moveCam = data.moveCam
-    //         //             schema.movePos = data.movePos
-    //         //             schema.emote = data.emote
-    //         //             schema.moveRel = data.moveRel
-    //         //             schema.anchor = data.anchor
-    //         //             action.actions.push(schema)
-    //         //         })     
-
-    //         //         sceneactions.set(aid, action)
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.GLTF_COMPONENT:
-    //         //     for (const aid in components[key]) {
-    //         //         scenegltfs.set(aid, new GltfComponent(components[key][aid]))
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.MESH_RENDER_COMPONENT:
-    //         //     for (const aid in components[key]) {
-    //         //         scenemeshRenders.set(aid, new MeshRendererComponent(components[key][aid]))
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.MESH_COLLIDER_COMPONENT:
-    //         //     for (const aid in components[key]) {
-    //         //         scenemeshColliders.set(aid, new MeshColliderComponent(components[key][aid]))
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.TEXTURE_COMPONENT:
-    //         //     for (const aid in components[key]) {
-    //         //         scenetextures.set(aid, new TextureComponent(components[key][aid]))
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT:
-    //         //     for (const aid in components[key]) {
-    //         //         createEmissiveComponent(scene, aid, components[key][aid])
-    //         //     }
-    //         //     break;
-
-    //         //  case COMPONENT_TYPES.MATERIAL_COMPONENT:
-    //         //     for (const aid in components[key]) {
-    //         //         createMaterialComponent(scene, aid, components[key][aid])
-    //         //     }
-    //         //     break;
-
-    //         //  case COMPONENT_TYPES.NFT_COMPONENT:
-    //         //     for (const aid in components[key]) {
-    //         //         createNftShapeComponent(scene, aid, components[key][aid])
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.STATE_COMPONENT:
-             
-    //         //     for (const aid in components[key]) {
-    //         //         let data = components[key][aid]
-
-    //         //         let state = new StateComponent()
-    //         //         state.defaultValue = data.defaultValue
-
-    //         //         state.values = new ArraySchema<string>()
-    //         //         data.values.forEach((value:string)=>{
-    //         //             state.values.push(value)
-    //         //         })
-    //         //         scenestates.set(aid, state)
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.SOUND_COMPONENT:
-           
-    //         //     for (const aid in components[key]) {
-    //         //         scenesounds.set(aid, new SoundComponent(components[key][aid]))
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.VIDEO_COMPONENT:
-              
-    //         //     for (const aid in components[key]) {
-    //         //         scenevideos.set(aid, new VideoComponent(components[key][aid]))
-    //         //     }
-    //         //     break;
-
-    //         // case COMPONENT_TYPES.ANIMATION_COMPONENT:
-              
-    //         //     for (const aid in components[key]) {
-    //         //         createAnimationComponent(scene, aid, components[key][aid])
-    //         //     }
-    //         //     break;
-
-    //     }
-    // })
+            // pushPlayfabEvent(
+            //     SERVER_MESSAGE_TYPES.SCENE_DELETE_GRABBED_ITEM, 
+            //     player, 
+            //     [{name:itemData.n, type:itemInfo.type}]
+            // )
+        }
+    }
+    catch(e){
+        console.log('error deleting grabbed scene item', e)
+    }
 }
 
 function deleteSceneItem(room:IWBRoom, player:Player, info:any, edit?:boolean){
@@ -928,7 +475,9 @@ function deleteSceneItem(room:IWBRoom, player:Player, info:any, edit?:boolean){
                         room.state.realmAssets.get(itemInfo.id) : 
                         itemManager.items.get(itemInfo.id)
 
-                    if(edit){}
+                    if(edit){
+                        console.log('player editing asset, dont remove from selectecd tree')
+                    }
                     else{
                         if(info.childDelete){}
                         else{
@@ -975,4 +524,47 @@ export function removeAllAssetComponents(scene:any, aid:string){
             }
         }
     }
+}
+
+function copyItem(room:IWBRoom, scene:any, info:any, catalogInfo:any){
+    let omittedComponents:COMPONENT_TYPES[] = [
+        COMPONENT_TYPES.PARENTING_COMPONENT,
+        COMPONENT_TYPES.VISBILITY_COMPONENT,
+        COMPONENT_TYPES.TRANSFORM_COMPONENT,
+        COMPONENT_TYPES.IWB_COMPONENT,
+    ]
+    Object.values(COMPONENT_TYPES).forEach((component:any)=>{
+        if(scene[component] && !omittedComponents.includes(component)){
+            let itemInfo:any
+
+            if(component === COMPONENT_TYPES.NAMES_COMPONENT){
+                itemInfo = scene[component].get(info.item.aid)
+                if(itemInfo){
+                    itemInfo.value += " Copy"
+                }
+            }
+            else{
+                itemInfo = scene[component].get(info.item.duplicate)
+                if(itemInfo){
+                    let currentComponent:any = {...itemInfo}
+                    currentComponent.aid = info.item.aid
+                    console.log('copy component', component)
+
+                // if(component === COMPONENT_TYPES.TRIGGER_COMPONENT){
+                //     let triggers:any[] = []
+                //     itemInfo.triggers.forEach((trigger:any)=>{
+                //         triggers.push({
+                //             type:trigger.type,
+                //             input:trigger.input,
+                //             pointer:trigger.pointer,
+
+                //         })
+                //     })
+                // }
+    
+                createComponentFunctions[component](scene, currentComponent.aid, currentComponent)
+                }
+            }
+        }
+    })
 }

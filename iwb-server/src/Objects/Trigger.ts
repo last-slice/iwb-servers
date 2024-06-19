@@ -40,27 +40,30 @@ export function createTriggerComponent(scene:Scene, aid:string, data?:any){
         data.triggers.forEach((data:any)=>{
             let schema = new TriggerComponentSchema()
             schema.type = data.type
-            schema.input = data.input ? data.input : undefined
-            schema.pointer = data.input ? data.pointer : undefined
+            schema.input = data.input ? data.input : 0
+            schema.pointer = data.input ? data.pointer : 0
 
             schema.caid = new ArraySchema<string>()
             schema.ctype = new ArraySchema<string>()
             schema.cvalue = new ArraySchema<string>()
             schema.ccounter = new ArraySchema<number>()
 
-            // schema.conditions = new ArraySchema<TriggerConditionComponent>()
-            schema.actions = new ArraySchema<string>()
-    
-            data.conditions.forEach((condition:any)=>{
-                // schema.conditions.push(new TriggerConditionComponent(condition))
-                schema.caid.push(condition.aid)
-                schema.ctype.push(condition.ctype)
-                schema.cvalue.push(condition.cvalue)
-                schema.ccounter.push(condition.ccounter)
+            data.caid && data.caid.forEach((caid:any)=>{
+                schema.caid.push(caid)
             })
-    
+            data.ctype && data.ctype.forEach((ctype:any)=>{
+                schema.ctype.push(ctype)
+            })
+            data.cvalue && data.cvalue.forEach((cvalue:any)=>{
+                schema.cvalue.push(cvalue)
+            })
+            data.ccounter && data.ccounter.forEach((ccounter:any)=>{
+                schema.ccounter.push(ccounter)
+            })
+
+            schema.actions = new ArraySchema<string>()
             data.actions.forEach((action:any)=>{
-                schema.actions.push(action.id)
+                schema.actions.push(action)
             })
             component.triggers.push(schema)
         })
@@ -90,7 +93,7 @@ export function editTriggerComponent(data:any, scene:Scene){
                 let schema = new TriggerComponentSchema()
                 schema.type = triggerData.type
                 schema.input = 0    
-                schema.pointer = 1
+                schema.pointer = 0
 
                 schema.caid = new ArraySchema<string>()
                 schema.ctype = new ArraySchema<string>()

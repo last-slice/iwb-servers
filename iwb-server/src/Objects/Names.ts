@@ -8,8 +8,8 @@ export class NameComponent extends Schema{
 
 export function createNameComponent(scene:Scene, data:any){
     let component = new NameComponent()
-    component.value = data.item.n
-    scene[COMPONENT_TYPES.NAMES_COMPONENT].set(data.scene.aid, component)
+    component.value = data.value
+    scene[COMPONENT_TYPES.NAMES_COMPONENT].set(data.aid, component)
 }
 
 export function editNameComponent(info:any, scene:Scene){

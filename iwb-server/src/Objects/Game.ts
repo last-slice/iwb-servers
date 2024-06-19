@@ -1,5 +1,4 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
-import { Client } from "colyseus";
 import { Scene } from "./Scene";
 import { COMPONENT_TYPES } from "../utils/types";
 

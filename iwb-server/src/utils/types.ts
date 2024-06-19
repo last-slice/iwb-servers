@@ -70,6 +70,7 @@ export enum SERVER_MESSAGE_TYPES {
     SCENE_COPY_ITEM = 'scene_copy_item',
     SCENE_DEPLOY_FINISHED = 'scene_deploy_finished',
     SCENE_ACTION = 'scene_action',
+    SCENE_DELETE_GRABBED_ITEM = 'scene_delete_grabbed_item',
 
     //World
     INIT_WORLD = "init_world",
@@ -146,6 +147,7 @@ export enum COMPONENT_TYPES {
     NAMES_COMPONENT ='Name',
     POINTER_COMPONENT = 'Pointers',
     UI_TEXT_COMPONENT = 'UI_Text',
+    UI_IMAGE_COMPONENT ='UI_Image',
     COUNTER_COMPONENT = 'Counters',
     GLTF_COMPONENT = 'Gltf',
     STATE_COMPONENT ='States',
@@ -159,6 +161,7 @@ export enum COMPONENT_TYPES {
     AVATAR_SHAPE_COMPONENT = 'Avatar_Shape',
     GAME_COMPONENT = 'Game',
     LEVEL_COMPONENT = 'Levels',
+    BILLBOARD_COMPONENT = 'Billboard'
 }
 
 export enum COLLISION_LAYERS {
