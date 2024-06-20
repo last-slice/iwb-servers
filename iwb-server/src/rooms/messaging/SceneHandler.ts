@@ -7,6 +7,7 @@ import { DEBUG } from "../../utils/config";
 import { Scene } from "../../Objects/Scene";
 import { generateId } from "colyseus";
 import { removeAllAssetComponents } from "./ItemHandler";
+import { addBasicSceneParenting } from "../../Objects/Parenting";
 
 let deploymentServer:any = DEBUG ? process.env.DEPLOYMENT_SERVER_DEV : process.env.DEPLOYMENT_SERVER_PROD
 
@@ -373,7 +374,7 @@ export function iwbSceneHandler(room:IWBRoom){
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN, async(client, info)=>{
-        // console.log(SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN + " message", info)
+        console.log(SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN + " message", info)
         let player:Player = room.state.players.get(client.userData.userId)
         let scene: Scene = room.state.scenes.get(info.sceneId)
         if(player && scene && scene.o === player.address){
@@ -389,7 +390,7 @@ export function iwbSceneHandler(room:IWBRoom){
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE_SPAWN, async(client, info)=>{
-        // console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_SPAWN + " message", info)
+        console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_SPAWN + " message", info)
         let player:Player = room.state.players.get(client.userData.userId)
         let scene: Scene = room.state.scenes.get(info.sceneId)
         if(player && scene && scene.o === player.address){
@@ -533,12 +534,12 @@ export function createScene(player:Player, room:IWBRoom, info:any, parcels:strin
 
   function clearSceneAssets(scene:any){
     Object.values(COMPONENT_TYPES).forEach((component:any)=>{
-        console.log('component is', component)
         if(scene[component] && component !== COMPONENT_TYPES.PARENTING_COMPONENT){
             scene[component].forEach((component:any, aid:string)=>{
-                console.log('aid is', aid)
                 removeAllAssetComponents(scene, aid)
             })
         }
     })
+
+    addBasicSceneParenting(scene)
   }

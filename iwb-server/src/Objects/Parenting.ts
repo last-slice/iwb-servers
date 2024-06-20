@@ -24,7 +24,6 @@ export class ParentingComponent extends Schema{
 }
 
 export function createParentingComponent(scene:Scene, data:any){
-    console.log('creaging parenting component', data)//
     let component = new ParentingComponent()
     component.aid = data.aid
     scene[COMPONENT_TYPES.PARENTING_COMPONENT][data.parent ? data.parent : 0].children.push(data.aid)
@@ -73,4 +72,22 @@ export function editParentingComponent(room:IWBRoom, info:any, scene:Scene){
                 break;
         }
     }
+}
+
+export function addBasicSceneParenting(scene:Scene){
+    let parenting = scene[COMPONENT_TYPES.PARENTING_COMPONENT]
+    parenting.length = 0
+    
+    let sceneRoot = new ParentingComponent()
+    sceneRoot.aid = "0"
+
+    let playerRoot = new ParentingComponent()
+    playerRoot.aid = "1"
+
+    let cameraRoot = new ParentingComponent()
+    cameraRoot.aid = "2"
+
+    parenting.push(sceneRoot)
+    parenting.push(playerRoot)
+    parenting.push(cameraRoot)
 }

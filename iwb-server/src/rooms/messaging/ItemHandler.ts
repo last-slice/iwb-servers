@@ -17,14 +17,14 @@ import { createAudioSourceComponent, editAudioComponent } from "../../Objects/So
 import { createMaterialComponent } from "../../Objects/Materials";
 import { createVideoComponent, editVideoComponent } from "../../Objects/Video";
 import { IWBComponent, createIWBComponent, editIWBComponent } from "../../Objects/IWB";
-import { editNftShape } from "../../Objects/NftShape";
+import { createNftShapeComponent, editNftShape } from "../../Objects/NftShape";
 import { createMeshRendererComponent, editMeshRendererComponent } from "../../Objects/MeshRenderers";
 import { MeshColliderComponent, createMeshColliderComponent, editMeshColliderComponent } from "../../Objects/MeshColliders";
 import { createTextureComponent, editTextureComponent } from "../../Objects/Textures";
 import { createEmissiveComponent } from "../../Objects/Emissive";
 import { createCounterComponent, editCounterComponent } from "../../Objects/Counter";
 import { createActionComponent, editActionComponent } from "../../Objects/Actions";
-import { createTriggerComponent, editTriggerComponent } from "../../Objects/Trigger";
+import { createTriggerComponent, editTriggerComponent, removeActionFromTriggers } from "../../Objects/Trigger";
 import { createPointerComponent, editPointerComponent } from "../../Objects/Pointers";
 import { createStateComponent, editStateComponent } from "../../Objects/State";
 import { createUITextComponent, editUIComponent } from "../../Objects/UIText";
@@ -64,7 +64,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.TEXT_COMPONENT]:(scene:any, aid:string, info:any)=>{createTextComponent(scene, aid, info)}, 
     // [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
     // [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
-    // [COMPONENT_TYPES.NFT_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editNftShape(info, scene)}, 
+    [COMPONENT_TYPES.NFT_COMPONENT]:(scene:any, aid:string, info:any)=>{createNftShapeComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.GLTF_COMPONENT]:(scene:any, aid:string, info:any)=>{createGLTFComponent(scene, info)}, 
     // [COMPONENT_TYPES.VIDEO_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editVideoComponent(info, scene)}, 
     [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:(scene:any, aid:string, info:any)=>{createMeshColliderComponent(scene, info)}, 
@@ -165,7 +165,7 @@ export function iwbItemHandler(room:IWBRoom){
             let scene = room.state.scenes.get(info.item.sceneId)
             if(scene){
                 let catalogItem = item.ugc ? room.state.realmAssets.get(item.id) : itemManager.items.get(item.id)
-                // console.log('catalog item is', catalogItem)
+                console.log('catalog item is', catalogItem)
                 if(catalogItem){
                     if(checkSceneLimits(scene, catalogItem)){
                         createNewItem(room, scene, item, catalogItem)
@@ -265,6 +265,22 @@ export function iwbItemHandler(room:IWBRoom){
             }
         }else{
             client.send(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET, {valid:false, reason:"", player:player.address})
+        }
+    })
+
+    room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_CANCEL, async(client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET_CANCEL + " message", info)
+
+        let player:Player = room.state.players.get(client.userData.userId)
+        if(player && player.mode === SCENE_MODES.BUILD_MODE && canBuild(room, client.userData.userId, info.item.sceneId)){
+            let scene = room.state.scenes.get(info.item.sceneId)
+            if(scene){
+                let itemInfo = scene[COMPONENT_TYPES.IWB_COMPONENT].get(info.item.aid)
+                if(itemInfo && itemInfo.editing && itemInfo.editor === player.address){
+                    itemInfo.editing = false
+                    // this.cancelAssetChanges(player, sceneItem)
+                }
+            }
         }
     })
 }
@@ -420,9 +436,13 @@ export function addItemComponents(scene:Scene, item:any, data:any){
     }
 
     if(catalogItemInfo.components){
+        console.log("catalog components", catalogItemInfo.components)
         for(let componentType in catalogItemInfo.components){
+            console.log('catalog component type', componentType)
             let componentData = {...catalogItemInfo.components[componentType]}
             componentData.aid = item.aid
+
+            console.log("yes we have collider")
             createComponentFunctions[componentType](scene, item.aid, componentData)
         }
     }
@@ -502,6 +522,14 @@ function deleteSceneItem(room:IWBRoom, player:Player, info:any, edit?:boolean){
 export function removeAllAssetComponents(scene:any, aid:string){
     Object.values(COMPONENT_TYPES).forEach((component:any)=>{
         if(scene[component] && component !== COMPONENT_TYPES.PARENTING_COMPONENT){
+            if(component === COMPONENT_TYPES.ACTION_COMPONENT){
+                let actions = scene[component].get(aid)
+                if(actions){
+                    actions.actions.forEach((action:any)=>{
+                        removeActionFromTriggers(scene, action.id)
+                    })
+                }
+            }
             scene[component].delete(aid)
         }
     })

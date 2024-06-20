@@ -112,6 +112,7 @@ export class Scene extends Schema {
     constructor(data?:any) {
         super(data)
         if (data){
+            this.bps = data.bps
             this.pcls = data.pcls
             this.pcnt = data.pcls.length
             this.lim = data.hasOwnProperty("lim") ? data.lim : true
@@ -430,6 +431,8 @@ export function loadRealmScenes(room:IWBRoom, scenes:any[]){
     let filter = scenes.filter((scene)=> scene.w === room.state.world)
     room.state.sceneCount = filter.length
 
+    console.log('scenes are ', filter)
+
     filter.forEach((scene)=>{
         room.state.scenes.set(scene.id, new Scene(scene))
     })
@@ -453,8 +456,6 @@ export async function saveRealmScenes(room:IWBRoom){
 
         scenes.push(jsonScene)
     })
-
-    // console.log('scenes are', scenes)
 
     let world = iwbManager.worlds.find((w)=>w.ens === room.state.world)
     if(world){
