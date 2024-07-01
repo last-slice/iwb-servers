@@ -39,7 +39,7 @@ export class IWBRoom extends Room<IWBRoomState> {
 
 
 
-        createTestScene(this)
+        // createTestScene(this)
     }
 
     onJoin(client: Client, options: any) {

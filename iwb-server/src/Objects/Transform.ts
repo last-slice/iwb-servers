@@ -7,6 +7,14 @@ export class Vector3 extends Schema {
   @type("number") x: number
   @type("number") y: number
   @type("number") z: number
+
+  subtract(other: Vector3): Vector3 {
+    return new Vector3(
+        this.x - other.x,
+        this.y - other.y,
+        this.z - other.z
+    );
+  }
 }
 
 export class Quaternion extends Schema {

@@ -161,6 +161,15 @@ export class Vector3 {
       lerp(this.z, target.z, t)
     );
   }
+
+   // Method to subtract two Vector3 positions
+   subtract(other: Vector3): Vector3 {
+    return new Vector3(
+        this.x - other.x,
+        this.y - other.y,
+        this.z - other.z
+    );
+}
 }
 
 function lerp(start:number, end:number, t:number) {

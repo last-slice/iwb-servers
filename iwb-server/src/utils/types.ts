@@ -253,6 +253,7 @@ export enum ACTIONS {
     MOVE_PLAYER = 'move_player',
     SHOW_NOTIFICATION = 'show_notification',
     PLACE_PLAYER_POSITION = 'place_player_position',
+    ATTEMPT_GAME_START = 'attempt_game_start'
 }
 
 export enum Triggers {

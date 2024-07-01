@@ -97003,9 +97003,9 @@
   {
     "id": "e7a63c71-c2ba-4e6d-8e62-d77e2c8dc93a",
     "m": "",
-    "n": "IWB Game Component",
+    "n": "IWB Game Module",
     "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
-    "d": "Add game templates to your scene!",
+    "d": "Add a game to your scene!",
     "cat": "Gallery/Venue",
     "on": "IWB Builder",
     "o": "IWB Team",
@@ -97020,6 +97020,53 @@
       "y": 1,
       "z": 1
     },
-    "sty": "Smart Items"
+    "sty": "Smart Items",
+    "components": {
+      "Material": {
+        "type": 0,
+        "onPlay": false,
+        "albedoColor": {
+          "r": 0.925,
+          "g": 0.819,
+          "b": 0.0361,
+          "a": 0.5
+        }
+      },
+      "Gltf":{
+        "src":"90048a13-0171-4e5d-84be-662492b775ea",
+        "visibleCollision":1,
+        "invisibleCollision":2
+      },
+      "Actions": {
+        "actions": [
+          {
+            "name": "Attempt Start Game",
+            "type": "attempt_game_start"
+          }
+        ]
+      },
+      "Pointers": {
+        "events": [
+          {
+            "eventType": 1,
+            "button": 1,
+            "hoverText": "Start Game",
+            "maxDistance": 5,
+            "showFeedback": true
+          }
+        ]
+      },
+      "Triggers": {
+        "triggers": [
+          {
+            "type": "on_input_action",
+            "input": 1,
+            "pointer":1,
+            "conditions": [],
+            "actions": []
+          }
+        ]
+      }
+    }
   }
 ]

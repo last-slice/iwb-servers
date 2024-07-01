@@ -27,9 +27,10 @@ import { TextureComponent } from "./Textures";
 import { EmissiveComponent, createEmissiveComponent } from "./Emissive";
 import { AvatarShapeComponent, createAvatarShapeComponent } from "./AvatarShape";
 import { UITextComponent, createUITextComponent } from "./UIText";
-import { GameComponent } from "./Game";
+import { GameComponent, createGameComponent } from "./Game";
 import { UIImageComponent, createUIImageComponent } from "./UIImage";
 import { BillboardComponent, createBillboardComponent } from "./Billboard";
+import { LevelComponent, createLevelComponent } from "./Level";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -96,6 +97,7 @@ export class Scene extends Schema {
     @type({map:UITextComponent}) [COMPONENT_TYPES.UI_TEXT_COMPONENT]:MapSchema<UITextComponent>
     @type({map:UIImageComponent}) [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:MapSchema<UIImageComponent>
     @type({map:GameComponent}) [COMPONENT_TYPES.GAME_COMPONENT]:MapSchema<GameComponent>
+    @type({map:LevelComponent}) [COMPONENT_TYPES.LEVEL_COMPONENT]:MapSchema<LevelComponent>
     @type({map:BillboardComponent}) [COMPONENT_TYPES.BILLBOARD_COMPONENT]:MapSchema<BillboardComponent>
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent>
 
@@ -152,11 +154,23 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.GAME_COMPONENT] = new MapSchema<GameComponent>()
         this[COMPONENT_TYPES.UI_IMAGE_COMPONENT] = new MapSchema<UIImageComponent>()
         this[COMPONENT_TYPES.BILLBOARD_COMPONENT] = new MapSchema<BillboardComponent>()
+        this[COMPONENT_TYPES.LEVEL_COMPONENT] = new MapSchema<LevelComponent>()
         // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()
 
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
+                    case COMPONENT_TYPES.LEVEL_COMPONENT:
+                        for (const aid in data[component]) {
+                            createLevelComponent(this, aid,  data[component][aid])
+                        }
+                        break;
+                    case COMPONENT_TYPES.GAME_COMPONENT:
+                        for (const aid in data[component]) {
+                            createGameComponent(this, aid,  data[component][aid])
+                        }
+                        break;
+
                     case COMPONENT_TYPES.BILLBOARD_COMPONENT:
                         for (const aid in data[component]) {
                             createBillboardComponent(this, aid,  data[component][aid])

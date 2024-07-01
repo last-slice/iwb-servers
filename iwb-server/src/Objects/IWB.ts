@@ -17,6 +17,7 @@ export class IWBComponent extends Schema{
     ugc:boolean
     pending:boolean
     components:any
+    entity:any
     @type("boolean") locked:boolean
     @type("boolean") buildVis:boolean
     @type("boolean") editing:boolean
@@ -25,7 +26,7 @@ export class IWBComponent extends Schema{
 }
 
 export function createIWBComponent(room:IWBRoom, scene:Scene, data:any){
-    console.log('creating iwb component', data)
+    // console.log('creating iwb component', data)
     let component = new IWBComponent()
     component.aid = data.scene.aid
     component.id = data.scene.id

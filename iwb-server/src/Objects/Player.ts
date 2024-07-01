@@ -110,6 +110,7 @@ export class Player extends Schema {
     rotation:number
     parent:any
     parentEntity:any
+    playingGame:any
 
     constructor(room:IWBRoom, client:Client){
         super()

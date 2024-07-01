@@ -11,7 +11,7 @@ import { Scene } from "../../Objects/Scene";
 // import { IWBComponent, createIWBComponent, editIWBComponent } from "../../Objects/IWB";
 import { NameComponent, createNameComponent, editNameComponent } from "../../Objects/Names";
 import { GltfComponent, createGLTFComponent, editGltfComponent } from "../../Objects/Gltf";
-import { ParentingComponent, createParentingComponent, editParentingComponent } from "../../Objects/Parenting";
+import { ParentingComponent, createParentingComponent, editParentingComponent, removeParenting } from "../../Objects/Parenting";
 import { AnimatorComponentSchema, createAnimationComponent } from "../../Objects/Animator";
 import { createAudioSourceComponent, editAudioComponent } from "../../Objects/Sound";
 import { createMaterialComponent } from "../../Objects/Materials";
@@ -30,6 +30,7 @@ import { createStateComponent, editStateComponent } from "../../Objects/State";
 import { createUITextComponent, editUIComponent } from "../../Objects/UIText";
 import { createUIImageComponent, editUIImageComponent } from "../../Objects/UIImage";
 import { createBillboardComponent } from "../../Objects/Billboard";
+import { addGameComponent, sceneHasGame } from "../../Objects/Game";
 
 
 let updateComponentFunctions:any = {
@@ -48,7 +49,7 @@ let updateComponentFunctions:any = {
     [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editMeshColliderComponent(info, scene)}, 
     [COMPONENT_TYPES.MESH_RENDER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editMeshRendererComponent(info, scene)}, 
     [COMPONENT_TYPES.TEXTURE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editTextureComponent(info, scene)},
-    [COMPONENT_TYPES.PARENTING_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editParentingComponent(room, info, scene)},
+    [COMPONENT_TYPES.PARENTING_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editParentingComponent(room, client, info, scene)},
     [COMPONENT_TYPES.ACTION_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editActionComponent(info, scene)},
     [COMPONENT_TYPES.TRIGGER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editTriggerComponent(info, scene)},
     [COMPONENT_TYPES.POINTER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{ editPointerComponent(info, scene)},
@@ -79,7 +80,6 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.COUNTER_COMPONENT]:(scene:any, aid:string, info:any)=>{createCounterComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.MATERIAL_COMPONENT]:(scene:any, aid:string, info:any)=>{createMaterialComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.BILLBOARD_COMPONENT]:(scene:any, aid:string, info:any)=>{createBillboardComponent(scene, aid, info)}, 
-    
 }
 
 export function iwbItemHandler(room:IWBRoom){
@@ -168,7 +168,7 @@ export function iwbItemHandler(room:IWBRoom){
                 console.log('catalog item is', catalogItem)
                 if(catalogItem){
                     if(checkSceneLimits(scene, catalogItem)){
-                        createNewItem(room, scene, item, catalogItem)
+                        createNewItem(room, client, scene, item, catalogItem)
 
                         if(item.duplicate){
                             console.log('need to copy item')
@@ -182,7 +182,7 @@ export function iwbItemHandler(room:IWBRoom){
                         }
 
                         else{
-                            addItemComponents(scene, item, catalogItem)
+                            addItemComponents(room, client, scene, item, catalogItem)
 
                             pushPlayfabEvent(
                                 SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, 
@@ -329,7 +329,14 @@ function checkSceneLimits(scene:Scene, item:any){
     }
 }
 
-export function createNewItem(room:IWBRoom, scene:Scene, item:any, catalogItemInfo:any){
+export function createNewItem(room:IWBRoom, client:Client, scene:Scene, item:any, catalogItemInfo:any){
+    //check if new item is a game comonent, if so, check if already exists
+
+    if(sceneHasGame(scene)){
+        client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"A game component already exists on this scene", sound:'error_2'})
+        return
+    }
+
     createIWBComponent(room, scene, {scene:item, item:catalogItemInfo})
     createNameComponent(scene, {aid:item.aid, value:catalogItemInfo.n})
     createVisibilityComponent(scene, item)
@@ -381,11 +388,17 @@ function addNewComponent(scene:Scene, item:any){
     }
 }
 
-export function addItemComponents(scene:Scene, item:any, data:any){
+export function addItemComponents(room:IWBRoom, client:Client, scene:Scene, item:any, data:any){
     // if(item.type === "SM"){}
     // else{
 
     // }
+
+    //check if game component and if it already exists
+    if(sceneHasGame(scene)){
+        client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"A game component already exists on this scene", sound:'error_2'})
+        return
+    }
 
     let catalogItemInfo = {...data}
     switch(catalogItemInfo.ty){
@@ -399,7 +412,7 @@ export function addItemComponents(scene:Scene, item:any, data:any){
                         loop:false
                     })
                 })
-                // createAnimationComponent(scene, item.aid, {states:states})
+                createAnimationComponent(scene, item.aid, {states:states})
             }
             createGLTFComponent(scene, {aid:item.aid, src:catalogItemInfo.id, visibleCollision:1, invisibleCollision:2, pc:catalogItemInfo.pc})
             break;
@@ -436,15 +449,15 @@ export function addItemComponents(scene:Scene, item:any, data:any){
     }
 
     if(catalogItemInfo.components){
-        console.log("catalog components", catalogItemInfo.components)
         for(let componentType in catalogItemInfo.components){
-            console.log('catalog component type', componentType)
             let componentData = {...catalogItemInfo.components[componentType]}
             componentData.aid = item.aid
-
-            console.log("yes we have collider")
             createComponentFunctions[componentType](scene, item.aid, componentData)
         }
+    }
+
+    if(catalogItemInfo.id === "e7a63c71-c2ba-4e6d-8e62-d77e2c8dc93a"){
+        addGameComponent(room, client, scene, item.aid, catalogItemInfo)
     }
 }
 
@@ -537,21 +550,7 @@ export function removeAllAssetComponents(scene:any, aid:string){
     if(["0","1","2"].includes(aid)){
         return
     }
-
-    let parentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any) => $.aid === aid)
-    if(parentIndex >= 0){
-        scene[COMPONENT_TYPES.PARENTING_COMPONENT].splice(parentIndex,1)
-    }
-
-    for(const parent of scene[COMPONENT_TYPES.PARENTING_COMPONENT]){
-        if(parent.children.includes(aid)){
-            let childIndex = parent.children.findIndex(($:any)=> $ === aid)
-            if(childIndex >= 0){
-                parent.children.splice(childIndex, 1)
-                return
-            }
-        }
-    }
+    removeParenting(scene, aid)
 }
 
 function copyItem(room:IWBRoom, scene:any, info:any, catalogInfo:any){

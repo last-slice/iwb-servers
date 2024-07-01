@@ -153,7 +153,7 @@ export class IWBManager{
     attemptUserMessage(req:any, res:any){
         if(req.body){
             if(req.body.user){
-                this.sendUserMessage(req.body.user.toLowerCase(), SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, req.body.message)
+                this.sendUserMessage(req.body.user.toLowerCase(), SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:req.body.message, sound:req.body.sound})
                 res.status(200).send({valid: true})
             }else{
                 res.status(200).send({valid: false, msg: "invalid user"})
@@ -167,7 +167,7 @@ export class IWBManager{
         console.log('body to send is', body)
         if(body && body.message){
             this.rooms.forEach((room)=>{
-                room.broadcast(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, body.message)
+                room.broadcast(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:body.message, sound:body.sound})
             })
         }
     }

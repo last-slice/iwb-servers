@@ -28,24 +28,24 @@ export function iwbSceneHandler(room:IWBRoom){
                     // }
                 })
 
-                try{
-                    let res = await fetch(deploymentServer + "scene/download", {
-                        method:"POST",
-                        headers:{"Content-type": "application/json"},
-                        body: JSON.stringify({scene:scene})
-                    })
-                   //  console.log('deployment ping', await res.json())
+                // try{
+                //     let res = await fetch(deploymentServer + "scene/download", {
+                //         method:"POST",
+                //         headers:{"Content-type": "application/json"},
+                //         body: JSON.stringify({scene:scene})
+                //     })
+                //    //  console.log('deployment ping', await res.json())
 
-                   pushPlayfabEvent(
-                    SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD, 
-                    player, 
-                    [{scene:scene.n}]
-                    )
-                }
-                catch(e){
-                    console.log('error pinging download server for zip file', player.address, e)
-                    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "There was an error initiating your download. Please try again.")
-                }
+                //    pushPlayfabEvent(
+                //     SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD, 
+                //     player, 
+                //     [{scene:scene.n}]
+                //     )
+                // }
+                // catch(e){
+                //     console.log('error pinging download server for zip file', player.address, e)
+                //     player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"There was an error initiating your download. Please try again.", sound:'error_2'})
+                // }
             }
         }
     })
@@ -53,17 +53,17 @@ export function iwbSceneHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT, async(client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT + " message", info)
 
-        let player:Player = room.state.players.get(client.userData.userId)
-        if(player){
-            let world = iwbManager.worlds.find((w)=> w.ens === room.state.world)
-            if(world && world.owner === client.userData.userId){
-                iwbManager.deployWorld(world, room)
-            }
-        }
+        // let player:Player = room.state.players.get(client.userData.userId)
+        // if(player){
+        //     let world = iwbManager.worlds.find((w)=> w.ens === room.state.world)
+        //     if(world && world.owner === client.userData.userId){
+        //         iwbManager.deployWorld(world, room)
+        //     }
+        // }
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SELECT_PARCEL, async(client, info)=>{
-        // console.log(SERVER_MESSAGE_TYPES.SELECT_PARCEL + " message", info)
+        console.log(SERVER_MESSAGE_TYPES.SELECT_PARCEL + " message", info)
         let player:Player = room.state.players.get(client.userData.userId)
         if(player && (player.mode === SCENE_MODES.CREATE_SCENE_MODE || info.current)){
 
@@ -72,14 +72,15 @@ export function iwbSceneHandler(room:IWBRoom){
                 if(scene){
                     if(isOccupied(room, info.parcel)){
                         removeParcel(scene, info.parcel)
+                    }else if(hasTemporaryParcel(room, info.parcel)){
+                        removeTemporaryParcel(room, info.parcel)
                     }else{
-                        scene.pcls.push(info.parcel)
+                        addTempParcel(room, info.parcel)
                     }
                 }
 
             }else{
                 if(!isOccupied(room, info.parcel)){
-                    if(info.current){}
                     if(hasTemporaryParcel(room, info.parcel)){
                         removeTemporaryParcel(room, info.parcel)
                         }else{
@@ -91,6 +92,17 @@ export function iwbSceneHandler(room:IWBRoom){
             }
         }
     })   
+
+    room.onMessage(SERVER_MESSAGE_TYPES.SCENE_UPDATE_PARCELS, async(client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.SCENE_UPDATE_PARCELS + " message", info)
+        let scene = room.state.scenes.get(info.sceneId)
+        if(scene){
+            room.state.temporaryParcels.forEach((parcel:string, i:number)=>{
+                scene.pcls.push(parcel)
+            })
+            room.state.temporaryParcels.clear()
+        }
+    })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_SAVE_NEW, async(client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.SCENE_SAVE_NEW + " message", info)
@@ -286,7 +298,7 @@ export function iwbSceneHandler(room:IWBRoom){
                         [{scene: scene.n, world:scene.w}]
                     )
 
-                    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, "Your scene assets were removed!")
+                    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"Your scene assets were removed!"})
                 }
             }
         }
@@ -330,47 +342,47 @@ export function iwbSceneHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, async(client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.SCENE_DEPLOY + " message", info)
         let player:Player = room.state.players.get(client.userData.userId)
-        if(player){
-            let scene:Scene = room.state.scenes.get(info.sceneId)
-            if(scene && scene.o === player.address){
-              //   console.log('owner is requesting deployment')
+        // if(player){
+        //     let scene:Scene = room.state.scenes.get(info.sceneId)
+        //     if(scene && scene.o === player.address){
+        //       //   console.log('owner is requesting deployment')
 
-                try{
-                    let res = await fetch(deploymentServer + "scene/deploy", {
-                        method:"POST",
-                        headers:{
-                            "Content-type": "application/json",
-                            "Auth": "" + process.env.IWB_DEPLOYMENT_AUTH
-                        },
-                        body: JSON.stringify({
-                            scene:scene,
-                            dest:info.dest,
-                            name: info.name,
-                            worldName:info.worldName,
-                            user: scene.o,
-                            parcel: info.parcel,
-                            tokenId: info.tokenId,
-                            target: 'interconnected.online'
-                        })
-                    })
-                    let json = await res.json()
-                    console.log('json is', json)
-                    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:json.valid, msg:json.valid ? "Your deployment is pending!...Please wait for a link to sign the deployment. This could take a couple minutes." : "Error with your deployment request. Please try again."})
+        //         try{
+        //             let res = await fetch(deploymentServer + "scene/deploy", {
+        //                 method:"POST",
+        //                 headers:{
+        //                     "Content-type": "application/json",
+        //                     "Auth": "" + process.env.IWB_DEPLOYMENT_AUTH
+        //                 },
+        //                 body: JSON.stringify({
+        //                     scene:scene,
+        //                     dest:info.dest,
+        //                     name: info.name,
+        //                     worldName:info.worldName,
+        //                     user: scene.o,
+        //                     parcel: info.parcel,
+        //                     tokenId: info.tokenId,
+        //                     target: 'interconnected.online'
+        //                 })
+        //             })
+        //             let json = await res.json()
+        //             console.log('json is', json)
+        //             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:json.valid, msg:json.valid ? "Your deployment is pending!...Please wait for a link to sign the deployment. This could take a couple minutes." : "Error with your deployment request. Please try again."})
 
-                    pushPlayfabEvent(
-                        SERVER_MESSAGE_TYPES.SCENE_DEPLOY, 
-                        player, 
-                        [{scene:scene, world: scene.w}]
-                    )
-                }
-                catch(e){
-                    console.log('error pinging deploy server', player.address, e)
-                    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:false, msg:"Error pinging the deploy server"})
-                }
-            }else{
-               //  console.log('someone else requesting deployment access')
-            }
-        }
+        //             pushPlayfabEvent(
+        //                 SERVER_MESSAGE_TYPES.SCENE_DEPLOY, 
+        //                 player, 
+        //                 [{scene:scene, world: scene.w}]
+        //             )
+        //         }
+        //         catch(e){
+        //             console.log('error pinging deploy server', player.address, e)
+        //             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:false, msg:"Error pinging the deploy server"})
+        //         }
+        //     }else{
+        //        //  console.log('someone else requesting deployment access')
+        //     }
+        // }
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN, async(client, info)=>{
@@ -465,6 +477,7 @@ export function removeTemporaryParcel(room:IWBRoom, parcel: any) {
 }
 
 export function addTempParcel(room:IWBRoom, parcel: any) {
+    console.log('adding temp parcel', parcel)
     room.state.temporaryParcels.push(parcel)
 }
 

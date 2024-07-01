@@ -11,7 +11,7 @@ export class AnimatorComponentSchema extends Schema{
 
 export class AnimatorComponent extends Schema{
     // @type("string") id:string
-    @type([AnimatorComponentSchema]) states:ArraySchema<AnimatorComponentSchema>
+    @type([AnimatorComponentSchema]) states:ArraySchema<AnimatorComponentSchema> = new ArraySchema()
 }
 
 export function createAnimationComponent(scene:Scene, aid:string, data:any){
