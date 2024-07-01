@@ -12,6 +12,10 @@ import { addBasicSceneParenting } from "../../Objects/Parenting";
 let deploymentServer:any = DEBUG ? process.env.DEPLOYMENT_SERVER_DEV : process.env.DEPLOYMENT_SERVER_PROD
 
 export function iwbSceneHandler(room:IWBRoom){
+    room.onMessage(SERVER_MESSAGE_TYPES.GET_MARKETPLACE, (client, info)=>{
+        client.send(SERVER_MESSAGE_TYPES.GET_MARKETPLACE, itemManager.marketplace)
+    })
+
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD, async(client, info)=>{
         // (SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD + " message", info)
 

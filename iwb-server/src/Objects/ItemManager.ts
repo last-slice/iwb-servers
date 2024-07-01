@@ -3,10 +3,12 @@ import { PLAYFAB_DATA_ACCOUNT, abortFileUploads, fetchPlayfabFile, fetchPlayfabM
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
 import data from '../tests/catalog.json'
+import marketplace from '../tests/marketplace.json'
 
 export class ItemManager{
     
     items:Map<string, any> = new Map()
+    marketplace:Map<string, any> = new Map()
     newItemsToDeploy:any[] = []
 
     constructor(){
@@ -35,8 +37,13 @@ export class ItemManager{
             }
         })
 
+        marketplace.forEach((item:any)=>{
+            if(!this.marketplace.has(item.id)){
+                this.marketplace.set(item.id, item)
+            }
+        })
 
-        console.log('catalog size is', this.items.size)
+        // console.log('catalog size is', this.items.size)
     }
 
     async getServerItems(init?:boolean){
