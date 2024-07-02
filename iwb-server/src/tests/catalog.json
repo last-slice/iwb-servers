@@ -97064,6 +97064,13 @@
             "pointer":1,
             "conditions": [],
             "actions": []
+          },
+          {
+            "type": "on_game_start",
+            "input": 0,
+            "pointer":0,
+            "conditions": [],
+            "actions": []
           }
         ]
       }

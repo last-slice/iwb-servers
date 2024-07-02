@@ -11,6 +11,7 @@ import { itemManager, iwbManager } from "../app.config";
 import { playerLogin, pushPlayfabEvent, updatePlayerDisplayName, updatePlayerInternalData } from "../utils/Playfab";
 import { checkAssetsForEditByPlayer, iwbSceneHandler } from "./messaging/SceneHandler";
 import { iwbItemHandler } from "./messaging/ItemHandler";
+import { iwbSceneGameHandler } from "./messaging/GameHandler";
 
 export class IWBRoom extends Room<IWBRoomState> {
 
@@ -27,6 +28,7 @@ export class IWBRoom extends Room<IWBRoomState> {
         iwbItemHandler(this)
         iwbSceneActionHandler(this)
         // iwbRewardHandler(this)
+        iwbSceneGameHandler(this)
         iwbPlayerHandler(this)
         iwbSceneHandler(this)
 

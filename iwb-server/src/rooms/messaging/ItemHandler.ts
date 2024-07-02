@@ -30,7 +30,7 @@ import { createStateComponent, editStateComponent } from "../../Objects/State";
 import { createUITextComponent, editUIComponent } from "../../Objects/UIText";
 import { createUIImageComponent, editUIImageComponent } from "../../Objects/UIImage";
 import { createBillboardComponent } from "../../Objects/Billboard";
-import { addGameComponent, sceneHasGame } from "../../Objects/Game";
+import { addGameComponent, editGameComponent, sceneHasGame } from "../../Objects/Game";
 
 
 let updateComponentFunctions:any = {
@@ -57,6 +57,7 @@ let updateComponentFunctions:any = {
     [COMPONENT_TYPES.UI_TEXT_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editUIComponent(info, scene)},
     [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editUIImageComponent(info, scene)},
     [COMPONENT_TYPES.COUNTER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editCounterComponent(info, scene)}, 
+    [COMPONENT_TYPES.GAME_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editGameComponent(info, scene)}, 
 }
 
 let createComponentFunctions:any = {
@@ -332,9 +333,11 @@ function checkSceneLimits(scene:Scene, item:any){
 export function createNewItem(room:IWBRoom, client:Client, scene:Scene, item:any, catalogItemInfo:any){
     //check if new item is a game comonent, if so, check if already exists
 
-    if(sceneHasGame(scene)){
-        client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"A game component already exists on this scene", sound:'error_2'})
-        return
+    if(catalogItemInfo.id === "e7a63c71-c2ba-4e6d-8e62-d77e2c8dc93a"){
+        if(sceneHasGame(scene)){
+            client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"A game component already exists on this scene", sound:'error_2'})
+            return
+        }
     }
 
     createIWBComponent(room, scene, {scene:item, item:catalogItemInfo})
@@ -395,10 +398,10 @@ export function addItemComponents(room:IWBRoom, client:Client, scene:Scene, item
     // }
 
     //check if game component and if it already exists
-    if(sceneHasGame(scene)){
-        client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"A game component already exists on this scene", sound:'error_2'})
-        return
-    }
+    // if(sceneHasGame(scene)){
+    //     client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"A game component already exists on this scene", sound:'error_2'})
+    //     return
+    // }
 
     let catalogItemInfo = {...data}
     switch(catalogItemInfo.ty){

@@ -85,6 +85,7 @@ export enum SERVER_MESSAGE_TYPES {
     WORLD_ADD_BP = 'world_add_build_permissions',
     WORLD_DELETE_BP = 'world_delete_build_permissions',
     GET_MARKETPLACE = 'get_marketplace',
+    START_GAME = 'start_game',
 
     CUSTOM = "custom",
 

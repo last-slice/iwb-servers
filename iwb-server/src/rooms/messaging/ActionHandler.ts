@@ -1,14 +1,7 @@
 import { Client, generateId } from "colyseus";
 import { IWBRoom } from "../IWBRoom";
 import { ACTIONS, COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../../utils/types";
-import { editTransform } from "../../Objects/Transform";
-import { editVisibility } from "../../Objects/Visibility";
-import { editTextShape } from "../../Objects/TextShape";
-import { addNumber } from "../../Objects/Counter";
-import { Scene } from "../../Objects/Scene";
 import { ActionComponent, ActionComponentSchema, handleCloneAction } from "../../Objects/Actions";
-import { itemManager } from "../../app.config";
-import { createNewItem } from "./ItemHandler";
 
 export function iwbSceneActionHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ACTION, (client:Client, info:any)=>{
@@ -31,7 +24,7 @@ export function iwbSceneActionHandler(room:IWBRoom){
                             break;
         
                         case ACTIONS.CLONE:
-                            handleCloneAction(room, scene, aid, action)
+                            handleCloneAction(room, client, scene, aid, action)
                             break;
                     }
                 }

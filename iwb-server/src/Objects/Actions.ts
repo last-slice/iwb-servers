@@ -3,7 +3,7 @@ import { Scene } from "./Scene";
 import { generateRandomId } from "../utils/functions";
 import { removeActionFromTriggers } from "./Trigger";
 import { COMPONENT_TYPES } from "../utils/types";
-import { generateId } from "colyseus";
+import { Client, generateId } from "colyseus";
 import { itemManager } from "../app.config";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { createNewItem } from "../rooms/messaging/ItemHandler";
@@ -45,6 +45,7 @@ export class ActionComponentSchema extends Schema{
     @type("string") id:string
     @type("string") name:string
     @type("string") type:string
+    @type("string") game:string
     @type("number") anchor:number
     @type("string") emote:string
     @type("boolean") visible:boolean
@@ -61,8 +62,6 @@ export class ActionComponentSchema extends Schema{
     @type("number") x:number
     @type("number") y:number
     @type("number") z:number
-
-    ///amount for add/subtract actions
     @type("number") value:number
     @type("string") counter:string
     @type("string") state:string
@@ -135,7 +134,7 @@ export function editActionComponent(data:any, scene:Scene){
     }
 }
 
-export function handleCloneAction(room:IWBRoom, scene:any, aid:string, action:ActionComponentSchema){
+export function handleCloneAction(room:IWBRoom, client:Client, scene:any, aid:string, action:ActionComponentSchema){
     let iwbInfo:any = scene[COMPONENT_TYPES.IWB_COMPONENT].get(aid)
     let nameInfo:any = scene[COMPONENT_TYPES.NAMES_COMPONENT].get(aid)
     if(iwbInfo && nameInfo){
@@ -151,7 +150,7 @@ export function handleCloneAction(room:IWBRoom, scene:any, aid:string, action:Ac
                 clonedItemInfo.rotation = {...transform.r}
                 clonedItemInfo.scale = {...transform.s}
 
-                createNewItem(room, scene, clonedItemInfo, catalogItem)
+                createNewItem(room, client, scene, clonedItemInfo, catalogItem)
 
                 let omittedComponents:COMPONENT_TYPES[] = [
                     COMPONENT_TYPES.NAMES_COMPONENT,

@@ -12,11 +12,13 @@ import { editTriggerComponent } from "./Trigger";
 export class GameComponent extends Schema{
     @type("string") id:string = ""
     @type("string") name:string = ""
+    @type("string") image:string = ""
     @type("string") description:string = ""
     @type("string") startScreen:string = "iwb"
     @type("string") loadingScreen:string
     @type("number") type:number
     @type("number") startLevel:number
+    @type("number") currentLevel:number
     @type(Vector3) loadingSpawn:Vector3
     @type("boolean") invisibleStartBox:boolean //do we need this?
     @type("boolean") saveProgress:boolean //do we need this?
@@ -42,6 +44,17 @@ export function createGameComponent(scene:Scene, aid:string, data:any){
     scene[COMPONENT_TYPES.GAME_COMPONENT].set(aid, component)
 }
 
+export function editGameComponent(info:any, scene:Scene){
+    let itemInfo:any = scene[COMPONENT_TYPES.GAME_COMPONENT].get(info.aid)
+    if(itemInfo){
+        for(let key in info){
+            if(itemInfo.hasOwnProperty(key)){
+                itemInfo[key] = info[key]
+            }
+        }
+    }
+}
+
 export function addGameComponent(room:IWBRoom, client:Client, scene:Scene, aid:string, catalogInfo:any){
     let gameComponentInfo:any = {
         id: scene.id,
@@ -62,6 +75,7 @@ function updateGameTrigger(scene:Scene, aid:string){
 
     let action = scene[COMPONENT_TYPES.ACTION_COMPONENT].get(aid)
     let actionid = action.actions[0].id
+    action.actions[0].game = scene.id
 
     let data:any = {
         aid:aid,
@@ -97,8 +111,10 @@ export function createGameLevel(room:IWBRoom, client:Client, scene:Scene, number
 }
 
 export function sceneHasGame(scene:Scene){
-    for(const aid in scene[COMPONENT_TYPES.GAME_COMPONENT]){
-        return true
-    }
-    return false
+    let count = 0
+    scene[COMPONENT_TYPES.GAME_COMPONENT].forEach((component)=>{
+        count++
+    })
+    console.log("game component count", count)
+    return count > 0
 }
