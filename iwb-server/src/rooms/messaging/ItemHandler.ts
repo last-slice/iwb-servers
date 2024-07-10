@@ -58,7 +58,7 @@ let updateComponentFunctions:any = {
     [COMPONENT_TYPES.UI_TEXT_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editUIComponent(info, scene)},
     [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editUIImageComponent(info, scene)},
     [COMPONENT_TYPES.COUNTER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editCounterComponent(info, scene)}, 
-    [COMPONENT_TYPES.GAME_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editGameComponent(info, scene)}, 
+    [COMPONENT_TYPES.GAME_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editGameComponent(room, client, info, scene)}, 
     [COMPONENT_TYPES.LEVEL_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editLevelComponent(info, scene)}, 
 }
 

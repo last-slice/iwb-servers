@@ -81,22 +81,19 @@ export function createGameLevel(room:IWBRoom, client:Client, scene:Scene, item:a
     createNewItem(room, client, scene, newLevelCatalogInfo, newLevelCatalogInfo) 
 
     createLevelComponent(scene, aid, {
-        name: "Level 1",
+        name: "Level " + number,
         number: number,
         loadingSpawn: new Vector3(item.position),
         loadingSpawnLook: new Vector3({x:0, y:0, z:0}),
         invisibleStartBox:true
     })
 
-    // createStateComponent(scene, aid)
-    // editStateComponent({aid:aid, action:'add', data:{value:'disabled'}}, scene)
-    // editStateComponent({aid:aid, action:'add', data:{value:'enabled'}}, scene)
     createActionComponent(scene, aid, 
         {
         actions:[
-            // {name:"Enable Level", type:ACTIONS.SET_STATE, state:'enabled'}, 
-            // {name:"Disable Level", type:ACTIONS.SET_STATE, state:'disabled'},
             {name:"Load Level", type:ACTIONS.LOAD_LEVEL},
+            {name:"Complete Level", type:ACTIONS.COMPLETE_LEVEL},
+            {name:"End Level", type:ACTIONS.END_LEVEL},
         ]
         }
     )
@@ -105,7 +102,9 @@ export function createGameLevel(room:IWBRoom, client:Client, scene:Scene, item:a
         {
             isArea:false,
             triggers:[
-                {input:0, pointer:0, type:Triggers.ON_LEVEL_LOADED, actions:[]}
+                {input:0, pointer:0, type:Triggers.ON_LEVEL_LOADED, actions:[]},
+                {input:0, pointer:0, type:Triggers.ON_LEVEL_COMPLETE, actions:[]},
+                {input:0, pointer:0, type:Triggers.ON_LEVEL_END, actions:[]}
             ],
         }
     )

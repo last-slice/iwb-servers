@@ -45,13 +45,23 @@ export function createGameComponent(scene:Scene, aid:string, data:any){
     scene[COMPONENT_TYPES.GAME_COMPONENT].set(aid, component)
 }
 
-export function editGameComponent(info:any, scene:Scene){
+export function editGameComponent(room:IWBRoom, client:Client, info:any, scene:Scene){
     let itemInfo:any = scene[COMPONENT_TYPES.GAME_COMPONENT].get(info.aid)
     if(itemInfo){
-        for(let key in info){
-            if(itemInfo.hasOwnProperty(key)){
-                itemInfo[key] = info[key]
-            }
+        switch(info.action){
+            case 'edit':
+                for(let key in info){
+                    if(itemInfo.hasOwnProperty(key)){
+                        itemInfo[key] = info[key]
+                    }
+                }
+                break;
+
+            case 'addlevel':
+                console.log('adding game level')
+                let transform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(info.aid)
+                createGameLevel(room, client, scene, {position:transform.p}, scene[COMPONENT_TYPES.LEVEL_COMPONENT].size + 1)
+                break;
         }
     }
 }

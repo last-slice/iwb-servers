@@ -246,6 +246,7 @@ export enum ACTIONS {
     CHANGE_LEVEL = 'change_level',
     LOAD_LEVEL = 'load_level',
     END_LEVEL = 'end_level',
+    COMPLETE_LEVEL = 'complete_level',
     START_TIMER = 'start_timer',
     STOP_TIMER = 'stop_timer',
     LOCK_PLAYER = 'lock_player',
@@ -284,7 +285,9 @@ export enum Triggers {
     ON_COUNTER_CHANGE = "on_counter_change",
     ON_RAYCAST_HIT = 'on_raycast_hit',
     ON_GAME_START = 'on_game_start',
-    ON_LEVEL_LOADED = 'on_level_loaded'
+    ON_LEVEL_LOADED = 'on_level_loaded',
+    ON_LEVEL_COMPLETE = 'on_level_complete',
+    ON_LEVEL_END = 'on_level_end'
 }
 
 export enum REWARD_TYPES {
