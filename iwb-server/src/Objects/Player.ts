@@ -62,6 +62,9 @@ export class Player extends Schema {
     @type("string") address:string
     @type("string") name:string 
     @type(SelectedAsset) selectedAsset: SelectedAsset
+    @type("boolean") playingGame:boolean
+
+    gameData:any
 
     playFabData:any
     ip:string
@@ -110,7 +113,7 @@ export class Player extends Schema {
     rotation:number
     parent:any
     parentEntity:any
-    playingGame:any
+    canTeleport:any
 
     constructor(room:IWBRoom, client:Client){
         super()
@@ -310,5 +313,15 @@ export class Player extends Schema {
         }
     
         this.client.send(SERVER_MESSAGE_TYPES.PLAYER_SETTINGS, {action:"load", value:this.settings})
+      }
+
+      startGame(sceneId:any, game:any, level:any){
+        this.playingGame = true
+        this.gameData = {...game, ...{level:level}, ...{sceneId:sceneId}}
+      }
+
+      endGame(){
+        this.playingGame = false
+        console.log('player game data', this.gameData)
       }
 }

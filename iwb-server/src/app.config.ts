@@ -39,16 +39,9 @@ export default config({
         app.use(express.static(path.join(__dirname, '..', 'public')));
         app.use(express.static(path.join('/root/iwb', 'dapps', 'upload')));
         app.use(express.static(path.join('/root/iwb', 'dapps', 'deploy')));
-        // app.use("/", router);
         app.use('/colyseus', monitor())
-
-
-        // ...
         app.use("/playground", playground);
-
-                console.log(path.join(__dirname, '..', 'public'))
-            },
-
+    },
 
     beforeListen: () => {
         /**

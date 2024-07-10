@@ -97042,6 +97042,10 @@
           {
             "name": "Attempt Start Game",
             "type": "attempt_game_start"
+          },
+          {
+            "name": "End Game",
+            "type": "end_game"
           }
         ]
       },
@@ -97053,6 +97057,13 @@
             "hoverText": "Start Game",
             "maxDistance": 5,
             "showFeedback": true
+          },
+          {
+            "eventType": 1,
+            "button": 2,
+            "hoverText": "End Game",
+            "maxDistance": 5,
+            "showFeedback": true
           }
         ]
       },
@@ -97061,6 +97072,13 @@
           {
             "type": "on_input_action",
             "input": 1,
+            "pointer":1,
+            "conditions": [],
+            "actions": []
+          },
+          {
+            "type": "on_input_action",
+            "input": 2,
             "pointer":1,
             "conditions": [],
             "actions": []

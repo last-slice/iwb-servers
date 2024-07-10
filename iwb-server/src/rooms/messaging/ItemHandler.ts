@@ -1,6 +1,6 @@
 import { Client } from "colyseus";
 import { IWBRoom } from "../IWBRoom";
-import { COMPONENT_TYPES, SCENE_MODES, SERVER_MESSAGE_TYPES, TRIGGER_TYPES } from "../../utils/types";
+import { CATALOG_IDS, COMPONENT_TYPES, SCENE_MODES, SERVER_MESSAGE_TYPES, TRIGGER_TYPES } from "../../utils/types";
 import { Quaternion, Vector3, createTransformComponent, editTransform } from "../../Objects/Transform";
 import { createVisibilityComponent, editVisibility } from "../../Objects/Visibility";
 import { createTextComponent, editTextShape } from "../../Objects/TextShape";
@@ -30,7 +30,8 @@ import { createStateComponent, editStateComponent } from "../../Objects/State";
 import { createUITextComponent, editUIComponent } from "../../Objects/UIText";
 import { createUIImageComponent, editUIImageComponent } from "../../Objects/UIImage";
 import { createBillboardComponent } from "../../Objects/Billboard";
-import { addGameComponent, editGameComponent, sceneHasGame } from "../../Objects/Game";
+import { addGameComponent, editGameComponent, removeGameComponent, sceneHasGame } from "../../Objects/Game";
+import { editLevelComponent } from "../../Objects/Level";
 
 
 let updateComponentFunctions:any = {
@@ -58,6 +59,7 @@ let updateComponentFunctions:any = {
     [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editUIImageComponent(info, scene)},
     [COMPONENT_TYPES.COUNTER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editCounterComponent(info, scene)}, 
     [COMPONENT_TYPES.GAME_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editGameComponent(info, scene)}, 
+    [COMPONENT_TYPES.LEVEL_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editLevelComponent(info, scene)}, 
 }
 
 let createComponentFunctions:any = {
@@ -213,7 +215,7 @@ export function iwbItemHandler(room:IWBRoom){
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM, async(client, info)=>{
-        // console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM + " message", info)
+        console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM + " message", info)
         let player:Player = room.state.players.get(client.userData.userId)
         deleteSceneItem(room, player, info)
     })
@@ -333,7 +335,7 @@ function checkSceneLimits(scene:Scene, item:any){
 export function createNewItem(room:IWBRoom, client:Client, scene:Scene, item:any, catalogItemInfo:any){
     //check if new item is a game comonent, if so, check if already exists
 
-    if(catalogItemInfo.id === "e7a63c71-c2ba-4e6d-8e62-d77e2c8dc93a"){
+    if(catalogItemInfo.id === CATALOG_IDS.GAME_COMPONENT){
         if(sceneHasGame(scene)){
             client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"A game component already exists on this scene", sound:'error_2'})
             return
@@ -460,7 +462,7 @@ export function addItemComponents(room:IWBRoom, client:Client, scene:Scene, item
     }
 
     if(catalogItemInfo.id === "e7a63c71-c2ba-4e6d-8e62-d77e2c8dc93a"){
-        addGameComponent(room, client, scene, item.aid, catalogItemInfo)
+        addGameComponent(room, client, scene, item, catalogItemInfo)
     }
 }
 
@@ -490,6 +492,8 @@ function deleteSceneItem(room:IWBRoom, player:Player, info:any, edit?:boolean){
                 if(itemInfo && !itemInfo.locked){
                     let pc:any
                     let si:any
+
+                    console.log('deleting item info', itemInfo.id)
 
                     if(itemInfo.ugc){
                         let realmAsset = room.state.realmAssets.get(itemInfo.id)
@@ -525,6 +529,12 @@ function deleteSceneItem(room:IWBRoom, player:Player, info:any, edit?:boolean){
                             player, 
                             [{name:itemData.n, type:itemInfo.type}]
                         )
+                    }
+
+                    //check if game component and remove all levels and children
+                    if(itemInfo.id === CATALOG_IDS.GAME_COMPONENT){
+                        console.log('removing game component, need to remove all levels as well')
+                        removeGameComponent(room, scene, player, info.assetId, itemInfo)
                     }
                 }
             }

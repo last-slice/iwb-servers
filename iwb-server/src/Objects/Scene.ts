@@ -7,7 +7,7 @@ import { GltfComponent, createGLTFComponent } from "./Gltf";
 import { NameComponent } from "./Names";
 import { ParentingComponent } from "./Parenting";
 import { PointerComponent, PointerComponentEvent, createPointerComponent } from "./Pointers";
-import { SoundComponent } from "./Sound";
+import { SoundComponent, createAudioSourceComponent } from "./Sound";
 import { StateComponent } from "./State";
 import { TextShapeComponent, createTextComponent } from "./TextShape";
 import { TransformComponent } from "./Transform";
@@ -366,8 +366,8 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT:
-                        for (const aid in data[component]) {
-                            this[COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT].set(aid, new SoundComponent(data[component][aid]))
+                        for (const aid in data[component]){
+                            createAudioSourceComponent(this, aid, data[component][aid])
                         }
                         break;
 

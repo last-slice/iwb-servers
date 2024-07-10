@@ -150,10 +150,12 @@ export class IWBRoom extends Room<IWBRoomState> {
                         client.auth.ip = ipAddress
                         // console.log('playfab info', playfabInfo)
         
-                        if (playfabInfo.NewlyCreated) {
+                        if (playfabInfo.NewlyCreated || !playfabInfo.InfoResultPayload.AccountInfo.TitleInfo.DisplayName) {
                             let [data, stats] = await this.initializeServerPlayerData(options, client.auth)
+
                             client.auth.playfab.InfoResultPayload.PlayerStatistics = stats
                             client.auth.playfab.InfoResultPayload.UserData = data
+
                             info = client.auth
                         } else {
                             //to do
@@ -173,18 +175,25 @@ export class IWBRoom extends Room<IWBRoomState> {
 
     async initializeServerPlayerData(options: any, auth: any) {
 
-        // console.log('options are', options)
         options.userData.name.replace(" ", "_").trim()
+        options.userData.name === "Guest" ? 
+            options.userData.name = "Guest" : 
+                options.userData.name
 
         //set new user display name
-        const result = await updatePlayerDisplayName({
-            DisplayName: options.userData.name === "Guest" ? 
-            options.userData.name + options.userData.userId.substring(options.userData.userId.length - 5) : 
-            options.userData.name,
-            
-            PlayFabId: auth.playfab.PlayFabId
-        })
-       //  console.log('setting player name res is', result)
+        try{
+            const result = await updatePlayerDisplayName({
+                DisplayName: options.userData.name === "Guest" ? 
+                options.userData.name + options.userData.userId.substring(options.userData.userId.length - 5) : 
+                options.userData.name,
+                
+                PlayFabId: auth.playfab.PlayFabId
+            })
+            console.log('result for new player', result)
+        }
+        catch(e){
+            console.log('error updating display name', e)
+        }
 
         let def: any = {}
         def.address = options.userData.userId

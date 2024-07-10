@@ -1,0 +1,632 @@
+[
+    {
+        "id": "mwnJU",
+        "n": "lobby",
+        "d": "",
+        "o": "0x87b895f37a93e76cf1c27ed68b38d77fee0f7867",
+        "ona": "dclbuilder",
+        "cat": "",
+        "bpcl": "1,1",
+        "w": "Mease.dcl.eth",
+        "im": "",
+        "bps": [],
+        "rat": [],
+        "rev": [],
+        "pcls": [
+            "1,1",
+            "0,1",
+            "0,0",
+            "1,0"
+        ],
+        "sp": [
+            "0,0,0"
+        ],
+        "cp": [
+            "0,0,0"
+        ],
+        "cd": 1711644442,
+        "upd": 1711644442,
+        "si": 164436,
+        "toc": 0,
+        "pc": 1382,
+        "pcnt": 4,
+        "isdl": false,
+        "e": true,
+        "priv": false,
+        "lim": true,
+        "Transform": {
+            "frBjo9": {
+                "p": {
+                    "x": 3.49,
+                    "y": 0.17,
+                    "z": 11.68
+                },
+                "r": {
+                    "x": 0,
+                    "y": 0.95,
+                    "z": 0
+                },
+                "s": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "delta": 0
+            },
+            "tDd6KK": {
+                "p": {
+                    "x": 8.18,
+                    "y": 0,
+                    "z": 5.14
+                },
+                "r": {
+                    "x": 0,
+                    "y": 180.2,
+                    "z": 0
+                },
+                "s": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "delta": 0
+            },
+            "FH8nCj": {
+                "p": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "r": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "s": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "delta": 0
+            },
+            "ZFM85Z": {
+                "p": {
+                    "x": -0.46,
+                    "y": 1.12,
+                    "z": 4.53
+                },
+                "r": {
+                    "x": 0,
+                    "y": 242.5,
+                    "z": 0
+                },
+                "s": {
+                    "x": 0.5,
+                    "y": 0.5,
+                    "z": 0.5
+                },
+                "delta": 0
+            },
+            "w4e4xk": {
+                "p": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "r": {
+                    "x": 0,
+                    "y": 27.83,
+                    "z": 0
+                },
+                "s": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "delta": 0
+            },
+            "dASezs": {
+                "p": {
+                    "x": 6.81,
+                    "y": 1.07,
+                    "z": 7.91
+                },
+                "r": {
+                    "x": 0,
+                    "y": 36.1,
+                    "z": 0
+                },
+                "s": {
+                    "x": 0.5,
+                    "y": 0.5,
+                    "z": 0.5
+                },
+                "delta": 0
+            },
+            "IoxyFn": {
+                "p": {
+                    "x": 6.01,
+                    "y": 0.04,
+                    "z": 9.99
+                },
+                "r": {
+                    "x": 0,
+                    "y": 268.92,
+                    "z": 0
+                },
+                "s": {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                "delta": 0
+            }
+        },
+        "Gltf": {
+            "frBjo9": {
+                "src": "1ed7a09d-e886-42ea-9e66-7079b88894fc",
+                "visibleCollision": 1,
+                "invisibleCollision": 2
+            },
+            "tDd6KK": {
+                "src": "fc7cfc62-c497-4d10-aad4-b61975e603a0",
+                "visibleCollision": 1,
+                "invisibleCollision": 2
+            },
+            "IoxyFn": {
+                "src": "21848e3b-f608-483b-a96d-2c1e161b7065",
+                "visibleCollision": 1,
+                "invisibleCollision": 2
+            }
+        },
+        "Mesh_Renderer": {
+            "ZFM85Z": {
+                "shape": 1,
+                "onPlay": false
+            },
+            "dASezs": {
+                "shape": 1,
+                "onPlay": false
+            }
+        },
+        "Mesh_Collider": {
+            "ZFM85Z": {
+                "shape": 1,
+                "layer": 1
+            },
+            "dASezs": {
+                "shape": 1,
+                "layer": 1
+            }
+        },
+        "Texture": {},
+        "Emissive": {},
+        "Material": {
+            "ZFM85Z": {
+                "type": 0,
+                "albedoColor": {
+                    "r": 0.498,
+                    "g": 1,
+                    "b": 0.749,
+                    "a": 0.5
+                },
+                "onPlay": false
+            },
+            "dASezs": {
+                "type": 0,
+                "albedoColor": {
+                    "r": 0.498,
+                    "g": 1,
+                    "b": 0.749,
+                    "a": 0.5
+                },
+                "onPlay": false
+            }
+        },
+        "Name": {
+            "frBjo9": {
+                "value": "AcousticPanelCorner"
+            },
+            "tDd6KK": {
+                "value": "AcousticPanelWall"
+            },
+            "FH8nCj": {
+                "value": "Player Score"
+            },
+            "ZFM85Z": {
+                "value": "Player Score Ui"
+            },
+            "w4e4xk": {
+                "value": "Player Health"
+            },
+            "dASezs": {
+                "value": "Player Health2 Ui"
+            },
+            "IoxyFn": {
+                "value": "Blue Scifi Button"
+            }
+        },
+        "Visibility": {
+            "frBjo9": {
+                "visible": true
+            },
+            "tDd6KK": {
+                "visible": true
+            },
+            "FH8nCj": {
+                "visible": true
+            },
+            "ZFM85Z": {
+                "visible": true
+            },
+            "w4e4xk": {
+                "visible": true
+            },
+            "dASezs": {
+                "visible": true
+            },
+            "IoxyFn": {
+                "visible": true
+            }
+        },
+        "Actions": {
+            "frBjo9": {
+                "actions": [
+                    {
+                        "id": "y6JKvb",
+                        "name": "add 1",
+                        "type": "add_number",
+                        "value": 1
+                    }
+                ]
+            },
+            "FH8nCj": {
+                "actions": [
+                    {
+                        "id": "at92sA",
+                        "name": "add 1 score",
+                        "type": "add_number",
+                        "value": 1
+                    }
+                ]
+            },
+            "ZFM85Z": {
+                "actions": [
+                    {
+                        "id": "GRsc1y",
+                        "name": "Show Text",
+                        "type": "show_text"
+                    },
+                    {
+                        "id": "pbenhE",
+                        "name": "Hide Text",
+                        "type": "hide_text"
+                    },
+                    {
+                        "id": "7KVLtZ",
+                        "name": "Set Text",
+                        "type": "set_text"
+                    }
+                ]
+            },
+            "w4e4xk": {
+                "actions": [
+                    {
+                        "id": "2Cj3sB",
+                        "name": "Decrease Health",
+                        "type": "subtract_number",
+                        "value": 5
+                    }
+                ]
+            },
+            "dASezs": {
+                "actions": [
+                    {
+                        "id": "KUu7OW",
+                        "name": "Show Text",
+                        "type": "show_text"
+                    },
+                    {
+                        "id": "6tcM2w",
+                        "name": "Hide Text",
+                        "type": "hide_text"
+                    },
+                    {
+                        "id": "ljMEmt",
+                        "name": "Set Text",
+                        "type": "set_text"
+                    }
+                ]
+            }
+        },
+        "Counters": {
+            "frBjo9": {
+                "defaultValue": 0,
+                "currentValue": 0,
+                "previousValue": 0
+            },
+            "FH8nCj": {
+                "defaultValue": 0,
+                "currentValue": 0,
+                "previousValue": 0
+            },
+            "w4e4xk": {
+                "defaultValue": 100,
+                "currentValue": 100,
+                "previousValue": 0
+            }
+        },
+        "States": {},
+        "Triggers": {
+            "frBjo9": {
+                "triggers": [
+                    {
+                        "id": "00J06R",
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer": 1,
+                        "tick": 0,
+                        "actions": [
+                            "at92sA"
+                        ],
+                        "caid": [],
+                        "ctype": [],
+                        "cvalue": [],
+                        "ccounter": []
+                    }
+                ]
+            },
+            "tDd6KK": {
+                "triggers": [
+                    {
+                        "id": "9qVRcN",
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer": 1,
+                        "tick": 0,
+                        "actions": [
+                            "GRsc1y",
+                            "KUu7OW"
+                        ],
+                        "caid": [],
+                        "ctype": [],
+                        "cvalue": [],
+                        "ccounter": []
+                    }
+                ]
+            },
+            "IoxyFn": {
+                "triggers": [
+                    {
+                        "id": "4fr0t3",
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer": 1,
+                        "tick": 0,
+                        "actions": [
+                            "2Cj3sB"
+                        ],
+                        "caid": [],
+                        "ctype": [],
+                        "cvalue": [],
+                        "ccounter": []
+                    }
+                ]
+            }
+        },
+        "Text": {
+            "ZFM85Z": {
+                "text": "UI Text",
+                "font": 2,
+                "fontSize": 3,
+                "textAlign": 4,
+                "billboard": true,
+                "onPlay": false,
+                "outlineColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                }
+            },
+            "dASezs": {
+                "text": "UI Text",
+                "font": 2,
+                "fontSize": 3,
+                "textAlign": 4,
+                "billboard": true,
+                "onPlay": false,
+                "outlineColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "color": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                }
+            }
+        },
+        "NFT_Shape": {},
+        "Animator": {},
+        "Pointers": {
+            "frBjo9": {
+                "events": [
+                    {
+                        "hoverText": "Add Score",
+                        "eventType": 1,
+                        "button": 0,
+                        "maxDistance": 15,
+                        "tick": 0,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "tDd6KK": {
+                "events": [
+                    {
+                        "hoverText": "Show Ui",
+                        "eventType": 1,
+                        "button": 0,
+                        "maxDistance": 15,
+                        "tick": 0,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "IoxyFn": {
+                "events": [
+                    {
+                        "hoverText": "Damage Player",
+                        "eventType": 1,
+                        "button": 0,
+                        "maxDistance": 15,
+                        "tick": 0,
+                        "showFeedback": true
+                    }
+                ]
+            }
+        },
+        "Audio_Source": {},
+        "Audio_Stream": {},
+        "Avatar_Shape": {},
+        "Video": {},
+        "IWB": {
+            "frBjo9": {
+                "id": "1ed7a09d-e886-42ea-9e66-7079b88894fc",
+                "locked": false,
+                "buildVis": true,
+                "editing": false,
+                "priv": false
+            },
+            "tDd6KK": {
+                "id": "fc7cfc62-c497-4d10-aad4-b61975e603a0",
+                "locked": false,
+                "buildVis": true,
+                "editing": false,
+                "priv": false
+            },
+            "FH8nCj": {
+                "id": "b9768002-c662-4b80-97a0-fb0d0b714fab",
+                "locked": false,
+                "buildVis": true,
+                "editing": false,
+                "priv": false
+            },
+            "ZFM85Z": {
+                "id": "13b63e57-a636-4cf2-8449-488a5fd6d03e",
+                "locked": false,
+                "buildVis": true,
+                "editing": false,
+                "priv": false
+            },
+            "w4e4xk": {
+                "id": "b9768002-c662-4b80-97a0-fb0d0b714fab",
+                "locked": false,
+                "buildVis": true,
+                "editing": false,
+                "priv": false
+            },
+            "dASezs": {
+                "id": "13b63e57-a636-4cf2-8449-488a5fd6d03e",
+                "locked": false,
+                "buildVis": true,
+                "editing": true,
+                "editor": "0x3edfae1ce7aeb54ed6e171c4b13e343ba81669b6",
+                "priv": false
+            },
+            "IoxyFn": {
+                "id": "21848e3b-f608-483b-a96d-2c1e161b7065",
+                "locked": false,
+                "buildVis": true,
+                "editing": false,
+                "priv": false
+            }
+        },
+        "UI_Text": {
+            "ZFM85Z": {
+                "label": "Score",
+                "data": "",
+                "style": 0,
+                "type": 2,
+                "aid": "FH8nCj",
+                "tAlign": 4,
+                "size": 25,
+                "pt": 5,
+                "pl": 15
+            },
+            "dASezs": {
+                "label": "Health",
+                "data": "",
+                "style": 0,
+                "type": 2,
+                "aid": "w4e4xk",
+                "tAlign": 4,
+                "size": 25,
+                "pt": 10,
+                "pl": 15
+            }
+        },
+        "Game": {},
+        "Parenting": [
+            {
+                "aid": "0",
+                "children": [
+                    "frBjo9",
+                    "tDd6KK",
+                    "ZFM85Z",
+                    "dASezs",
+                    "IoxyFn"
+                ]
+            },
+            {
+                "aid": "1",
+                "children": [
+                    "FH8nCj",
+                    "w4e4xk"
+                ]
+            },
+            {
+                "aid": "2",
+                "children": []
+            },
+            {
+                "aid": "frBjo9",
+                "children": []
+            },
+            {
+                "aid": "tDd6KK",
+                "children": []
+            },
+            {
+                "aid": "FH8nCj",
+                "children": []
+            },
+            {
+                "aid": "ZFM85Z",
+                "children": []
+            },
+            {
+                "aid": "w4e4xk",
+                "children": []
+            },
+            {
+                "aid": "dASezs",
+                "children": []
+            },
+            {
+                "aid": "IoxyFn",
+                "children": []
+            }
+        ]
+    }
+]

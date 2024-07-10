@@ -1,13 +1,15 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
-import { COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../utils/types";
+import { CATALOG_IDS, COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../utils/types";
 import { itemManager } from "../app.config";
 import { createNewItem } from "../rooms/messaging/ItemHandler";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { Client, generateId } from "colyseus";
 import { Quaternion, Vector3 } from "./Transform";
-import { createLevelComponent } from "./Level";
+import { LevelComponent, createGameLevel, createLevelComponent, removeLevels } from "./Level";
 import { editTriggerComponent } from "./Trigger";
+import { Player } from "./Player";
+import { createStateComponent, editStateComponent } from "./State";
 
 export class GameComponent extends Schema{
     @type("string") id:string = ""
@@ -19,8 +21,7 @@ export class GameComponent extends Schema{
     @type("number") type:number
     @type("number") startLevel:number
     @type("number") currentLevel:number
-    @type(Vector3) loadingSpawn:Vector3
-    @type("boolean") invisibleStartBox:boolean //do we need this?
+    @type("boolean") disableTeleport:boolean = false
     @type("boolean") saveProgress:boolean //do we need this?
     @type("boolean") premiumAccess:boolean //do we need this? ifo
     @type("boolean") premiumAccessType:boolean //do we need this? ifo
@@ -55,59 +56,41 @@ export function editGameComponent(info:any, scene:Scene){
     }
 }
 
-export function addGameComponent(room:IWBRoom, client:Client, scene:Scene, aid:string, catalogInfo:any){
+export function addGameComponent(room:IWBRoom, client:Client, scene:Scene, item:any, catalogInfo:any){
     let gameComponentInfo:any = {
         id: scene.id,
         name: scene.n + " Game",
         description: "IWB Game",
         type:0,
         startLevel: 1,
-        loadingSpawn: new Vector3({x:0, y:0, z:0})
     }
-    createGameComponent(scene, aid, gameComponentInfo)
-    updateGameTrigger(scene, aid)
-    createGameLevel(room, client, scene, 1)  
+
+    createGameComponent(scene, item.aid, gameComponentInfo)
+    addGameConsoleTriggers(scene, item.aid, 0, 2)
+    createGameLevel(room, client, scene, item, 1)  
 }
 
-function updateGameTrigger(scene:Scene, aid:string){
-    let trigger = scene[COMPONENT_TYPES.TRIGGER_COMPONENT].get(aid)
-    let triggerId = trigger.triggers[0].id
-
-    let action = scene[COMPONENT_TYPES.ACTION_COMPONENT].get(aid)
-    let actionid = action.actions[0].id
-    action.actions[0].game = scene.id
-
-    let data:any = {
-        aid:aid,
-        action:"addaction",
-        data:{
-            tid:triggerId,
-            id:actionid,
+function addGameConsoleTriggers(scene:Scene, aid:string, index:number, max:number){
+    if(index < max){
+        let trigger = scene[COMPONENT_TYPES.TRIGGER_COMPONENT].get(aid)
+        let triggerId = trigger.triggers[index].id
+    
+        let action = scene[COMPONENT_TYPES.ACTION_COMPONENT].get(aid)
+        let actionid = action.actions[index].id
+        action.actions[index].game = scene.id
+    
+        let data:any = {
+            aid:aid,
+            action:"addaction",
+            data:{
+                tid:triggerId,
+                id:actionid,
+            }
         }
+        editTriggerComponent(data, scene)
+        index++
+        addGameConsoleTriggers(scene, aid, index, max)
     }
-    editTriggerComponent(data, scene)
-}
-
-export function createGameLevel(room:IWBRoom, client:Client, scene:Scene, number:number){
-    let newLevelCatalogInfo = {...itemManager.items.get("b9768002-c662-4b80-97a0-fb0d0b714fab")}// empty entity
-    let aid = generateId(6)
-    newLevelCatalogInfo.n = "Level " + number
-    newLevelCatalogInfo.aid = aid
-    newLevelCatalogInfo.pending = false
-    newLevelCatalogInfo.ugc = false
-    newLevelCatalogInfo.position = new Vector3({x:0,y:0,z:0})
-    newLevelCatalogInfo.rotation = new Quaternion({x:0,y:0,z:0})
-    newLevelCatalogInfo.scale = new Vector3({x:1,y:1,z:1})
-
-    createNewItem(room, client, scene, newLevelCatalogInfo, newLevelCatalogInfo) 
-
-    let newLevelInfo:any = {
-        name: "Level 1",
-        number: number,
-        loadingSpawn: new Vector3({x:0, y:0, z:0}),
-        invisibleStartBox:true
-    }
-    createLevelComponent(scene, aid, newLevelInfo)
 }
 
 export function sceneHasGame(scene:Scene){
@@ -115,6 +98,65 @@ export function sceneHasGame(scene:Scene){
     scene[COMPONENT_TYPES.GAME_COMPONENT].forEach((component)=>{
         count++
     })
-    console.log("game component count", count)
     return count > 0
+}
+
+export function removeGameComponent(room:IWBRoom, scene:Scene, player:Player,aid:string, info:any){
+    removeLevels(room, scene, player)
+}
+
+export function attemptGameStart(room:IWBRoom, client:any, info:any){
+    if(!info || !info.sceneId || !info.entity){
+        return
+    }
+
+    let player = room.state.players.get(client.userData.userId)
+    let scene = room.state.scenes.get(info.sceneId)
+    if(scene && player && !player.playingGame){
+        let gameInfo:any
+        scene[COMPONENT_TYPES.GAME_COMPONENT].forEach((gameComponent:GameComponent, aid:string)=>{
+            if(gameComponent.id === info.sceneId){
+                gameInfo = {...gameComponent}
+                gameInfo.aid = aid
+            }
+        })
+
+        if(gameInfo){
+            info.aid = gameInfo.aid
+
+            let canStartLevel = false
+            scene[COMPONENT_TYPES.LEVEL_COMPONENT].forEach((levelComponent:LevelComponent, aid:string)=>{
+                if(gameInfo.startLevel === levelComponent.number && levelComponent.live && !canStartLevel){
+                    canStartLevel = true
+                    info.canStart = true
+                    info.level = aid
+
+                    player.startGame(scene.id, gameInfo, aid)
+                    client.send(SERVER_MESSAGE_TYPES.START_GAME, info)
+                }
+            })
+
+            if(!canStartLevel){
+                info.canStart = false
+                client.send(SERVER_MESSAGE_TYPES.START_GAME, info)
+            }
+        }
+        //to do - game verifications
+        //to do- multiplayer game handing
+    }
+}
+
+export function attemptGameEnd(room:IWBRoom, client:any, info:any){
+    // if(!info || !info.sceneId || !info.entity){
+    //     return
+    // }
+
+    let player = room.state.players.get(client.userData.userId)
+    // let scene = room.state.scenes.get(info.sceneId)
+    if(player){
+        player.endGame()
+        if(player.gameData){
+            client.send(SERVER_MESSAGE_TYPES.END_GAME, {sceneId:player.gameData.sceneId, gameId:player.gameData.aid})
+        }
+    }
 }

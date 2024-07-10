@@ -86,6 +86,7 @@ export enum SERVER_MESSAGE_TYPES {
     WORLD_DELETE_BP = 'world_delete_build_permissions',
     GET_MARKETPLACE = 'get_marketplace',
     START_GAME = 'start_game',
+    END_GAME = 'end_game',
 
     CUSTOM = "custom",
 
@@ -243,6 +244,7 @@ export enum ACTIONS {
     SET_NUMBER = 'set_number',
     SUBTRACT_NUMBER = 'subtract_number',
     CHANGE_LEVEL = 'change_level',
+    LOAD_LEVEL = 'load_level',
     END_LEVEL = 'end_level',
     START_TIMER = 'start_timer',
     STOP_TIMER = 'stop_timer',
@@ -280,6 +282,9 @@ export enum Triggers {
     // ON_HEAL//
     ON_STATE_CHANGE = "on_state_change",
     ON_COUNTER_CHANGE = "on_counter_change",
+    ON_RAYCAST_HIT = 'on_raycast_hit',
+    ON_GAME_START = 'on_game_start',
+    ON_LEVEL_LOADED = 'on_level_loaded'
 }
 
 export enum REWARD_TYPES {
@@ -302,4 +307,9 @@ export enum ACCESS_FILTERS {
 
 export enum TRIGGER_TYPES {
     ON_INPUT_ACTION = 'on_input_action'
+}
+
+export enum CATALOG_IDS {
+    GAME_COMPONENT = "e7a63c71-c2ba-4e6d-8e62-d77e2c8dc93a",
+    EMPTY_ENTITY = "b9768002-c662-4b80-97a0-fb0d0b714fab"
 }

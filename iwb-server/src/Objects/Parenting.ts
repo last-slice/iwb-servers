@@ -99,24 +99,45 @@ export function addBasicSceneParenting(scene:Scene){
     parenting.push(cameraRoot)
 }
 
+// export async function removeParenting(scene:Scene, aid:string){
+//     let parentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any) => $.aid === aid)
+//     if(parentIndex >= 0){
+//         //need to delete trigger references
+//         //need to delete action references
+
+//         console.log('parent index is', parentIndex)
+
+//         for(let childIndex = 0; childIndex < scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentIndex].children.length; childIndex++){
+//             await removeParenting(scene, scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentIndex].children[childIndex])
+//         }
+//         scene[COMPONENT_TYPES.PARENTING_COMPONENT].splice(parentIndex,1)
+//     }
+
+//     for(const parent of scene[COMPONENT_TYPES.PARENTING_COMPONENT]){
+//         if(parent.children.includes(aid)){
+//             let childIndex = parent.children.findIndex(($:any)=> $ === aid)
+//             if(childIndex >= 0){
+//                 parent.children.splice(childIndex, 1)
+//                 return
+//             }
+//         }
+//     }
+// }
+
 export async function removeParenting(scene:Scene, aid:string){
-    let parentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any) => $.aid === aid)
-    if(parentIndex >= 0){
-        //need to delete trigger references
-        //need to delete action references
-
-        for(let childIndex = 0; childIndex < scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentIndex].children.length; childIndex++){
-            await removeParenting(scene, scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentIndex].children[childIndex])
+    let parentsWithChildren = scene[COMPONENT_TYPES.PARENTING_COMPONENT].filter(obj => obj.children.length > 0);
+    const allChildrenStrings = parentsWithChildren.flatMap((obj:any) => obj.children);
+    
+    allChildrenStrings.forEach((aid:string, i:number)=>{
+        if(scene[COMPONENT_TYPES.PARENTING_COMPONENT][i].aid === aid){
+            scene[COMPONENT_TYPES.PARENTING_COMPONENT].splice(i,1)
         }
-        scene[COMPONENT_TYPES.PARENTING_COMPONENT].splice(parentIndex,1)
-    }
+    })
 
-    for(const parent of scene[COMPONENT_TYPES.PARENTING_COMPONENT]){
-        if(parent.children.includes(aid)){
-            let childIndex = parent.children.findIndex(($:any)=> $ === aid)
-            if(childIndex >= 0){
-                parent.children.splice(childIndex, 1)
-                return
+    for(let i = 0; i < scene[COMPONENT_TYPES.PARENTING_COMPONENT].length; i++){
+        if(i > 2){
+            if(scene[COMPONENT_TYPES.PARENTING_COMPONENT][i].aid === aid){
+                scene[COMPONENT_TYPES.PARENTING_COMPONENT].splice(i,1)
             }
         }
     }
