@@ -46,17 +46,24 @@ export function editParentingComponent(room:IWBRoom, client:Client, info:any, sc
                     }
                 }
         
-                if(parentData.parent >=0){
-                    scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentData.parent].children.push(info.aid)
-                    let newPosition = new Vector3({x: info.sp.x - info.pp.x, y:info.sp.y - info.pp.y, z:info.sp.z - info.pp.z})
-                    let newRotation = new Quaternion({x: info.sr.x - info.pr.x, y:info.sr.y - info.pr.y, z:info.sr.z - info.pr.z})
-
-                    let transform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(info.aid)
-                    if(transform){
-                        transform.p = newPosition
-                        transform.r = newRotation
-                        transform.delta++
+                if(parentData){
+                    let parent = scene[COMPONENT_TYPES.PARENTING_COMPONENT].find(($:any)=> $.aid === parentData)
+                    if(parent){
+                        parent.children.push(info.aid)
+                        console.log('distance is', {x: info.sp.x - info.pp.x, y:info.sp.y - info.pp.y, z:info.sp.z - info.pp.z})
+                        let newPosition = new Vector3({x: info.sp.x - info.pp.x, y:info.sp.y - info.pp.y, z:info.sp.z - info.pp.z})
+                        let newRotation = new Quaternion({x: info.sr.x - info.pr.x, y:info.sr.y - info.pr.y, z:info.sr.z - info.pr.z})
+    
+                        let transform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(info.aid)
+                        if(transform){
+                            transform.p = newPosition
+                            transform.r = newRotation
+                            transform.delta++
+                        }
+                    }else{
+                        console.log('did not find any parent, should we default back to scene root?')
                     }
+
                 }
                 break;
 
