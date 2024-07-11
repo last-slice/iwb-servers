@@ -14,6 +14,8 @@ import { createTriggerComponent } from "./Trigger";
 export class LevelComponent extends Schema{
     @type("number") number:number
     @type("number") loadingMin:number = 3
+    @type("number") loadingType:number = 0
+    @type("string") loadingScreen:string
     @type(Vector3) loadingSpawn:Vector3 = new Vector3({x:0, y:0, z:0})
     @type(Vector3) loadingSpawnLook:Vector3 = new Vector3({x:0, y:0, z:0})
     @type("boolean") invisibleStartBox:boolean //do we need this?
@@ -85,7 +87,7 @@ export function createGameLevel(room:IWBRoom, client:Client, scene:Scene, item:a
         number: number,
         loadingSpawn: new Vector3(item.position),
         loadingSpawnLook: new Vector3({x:0, y:0, z:0}),
-        invisibleStartBox:true
+        invisibleStartBox:true,
     })
 
     createActionComponent(scene, aid, 
