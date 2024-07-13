@@ -2,8 +2,8 @@ import axios from "axios";
 import { PlayFabClient, PlayFabServer, PlayFabAdmin } from "playfab-sdk";
 import { DEBUG } from "./config";
 
-export let PlayfabId = DEBUG ? process.env.PLAYFAB_ID_QA : process.env.PLAYFAB_ID;
-export let PlayfabKey = DEBUG ? process.env.PLAYFAB_KEY_QA : process.env.PLAYFAB_KEY;
+export let PlayfabId = DEBUG ? process.env.PLAYFAB_ID_QA : process.env.PLAYFAB_ID_QA;
+export let PlayfabKey = DEBUG ? process.env.PLAYFAB_KEY_QA : process.env.PLAYFAB_KEY_QA;
 export let PLAYFAB_DATA_ACCOUNT = process.env.PLAYFAB_DATA_ACCOUNT;
 
 let eventQueue:any[] = []
@@ -391,6 +391,29 @@ export async function fetchUserMetaData(realmData:any){
     console.log('error fetching user metadata, maybe they dont have the file? ')
     return null
   }
+}
+
+export function getDownloadURL(metadata:any, fileKey:string){
+  let url:any
+  if(metadata.code === 200){
+    let version = metadata.data.ProfileVersion
+    if(version > 0){
+        let data = metadata.data.Metadata
+        let count = 0
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                count++
+            }
+        }
+
+        if(count > 0){
+          if(data[fileKey]){
+            url = data[fileKey].DownloadUrl
+          }
+        }
+    }
+  }
+  return url
 }
 
 export async function fetchPlayfabFile(metadata:any, fileKey:string){

@@ -324,4 +324,16 @@ export class Player extends Schema {
         this.playingGame = false
         console.log('player game data', this.gameData)
       }
+
+      inHomeWorld(roomWorld:string){
+        let world = iwbManager.worlds.find((w) => w.ens === roomWorld)
+        if(!world){
+            return false
+        }
+
+        if(world.owner === this.address){
+          return true
+        }
+        return false
+      }
 }

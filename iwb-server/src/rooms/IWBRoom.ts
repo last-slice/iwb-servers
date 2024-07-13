@@ -1,6 +1,6 @@
 import {Client, Room} from "@colyseus/core";
 import {IWBRoomState} from "./IWBRoomState";
-import { Scene, initServerAssets, initServerScenes, saveRealmScenes } from "../Objects/Scene";
+import { Scene, initServerAssets, initServerScenes, saveRealm, saveRealmScenes } from "../Objects/Scene";
 import { testData } from "../tests/data";
 import { iwbSceneActionHandler } from "./messaging/ActionHandler";
 import { Player } from "../Objects/Player";
@@ -16,7 +16,6 @@ import { iwbSceneGameHandler } from "./messaging/GameHandler";
 export class IWBRoom extends Room<IWBRoomState> {
 
     async onAuth(client: Client, options: any, req: any) {
-        // return true
         return await this.doLogin(client, options, req)   
     }
 
@@ -81,7 +80,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     onDispose() {
         console.log("room", this.roomId, "disposing...");
         iwbManager.removeRoom(this)
-        saveRealmScenes(this)
+        saveRealm(this)
         // destroyCustomObjects(this)
     }
 
@@ -91,7 +90,6 @@ export class IWBRoom extends Room<IWBRoomState> {
         addPlayerToWorld(player)
 
         client.send(SERVER_MESSAGE_TYPES.INIT, {
-            catalog: itemManager.items,
             realmAssets: this.state.realmAssets,
             styles: iwbManager.styles,
             worlds: iwbManager.worlds,
@@ -226,9 +224,4 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         return [data, stats]
     }
-}
-
-function createTestScene(room:IWBRoom){
-    let scene = new Scene(testData[0])
-    room.state.scenes.set(testData[0].id, scene)
 }

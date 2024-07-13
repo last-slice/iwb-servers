@@ -37,13 +37,13 @@ export class ItemManager{
             }
         })
 
-        marketplace.forEach((item:any)=>{
-            if(!this.marketplace.has(item.id)){
-                this.marketplace.set(item.id, item)
-            }
-        })
+        // marketplace.forEach((item:any)=>{
+        //     if(!this.marketplace.has(item.id)){
+        //         this.marketplace.set(item.id, item)
+        //     }
+        // })
 
-        // console.log('catalog size is', this.items.size)
+        console.log('catalog size is', this.items.size)
     }
 
     async getServerItems(init?:boolean){

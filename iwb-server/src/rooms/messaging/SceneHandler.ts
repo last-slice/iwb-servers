@@ -6,14 +6,54 @@ import { IWBRoom } from "../IWBRoom";
 import { DEBUG } from "../../utils/config";
 import { Scene } from "../../Objects/Scene";
 import { generateId } from "colyseus";
-import { removeAllAssetComponents } from "./ItemHandler";
+import { canBuild, removeAllAssetComponents } from "./ItemHandler";
 import { addBasicSceneParenting } from "../../Objects/Parenting";
 
 let deploymentServer:any = DEBUG ? process.env.DEPLOYMENT_SERVER_DEV : process.env.DEPLOYMENT_SERVER_PROD
 
 export function iwbSceneHandler(room:IWBRoom){
+    room.onMessage(SERVER_MESSAGE_TYPES.ADD_WORLD_ASSETS, (client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.ADD_WORLD_ASSETS + " received", info)
+        let player = room.state.players.get(client.userData.userId)
+        if(player && player.inHomeWorld(room.state.world)){
+            if(info){
+                info.forEach((id:any, i:number)=>{
+                    let item:any = itemManager.items.get(id)
+                    if(item){
+                        item.pending = true
+                        room.state.realmAssets.set(id, item)
+                        room.state.realmAssetsChanged = true
+                    }
+                })
+
+                room.broadcast(SERVER_MESSAGE_TYPES.ADD_WORLD_ASSETS, room.state.realmAssets)
+                console.log('realm assets', room.state.realmAssets.size)
+            }
+        }else{
+            console.log('player not in home world, spamming?')
+        }
+    })
+
+    room.onMessage(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, (client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS + " received", info)
+        let player = room.state.players.get(client.userData.userId)
+        if(player && player.inHomeWorld(room.state.world)){
+            if(info){
+                info.forEach((id:any, i:number)=>{
+                    if(room.state.realmAssets.get(id)){
+                        room.state.realmAssets.delete(id)
+                        room.state.realmAssetsChanged = true
+                        room.broadcast(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, room.state.realmAssets)
+                    }
+                })
+            }
+        }else{
+            console.log('player not in home world, spamming?')
+        }
+    })
+
     room.onMessage(SERVER_MESSAGE_TYPES.GET_MARKETPLACE, (client, info)=>{
-        client.send(SERVER_MESSAGE_TYPES.GET_MARKETPLACE, itemManager.marketplace)
+        client.send(SERVER_MESSAGE_TYPES.GET_MARKETPLACE, itemManager.items)
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD, async(client, info)=>{
@@ -57,13 +97,13 @@ export function iwbSceneHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT, async(client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT + " message", info)
 
-        // let player:Player = room.state.players.get(client.userData.userId)
-        // if(player){
-        //     let world = iwbManager.worlds.find((w)=> w.ens === room.state.world)
-        //     if(world && world.owner === client.userData.userId){
-        //         iwbManager.deployWorld(world, room)
-        //     }
-        // }
+        let player:Player = room.state.players.get(client.userData.userId)
+        if(player){
+            let world = iwbManager.worlds.find((w)=> w.ens === room.state.world)
+            if(world && world.owner === client.userData.userId){
+                iwbManager.deployWorld(world, room)
+            }
+        }
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SELECT_PARCEL, async(client, info)=>{

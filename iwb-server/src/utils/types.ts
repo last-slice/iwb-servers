@@ -46,6 +46,8 @@ export enum SERVER_MESSAGE_TYPES {
     UPDATE_ASSET_LOCKED = 'update_asset_locked',
     UPDATE_ASSET_BUILD_VIS = 'update_asset_build_visibility',
     DELETE_UGC_ASSET = 'delete_ugc_asset',
+    ADD_WORLD_ASSETS = 'add_world_assets',
+    DELETE_WORLD_ASSETS = 'delete_world_assets',
 
     // Scene
     SCENE_SAVE_NEW = "scene_save_new",
@@ -164,7 +166,8 @@ export enum COMPONENT_TYPES {
     AVATAR_SHAPE_COMPONENT = 'Avatar_Shape',
     GAME_COMPONENT = 'Game',
     LEVEL_COMPONENT = 'Levels',
-    BILLBOARD_COMPONENT = 'Billboard'
+    BILLBOARD_COMPONENT = 'Billboard',
+    LIVE_COMPONENT = 'Live'
 }
 
 export enum COLLISION_LAYERS {

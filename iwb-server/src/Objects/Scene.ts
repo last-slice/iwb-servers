@@ -31,6 +31,7 @@ import { GameComponent, createGameComponent } from "./Game";
 import { UIImageComponent, createUIImageComponent } from "./UIImage";
 import { BillboardComponent, createBillboardComponent } from "./Billboard";
 import { LevelComponent, createLevelComponent } from "./Level";
+import { createLiveComponent, LiveShowComponent } from "./LiveShow";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -99,8 +100,8 @@ export class Scene extends Schema {
     @type({map:GameComponent}) [COMPONENT_TYPES.GAME_COMPONENT]:MapSchema<GameComponent>
     @type({map:LevelComponent}) [COMPONENT_TYPES.LEVEL_COMPONENT]:MapSchema<LevelComponent>
     @type({map:BillboardComponent}) [COMPONENT_TYPES.BILLBOARD_COMPONENT]:MapSchema<BillboardComponent>
+    @type({map:LiveShowComponent}) [COMPONENT_TYPES.LIVE_COMPONENT]:MapSchema<LiveShowComponent>
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent>
-
 
     // @type({map:"string"}) [COMPONENT_TYPES.CLICK_AREA_COMPONENT]:MapSchema<string>
 
@@ -155,11 +156,17 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.UI_IMAGE_COMPONENT] = new MapSchema<UIImageComponent>()
         this[COMPONENT_TYPES.BILLBOARD_COMPONENT] = new MapSchema<BillboardComponent>()
         this[COMPONENT_TYPES.LEVEL_COMPONENT] = new MapSchema<LevelComponent>()
+        this[COMPONENT_TYPES.LIVE_COMPONENT] = new MapSchema<LiveShowComponent>()
         // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()
 
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
+                    case COMPONENT_TYPES.LIVE_COMPONENT:
+                        for (const aid in data[component]) {
+                            createLiveComponent(this, aid,  data[component][aid])
+                        }
+                        break;
                     case COMPONENT_TYPES.LEVEL_COMPONENT:
                         for (const aid in data[component]) {
                             createLevelComponent(this, aid,  data[component][aid])
@@ -244,13 +251,12 @@ export class Scene extends Schema {
                         break;
                 
                     case COMPONENT_TYPES.TRIGGER_COMPONENT:
-                       
                         for (const aid in data[component]) {
                             let triggerData = data[component][aid]
 
                             let trigger = new TriggerComponent()
                             trigger.triggers = new ArraySchema<TriggerComponentSchema>()
-                            trigger.isArea = data.isArea
+                            trigger.isArea = data[component][aid].isArea
 
                             triggerData.triggers.forEach((data:any)=>{
                                 let schema = new TriggerComponentSchema()
@@ -445,11 +451,57 @@ export function loadRealmScenes(room:IWBRoom, scenes:any[]){
     let filter = scenes.filter((scene)=> scene.w === room.state.world)
     room.state.sceneCount = filter.length
 
-    console.log('scenes are ', filter)
+    // console.log('scenes are ', filter)
 
     filter.forEach((scene)=>{
         room.state.scenes.set(scene.id, new Scene(scene))
     })
+}
+
+export async function saveRealm(room:IWBRoom){
+    let fileNames:any[] = []
+    let data:any[] = []
+
+    let scenes:any[] = []
+    room.state.scenes.forEach(async (scene:any)=>{
+        let jsonScene:any = scene.toJSON()
+        // console.log('scene is', jsonScene)
+        // await checkAssetCacheStates(scene, jsonScene)
+
+
+        // Object.values(COMPONENT_TYPES).forEach((component:any)=>{
+        //     if(data[component]){
+        //         for(let aid in data[component]){
+
+        //         }
+        //     }
+        // })
+
+        scenes.push(jsonScene)
+    })
+
+    if(scenes && scenes.length > 0){
+        fileNames.push("" + room.state.world + "-scenes.json")
+        data.push(scenes)
+    }
+
+    let assets:any[] = []
+    room.state.realmAssets.forEach((item:any)=>{
+        assets.push(item)
+    })
+    if(scenes && scenes.length > 0){
+        fileNames.push("catalogs.json")
+        data.push(assets)
+    }
+
+    if(fileNames.length > 0){
+        let world = iwbManager.worlds.find((w)=>w.ens === room.state.world)
+        if(world){
+            world.builds = scenes.length
+            world.updated = Math.floor(Date.now()/1000)
+        }
+        iwbManager.backupFiles(room.state.world, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
+    }
 }
 
 export async function saveRealmScenes(room:IWBRoom){
@@ -471,15 +523,27 @@ export async function saveRealmScenes(room:IWBRoom){
         scenes.push(jsonScene)
     })
 
-    let world = iwbManager.worlds.find((w)=>w.ens === room.state.world)
-    if(world){
-        world.builds = scenes.length
-        world.updated = Math.floor(Date.now()/1000)
-    }
+    // let world = iwbManager.worlds.find((w)=>w.ens === room.state.world)
+    // if(world){
+    //     world.builds = scenes.length
+    //     world.updated = Math.floor(Date.now()/1000)
+    // }
 
-    if(scenes.length > 0){
-        iwbManager.backupScene(room.state.world, room.state.realmToken, room.state.realmTokenType, room.state.realmId, scenes)
-    }
+    // if(scenes.length > 0){
+    //     iwbManager.backupScene(room.state.world, room.state.realmToken, room.state.realmTokenType, room.state.realmId, scenes)
+    // }
+
+    return scenes
+}
+
+export function saveRealmAssets(room:IWBRoom){
+    let assets:any[] = []
+    room.state.realmAssets.forEach((item:any)=>{
+        assets.push(item)
+    })
+
+    return assets
+    // iwbManager.backupFile(room.state.world, "catalogs.json", room.state.realmToken, room.state.realmTokenType, room.state.realmId, assets)
 }
 
 export function checkAssetCacheStates(scene:Scene, jsonScene:any){

@@ -10,6 +10,7 @@ import { playground } from "@colyseus/playground";
 import { initPlayFab } from "./utils/Playfab";
 import { IWBManager } from "./Objects/IWBManager";
 import { ItemManager } from "./Objects/ItemManager";
+import { router } from "./Routers/Router";
 // import { router } from "./Objects/Routers/Router";
 
 export let itemManager: ItemManager
@@ -41,6 +42,7 @@ export default config({
         app.use(express.static(path.join('/root/iwb', 'dapps', 'deploy')));
         app.use('/colyseus', monitor())
         app.use("/playground", playground);
+        app.use(router)
     },
 
     beforeListen: () => {

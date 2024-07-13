@@ -2,7 +2,7 @@ import { handleAssetUploaderSigning, handleNewAssetData } from "../Objects/Servi
 
 export function uploadRouter(router:any){
     router.post("/uploader/sign", (req: any, res: any) => {
-        console.log('get jwt token for asset upload session')
+        console.log('get jwt token for asset upload session', req.body)
         handleAssetUploaderSigning(req, res)
     });
     

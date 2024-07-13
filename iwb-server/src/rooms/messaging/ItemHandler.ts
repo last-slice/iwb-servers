@@ -32,6 +32,7 @@ import { createUIImageComponent, editUIImageComponent } from "../../Objects/UIIm
 import { createBillboardComponent } from "../../Objects/Billboard";
 import { addGameComponent, editGameComponent, removeGameComponent, sceneHasGame } from "../../Objects/Game";
 import { editLevelComponent } from "../../Objects/Level";
+import { createLiveComponent, editLiveComponent } from "../../Objects/LiveShow";
 
 
 let updateComponentFunctions:any = {
@@ -60,6 +61,7 @@ let updateComponentFunctions:any = {
     [COMPONENT_TYPES.COUNTER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editCounterComponent(info, scene)}, 
     [COMPONENT_TYPES.GAME_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editGameComponent(room, client, info, scene)}, 
     [COMPONENT_TYPES.LEVEL_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editLevelComponent(info, scene)}, 
+    [COMPONENT_TYPES.LIVE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editLiveComponent(info, scene)}, 
 }
 
 let createComponentFunctions:any = {
@@ -83,6 +85,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.COUNTER_COMPONENT]:(scene:any, aid:string, info:any)=>{createCounterComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.MATERIAL_COMPONENT]:(scene:any, aid:string, info:any)=>{createMaterialComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.BILLBOARD_COMPONENT]:(scene:any, aid:string, info:any)=>{createBillboardComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.LIVE_COMPONENT]:(scene:any, aid:string, info:any)=>{createLiveComponent(scene, aid, info)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){
@@ -288,7 +291,7 @@ export function iwbItemHandler(room:IWBRoom){
     })
 }
 
-function canBuild(room:IWBRoom, user:string, sceneId:any){
+export function canBuild(room:IWBRoom, user:string, sceneId:any){
     let scene:Scene = room.state.scenes.get(sceneId)
     if(!scene){
         return false
@@ -355,6 +358,12 @@ function deleteComponent(scene:any, item:any){
 
 function addNewComponent(scene:Scene, item:any){
     switch(item.type){
+        case COMPONENT_TYPES.LIVE_COMPONENT:
+            if(!scene[COMPONENT_TYPES.LIVE_COMPONENT].has(item.aid)){
+                createLiveComponent(scene, item.aid, {mode:2})
+            }
+            break;
+
         case COMPONENT_TYPES.BILLBOARD_COMPONENT:
             if(!scene[COMPONENT_TYPES.BILLBOARD_COMPONENT].has(item.aid)){
                 createBillboardComponent(scene, item.aid, {mode:2})

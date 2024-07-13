@@ -10,6 +10,7 @@ export class IWBRoomState extends Schema {
   @type("number") sceneCount:number = 0 
   
   realmAssets:Map<string,any> = new Map()
+  realmAssetsChanged = false
 
   @type(TempScene) tempScene:TempScene
 

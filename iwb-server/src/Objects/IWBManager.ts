@@ -1,7 +1,7 @@
 import axios from "axios"
 import { itemManager, iwbManager } from "../app.config"
 import { IWBRoom } from "../rooms/IWBRoom"
-import { PlayfabId, abortFileUploads, addEvent, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getTitleData, initializeUploadPlayerFiles, playerLogin, playfabLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
+import { PlayfabId, abortFileUploads, addEvent, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getDownloadURL, getTitleData, initializeUploadPlayerFiles, playerLogin, playfabLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
 import { Scene } from "./Scene"
@@ -203,18 +203,10 @@ export class IWBManager{
 
     async deployWorld(world:any, room?:IWBRoom){
         try{
-            console.log('deploying world')
-            // let response = await axios.post("https://" + PlayfabId + ".playfabapi.com/File/GetFiles",
-            // {
-            //     auth: process.env.DEPLOYMENT_AUTH,
-            //     world:{
-            //         ens:world.ens,
-            //         worldName: world.name,
-            //         owner: world.owner,
-            //         init:init
-            //     }
-            // }) 
-            // console.log('response is', response.data)
+            console.log('deploying world', world)
+
+            let metadata = await fetchPlayfabMetadata(iwbManager.worlds.find((w:any)=> w.ens === world.ens).owner)
+            let url = getDownloadURL(metadata, "catalogs.json")
 
             let res = await fetch((DEBUG ? process.env.DEPLOYMENT_SERVER_DEV : process.env.DEPLOYMENT_SERVER_PROD ) + process.env.DEPLOYMENT_WORLD_ENDPOINT,{
                 headers:{"content-type":"application/json"},
@@ -225,22 +217,24 @@ export class IWBManager{
                         ens:world.ens,
                         worldName: world.name,
                         owner: world.owner,
-                        init: room ? false : true
-                    }
+                        init: room ? false : true,
+                        url:url
+                    },
+                    
                 })
             })
             let json = await res.json()
             console.log('world deployment api response is', json, world)
 
-            if(room){
-                this.createRealmLobby(room,
-                    {
-                    ens:world.ens,
-                    worldName: world.name,
-                    owner: world.owner,
-                    init:true
-                }, true)
-            }
+            // if(room){
+            //     this.createRealmLobby(room,
+            //         {
+            //         ens:world.ens,
+            //         worldName: world.name,
+            //         owner: world.owner,
+            //         init:true
+            //     }, true)
+            // }
         }
         catch(e){
             console.log('error posting deployment request', e)
@@ -268,7 +262,7 @@ export class IWBManager{
 
         if(world.init){
             delete world.init
-            // this.createRealmLobby(world, true)
+            this.worlds.push(world)
         }else{
             delete world.init
             let cachedWorld = this.worlds.find((w)=> w.ens === world.ens)
@@ -424,6 +418,37 @@ export class IWBManager{
         return lobby
     }
 
+    async backupFiles(world:string, filenames:string[], token:string, type:string, realmId:string, data:any[]){
+        try{
+            this.addWorldPendingSave(world)
+
+            let initres = await initializeUploadPlayerFiles(token,{
+                Entity: {Id: realmId, Type: type},
+                FileNames:filenames
+            })
+
+            // console.log('initres is', initres)
+
+            for(let i = 0; i < filenames.length; i++){
+                let uploadres = await uploadPlayerFiles(initres.UploadDetails[i].UploadUrl, JSON.stringify(data[i]))
+            }
+
+            //let uploadres = await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(data))
+    
+            let finalres = await finalizeUploadFiles(token,
+                {
+                Entity: {Id: realmId, Type: type},
+                FileNames:filenames,
+                ProfileVersion:initres.ProfileVersion,
+            })
+            this.removeWorldPendingSave(world)
+        }
+        catch(e:any){
+            console.log('backup file error', e.message)
+            this.abortSaveSceneUploads(world, filenames, token, type, realmId)
+        }
+    }
+
 
     async backupScene(world:string, token:string, type:string, realmId:string, scenes:any[]){
         try{
@@ -435,6 +460,8 @@ export class IWBManager{
                 Entity: {Id: realmId, Type: type},
                 FileNames:[world + "-" + this.realmFileKey]
             })
+            
+            console.log(initres)
     
             let uploadres = await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(scenes))
     
@@ -448,14 +475,14 @@ export class IWBManager{
         }
         catch(e){
             console.log('error backing up realm scenes', world, e)
-            this.abortSaveSceneUploads(world, token, type, realmId)
+            this.abortSaveSceneUploads(world, [world + "-" + this.realmFileKey], token, type, realmId)
         }
     }
 
-    async abortSaveSceneUploads(world:string, token:string, type:string, realmId:string){
+    async abortSaveSceneUploads(world:string, filenames:string[], token:string, type:string, realmId:string){
         await abortFileUploads(token,{
             Entity: {Id: realmId, Type: type},
-            FileNames:[world + "-" + this.realmFileKey]
+            FileNames:filenames
           })
         this.removeWorldPendingSave(world)
     }
