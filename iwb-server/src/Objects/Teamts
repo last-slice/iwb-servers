@@ -1,0 +1,15 @@
+import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
+import { Scene } from "./Scene";
+import { CATALOG_IDS, COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../utils/types";
+import { Vector3 } from "./Transform";
+
+export class TeamComponent extends Schema {
+}
+
+export function createTeamComponent(scene:Scene, aid:string, data:any){
+    let component:any = new TeamComponent()
+    for(let key in data){
+        component[key] = data[key]
+    }
+    scene[COMPONENT_TYPES.TEAM_COMPONENT].set(aid, component)
+}

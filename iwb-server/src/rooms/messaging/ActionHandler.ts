@@ -16,26 +16,33 @@ export function iwbSceneActionHandler(room:IWBRoom){
         let scene = room.state.scenes.get(sceneId)
 
         switch(info.type){
+            case 'live-action':
+                if(!info.actionId || !info.aid){
+                    return
+                }
+                room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ACTION, {type:info.type, aid:info.aid, sceneId:sceneId, actionId:actionId, forceScene:info.forceScene})
+                break;
+
             case 'live-bounce':
                 if(!info.player || !info.location){
                     return
                 }
 
-                    try{
-                        if(info.player === "all"){
-                            console.log('bouncing everyone')
-                            room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ACTION, {type:info.type, l:info.location.look, p:info.location.position})
-                        }else{
-                            console.log('bouncing single plaer')
-                            let player = room.state.players.get(info.player)
-                            if(player){
-                                console.log('found player to obunce')
-                                player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_ACTION, {type:info.type, l:info.location.look, p:info.location.position})
-                            }
+                try{
+                    if(info.player === "all"){
+                        console.log('bouncing everyone')
+                        room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ACTION, {type:info.type, l:info.location.look, p:info.location.position})
+                    }else{
+                        console.log('bouncing single plaer')
+                        let player = room.state.players.get(info.player)
+                        if(player){
+                            console.log('found player to obunce')
+                            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_ACTION, {type:info.type, l:info.location.look, p:info.location.position})
                         }
                     }
-                    catch(e){
-                        console.log('error trying to bounce', e)
+                }
+                catch(e){
+                    console.log('error trying to bounce', e)
                     }
                 break;
             case 'live-players-get':

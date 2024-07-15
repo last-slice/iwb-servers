@@ -1,45 +1,68 @@
 import * as fs from 'fs';
 import { temporaryDirectory } from '.';
 
-export async function writeSceneMetadata(location:string, data:any, parcels?:any, world?:string){
+export async function updateWorldMetadata(location:string, data:any){
+    console.log('updating iwb scene.json', data.ens)
     let fileData = await fs.promises.readFile(location)
     let metadata = JSON.parse(fileData.toString())
-    
-    metadata.display.title = data.n
-    metadata.display.description = data.d
-    metadata.owner = data.ona
-    metadata.scene.base = data.bpcl
-    metadata.scene.parcels = data.pcls
-    metadata.spawnPoints = []
 
-    if(parcels){
-        metadata.scene.base = parcels
-        metadata.scene.parcels = [parcels]
+    metadata['iwb'] = {
+        name: data.ens
     }
 
+    await fs.promises.writeFile(location, JSON.stringify(metadata,null, 2));
+}
 
-    if(world){
+export async function writeSceneMetadata(location:string, data:any){
+    let fileData = await fs.promises.readFile(location)
+    let metadata = JSON.parse(fileData.toString())
+
+    let {title, description, owner} = data.metadata
+    
+    metadata.display.title = title
+    metadata.display.description = description
+    metadata.owner = owner
+
+    metadata.scene.parcels = []
+    metadata.scene.base = ""
+
+    data.parcels.forEach((parcel:any)=>{
+        metadata.scene.parcels.push("" + parcel.x + "," + parcel.y)
+    })
+
+    metadata = determineBaseParcel(metadata, data.parcels)
+
+    if(data.dest === "worlds"){
         metadata['worldConfiguration'] = {
-            name: world
+            name: data.worldName
         }
     }
     else{
         delete metadata.worldConfiguration
     }
 
-    data.sp.forEach((sp:any, index:number)=>{
-        const [x1, z1] = sp.split(",")
+    metadata['iwb'] = {
+        name: data.worldName
+    }
+
+    metadata.spawnPoints = []
+    data.spawns.forEach((sp:any, index:number)=>{
+        const [x1,y1, z1] = sp.split(",")
         let spawn:any =  {
             "name": "spawn-" + index,
             "default": true,
             "position": {
               "x": parseFloat(x1),
-              "y": 1,
+              "y": parseFloat(y1),
               "z": parseFloat(z1)
             }
         }
         metadata.spawnPoints.push(spawn)
     })
-
     await fs.promises.writeFile(location, JSON.stringify(metadata,null, 2));
+}
+
+function determineBaseParcel(metadata:any, parcels:any[]){
+    metadata.scene.base = "" + (parcels[0].x + "," + parcels[0].y)
+    return metadata
 }

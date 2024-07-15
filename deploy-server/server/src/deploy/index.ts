@@ -6,7 +6,7 @@ import { DCLDeploymentData } from "src/utils/types";
 const fs = require('fs-extra');
 const path = require('path');
 
-export let dclDeploymentQueue:DCLDeploymentData[] = []
+export let dclDeploymentQueue:any[] = []
 
 export function checkDCLDeploymentQueue(){
     if(dclDeploymentQueue.length > 0){
@@ -15,7 +15,7 @@ export function checkDCLDeploymentQueue(){
                 console.log('dcl bucket ' + key + " is available")
                 bucket.available = false
                 bucket.directory = path.join(dclBucketDirectory, key)
-                let deploymentData:DCLDeploymentData = dclDeploymentQueue.shift()
+                let deploymentData:any = dclDeploymentQueue.shift()
 
                 try{
                     handleGenesisCityDeployment(key, deploymentData)
@@ -48,7 +48,7 @@ export async function resetBucket(key:string){
 
     try{
         await fs.emptyDir(path.join(dclBucketDirectory, key, "assets"))
-        await fs.emptyDir(path.join(dclBucketDirectory, key, "src", "iwb"))
+        // await fs.emptyDir(path.join(dclBucketDirectory, key, "src", "iwb"))
 
         b.status = "free"
         b.available = true
@@ -71,6 +71,7 @@ export async function resetBucket(key:string){
 }
 
 export function validateDeployment(req:any, res:any){
+    console.log('validating deployment', req.body)
     if(req.body && req.body.user && pendingDeployments[req.body.user.toLowerCase()]){
         res.status(200).json({valid:true, entityId: pendingDeployments[req.body.user.toLowerCase()].entityId})
     }else{

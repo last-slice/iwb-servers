@@ -24,7 +24,7 @@ export let temporaryDirectory = process.env.NODE_ENV === "Development" ? process
 export let assetDirectory = process.env.NODE_ENV === "Development" ? process.env.DEV_DOWNLOAD_ASSET_DIRECTORY : process.env.PROD_DOWNLOAD_ASSET_DIRECTORY
 export let ugcDirectory = process.env.NODE_ENV === "Development" ? process.env.DEV_DOWNLOAD_UGC_DIRECTORY : process.env.PROD_DOWNLOAD_UGC_DIRECTORY
 
-export async function buildScene(data:any, type:string, bucketDirectory?:string, parcels?:any, worldName?:string){
+export async function buildScene(data:any, type:string, bucketDirectory?:string){
 
     let directory = type === "download" ? path.join(temporaryDirectory, data.o + "-" + data.id) : bucketDirectory
 
@@ -32,21 +32,21 @@ export async function buildScene(data:any, type:string, bucketDirectory?:string,
         if(type === "download"){
             await copyTemplate(directory, data)
         }
-        await writeIndexFile(path.join(directory, "src/index.ts"))
-        await writeSceneMetadata(path.join(directory, 'scene.json'), data , parcels ? parcels : undefined, worldName ? worldName : undefined)
-        await writeSceneTemplate(path.join(directory, "src/iwb/config.ts"), data)
-        await writeTypesFile(path.join(directory, 'src/iwb/types.ts'), data)
-        await writeIWBFile(path.join(directory, 'src/iwb/iwb.ts'), data)
-        await writeComponentFile(path.join(directory, 'src/iwb/components.ts'), data)
-        await writePlayModeFile(path.join(directory, 'src/iwb/playMode.ts'), data)
-        await writeActionsFile(path.join(directory, 'src/iwb/actions.ts'), data)
-        await writeUIFile(path.join(directory, 'src/iwb/ui.tsx'), data)
-        await writeDialogPanelUI(path.join(directory, 'src/iwb/dialogPanel.tsx'), data)
-        await writeUITextComponentFile(path.join(directory, 'src/iwb/showTextComponent.tsx'), data)
-        await writeLibrariesFile(path.join(directory, 'src/iwb/libraries.ts'), data)
-        await writeHelperFile(path.join(directory, 'src/iwb/helpers.ts'), data)
-        await writeUIConfigFile(path.join(directory, 'src/iwb/uiConfig.ts'), data)
-        await writeResourcesFile(path.join(directory, 'src/iwb/resources.ts'), data)
+        // await writeIndexFile(path.join(directory, "src/index.ts"))
+        await writeSceneMetadata(path.join(directory, 'scene.json'), data)
+        // await writeSceneTemplate(path.join(directory, "src/iwb/config.ts"), data)
+        // await writeTypesFile(path.join(directory, 'src/iwb/types.ts'), data)
+        // await writeIWBFile(path.join(directory, 'src/iwb/iwb.ts'), data)
+        // await writeComponentFile(path.join(directory, 'src/iwb/components.ts'), data)
+        // await writePlayModeFile(path.join(directory, 'src/iwb/playMode.ts'), data)
+        // await writeActionsFile(path.join(directory, 'src/iwb/actions.ts'), data)
+        // await writeUIFile(path.join(directory, 'src/iwb/ui.tsx'), data)
+        // await writeDialogPanelUI(path.join(directory, 'src/iwb/dialogPanel.tsx'), data)
+        // await writeUITextComponentFile(path.join(directory, 'src/iwb/showTextComponent.tsx'), data)
+        // await writeLibrariesFile(path.join(directory, 'src/iwb/libraries.ts'), data)
+        // await writeHelperFile(path.join(directory, 'src/iwb/helpers.ts'), data)
+        // await writeUIConfigFile(path.join(directory, 'src/iwb/uiConfig.ts'), data)
+        // await writeResourcesFile(path.join(directory, 'src/iwb/resources.ts'), data)
         await copyUITextures(path.join(directory, "assets/"), data)
         await copyAssets(path.join(directory, "assets/"), data)
         return true

@@ -20,6 +20,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     }
 
     onCreate(options: any) {
+        console.log('on create options are ', options)
         this.setState(new IWBRoomState());
         this.state.world = options.world
 
@@ -37,8 +38,6 @@ export class IWBRoom extends Room<IWBRoomState> {
         // createCustomObjects(this)
 
         iwbManager.addRoom(this)
-
-
 
         // createTestScene(this)
     }

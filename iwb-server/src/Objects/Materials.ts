@@ -20,3 +20,14 @@ export function createMaterialComponent(scene:Scene, aid:string, data:any){
     scene[COMPONENT_TYPES.MATERIAL_COMPONENT].set(aid, component)
 }
 
+export function editMaterialComponent(info:any, scene:Scene){
+    let materialInfo:any = scene[COMPONENT_TYPES.MATERIAL_COMPONENT].get(info.aid)
+    if(materialInfo){
+        switch(info.type){
+            case 'albedoColor':
+                materialInfo.albedoColor[info.data.hue] = info.data.value
+                break;
+        }
+    }
+}
+

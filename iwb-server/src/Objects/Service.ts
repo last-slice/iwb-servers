@@ -2,6 +2,8 @@ import * as jwt from "jsonwebtoken";
 import { itemManager, iwbManager } from "../app.config";
 import { DEBUG } from "../utils/config";
 import { Player } from "./Player";
+import { IWBRoom } from "../rooms/IWBRoom";
+import { SERVER_MESSAGE_TYPES } from "../utils/types";
 
 export function handleAssetUploaderSigning(req:any, res:any){
     if(req.body.user && req.header('Authorization') && req.header('AssetAuth')){
@@ -109,6 +111,10 @@ export function updateIWBVersion(req:any, res:any, manual?:boolean){
             itemManager.notifyUsersDeploymentReady()
         }
 
+        iwbManager.rooms.forEach((room:IWBRoom)=>{
+            room.broadcast(SERVER_MESSAGE_TYPES.IWB_VERSION_UPDATE, {updates:req.body.updates, version: iwbManager.version})
+        })
+
         res.status(200).send({valid: true})
     }else{
         res.status(200).send({valid: false, token: false})
@@ -177,6 +183,10 @@ export function handleDeploymentFinished(req:any, res:any){
     
     let player:Player = iwbManager.findUser(req.body.user)
     if(player){
-        player.sendPlayerMessage(req.body.type, {world:req.body.world, valid:req.body.valid})
+        if(req.body.valid){
+            player.sendPlayerMessage(req.body.type, {world:req.body.world, name:req.body.name, valid:req.body.valid, dest:req.body.dest})
+        }else{
+            player.sendPlayerMessage(req.body.type, {valid:req.body.valid})
+        }
     }
 }

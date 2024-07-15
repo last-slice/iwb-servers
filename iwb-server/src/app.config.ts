@@ -11,12 +11,10 @@ import { initPlayFab } from "./utils/Playfab";
 import { IWBManager } from "./Objects/IWBManager";
 import { ItemManager } from "./Objects/ItemManager";
 import { router } from "./Routers/Router";
-// import { router } from "./Objects/Routers/Router";
+import { IWBGameRoom } from "./rooms/IWBGameRoom";
 
 export let itemManager: ItemManager
 export let iwbManager: IWBManager
-// export let playerManager: PlayerManager
-// export let eventListener: Listener
 
 export default config({
 
@@ -27,11 +25,13 @@ export default config({
         iwbManager = new IWBManager()
 
         gameServer.define('iwb-world', IWBRoom)
-        .filterBy(['world'])
+        .filterBy(['world','island'])
+
+        gameServer.define('iwb-game-world', IWBGameRoom)
+        .filterBy(['world','island', 'scene'])
     },
 
-    initializeExpress: (app) => {
-
+    initializeExpress: (app) => { 
         app.use(cors({origin: true}))
         app.options('*', cors());
         app.use(bodyParser.urlencoded({limit: '50mb', extended: true }));

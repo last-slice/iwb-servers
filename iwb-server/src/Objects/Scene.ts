@@ -32,6 +32,8 @@ import { UIImageComponent, createUIImageComponent } from "./UIImage";
 import { BillboardComponent, createBillboardComponent } from "./Billboard";
 import { LevelComponent, createLevelComponent } from "./Level";
 import { createLiveComponent, LiveShowComponent } from "./LiveShow";
+import { createTeamComponent, TeamComponent } from "./Team";
+import { createGameItemComponent, GameItemComponent } from "./GameItem";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -101,6 +103,8 @@ export class Scene extends Schema {
     @type({map:LevelComponent}) [COMPONENT_TYPES.LEVEL_COMPONENT]:MapSchema<LevelComponent>
     @type({map:BillboardComponent}) [COMPONENT_TYPES.BILLBOARD_COMPONENT]:MapSchema<BillboardComponent>
     @type({map:LiveShowComponent}) [COMPONENT_TYPES.LIVE_COMPONENT]:MapSchema<LiveShowComponent>
+    @type({map:TeamComponent}) [COMPONENT_TYPES.TEAM_COMPONENT]:MapSchema<TeamComponent>
+    @type({map:GameItemComponent}) [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:MapSchema<GameItemComponent>
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent>
 
     // @type({map:"string"}) [COMPONENT_TYPES.CLICK_AREA_COMPONENT]:MapSchema<string>
@@ -112,7 +116,7 @@ export class Scene extends Schema {
     entities:any[] = []
     components:any
 
-    constructor(data?:any) {
+    constructor(room?:IWBRoom, data?:any) {
         super(data)
         if (data){
             this.bps = data.bps
@@ -122,11 +126,11 @@ export class Scene extends Schema {
             this.sp = data.sp[0].split(",").length === 2 ? [data.sp[0].split(",")[0] + ",0," + data.sp[0].split(",")[1]] : data.sp
             this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"]
 
-            this.setComponents(data)
+            this.setComponents(data, room)
         }
     }
     
-    setComponents(data:any){
+    setComponents(data:any, room:IWBRoom){
         this[COMPONENT_TYPES.IWB_COMPONENT] = new MapSchema<IWBComponent>()
         this[COMPONENT_TYPES.NAMES_COMPONENT] = new MapSchema<NameComponent>()
         this[COMPONENT_TYPES.VISBILITY_COMPONENT] = new MapSchema<VisibilityComponent>()
@@ -157,11 +161,23 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.BILLBOARD_COMPONENT] = new MapSchema<BillboardComponent>()
         this[COMPONENT_TYPES.LEVEL_COMPONENT] = new MapSchema<LevelComponent>()
         this[COMPONENT_TYPES.LIVE_COMPONENT] = new MapSchema<LiveShowComponent>()
+        this[COMPONENT_TYPES.TEAM_COMPONENT] = new MapSchema<TeamComponent>()
+        this[COMPONENT_TYPES.GAME_ITEM_COMPONENT] = new MapSchema<GameItemComponent>()
         // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()
 
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
+                    case COMPONENT_TYPES.GAME_ITEM_COMPONENT:
+                        for (const aid in data[component]) {
+                            createGameItemComponent(this, aid,  data[component][aid])
+                        }
+                        break;
+                    case COMPONENT_TYPES.TEAM_COMPONENT:
+                        for (const aid in data[component]) {
+                            createTeamComponent(this, aid,  data[component][aid])
+                        }
+                        break;
                     case COMPONENT_TYPES.LIVE_COMPONENT:
                         for (const aid in data[component]) {
                             createLiveComponent(this, aid,  data[component][aid])
@@ -197,7 +213,9 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.IWB_COMPONENT:
-                        setIWBComponent(data.room, this, data[component])
+                        for (const aid in data[component]) {
+                            setIWBComponent(room, this, aid, data[component][aid])
+                        }
                         break;
 
                     case COMPONENT_TYPES.NAMES_COMPONENT:
@@ -454,7 +472,7 @@ export function loadRealmScenes(room:IWBRoom, scenes:any[]){
     // console.log('scenes are ', filter)
 
     filter.forEach((scene)=>{
-        room.state.scenes.set(scene.id, new Scene(scene))
+        room.state.scenes.set(scene.id, new Scene(room, scene))
     })
 }
 
@@ -465,8 +483,12 @@ export async function saveRealm(room:IWBRoom){
     let scenes:any[] = []
     room.state.scenes.forEach(async (scene:any)=>{
         let jsonScene:any = scene.toJSON()
-        // console.log('scene is', jsonScene)
-        // await checkAssetCacheStates(scene, jsonScene)
+        if(scene.id === "OaT46"){
+            // console.log('scene is', jsonScene)
+            await checkAssetCacheStates(scene, jsonScene)
+        }
+       
+        
 
 
         // Object.values(COMPONENT_TYPES).forEach((component:any)=>{
@@ -500,7 +522,9 @@ export async function saveRealm(room:IWBRoom){
             world.builds = scenes.length
             world.updated = Math.floor(Date.now()/1000)
         }
-        iwbManager.backupFiles(room.state.world, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
+
+        iwbManager.addWorldPendingSave(room.state.world, room.roomId, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
+        // iwbManager.backupFiles(room.state.world, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
     }
 }
 
@@ -547,6 +571,10 @@ export function saveRealmAssets(room:IWBRoom){
 }
 
 export function checkAssetCacheStates(scene:Scene, jsonScene:any){
+    scene[COMPONENT_TYPES.IWB_COMPONENT].forEach((iwbComponent:IWBComponent, aid:string)=>{
+        console.log('ugc is', iwbComponent.ugc)
+        console.log('type is', iwbComponent.type)
+    })
     // scene.parenting.forEach((assetItem:any, index:number)=>{
     //     let iwbAsset = scene.itemInfo.get(assetItem.aid)
     //     iwbAsset.editing = false

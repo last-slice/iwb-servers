@@ -14,7 +14,7 @@ import { GltfComponent, createGLTFComponent, editGltfComponent } from "../../Obj
 import { ParentingComponent, createParentingComponent, editParentingComponent, removeParenting } from "../../Objects/Parenting";
 import { AnimatorComponentSchema, createAnimationComponent } from "../../Objects/Animator";
 import { createAudioSourceComponent, editAudioComponent } from "../../Objects/Sound";
-import { createMaterialComponent } from "../../Objects/Materials";
+import { createMaterialComponent, editMaterialComponent } from "../../Objects/Materials";
 import { createVideoComponent, editVideoComponent } from "../../Objects/Video";
 import { IWBComponent, createIWBComponent, editIWBComponent } from "../../Objects/IWB";
 import { createNftShapeComponent, editNftShape } from "../../Objects/NftShape";
@@ -30,14 +30,15 @@ import { createStateComponent, editStateComponent } from "../../Objects/State";
 import { createUITextComponent, editUIComponent } from "../../Objects/UIText";
 import { createUIImageComponent, editUIImageComponent } from "../../Objects/UIImage";
 import { createBillboardComponent } from "../../Objects/Billboard";
-import { addGameComponent, editGameComponent, removeGameComponent, sceneHasGame } from "../../Objects/Game";
+import { addGameComponent, createGameComponent, editGameComponent, removeGameComponent, sceneHasGame } from "../../Objects/Game";
 import { editLevelComponent } from "../../Objects/Level";
 import { createLiveComponent, editLiveComponent } from "../../Objects/LiveShow";
+import { createGameItemComponent } from "../../Objects/GameItem";
 
 
 let updateComponentFunctions:any = {
     ['Delete']: (scene:any, info:any)=>{deleteComponent(scene, info)},
-    ['Add']: (scene:any, info:any)=>{addNewComponent(scene, info)},
+    ['Add']: (scene:any, info:any, client:any, room:IWBRoom)=>{addNewComponent(scene, info, client, room)},
     [COMPONENT_TYPES.TRANSFORM_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editTransform(client,info, scene)}, 
     [COMPONENT_TYPES.VISBILITY_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editVisibility(client, info, scene)}, 
     [COMPONENT_TYPES.TEXT_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editTextShape(client, info, scene)}, 
@@ -62,11 +63,12 @@ let updateComponentFunctions:any = {
     [COMPONENT_TYPES.GAME_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editGameComponent(room, client, info, scene)}, 
     [COMPONENT_TYPES.LEVEL_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editLevelComponent(info, scene)}, 
     [COMPONENT_TYPES.LIVE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editLiveComponent(info, scene)}, 
+    [COMPONENT_TYPES.MATERIAL_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editMaterialComponent(info, scene)}, 
 }
 
 let createComponentFunctions:any = {
     ['Delete']: (scene:any, info:any)=>{deleteComponent(scene, info)},
-    ['Add']: (scene:any, info:any)=>{addNewComponent(scene, info)},
+    ['Add']: (scene:any, info:any, client:Client, room:IWBRoom)=>{addNewComponent(scene, info, client, room)},
     [COMPONENT_TYPES.TEXT_COMPONENT]:(scene:any, aid:string, info:any)=>{createTextComponent(scene, aid, info)}, 
     // [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
     // [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
@@ -356,11 +358,16 @@ function deleteComponent(scene:any, item:any){
     scene[item.type].delete(item.aid)
 }
 
-function addNewComponent(scene:Scene, item:any){
+function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
     switch(item.type){
+        case COMPONENT_TYPES.GAME_ITEM_COMPONENT:
+            if(!scene[COMPONENT_TYPES.GAME_ITEM_COMPONENT].has(item.aid)){
+                createGameItemComponent(scene, item.aid)
+            }
+            break;
         case COMPONENT_TYPES.LIVE_COMPONENT:
             if(!scene[COMPONENT_TYPES.LIVE_COMPONENT].has(item.aid)){
-                createLiveComponent(scene, item.aid, {mode:2})
+                createLiveComponent(scene, item.aid, {})
             }
             break;
 
@@ -398,6 +405,14 @@ function addNewComponent(scene:Scene, item:any){
             if(!scene[COMPONENT_TYPES.STATE_COMPONENT].has(item.aid)){
                 createStateComponent(scene, item.aid)
             }
+            break;
+
+        case COMPONENT_TYPES.GAME_COMPONENT:
+            if(sceneHasGame(scene)){
+                client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"A game component already exists on this scene", sound:'error_2'})
+                return
+            }
+            createGameComponent(scene, item.aid)
             break;
     }
 }
@@ -468,10 +483,6 @@ export function addItemComponents(room:IWBRoom, client:Client, scene:Scene, item
             componentData.aid = item.aid
             createComponentFunctions[componentType](scene, item.aid, componentData)
         }
-    }
-
-    if(catalogItemInfo.id === "e7a63c71-c2ba-4e6d-8e62-d77e2c8dc93a"){
-        addGameComponent(room, client, scene, item, catalogItemInfo)
     }
 }
 

@@ -22,6 +22,7 @@ export class IWBManager{
     backingUp:boolean = false
     worlds:any[] = []
     pendingSaves:any[] = []
+    savingWorlds:any[] = []
 
     //server config
     version:number = 0
@@ -39,6 +40,8 @@ export class IWBManager{
     tutorials:any[] = []
     tutorialsCID:string = ""
     feedback:any[] = []
+
+    pendingSaveIntervals:Map<string, any> = new Map()
 
 
     defaultPlayerSettings:any = {
@@ -149,7 +152,6 @@ export class IWBManager{
         }
     }
 
-
     attemptUserMessage(req:any, res:any){
         if(req.body){
             if(req.body.user){
@@ -183,7 +185,7 @@ export class IWBManager{
 
     findUser(user:string){
         let player:Player
-        this.rooms.forEach(async (room, key)=>{
+        this.rooms.forEach((room:IWBRoom, key)=>{
             player = room.state.players.get(user.toLowerCase())
         })
         return player
@@ -281,42 +283,64 @@ export class IWBManager{
         }
     }
 
-    addWorldPendingSave(world:string){
-        this.pendingSaves.push(world)
+    checkPendingSaveQueue(world:string){
+        let pendingWorld:any = this.pendingSaves.find(($:any)=> $.world === world)
+        if(pendingWorld && !this.savingWorlds.includes(world)){
+            this.savingWorlds.push(world)
+            this.backupFiles(pendingWorld)
+        }
     }
 
-    removeWorldPendingSave(world:string){
-        let index = this.pendingSaves.findIndex((w)=> w === world)
+    addWorldPendingSave(world:string, roomId:string, filenames:string[], token:string, type:string, realmId:string, data:any[]){
+        this.pendingSaves.push({
+            world:world,
+            roomId:roomId,
+            filenames:filenames,
+            token:token,
+            type:type,
+            realmId:realmId,
+            data:data
+        })
+        this.checkPendingSaveQueue(world)
+    }
+
+    async removeWorldPendingSave(world:string){
+        let index = this.pendingSaves.findIndex((w)=> w.world === world)
         if(index >=0){
             this.pendingSaves.splice(index,1)
         }
+
+        let save = this.savingWorlds.findIndex((w)=> w === world)
+        if(save >=0){
+            this.savingWorlds.splice(index,1)
+        }
     }
 
-    async createRealmLobby(room:IWBRoom, world:any, newWorld:boolean){
-        try{
-            let user = await playfabLogin(world.owner)
-            let realmMetadata = await fetchUserMetaData(user)
-            let scenes = await fetchPlayfabFile(realmMetadata, world +'-scenes.json')
+    // async createRealmLobby(room:IWBRoom, world:any, newWorld:boolean){
+    //     try{
+    //         let user = await playfabLogin(world.owner)
+    //         let realmMetadata = await fetchUserMetaData(user)
+    //         let scenes = await fetchPlayfabFile(realmMetadata, world +'-scenes.json')
 
-            scenes.push(this.createLobbyScene(room, world))
+    //         scenes.push(this.createLobbyScene(room, world))
     
-            if(newWorld){
-                world.builds = 1
-                world.updated = Math.floor(Date.now()/1000)
-                world.cv = 1
-                world.v = iwbManager.version    
-            } 
+    //         if(newWorld){
+    //             world.builds = 1
+    //             world.updated = Math.floor(Date.now()/1000)
+    //             world.cv = 1
+    //             world.v = iwbManager.version    
+    //         } 
 
-            await this.backupScene(world.ens, user.EntityToken.EntityToken, user.EntityToken.Entity.Type, user.EntityToken.Entity.Id, scenes)
+    //         await this.backupScene(world.ens, user.EntityToken.EntityToken, user.EntityToken.Entity.Type, user.EntityToken.Entity.Id, scenes)
             
-            if(newWorld){
-                this.worlds.push(world)  
-            }
-        }
-        catch(e){
-            console.log('error creating lobby for new world', world)
-        }
-    }
+    //         if(newWorld){
+    //             this.worlds.push(world)  
+    //         }
+    //     }
+    //     catch(e){
+    //         console.log('error creating lobby for new world', world)
+    //     }
+    // }
 
     async initiateRealm(user:string){
         try{
@@ -390,38 +414,39 @@ export class IWBManager{
         }
     }
 
-    createLobbyScene(room:IWBRoom, world:any){
-        let lobby:Scene = new Scene({
-            room:room,
-            w: world.ens,
-            id: "" + generateId(5),
-            n: "Realm Lobby",
-            d: "Realm Lobby Scene",
-            o: world.owner,
-            ona: world.worldName,
-            cat:"",
-            bps:[],
-            bpcl: "0,0",
-            cd: Math.floor(Date.now()/1000),
-            upd: Math.floor(Date.now()/1000),
-            si: 0,
-            toc:0,
-            pc: 0,
-            pcnt: 4,
-            isdl: false,
-            e:true,
-            pcls:["0,0", "1,0", "1,1", "0,1"],
-            sp:["16,16"],
-            ass:[]
-          })
+    // createLobbyScene(room:IWBRoom, world:any){
+    //     let lobby:Scene = new Scene({
+    //         room:room,
+    //         w: world.ens,
+    //         id: "" + generateId(5),
+    //         n: "Realm Lobby",
+    //         d: "Realm Lobby Scene",
+    //         o: world.owner,
+    //         ona: world.worldName,
+    //         cat:"",
+    //         bps:[],
+    //         bpcl: "0,0",
+    //         cd: Math.floor(Date.now()/1000),
+    //         upd: Math.floor(Date.now()/1000),
+    //         si: 0,
+    //         toc:0,
+    //         pc: 0,
+    //         pcnt: 4,
+    //         isdl: false,
+    //         e:true,
+    //         pcls:["0,0", "1,0", "1,1", "0,1"],
+    //         sp:["16,16"],
+    //         ass:[]
+    //       })
 
-        return lobby
-    }
+    //     return lobby
+    // }
 
-    async backupFiles(world:string, filenames:string[], token:string, type:string, realmId:string, data:any[]){
+    async backupFiles(pendingWorld:any){
+        let {world, token, realmId, type, filenames, data} = pendingWorld
+
         try{
-            this.addWorldPendingSave(world)
-
+            console.log('backing up world', world)
             let initres = await initializeUploadPlayerFiles(token,{
                 Entity: {Id: realmId, Type: type},
                 FileNames:filenames
@@ -441,7 +466,8 @@ export class IWBManager{
                 FileNames:filenames,
                 ProfileVersion:initres.ProfileVersion,
             })
-            this.removeWorldPendingSave(world)
+            await this.removeWorldPendingSave(world)
+            this.checkPendingSaveQueue(world)
         }
         catch(e:any){
             console.log('backup file error', e.message)
@@ -449,42 +475,72 @@ export class IWBManager{
         }
     }
 
+    // async backupFiles(world:string, filenames:string[], token:string, type:string, realmId:string, data:any[]){
+    //     try{
+    //         this.addWorldPendingSave(world)
 
-    async backupScene(world:string, token:string, type:string, realmId:string, scenes:any[]){
-        try{
-            this.addWorldPendingSave(world)
+    //         let initres = await initializeUploadPlayerFiles(token,{
+    //             Entity: {Id: realmId, Type: type},
+    //             FileNames:filenames
+    //         })
 
-            // console.log('scenes to back up are', scenes)
+    //         // console.log('initres is', initres)
 
-            let initres = await initializeUploadPlayerFiles(token,{
-                Entity: {Id: realmId, Type: type},
-                FileNames:[world + "-" + this.realmFileKey]
-            })
+    //         for(let i = 0; i < filenames.length; i++){
+    //             let uploadres = await uploadPlayerFiles(initres.UploadDetails[i].UploadUrl, JSON.stringify(data[i]))
+    //         }
+
+    //         //let uploadres = await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(data))
+    
+    //         let finalres = await finalizeUploadFiles(token,
+    //             {
+    //             Entity: {Id: realmId, Type: type},
+    //             FileNames:filenames,
+    //             ProfileVersion:initres.ProfileVersion,
+    //         })
+    //         this.removeWorldPendingSave(world)
+    //     }
+    //     catch(e:any){
+    //         console.log('backup file error', e.message)
+    //         this.abortSaveSceneUploads(world, filenames, token, type, realmId)
+    //     }
+    // }
+
+    // async backupScene(world:string, token:string, type:string, realmId:string, scenes:any[]){
+    //     try{
+    //         this.addWorldPendingSave(world)
+
+    //         // console.log('scenes to back up are', scenes)
+
+    //         let initres = await initializeUploadPlayerFiles(token,{
+    //             Entity: {Id: realmId, Type: type},
+    //             FileNames:[world + "-" + this.realmFileKey]
+    //         })
             
-            console.log(initres)
+    //         console.log(initres)
     
-            let uploadres = await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(scenes))
+    //         let uploadres = await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(scenes))
     
-            let finalres = await finalizeUploadFiles(token,
-                {
-                Entity: {Id: realmId, Type: type},
-                FileNames:[world + "-"  + this.realmFileKey],
-                ProfileVersion:initres.ProfileVersion,
-            })
-            this.removeWorldPendingSave(world)
-        }
-        catch(e){
-            console.log('error backing up realm scenes', world, e)
-            this.abortSaveSceneUploads(world, [world + "-" + this.realmFileKey], token, type, realmId)
-        }
-    }
+    //         let finalres = await finalizeUploadFiles(token,
+    //             {
+    //             Entity: {Id: realmId, Type: type},
+    //             FileNames:[world + "-"  + this.realmFileKey],
+    //             ProfileVersion:initres.ProfileVersion,
+    //         })
+    //         this.removeWorldPendingSave(world)
+    //     }
+    //     catch(e){
+    //         console.log('error backing up realm scenes', world, e)
+    //         this.abortSaveSceneUploads(world, [world + "-" + this.realmFileKey], token, type, realmId)
+    //     }
+    // }
 
     async abortSaveSceneUploads(world:string, filenames:string[], token:string, type:string, realmId:string){
         await abortFileUploads(token,{
             Entity: {Id: realmId, Type: type},
             FileNames:filenames
           })
-        this.removeWorldPendingSave(world)
+          this.checkPendingSaveQueue(world)
     }
 
     async updateRealmPendingAssets(owner:any, world:string){
@@ -519,18 +575,19 @@ export class IWBManager{
     }
 
     async sceneReady(body:any){
-        let player:any = false
+        let player:Player
+        // console.log('iwb rooms are ', iwbManager.rooms)
 
-        iwbManager.rooms.forEach((room)=>{
-            if(room.state.players.has(body.user)){
-                player = room.state.players.get(body.user)
-                return
-            }
-        })
+        let room:IWBRoom = iwbManager.rooms.find((w:any)=> w.state.world === body.data.worldName)
+        if(room.state.players.get(body.user)){
+            player = room.state.players.get(body.user)
+        }
 
-        if(!player){
-            console.log('user not online anymore, delete deployment and free up bucket')
-        }else{
+        player = room.state.players.get('0xaabe0ecfaf9e028d63cf7ea7e772cf52d662691a')
+
+        // if(!player && !room){
+        //     console.log('user not online anymore, delete deployment and free up bucket')
+        // }else{
             console.log('found user, notify them of their deployment', body)
             player.pendingDeployment = body.data.auth
 
@@ -550,8 +607,9 @@ export class IWBManager{
 
             link += "/" + body.auth
 
+            console.log('link is', link)
             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_READY, {link:link})
-        }
+        // }
     }
 
     async buildDeployLink(body:any){

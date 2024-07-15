@@ -25,19 +25,6 @@ export class ActionComponentSchema extends Schema{
     @type("string") startDId:string
 
     @type("string") dialID:string
-    @type("number") twT:number
-    @type("number") twE:number
-    @type("number") twD:number
-    @type("number") twL:number
-    @type("number") twEX:number
-    @type("number") twEY:number
-    @type("number") twEZ:number
-
-
-
-
-
-
 
 
 
@@ -46,26 +33,31 @@ export class ActionComponentSchema extends Schema{
     @type("string") name:string
     @type("string") type:string
     @type("string") game:string
-    @type("number") anchor:number
     @type("string") emote:string
-    @type("boolean") visible:boolean
-    @type("number") vMask:number
-    @type("number") iMask:number
     @type("string") text:string
-    @type("number") textAlign:number
-    @type("number") size:number
     @type("string") url:string
     @type("string") movePos:string
     @type("string") moveCam:string
-    @type("boolean") moveRel:boolean
+    @type("string") counter:string
+    @type("string") state:string
+    @type("string") message:string
+
+    @type("number") anchor:number
     @type("number") timer:number
     @type("number") x:number
     @type("number") y:number
     @type("number") z:number
     @type("number") value:number
-    @type("string") counter:string
-    @type("string") state:string
-    @type("string") message:string
+    @type("number") textAlign:number
+    @type("number") vMask:number
+    @type("number") iMask:number
+    @type("number") size:number
+    @type("number") ttype:number
+    @type("number") tloop:number
+
+    @type("boolean") visible:boolean
+    @type("boolean") moveRel:boolean
+
     @type(["string"]) actions:ArraySchema<string>
 }
 

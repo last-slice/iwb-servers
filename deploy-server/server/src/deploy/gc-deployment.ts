@@ -6,7 +6,6 @@ import { ChainId, EntityType, getChainName } from '@dcl/schemas'
 import { Authenticator } from '@dcl/crypto'
 import { getCatalystServersFromCache } from 'dcl-catalyst-client/dist/contracts-snapshots'
 import { createFetchComponent } from '@well-known-components/fetch-component'
-import Axios from 'axios'
 import { deployBuckets } from './buckets'
 import { resetBucket } from '.'
 import { buildScene } from '../download/scripts'
@@ -44,13 +43,13 @@ export async function handleGenesisCityDeployment(key:string, data:any){
         pendingDeployments[data.user] = {
           status:"building",
           data: data,
-          name: data.name,
+          name: data.metadata.title,
           dest: data.dest,
           worldName: data.worldName,
           tokenId: data.tokenId
         }
 
-        await buildScene(data.scene, "deploy", bucketDirectory, data.parcel !== null ? data.parcel : undefined, data.worldName !== null ? data.worldName : undefined)
+        await buildScene(data, "deploy", bucketDirectory)
 
           await buildTypescript({
             workingDir: bucketDirectory, 
@@ -58,7 +57,7 @@ export async function handleGenesisCityDeployment(key:string, data:any){
             production: true
           })
 
-          // Obtain list of files to deploy
+        //   // Obtain list of files to deploy//
           const originalFilesToIgnore = await fs.readFile(
             bucketDirectory + '/.dclignore',
               'utf8'
@@ -202,6 +201,7 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
       })
   }
   else{
+    target = undefined
       if(target){
           catalyst = await createCatalystClient({
               url: target,
@@ -255,7 +255,7 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
         if (response.message) {
           console.log(response.message)
         }
-        pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, user:req.body.user, world:pendingDeployments[req.body.user].worldName, valid:true})
+        pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, dest:pendingDeployments[req.body.user].dest, user:req.body.user, name:pendingDeployments[req.body.user].name, world:pendingDeployments[req.body.user].worldName, valid:true})
         resetDeployment(req.body.key)
       } catch (error: any) {
         // debug('\n' + error.stack)

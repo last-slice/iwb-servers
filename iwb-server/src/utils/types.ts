@@ -87,11 +87,9 @@ export enum SERVER_MESSAGE_TYPES {
     WORLD_ADD_BP = 'world_add_build_permissions',
     WORLD_DELETE_BP = 'world_delete_build_permissions',
     GET_MARKETPLACE = 'get_marketplace',
-    START_GAME = 'start_game',
-    END_GAME = 'end_game',
 
     CUSTOM = "custom",
-
+    IWB_VERSION_UPDATE ='iwb_version_update',
 
     VERIFY_ACCESS = 'verify_access',
 
@@ -100,7 +98,12 @@ export enum SERVER_MESSAGE_TYPES {
     CLAIM_REWARD = 'claim_reward',
 
     //GAMING
-    CREATE_GAME_LOBBY = 'create_game_lobby'
+    START_GAME = 'start_game',
+    END_GAME = 'end_game',
+    CREATE_GAME_LOBBY = 'create_game_lobby',
+    GAME_FINISHED_EARLY = 'game_finished_early',
+    WIN_GAME = 'win_game',
+    GAME_TIED = 'game_tied',
 }
 
 export enum SCENE_MODES {
@@ -167,7 +170,9 @@ export enum COMPONENT_TYPES {
     GAME_COMPONENT = 'Game',
     LEVEL_COMPONENT = 'Levels',
     BILLBOARD_COMPONENT = 'Billboard',
-    LIVE_COMPONENT = 'Live'
+    LIVE_COMPONENT = 'Live',
+    TEAM_COMPONENT = 'Team',
+    GAME_ITEM_COMPONENT = 'GameItem'
 }
 
 export enum COLLISION_LAYERS {
@@ -318,4 +323,10 @@ export enum TRIGGER_TYPES {
 export enum CATALOG_IDS {
     GAME_COMPONENT = "e7a63c71-c2ba-4e6d-8e62-d77e2c8dc93a",
     EMPTY_ENTITY = "b9768002-c662-4b80-97a0-fb0d0b714fab"
+}
+
+export enum GAME_TYPES {
+    SOLO,
+    MULTIPLAYER,
+    TEAM_COMPETITION
 }

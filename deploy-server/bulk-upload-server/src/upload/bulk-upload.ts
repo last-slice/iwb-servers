@@ -230,11 +230,10 @@ export async function modifyAssets(type:string, currentAssets:any){
       break;
   }
 
-
 }
 
 async function modifyAudioAssets(currentAssets:any){
-  const filedata = fs.readFileSync('../audioassets.json', 'utf8');
+  const filedata = fs.readFileSync('./audioAssets.json', 'utf8');
   let data = JSON.parse(filedata)
   errors = [...data]
 
@@ -294,10 +293,10 @@ async function moveMatchingFiles(
               "id": "" + id,
               "n": "" + matchingObject.name,
               "d": "",
-              "style": "",
+              "style": "" + matchingObject.cat,
               "cat": "" + matchingObject.cat,
               "m": "" + id + ".mp3",
-              "on": "Koshi",
+              "on": "" + matchingObject.artist,
               "o": "IWB Team",
               "pc": 0,
               "im": "https://bafkreibzvpwxnzewseobcvog24qsmekvlp4avrsrdgnt74dxta75rqbqbe.ipfs.nftstorage.link/",
@@ -305,8 +304,9 @@ async function moveMatchingFiles(
               "isdl": false,
               "tag": [],
               "si": 0 + size,
-              "bb": " {\"x\":1, \"y\":1, \"z\":1}",
-              "ugc":false
+              "bb":{"x":1, "y":1, z:1},
+              "ugc":false,
+              "v":1
             }
 
             newAssets.push(newAssetData)
@@ -345,19 +345,19 @@ function logFile(filename:string, data:any, asset?:any){
 }
 
 async function postAssetsToIWB(assets:any){
-  const result = await Axios.post('http://localhost:2751/update/catalog',{assets:assets},
-  {headers: {                      
-      'Authorization': `Bearer ${process.env.IWB_UPLOAD_AUTH_KEY}`, 
-  }},
-  );
-  // console.log('result is', result.data)
+  // const result = await Axios.post('http://localhost:2751/update/catalog',{assets:assets},
+  // {headers: {                      
+  //     'Authorization': `Bearer ${process.env.IWB_UPLOAD_AUTH_KEY}`, 
+  // }},
+  // );
+  // // console.log('result is', result.data)
 
-  if(result.data.valid){
-    // console.log('successfully posted new items iwb catalog')
-  }else{
-    console.log('there was an error', result.data.msg)
-    logFile('catalog-post-error', assets)
-  }
+  // if(result.data.valid){
+  //   // console.log('successfully posted new items iwb catalog')
+  // }else{
+  //   console.log('there was an error', result.data.msg)
+  //   logFile('catalog-post-error', assets)
+  // }
 }
 
 function getFileSize(filePath:any) {

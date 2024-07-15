@@ -44,12 +44,23 @@ export function createIWBComponent(room:IWBRoom, scene:Scene, data:any){
     scene[COMPONENT_TYPES.IWB_COMPONENT].set(data.scene.aid, component)
 }
 
-export function setIWBComponent(room:IWBRoom, scene:Scene, iwbComponent:any){
-    for (const aid in iwbComponent) {
-        let component = new IWBComponent(iwbComponent[aid])
-
-        checkAssetPolyAndSize(room, scene, component)
-       scene[COMPONENT_TYPES.IWB_COMPONENT].set(aid, component)
+export function setIWBComponent(room:IWBRoom, scene:Scene,aid:string, data:any){
+    let catalogItem = room.state.realmAssets.get(data.id)
+    if(catalogItem){
+        let iwbData:any = {
+            scene:{
+                aid:aid,
+                id:data.id,
+                n:catalogItem.n,
+            },
+            item:{
+                pending:catalogItem.pending,
+                ugc: catalogItem.ugc,
+                ty: catalogItem.ty,
+                sty: catalogItem.sty
+            },
+        }
+        createIWBComponent(room, scene, iwbData)
     }
 }
 
@@ -73,7 +84,7 @@ function checkAssetPolyAndSize(room:IWBRoom, scene:Scene, component:any){
 
         scene[COMPONENT_TYPES.IWB_COMPONENT].forEach((item:IWBComponent, aid:string)=>{
             if(item.id === catalogItem.id){
-                console.log('we found same item in scene')
+                // console.log('we found same item in scene')
                 size = 0
             }
         })

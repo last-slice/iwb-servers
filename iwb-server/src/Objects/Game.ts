@@ -1,24 +1,22 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
-import { CATALOG_IDS, COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../utils/types";
-import { itemManager } from "../app.config";
-import { createNewItem } from "../rooms/messaging/ItemHandler";
+import { COMPONENT_TYPES, GAME_TYPES, SERVER_MESSAGE_TYPES } from "../utils/types";
 import { IWBRoom } from "../rooms/IWBRoom";
-import { Client, generateId } from "colyseus";
-import { Quaternion, Vector3 } from "./Transform";
+import { Client } from "colyseus";
+import { Vector3 } from "./Transform";
 import { LevelComponent, createGameLevel, createLevelComponent, removeLevels } from "./Level";
 import { editTriggerComponent } from "./Trigger";
 import { Player } from "./Player";
-import { createStateComponent, editStateComponent } from "./State";
+import { removeAllTeams } from "./Team";
 
 export class GameComponent extends Schema{
     @type("string") id:string = ""
     @type("string") name:string = ""
     @type("string") image:string = ""
-    @type("string") description:string = ""
+    @type("string") description:string = "IWB Game"
     @type("string") startScreen:string = "iwb"
     @type("string") loadingScreen:string
-    @type("number") type:number
+    @type("string") type:string
     @type("number") startLevel:number
     @type("number") currentLevel:number
     @type("boolean") disableTeleport:boolean = false
@@ -26,21 +24,24 @@ export class GameComponent extends Schema{
     @type("boolean") premiumAccess:boolean //do we need this? ifo
     @type("boolean") premiumAccessType:boolean //do we need this? ifo
     @type("boolean") premiumAccessItem:boolean //do we need this? ifo
-    //levels here?
+    //levels here
+
+    @type(["string"]) variables:ArraySchema<string> = new ArraySchema()
 
     //game component can have children components to track "global" variables
     // like time, score, health, death, etc
 }
 
-export function createGameComponent(scene:Scene, aid:string, data:any){
+export function createGameComponent(scene:Scene, aid:string, data?:any){
     let component:any = new GameComponent()
+    component.id = scene.id
+    component.name = scene.n + " Game"
     for(let key in data){
         if(key === "loadingSpawn"){
             component[key] = new Vector3(data[key])
         }else{
             component[key] = data[key]
         }
-        
     }
     scene[COMPONENT_TYPES.GAME_COMPONENT].set(aid, component)
 }
@@ -49,10 +50,21 @@ export function editGameComponent(room:IWBRoom, client:Client, info:any, scene:S
     let itemInfo:any = scene[COMPONENT_TYPES.GAME_COMPONENT].get(info.aid)
     if(itemInfo){
         switch(info.action){
+            case 'delete-variable':
+                let variableIndex = itemInfo.variables.findIndex(($:any)=> $ === info.variables)
+                if(variableIndex >=0){
+                    itemInfo.variables.splice(variableIndex,1)
+                }
+                break;
+
             case 'edit':
                 for(let key in info){
                     if(itemInfo.hasOwnProperty(key)){
-                        itemInfo[key] = info[key]
+                        if(key === "variables"){
+                            itemInfo[key].push(info[key])
+                        }else{
+                            itemInfo[key] = info[key]
+                        }
                     }
                 }
                 break;
@@ -61,6 +73,24 @@ export function editGameComponent(room:IWBRoom, client:Client, info:any, scene:S
                 console.log('adding game level')
                 let transform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(info.aid)
                 createGameLevel(room, client, scene, {position:transform.p}, scene[COMPONENT_TYPES.LEVEL_COMPONENT].size + 1)
+                break;
+
+            case 'edit-type':
+                //remove all levels
+                // removeAllTeams(scene)
+                //do other clean up of things specific to both game types
+
+                itemInfo.type = info.gameType
+                switch(info.gameType){
+                    case GAME_TYPES.SOLO:
+                        break;
+
+                    case GAME_TYPES.MULTIPLAYER:
+                        break;
+
+                    case GAME_TYPES.TEAM_COMPETITION:
+                        break;
+                }
                 break;
         }
     }

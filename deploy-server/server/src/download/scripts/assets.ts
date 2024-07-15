@@ -4,8 +4,8 @@ import { assetDirectory, temporaryDirectory, ugcDirectory } from '.';
 export async function copyAssets(location:string, data:any){
     let alreaadyCopied:string[] = []
 
-    for(let i = 0; i < data.ass.length; i++){
-        let asset = data.ass[i]
+    for(let i = 0; i < data.assetIds.length; i++){
+        let asset = data.assetIds[i]
         if(!alreaadyCopied.includes(asset.id)){
             let file = asset.id
 

@@ -1,8 +1,9 @@
-import { DeploymentData } from "src/utils/types";
+import { DeploymentData, REQUIRED_ASSETS } from "../utils/types";
 import { iwbBuckets } from "./buckets";
 import { updateSceneMetadata } from "./sceneData";
 import { buildTypescript } from "./helpers";
 import { status } from "../config/config";
+import { updateWorldMetadata } from "../download/scripts/metadata"
 
 const fs = require('fs-extra');
 const ncp = require('ncp').ncp;
@@ -29,7 +30,7 @@ export async function checkDeploymentQueue(){
                 bucket.directory = path.join(worldBucketDirectory, key)
 
                 try{
-                    await buildBucket(key, bucket, tempData.owner)
+                    await buildBucket(key, bucket, tempData)
                     await modifyScene(key, tempData)
                     await deploy(key, tempData)
                 }
@@ -252,21 +253,31 @@ async function modifyScene(key:string, data:DeploymentData){
     }
 }
 
-async function buildBucket(key:string, bucket:any, world:string){
-    console.log("building temp deploy bucket", world, key)
+async function buildBucket(key:string, bucket:any, data:any){
+    console.log("building temp deploy bucket", data.owner, key)
     try {
         bucket.status = "Creating"
 
         const bucketPath = path.join(worldBucketDirectory, key)
 
+        let assets:any
+        if(data.url){
+            let res = await fetch(data.url)
+            let json = await res.json()
+            assets = json
+        }
+
         // const dep1FolderPath = path.join(worldBucketDirectory, key); // Path to the "dep1" folder inside "buckets"
         // const templateFolderPath = path.join(projectRoot, 'iwb-template'); // Path to the "template" folder
     
         // await fs.mkdir(dep1FolderPath, {recursive: true});
-        await copyFiles(assetDirectory, path.join(bucketPath, "assets"));
+        await copyFiles(assetDirectory, path.join(bucketPath, "assets"), assets);
 
         try {
-            let ugcPath = path.join(ugcDirectory, 'ugc-assets', world)
+            //write scene.json with world name
+            await updateWorldMetadata(path.join(bucketPath, "scene.json"), data)
+
+            let ugcPath = path.join(ugcDirectory, 'ugc-assets', data.owner)
             console.log('ugc path is', ugcPath)
 
             await fs.access(ugcPath, fs.constants.F_OK);
@@ -283,21 +294,39 @@ async function buildBucket(key:string, bucket:any, world:string){
       }
 }
 
-async function copyFiles(sourceFolder:string, destinationFolder:string) {
+async function copyFiles(sourceFolder:string, destinationFolder:string, assets?:any[]) {
     try {
+        if(assets){
+            for(let i = 0; i < Object.values(REQUIRED_ASSETS).length; i++){
+                let file = Object.values(REQUIRED_ASSETS)[i]
+                await fs.copy(path.join(sourceFolder, file), path.join(destinationFolder, file))
+            }
+        }
+
         const files = await fs.readdir(sourceFolder);
 
         for (const file of files) {
             const sourceFilePath = path.join(sourceFolder, file);
-            const destinationFilePath = path.join(destinationFolder, file);
-            await fs.copy(sourceFilePath, destinationFilePath);
+            let destinationFilePath:any
+                if(assets){
+                    if(assets.find(($:any)=> $.id === path.parse(file).name)){
+                        destinationFilePath = path.join(destinationFolder, file);
+                    }
+                }else{
+                    destinationFilePath = path.join(destinationFolder, file);
+                }
+            
+            if(destinationFilePath){
+                await fs.copy(sourceFilePath, destinationFilePath);
+            }
         }
 
-        console.log(`Files copied from ${sourceFolder} to ${destinationFolder}`);
+        // console.log(`Files copied from ${sourceFolder} to ${destinationFolder}`);
     } catch (err) {
         console.error(`Error copying files: ${err}`);
     }
 }
+
 
 function failBucket(key:any){
     let bucket = iwbBuckets.get(key)
@@ -318,15 +347,21 @@ function copyFolder(source:string, destination:string) {
   }
 
 async function successIWBServer(bucket:any, data:DeploymentData){
-    let res = await fetch((status.DEBUG ? process.env.IWB_DEV_PATH : process.env.IWB_PROD_PATH) + "deployment/success",{
-        method:"POST",
-        headers:{"content-type":"application/json"},
-        body:JSON.stringify({
-            auth:process.env.IWB_UPLOAD_AUTH_KEY,
-            world:data
+    try{
+        console.log('link is', (status.DEBUG ? process.env.IWB_DEV_PATH : process.env.IWB_PROD_PATH) + "deployment/success")
+        let res = await fetch((status.DEBUG ? process.env.IWB_DEV_PATH : process.env.IWB_PROD_PATH) + "deployment/success",{
+            method:"POST",
+            headers:{"content-type":"application/json"},
+            body:JSON.stringify({
+                auth:process.env.IWB_UPLOAD_AUTH_KEY,
+                world:data
+            })
         })
-    })
-    let json = await res.json()
-    console.log('ping iwb server success deployment', json)
+        let json = await res.json()
+        console.log('ping iwb server success deployment', json)
+    }
+    catch(e){
+        console.log('error pinging iwb server for successful deployment', e)
+    }
 }
 

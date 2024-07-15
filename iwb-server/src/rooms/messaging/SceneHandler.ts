@@ -8,6 +8,7 @@ import { Scene } from "../../Objects/Scene";
 import { generateId } from "colyseus";
 import { canBuild, removeAllAssetComponents } from "./ItemHandler";
 import { addBasicSceneParenting } from "../../Objects/Parenting";
+import { IWBComponent } from "../../Objects/IWB";
 
 let deploymentServer:any = DEBUG ? process.env.DEPLOYMENT_SERVER_DEV : process.env.DEPLOYMENT_SERVER_PROD
 
@@ -102,7 +103,12 @@ export function iwbSceneHandler(room:IWBRoom){
             let world = iwbManager.worlds.find((w)=> w.ens === room.state.world)
             if(world && world.owner === client.userData.userId){
                 iwbManager.deployWorld(world, room)
+            }else{
+                client.send(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, {valid:false})
             }
+        }
+        else{
+            client.send(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, {valid:false})
         }
     })
 
@@ -387,42 +393,54 @@ export function iwbSceneHandler(room:IWBRoom){
         console.log(SERVER_MESSAGE_TYPES.SCENE_DEPLOY + " message", info)
         let player:Player = room.state.players.get(client.userData.userId)
         // if(player){
-        //     let scene:Scene = room.state.scenes.get(info.sceneId)
+            let scene:Scene = room.state.scenes.get(info.sceneId)
         //     if(scene && scene.o === player.address){
         //       //   console.log('owner is requesting deployment')
 
-        //         try{
-        //             let res = await fetch(deploymentServer + "scene/deploy", {
-        //                 method:"POST",
-        //                 headers:{
-        //                     "Content-type": "application/json",
-        //                     "Auth": "" + process.env.IWB_DEPLOYMENT_AUTH
-        //                 },
-        //                 body: JSON.stringify({
-        //                     scene:scene,
-        //                     dest:info.dest,
-        //                     name: info.name,
-        //                     worldName:info.worldName,
-        //                     user: scene.o,
-        //                     parcel: info.parcel,
-        //                     tokenId: info.tokenId,
-        //                     target: 'interconnected.online'
-        //                 })
-        //             })
-        //             let json = await res.json()
-        //             console.log('json is', json)
-        //             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:json.valid, msg:json.valid ? "Your deployment is pending!...Please wait for a link to sign the deployment. This could take a couple minutes." : "Error with your deployment request. Please try again."})
+                try{
+                    let assetIds:any[] = []
+                    scene[COMPONENT_TYPES.IWB_COMPONENT].forEach((iwb:IWBComponent, aid:string)=>{
+                        console.log(iwb.toJSON())
+                        assetIds.push({id:iwb.id, ugc:iwb.ugc, type:iwb.type})
+                    })
 
-        //             pushPlayfabEvent(
-        //                 SERVER_MESSAGE_TYPES.SCENE_DEPLOY, 
-        //                 player, 
-        //                 [{scene:scene, world: scene.w}]
-        //             )
-        //         }
-        //         catch(e){
-        //             console.log('error pinging deploy server', player.address, e)
-        //             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:false, msg:"Error pinging the deploy server"})
-        //         }
+                    let res = await fetch(deploymentServer + "scene/deploy", {
+                        method:"POST",
+                        headers:{
+                            "Content-type": "application/json",
+                            "Auth": "" + process.env.IWB_DEPLOYMENT_AUTH
+                        },
+                        body: JSON.stringify({
+                            // scene:scene,
+                            metadata:{
+                                title: scene.n,
+                                description: scene.d,
+                                owner: scene.ona,
+                            },
+                            assetIds:assetIds,
+                            spawns:scene.sp,
+                            dest:info.dest,
+                            worldName:scene.w,
+                            user: client.userData.userId,// scene.o,
+                            parcels: info.parcels,
+                            tokenId: info.tokenId,
+                            target: 'interconnected.online'
+                        })
+                    })
+                    let json = await res.json()
+                    console.log('json is', json)
+                    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:json.valid, msg:json.valid ? "Your deployment is pending!...Please wait for a link to sign the deployment. This could take a couple minutes." : "Error with your deployment request. Please try again."})
+
+                    pushPlayfabEvent(
+                        SERVER_MESSAGE_TYPES.SCENE_DEPLOY, 
+                        player, 
+                        [{scene:scene, world: scene.w}]
+                    )
+                }
+                catch(e){
+                    console.log('error pinging deploy server', player.address, e)
+                    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:false, msg:"Error pinging the deploy server"})
+                }
         //     }else{
         //        //  console.log('someone else requesting deployment access')
         //     }
@@ -585,7 +603,7 @@ export function createScene(player:Player, room:IWBRoom, info:any, parcels:strin
             {"entity":"1", "aid":"1", "children":[]},
             {"entity":"2", "aid":"2", "children":[]},
         ]
-    let scene = new Scene(sceneData)
+    let scene = new Scene(room, sceneData)
     return scene
   }
 

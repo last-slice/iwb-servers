@@ -4,7 +4,8 @@ export type DeploymentData = {
     worldName:string,
     owner:string,
     ens:string
-    init:boolean   
+    init:boolean
+    url?:string   
 }
 
 export type DCLDeploymentData = {
@@ -14,7 +15,7 @@ export type DCLDeploymentData = {
     worldName:string,
     user: string,
     parcel: string,
-    tokenId: string
+    tokenId: string,
 }
 
 export enum SERVER_MESSAGE_TYPES {
@@ -88,4 +89,36 @@ export enum SERVER_MESSAGE_TYPES {
     WORLD_TRAVEL = 'world_travel',
     
     CUSTOM = "custom"
+}
+
+export enum REQUIRED_ASSETS {
+    SELECTION_POINTER = "40e64954-b84f-40e1-ac58-438a39441c3e.glb",
+    ATLAS_1 = "atlas1.png",
+    ATLAS_2 = "atlas2.png",
+    BLANK_GRASS = "a20e1fbd-9d55-4536-8a06-db8173c1325e.glb",
+    SCIFI_PACK_TRANSPARENT = "SciFiPackTransp_TX.png",
+    FANTASY_PACK = "FanstasyPack_TX.png",
+    PIRATES_PACK = "PiratesPack_TX.png.png",
+    SCIFI_PACK = "SciFiPack_TX.png",
+    FLOOR_DIRT = "FloorBaseDirt 01.png",
+    FLOOR_DIRT_2 = "FloorBaseDirt 02.png",
+    FLOOR_DIRT_02 = "Floor_Dirt02.png.png",
+    FLOOR_DIRT_03 = "Floor_Dirt03.png.001.png",
+    FLOOR_GRASS_01 = "Floor_Grass01.png.png",
+    FLOOR_GRASS = "FloorBaseGrass 01.png",
+    FLOOR_GRASS_2 = "FloorBaseGrass 01.png",
+    FLOOR_CONCRETE = 'FloorBaseConcrete 01.png',
+    FLOOR_DESERT = 'FloorBaseDesert 01.png',
+    FLOOR_PEBBLES = 'FloorBasePebbles 01.png',
+    FLOOR_SAND = 'FloorBaseSand 01.png',
+    FLOOR_TILES = 'FloorBaseTiles 01.png',
+    FLOOR_WOOD = 'FloorBaseWood 01.png',
+    FLOOR_FANTASY_ROCK = 'FloorFantasyRocks 01.png',
+    GROUND_FLOOR_SCIFI = 'GroundFloorSciFi 01.png',
+
+    //smart items
+    VIDEO = 'bb3b0edf-377b-438b-80af-bd199455a9bb',
+    UI_IMAGE = '4b245184-2862-4d92-8f96-58493b87e7bf',
+    UI_TEXT = '13b63e57-a636-4cf2-8449-488a5fd6d03e',
+    IMAGE = 'e6991f31-4b1e-4c17-82c2-2e484f53a123',
 }
