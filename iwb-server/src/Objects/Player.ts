@@ -1,5 +1,5 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
-import { COMPONENT_TYPES, SCENE_MODES, SERVER_MESSAGE_TYPES, VIEW_MODES } from "../utils/types";
+import { COMPONENT_TYPES, PLAYER_GAME_STATUSES, SCENE_MODES, SERVER_MESSAGE_TYPES, VIEW_MODES } from "../utils/types";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { Client } from "colyseus";
 import { fetchPlayfabFile, fetchUserMetaData, pushPlayfabEvent, updatePlayerData } from "../utils/Playfab";
@@ -7,6 +7,7 @@ import { itemManager, iwbManager } from "../app.config";
 import axios from "axios";
 import { Scene } from "./Scene";
 import { IWBComponent } from "./IWB";
+import { removeStalePlayer } from "./Game";
 
 export class PlayerManager {
     
@@ -62,7 +63,7 @@ export class Player extends Schema {
     @type("string") address:string
     @type("string") name:string 
     @type(SelectedAsset) selectedAsset: SelectedAsset
-    @type("boolean") playingGame:boolean
+    @type("string") gameStatus:string = PLAYER_GAME_STATUSES.NONE
 
     gameData:any
 
@@ -315,14 +316,29 @@ export class Player extends Schema {
         this.client.send(SERVER_MESSAGE_TYPES.PLAYER_SETTINGS, {action:"load", value:this.settings})
       }
 
-      startGame(sceneId:any, game:any, level:any){
-        this.playingGame = true
+      startGame(sceneId:any, game:any, status:PLAYER_GAME_STATUSES, level?:any){
+        this.gameStatus = status
+        // this.playingGame = true
         this.gameData = {...game, ...{level:level}, ...{sceneId:sceneId}}
       }
 
-      endGame(){
-        this.playingGame = false
-        console.log('player game data', this.gameData)
+      endGame(room?:IWBRoom){
+        this.gameStatus = PLAYER_GAME_STATUSES.NONE
+        // this.playingGame = false
+        // console.log('player game data', this.gameData)
+
+        if(this.gameData.type === "MULTIPLAYER"){
+          removeStalePlayer(room, this)
+        }
+      }
+
+      endGames(room?:IWBRoom){
+        // if(this.playingGame){
+        //   this.endGame(room)
+        // }
+        if(this.gameStatus !== PLAYER_GAME_STATUSES.NONE){
+          this.endGame(room)
+        }
       }
 
       inHomeWorld(roomWorld:string){

@@ -1,17 +1,16 @@
+import { iwbManager } from "../app.config"
+import { GameComponent } from "../Objects/Game"
 import { Player } from "../Objects/Player"
+import { Scene } from "../Objects/Scene"
 import { pushPlayfabEvent, PLAYFAB_DATA_ACCOUNT } from "../utils/Playfab"
-import { SERVER_MESSAGE_TYPES } from "../utils/types"
-import { IWBGameRoom } from "./IWBGameRoom"
+import { COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../utils/types"
+import { IWBRoom } from "./IWBRoom"
 
 export class GameManager {
 
-    room:IWBGameRoom
-
-    minPlayers:number = 1
-    maxPlayers:number = 8
-    numPlayers:number = 0
-
-    pods:any[] = []
+    scene:Scene
+    aid:string
+    room:IWBRoom
 
     countdownTimer:any
     countdownInterval:any
@@ -23,10 +22,10 @@ export class GameManager {
 
     haveMinPlayers:boolean = false
 
-    leaderboards:Map<string, any> = new Map()
-
-    constructor(gameRoom:IWBGameRoom){
-        this.room = gameRoom
+    constructor(scene:Scene, aid:string){
+        this.scene = scene
+        this.aid = aid
+        this.room = iwbManager.rooms.find(($:any)=>$.roomId === scene.roomId)
     }
     
     garbageCollect(){
@@ -34,9 +33,14 @@ export class GameManager {
     }
 
     removePlayer(player:Player){
-        if(this.room.state.started){
+        let gaming:GameComponent = this.scene[COMPONENT_TYPES.GAME_COMPONENT].get(this.aid)
+        if(!gaming){
+            return
+        }
+
+        if(gaming.started){
             //do other player removal things
-            this.checkRemainingPlayers()
+            // this.checkRemainingPlayers()
         }
     }
 
@@ -51,25 +55,25 @@ export class GameManager {
     }
 
     checkGameReady(){
-        // if(this.room.state.pods.filter(pod => pod.locked).length >= this.minPlayers && !this.room.state.startingSoon){
+        // if(gaming.pods.filter(pod => pod.locked).length >= this.minPlayers && !gaming.startingSoon){
         //     console.log("we have minimum players, begin game")
             
         //     if(this.haveMinPlayers){
-        //         this.clearCountdown()
-        //         this.room.state.gameCountdown = -500
+        //         this.clearCountdown()4
+        //         gaming.gameCountdown = -500
         //     }else{
         //         this.haveMinPlayers = true
         //     }
 
-        //     this.room.state.gameCountdown = 10
+        //     gaming.gameCountdown = 10
         //     this.countdownInterval = setInterval(()=>{
-        //         this.room.state.gameCountdown--
+        //         gaming.gameCountdown--
         //       }, 1000)
 
         //     this.countdownTimer = setTimeout(()=>{
         //         this.clearCountdown()
 
-        //         this.room.state.startingSoon = true
+        //         gaming.startingSoon = true
         //         this.startGameCountdown()
         //       }, 1000 * 10)
         // }
@@ -81,41 +85,54 @@ export class GameManager {
     }
 
     startGameCountdown(){
-        this.room.state.gameCountdown = -500
-        this.room.state.gameCountdown = this.countdownTime
+        let gaming:GameComponent = this.scene[COMPONENT_TYPES.GAME_COMPONENT].get(this.aid)
+        if(!gaming){
+            return
+        }
+
+        gaming.gameCountdown = -500
+        gaming.gameCountdown = this.countdownTime
 
         this.countdownTimer = setTimeout(()=>{
-            this.room.state.gameCountdown = -500
+            gaming.gameCountdown = -500
             this.clearCountdown()
             this.startGame()
           }, 1000 * this.countdownTime)
             
           this.countdownInterval = setInterval(()=>{
-            this.room.state.gameCountdown--
+            gaming.gameCountdown--
           }, 1000)
     }
 
     startGame(){
         console.log('starting game')
+        let gaming:GameComponent = this.scene[COMPONENT_TYPES.GAME_COMPONENT].get(this.aid)
+        if(!gaming){
+            return
+        }
        
-        this.room.state.reset = false
-        this.room.state.ended = false
-        this.room.state.started = true
+        gaming.reset = false
+        gaming.ended = false
+        gaming.started = true
 
         this.startForceEndTimer()
     }
 
     async endGame(){
-        this.room.state.ended = true
+        let gaming:GameComponent = this.scene[COMPONENT_TYPES.GAME_COMPONENT].get(this.aid)
+        if(!gaming){
+            return
+        }
+        gaming.ended = true
         this.clearCountdown()
 
-        this.room.state.players.forEach((player:Player)=>{
-            player.playingGame = false
-            // player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_SCORES, {pigs: pod.pigsFlown, targets: pod.targetsHit})
-            // player.saveToDB()
-        })
+        // gaming.players.forEach((player:Player)=>{
+        //     player.playingGame = false
+        //     // player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_SCORES, {pigs: pod.pigsFlown, targets: pod.targetsHit})
+        //     // player.saveToDB()
+        // })
 
-        pushPlayfabEvent(SERVER_MESSAGE_TYPES.END_GAME, PLAYFAB_DATA_ACCOUNT, {})
+        // pushPlayfabEvent(SERVER_MESSAGE_TYPES.END_GAME, PLAYFAB_DATA_ACCOUNT, {})
 
         await this.determineWinner()
 
@@ -129,10 +146,15 @@ export class GameManager {
     }
 
     determineWinner(){
+        let gaming:GameComponent = this.scene[COMPONENT_TYPES.GAME_COMPONENT].get(this.aid)
+        if(!gaming){
+            return
+        }
+
         let highscore = 0
         let winner = ""
         let winnerId = ""
-        // this.room.state.pods.forEach((pod, i:number)=>{
+        // gaming.pods.forEach((pod, i:number)=>{
         //     if(pod.locked){
         //         if(pod.score === highscore){
         //             winner = "tie"
@@ -146,11 +168,11 @@ export class GameManager {
         //         }
         //     }
         // })
-        this.room.state.winner = winner
-        this.room.state.winnerId = winnerId
+        gaming.winner = winner
+        gaming.winnerId = winnerId
 
         // if(winner !== "tie"){
-        //     let player = this.room.state.players.get(winnerId)
+        //     let player = gaming.players.get(winnerId)
         //     if(player && this.numPlayers > 1){
         //         player.increaseValueInMap(player.stats, SERVER_MESSAGE_TYPES.WIN_GAME, 1)
         //     }
@@ -158,37 +180,52 @@ export class GameManager {
     }
 
     resetPlayers(){
-        this.room.state.players.forEach((player)=>{
-            //do player cleanup
-        })
+        // gaming.players.forEach((player)=>{
+        //     //do player cleanup
+        // })
     }
 
     resetGame(){
         this.resetPlayers()
-        this.numPlayers = 0
+
+        let gaming:GameComponent = this.scene[COMPONENT_TYPES.GAME_COMPONENT].get(this.aid)
+        if(!gaming){
+            return
+        }
+
+        // this.numPlayers = 0
         this.haveMinPlayers = false
-        this.room.state.reset = true
-        this.room.state.winner = ""
-        this.room.state.winnerId = ""
+        gaming.reset = true
+        gaming.winner = ""
+        gaming.winnerId = ""
 
         this.countdownTime = this.gameResetTimeBase
         this.countdownTimer = setTimeout(()=>{
             this.clearCountdown()
-            this.room.state.started = false
-            this.room.state.ended = false
-            this.room.state.startingSoon = false
+            gaming.started = false
+            gaming.ended = false
+            gaming.startingSoon = false
             this.countdownTime = this.countdownBase
           }, 1000 * this.countdownTime)
     }
 
     isGameLive(){
-        return this.room.state.started && !this.room.state.ended
+        let gaming:GameComponent = this.scene[COMPONENT_TYPES.GAME_COMPONENT].get(this.aid)
+        if(!gaming){
+            return false
+        }
+        return gaming.started && !gaming.ended
     }
 
     startForceEndTimer(){
+        let gaming:GameComponent = this.scene[COMPONENT_TYPES.GAME_COMPONENT].get(this.aid)
+        if(!gaming){
+            return
+        }
+
         this.countdownTime = this.gameTimeBase
         this.countdownTimer = setTimeout(()=>{
-            this.room.state.gameCountdown = -500
+            gaming.gameCountdown = -500
 
             pushPlayfabEvent(SERVER_MESSAGE_TYPES.GAME_FINISHED_EARLY, PLAYFAB_DATA_ACCOUNT, {})
 

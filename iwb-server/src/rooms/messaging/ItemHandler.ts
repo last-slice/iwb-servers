@@ -30,7 +30,7 @@ import { createStateComponent, editStateComponent } from "../../Objects/State";
 import { createUITextComponent, editUIComponent } from "../../Objects/UIText";
 import { createUIImageComponent, editUIImageComponent } from "../../Objects/UIImage";
 import { createBillboardComponent } from "../../Objects/Billboard";
-import { addGameComponent, createGameComponent, editGameComponent, removeGameComponent, sceneHasGame } from "../../Objects/Game";
+import { createGameComponent, deleteGameComponent, editGameComponent, removeGameComponent, sceneHasGame } from "../../Objects/Game";
 import { editLevelComponent } from "../../Objects/Level";
 import { createLiveComponent, editLiveComponent } from "../../Objects/LiveShow";
 import { createGameItemComponent } from "../../Objects/GameItem";
@@ -356,6 +356,11 @@ export function createNewItem(room:IWBRoom, client:Client, scene:Scene, item:any
 
 function deleteComponent(scene:any, item:any){
     scene[item.type].delete(item.aid)
+    switch(item.type){
+        case COMPONENT_TYPES.GAME_COMPONENT:
+            deleteGameComponent(scene, item.aid)
+            break;
+    }
 }
 
 function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
@@ -412,7 +417,7 @@ function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
                 client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"A game component already exists on this scene", sound:'error_2'})
                 return
             }
-            createGameComponent(scene, item.aid)
+            createGameComponent(scene, item.aid, undefined, true)
             break;
     }
 }

@@ -22,3 +22,7 @@ export function createGameItemComponent(scene:Scene, aid:string, data?:any){
     }
     scene[COMPONENT_TYPES.GAME_ITEM_COMPONENT].set(aid, component)
 }
+
+export function editGameItemComponent(){
+    
+}

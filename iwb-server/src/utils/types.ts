@@ -172,7 +172,8 @@ export enum COMPONENT_TYPES {
     BILLBOARD_COMPONENT = 'Billboard',
     LIVE_COMPONENT = 'Live',
     TEAM_COMPONENT = 'Team',
-    GAME_ITEM_COMPONENT = 'GameItem'
+    GAME_ITEM_COMPONENT = 'GameItem',
+    GAME_ROOM_COMPONENT = 'gaming'
 }
 
 export enum COLLISION_LAYERS {
@@ -266,7 +267,8 @@ export enum ACTIONS {
     MOVE_PLAYER = 'move_player',
     SHOW_NOTIFICATION = 'show_notification',
     PLACE_PLAYER_POSITION = 'place_player_position',
-    ATTEMPT_GAME_START = 'attempt_game_start'
+    ATTEMPT_GAME_START = 'attempt_game_start',
+    END_GAME = 'end_game',
 }
 
 export enum Triggers {
@@ -295,7 +297,8 @@ export enum Triggers {
     ON_GAME_START = 'on_game_start',
     ON_LEVEL_LOADED = 'on_level_loaded',
     ON_LEVEL_COMPLETE = 'on_level_complete',
-    ON_LEVEL_END = 'on_level_end'
+    ON_LEVEL_END = 'on_level_end',
+     ON_JOIN_LOBBY = 'on_join_lobby'
 }
 
 export enum REWARD_TYPES {
@@ -328,5 +331,12 @@ export enum CATALOG_IDS {
 export enum GAME_TYPES {
     SOLO,
     MULTIPLAYER,
-    TEAM_COMPETITION
+}
+
+export enum PLAYER_GAME_STATUSES {
+    NONE = 'none',
+    PLAYING = 'playing',
+    LOBBY = 'lobby',
+    WAITING = 'waiting',
+    ELIMINATED = 'eliminated'
 }

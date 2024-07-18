@@ -12,10 +12,10 @@ function initIWBDeploy() {
         auth: process.env.DEPLOYMENT_AUTH
     })
         .then(function (response) {
-        console.log(response);
+        // console.log(response);
     })
         .catch(function (error) {
-        console.log(error);
+        console.log('init iwb deployument error', error);
     });
 }
 exports.initIWBDeploy = initIWBDeploy;
@@ -25,7 +25,7 @@ function initDeployServerDeploy() {
         const childProcess = exec(command);
         // Listen for stdout data events
         childProcess.stdout.on('data', (data) => {
-            console.log(`stdout: ${data}`);
+            // console.log(`stdout: ${data}`);
         });
         // Listen for stderr data events
         childProcess.stderr.on('data', (data) => {
@@ -34,16 +34,16 @@ function initDeployServerDeploy() {
                 console.log('we have an error with deployment');
             }
             else if (data === "Content uploaded successfully") {
-                console.log('we finished deploying');
+                // console.log('we finished deploying')
             }
         });
         // You can also listen for the child process to exit
         childProcess.on('exit', (code, signal) => {
             if (code === 0) {
-                console.log('Child process exited successfully.');
+                //   console.log('Child process exited successfully.');
             }
             else {
-                console.error(`Child process exited with code ${code}.`);
+                //   console.error(`Child process exited with code ${code}.`);
             }
         });
     }
@@ -134,6 +134,10 @@ class Vector3 {
     }
     lerp(target, t) {
         return new Vector3(lerp(this.x, target.x, t), lerp(this.y, target.y, t), lerp(this.z, target.z, t));
+    }
+    // Method to subtract two Vector3 positions
+    subtract(other) {
+        return new Vector3(this.x - other.x, this.y - other.y, this.z - other.z);
     }
 }
 exports.Vector3 = Vector3;

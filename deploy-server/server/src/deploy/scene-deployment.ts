@@ -70,7 +70,7 @@ async function deploy(key:string, data:DeploymentData){
         //     production: true
         //   })
         
-        await deployBucket(key)
+        // await deployBucket(key)
     
           successIWBServer(key, data)
           .then(()=>{

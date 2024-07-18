@@ -112,12 +112,18 @@ export class Scene extends Schema {
     //pointer evnts component
     //sync components
 
+    roomId:string
+
     parentEntity:any
     entities:any[] = []
     components:any
 
     constructor(room?:IWBRoom, data?:any) {
         super(data)
+        if(room){
+            this.roomId = room.roomId
+        }
+
         if (data){
             this.bps = data.bps
             this.pcls = data.pcls
@@ -483,10 +489,10 @@ export async function saveRealm(room:IWBRoom){
     let scenes:any[] = []
     room.state.scenes.forEach(async (scene:any)=>{
         let jsonScene:any = scene.toJSON()
-        if(scene.id === "OaT46"){
-            // console.log('scene is', jsonScene)
-            await checkAssetCacheStates(scene, jsonScene)
-        }
+        // if(scene.id === "OaT46"){
+        //     // console.log('scene is', jsonScene)
+        //     await checkAssetCacheStates(scene, jsonScene)
+        // }
        
         
 

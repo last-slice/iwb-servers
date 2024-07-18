@@ -31,7 +31,7 @@ export class TriggerComponent extends Schema{
     @type([TriggerComponentSchema]) triggers:ArraySchema<TriggerComponentSchema>
 }
 
-export function createTriggerComponent(scene:Scene, aid:string, data?:any){
+export async function createTriggerComponent(scene:Scene, aid:string, data?:any){
     console.log('creating new trigger component', data)
     let component:any = new TriggerComponent()
     component.triggers = new ArraySchema<TriggerComponentSchema>()

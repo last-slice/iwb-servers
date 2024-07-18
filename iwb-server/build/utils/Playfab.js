@@ -3,13 +3,56 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchPlayfabFile = exports.fetchUserMetaData = exports.playfabLogin = exports.fetchPlayfabMetadata = exports.abortFileUploads = exports.finalizeUploadFiles = exports.uploadPlayerFiles = exports.initializeUploadPlayerFiles = exports.getLeaderboard = exports.executeCloudScript = exports.getAllPlayers = exports.updatePlayerInternalData = exports.updatePlayerDisplayName = exports.getPlayerInternalData = exports.getPlayerData = exports.updatePlayerData = exports.playerLogin = exports.UpdateCatalogItems = exports.setCatalogItems = exports.getCatalogItems = exports.setTitleData = exports.getTitleData = exports.getEnemies = exports.getItem = exports.updatePlayerItem = exports.addItem = exports.revokeUserItem = exports.consumeItem = exports.updateItemUses = exports.grantUserItem = exports.incrementPlayerStatistic = exports.getPlayerStatistics = exports.updatePlayerStatistic = exports.updatePlayerStatisticDefinition = exports.addEvent = exports.getDropTables = exports.getRandomItemFromDropTable = exports.initPlayFab = exports.PLAYFAB_DATA_ACCOUNT = exports.PlayfabKey = exports.PlayfabId = void 0;
+exports.fetchPlayfabFile = exports.getDownloadURL = exports.fetchUserMetaData = exports.playfabLogin = exports.fetchPlayfabMetadata = exports.abortFileUploads = exports.finalizeUploadFiles = exports.uploadPlayerFiles = exports.initializeUploadPlayerFiles = exports.getLeaderboard = exports.executeCloudScript = exports.getAllPlayers = exports.updatePlayerInternalData = exports.updatePlayerDisplayName = exports.getPlayerInternalData = exports.getPlayerData = exports.updatePlayerData = exports.playerLogin = exports.UpdateCatalogItems = exports.setCatalogItems = exports.getCatalogItems = exports.setTitleData = exports.getTitleData = exports.getEnemies = exports.getItem = exports.updatePlayerItem = exports.addItem = exports.revokeUserItem = exports.consumeItem = exports.updateItemUses = exports.grantUserItem = exports.incrementPlayerStatistic = exports.getPlayerStatistics = exports.updatePlayerStatistic = exports.updatePlayerStatisticDefinition = exports.addEvent = exports.getDropTables = exports.getRandomItemFromDropTable = exports.initPlayFab = exports.pushPlayfabEvent = exports.PLAYFAB_DATA_ACCOUNT = exports.PlayfabKey = exports.PlayfabId = void 0;
 const axios_1 = __importDefault(require("axios"));
 const playfab_sdk_1 = require("playfab-sdk");
 const config_1 = require("./config");
-exports.PlayfabId = config_1.DEBUG ? process.env.PLAYFAB_ID_QA : process.env.PLAYFAB_ID;
-exports.PlayfabKey = config_1.DEBUG ? process.env.PLAYFAB_KEY_QA : process.env.PLAYFAB_KEY;
+exports.PlayfabId = config_1.DEBUG ? process.env.PLAYFAB_ID_QA : process.env.PLAYFAB_ID_QA;
+exports.PlayfabKey = config_1.DEBUG ? process.env.PLAYFAB_KEY_QA : process.env.PLAYFAB_KEY_QA;
 exports.PLAYFAB_DATA_ACCOUNT = process.env.PLAYFAB_DATA_ACCOUNT;
+let eventQueue = [];
+let postingEvents = false;
+let eventUpdateInterval = setInterval(async () => {
+    checkEventQueue();
+}, 1000 * 20);
+async function checkEventQueue() {
+    if (!postingEvents && eventQueue.length > 0) {
+        console.log('event queue has item, post to playfab');
+        postingEvents = true;
+        let event = eventQueue.shift();
+        try {
+            await (0, exports.addEvent)(event);
+            postingEvents = false;
+        }
+        catch (e) {
+            console.log('error posting event', e);
+            postingEvents = false;
+            eventQueue.push(event);
+        }
+    }
+}
+function pushPlayfabEvent(type, player, data) {
+    if (config_1.DEBUG) {
+        return;
+    }
+    let event = {};
+    let account = player;
+    if (player !== exports.PLAYFAB_DATA_ACCOUNT) {
+        account = player.playFabData.PlayFabId;
+        event.body = {
+            player: player.name,
+            wallet: player.userId,
+        };
+    }
+    event.EventName = type,
+        event.PlayFabId = account;
+    for (let key in data[0]) {
+        event.body[key] = data[0][key];
+    }
+    // console.log('new event to post is', event)
+    eventQueue.push(event);
+}
+exports.pushPlayfabEvent = pushPlayfabEvent;
 function initPlayFab() {
     playfab_sdk_1.PlayFabServer.settings.titleId = exports.PlayfabId;
     playfab_sdk_1.PlayFabServer.settings.developerSecretKey = exports.PlayfabKey;
@@ -305,7 +348,7 @@ async function playfabLogin(user) {
             return null;
         }
         else {
-            console.log('playfab login success, initiate realm');
+            // console.log('playfab login success, initiate realm')
             return playfabInfo;
         }
     }
@@ -329,6 +372,28 @@ async function fetchUserMetaData(realmData) {
     }
 }
 exports.fetchUserMetaData = fetchUserMetaData;
+function getDownloadURL(metadata, fileKey) {
+    let url;
+    if (metadata.code === 200) {
+        let version = metadata.data.ProfileVersion;
+        if (version > 0) {
+            let data = metadata.data.Metadata;
+            let count = 0;
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    count++;
+                }
+            }
+            if (count > 0) {
+                if (data[fileKey]) {
+                    url = data[fileKey].DownloadUrl;
+                }
+            }
+        }
+    }
+    return url;
+}
+exports.getDownloadURL = getDownloadURL;
 async function fetchPlayfabFile(metadata, fileKey) {
     if (metadata.code === 200) {
         let version = metadata.data.ProfileVersion;

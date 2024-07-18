@@ -2,6 +2,8 @@ import {ArraySchema, Schema, type} from "@colyseus/schema";
 import { Scene } from "./Scene";
 import { COMPONENT_TYPES } from "../utils/types";
 import { removeAllAssetComponents } from "../rooms/messaging/ItemHandler";
+import { Client } from "colyseus";
+import { IWBRoom } from "../rooms/IWBRoom";
 
 export class TeamComponent extends Schema {
     @type("string") id:string
@@ -14,6 +16,17 @@ export function createTeamComponent(scene:Scene, aid:string, data:any){
         component[key] = data[key]
     }
     scene[COMPONENT_TYPES.TEAM_COMPONENT].set(aid, component)
+}
+
+export function editGameComponent(room:IWBRoom, client:Client, info:any, scene:Scene){
+    let itemInfo:any = scene[COMPONENT_TYPES.TEAM_COMPONENT].get(info.aid)
+    if(!itemInfo){
+        scene[COMPONENT_TYPES.TEAM_COMPONENT].set(info.aid, new TeamComponent())
+        switch(info.action){
+            case 'add':
+                break
+        }
+    }
 }
 
 export function removeAllTeams(scene:Scene){

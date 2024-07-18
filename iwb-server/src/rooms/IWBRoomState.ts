@@ -33,4 +33,6 @@ export class IWBRoomState extends Schema {
   realmToken:string
   realmId:string
   realmTokenType:string
+
+
 }

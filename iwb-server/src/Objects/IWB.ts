@@ -40,7 +40,7 @@ export function createIWBComponent(room:IWBRoom, scene:Scene, data:any){
     component.editing = false
     component.priv = false
 
-    checkAssetPolyAndSize(room, scene, {ugc:data.item.ugc, id:data.item.id})
+    checkAssetPolyAndSize(room, scene, data.scene.id)
     scene[COMPONENT_TYPES.IWB_COMPONENT].set(data.scene.aid, component)
 }
 
@@ -75,9 +75,9 @@ export function editIWBComponent(info:any, scene:Scene){
     }
 }
 
-function checkAssetPolyAndSize(room:IWBRoom, scene:Scene, component:any){
-    let catalogItem = component.ugc ? room.state.realmAssets.get(component.id) : itemManager.items.get(component.id)
-    // console.log('catalog item is', catalogItem)
+function checkAssetPolyAndSize(room:IWBRoom, scene:Scene, id:string){
+    let catalogItem = room.state.realmAssets.get(id) //component.ugc ? room.state.realmAssets.get(component.id) : itemManager.items.get(component.id)
+    console.log('catalog item is', catalogItem)
     if(catalogItem){
         let size = catalogItem.si
         scene.pc += catalogItem.pc

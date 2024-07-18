@@ -1,6 +1,6 @@
 import {Client, Room} from "@colyseus/core";
 import {IWBRoomState} from "./IWBRoomState";
-import { Scene, initServerAssets, initServerScenes, saveRealm, saveRealmScenes } from "../Objects/Scene";
+import { Scene, initServerAssets, initServerScenes, loadRealmScenes, saveRealm, saveRealmScenes } from "../Objects/Scene";
 import { testData } from "../tests/data";
 import { iwbSceneActionHandler } from "./messaging/ActionHandler";
 import { Player } from "../Objects/Player";
@@ -12,6 +12,8 @@ import { playerLogin, pushPlayfabEvent, updatePlayerDisplayName, updatePlayerInt
 import { checkAssetsForEditByPlayer, iwbSceneHandler } from "./messaging/SceneHandler";
 import { iwbItemHandler } from "./messaging/ItemHandler";
 import { iwbSceneGameHandler } from "./messaging/GameHandler";
+
+import data from '../tests/data.json'
 
 export class IWBRoom extends Room<IWBRoomState> {
 
@@ -33,15 +35,14 @@ export class IWBRoom extends Room<IWBRoomState> {
         iwbSceneHandler(this)
 
         initServerScenes(this)
+        // loadRealmScenes(this, data)
         initServerAssets(this)
 
         // createCustomObjects(this)
 
         iwbManager.addRoom(this)
-
-        // createTestScene(this)
     }
-
+ 
     onJoin(client: Client, options: any) {
         try {
             client.userData = options.userData;
@@ -59,7 +60,9 @@ export class IWBRoom extends Room<IWBRoomState> {
     async onLeave(client: Client, consented: boolean) {
         let player:Player = this.state.players.get(client.userData.userId)
         if(player){
+            console.log('we have player to remove')
             this.state.players.delete(client.userData.userId)
+            player.endGames(this)
 
         //     checkAssetsForEditByPlayer(this, client.userData.userid)
             

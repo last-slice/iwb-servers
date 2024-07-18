@@ -1,7 +1,7 @@
 
 
 export let status:any ={
-    DEBUG:false,
+    DEBUG:true,
     status:"live",
     deploying:false,
     deploymentstatus:"none"

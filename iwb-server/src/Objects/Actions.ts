@@ -65,7 +65,7 @@ export class ActionComponent extends Schema {
     @type([ActionComponentSchema]) actions:ArraySchema<ActionComponentSchema> = new ArraySchema<ActionComponentSchema>()
 }
 
-export function createActionComponent(scene:Scene, aid:string, data:any){
+export async function createActionComponent(scene:Scene, aid:string, data:any){
     let component:any = new ActionComponent()
     let actions:any[] = []
     if(data){

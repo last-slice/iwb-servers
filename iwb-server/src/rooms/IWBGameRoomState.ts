@@ -12,7 +12,5 @@ export class IWBGameRoomState extends Schema {
   @type("string") winner:string = ""
   @type("string") winnerId:string = ""
 
-  @type({ map: Player }) players = new MapSchema<Player>();
-
   gameManager: GameManager
 }
