@@ -14,6 +14,7 @@ import { iwbItemHandler } from "./messaging/ItemHandler";
 import { iwbSceneGameHandler } from "./messaging/GameHandler";
 
 import data from '../tests/data.json'
+import { garbageCollectRealmGames } from "../Objects/Game";
 
 export class IWBRoom extends Room<IWBRoomState> {
 
@@ -84,6 +85,7 @@ export class IWBRoom extends Room<IWBRoomState> {
         iwbManager.removeRoom(this)
         saveRealm(this)
         // destroyCustomObjects(this)
+        garbageCollectRealmGames(this)
     }
 
     async getPlayerInfo(client: Client, options: any) {

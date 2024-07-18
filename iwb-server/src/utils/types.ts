@@ -290,7 +290,7 @@ export enum Triggers {
     // ON_DAMAGE
     // ON_GLOBAL_CLICK
     // ON_TICK
-    // ON_HEAL//
+    // ON_HEAL//s
     ON_STATE_CHANGE = "on_state_change",
     ON_COUNTER_CHANGE = "on_counter_change",
     ON_RAYCAST_HIT = 'on_raycast_hit',
@@ -298,7 +298,7 @@ export enum Triggers {
     ON_LEVEL_LOADED = 'on_level_loaded',
     ON_LEVEL_COMPLETE = 'on_level_complete',
     ON_LEVEL_END = 'on_level_end',
-     ON_JOIN_LOBBY = 'on_join_lobby'
+    ON_JOIN_LOBBY = 'on_join_lobby'
 }
 
 export enum REWARD_TYPES {

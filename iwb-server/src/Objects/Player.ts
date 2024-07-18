@@ -64,6 +64,7 @@ export class Player extends Schema {
     @type("string") name:string 
     @type(SelectedAsset) selectedAsset: SelectedAsset
     @type("string") gameStatus:string = PLAYER_GAME_STATUSES.NONE
+    @type("string") gameId:string = ""
 
     gameData:any
 
@@ -320,6 +321,7 @@ export class Player extends Schema {
         this.gameStatus = status
         // this.playingGame = true
         this.gameData = {...game, ...{level:level}, ...{sceneId:sceneId}}
+        this.gameId = sceneId
       }
 
       endGame(room?:IWBRoom){

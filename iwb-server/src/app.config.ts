@@ -11,7 +11,6 @@ import { initPlayFab } from "./utils/Playfab";
 import { IWBManager } from "./Objects/IWBManager";
 import { ItemManager } from "./Objects/ItemManager";
 import { router } from "./Routers/Router";
-import { IWBGameRoom } from "./rooms/IWBGameRoom";
 
 export let itemManager: ItemManager
 export let iwbManager: IWBManager
@@ -26,9 +25,6 @@ export default config({
 
         gameServer.define('iwb-world', IWBRoom)
         .filterBy(['world','island'])
-
-        gameServer.define('iwb-game-world', IWBGameRoom)
-        .filterBy(['world','island', 'scene'])
     },
 
     initializeExpress: (app) => { 

@@ -7,13 +7,22 @@ import { Vector3 } from "./Transform";
 import { LevelComponent, createGameLevel, createLevelComponent, removeLevels } from "./Level";
 import { createTriggerComponent, editTriggerComponent } from "./Trigger";
 import { Player } from "./Player";
-import { removeAllTeams } from "./Team";
 import { editGameItemComponent } from "./GameItem";
 import { createActionComponent, editActionComponent } from "./Actions";
 import { createPointerComponent } from "./Pointers";
 import { GameManager } from "../rooms/IWBGameManager";
-import { getRandomIntInclusive } from "../utils/functions";
-import { iwbManager } from "../app.config";
+import { editParentingComponent } from "./Parenting";
+
+let noBackup:any[] = [
+    "gameCountdown",
+    "assigningPlayer",
+    "startingSoon",
+    "started",
+    "ended",
+    "reset",
+    "winner",
+    "winnerId"
+]
 
 export class TeamComponent extends Schema {
     @type("string") id:string
@@ -23,7 +32,6 @@ export class TeamComponent extends Schema {
     @type(Vector3) sc:Vector3 = new Vector3({x:0, y:0, z:0})
     @type(["string"]) mates:ArraySchema<string> = new ArraySchema()
 }
-
 
 export class GameComponent extends Schema{
     //configurations
@@ -65,7 +73,7 @@ export class GameComponent extends Schema{
     gameManager: GameManager
 }
 
-export function createGameComponent(scene:Scene, aid:string, data?:any, fromScene?:boolean){
+export function createGameComponent(room:IWBRoom, scene:Scene, aid:string, data?:any, fromScene?:boolean){
     let component:any = new GameComponent()
     component.id = scene.id
     component.name = scene.n + " Game"
@@ -92,6 +100,7 @@ export function createGameComponent(scene:Scene, aid:string, data?:any, fromScen
                 component.pvariables.set(id, data[key][id])
             }
         }
+        else if(noBackup.includes(key)){}
         else{
             // console.log('create game component', key)
             component[key] = data[key]
@@ -99,11 +108,17 @@ export function createGameComponent(scene:Scene, aid:string, data?:any, fromScen
     }
     scene[COMPONENT_TYPES.GAME_COMPONENT].set(aid, component)
     component.gameManager = new GameManager(scene, aid)
+
+    // editParentingComponent()
+    //do we add children entities for the game variables and track them locally as well?
+    // ie, add state & counter to represent game state and countdown, then scene can listen for these changes
+    //could someone hack these and change the state of the game elsewhere in the scene? we would have to prevent this
 }
 
 export function deleteGameComponent(scene:Scene, aid:string){
-    console.log('deleted game component')
+    console.log('deleting game component, clean up any timers and things')
     deleteGameActions(scene, {aid:aid})
+    //delete timers
 }
 
 export async function editGameComponent(room:IWBRoom, client:Client, info:any, scene:Scene){
@@ -413,59 +428,7 @@ export function joinMultiplayerLobby(room:IWBRoom, player:Player, scene:Scene, i
     gaming.lobby.push(player.address)
     player.gameStatus = PLAYER_GAME_STATUSES.LOBBY
 
-    checkLobbyQueue(scene, gameInfo.aid)
-}
-
-function checkLobbyQueue(scene:Scene, aid:string){
-    let gaming = scene[COMPONENT_TYPES.GAME_COMPONENT].get(aid)
-    if(gaming.lobby.length > 0 && !gaming.started && !gaming.assigningPlayer){
-        console.log('game has not started and player waiting in lobby')
-        gaming.assigningPlayer = true
-        assignRandomTeam(scene, aid, gaming.lobby.shift())
-    }else{
-        console.log('game lobby is empty or game already started')
-    }
-}
-
-function assignRandomTeam(scene:Scene, aid:string, userId:string){
-    let gaming = scene[COMPONENT_TYPES.GAME_COMPONENT].get(aid)
-    let availableTeams:any[] = []
-    let emptyTeams:any[] = []
-
-    gaming.teams.forEach((team:TeamComponent, id:string)=>{
-        if(team.mates.length < team.max){
-            if(team.mates.length === 0){
-                emptyTeams.push(team)
-            }else{
-                availableTeams.push(team)
-            }
-        }
-    })
-
-    let randomTeam:any
-    if (emptyTeams.length > 0) {
-        let randomIndex = getRandomIntInclusive(0, emptyTeams.length - 1)
-        randomTeam = gaming.teams.get(emptyTeams[randomIndex].id)
-    } else {
-      const teamWithFewestPlayers = availableTeams.reduce((prev, current) =>
-        prev.mates.length < current.mates.length ? prev : current
-      );
-      randomTeam = teamWithFewestPlayers
-    }
-
-    let room = iwbManager.rooms.find(($:any)=> $.roomId === scene.roomId)
-    if(room){
-        let player = room.state.players.get(userId)
-        if(player){
-            randomTeam.mates.push(userId)
-            player.startGame(scene.id, {...gaming, aid:aid}, PLAYER_GAME_STATUSES.WAITING)     
-            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.START_GAME, {sceneId:gaming.id, aid:aid})
-        }
-    }
-
-    gaming.assigningPlayer = false
-    gaming.gameManager.checkGameReady()
-    checkLobbyQueue(scene, aid)
+    gaming.gameManager.checkLobbyQueue()
 }
 
 export function removeStalePlayer(room:IWBRoom, player:Player){
@@ -476,24 +439,19 @@ export function removeStalePlayer(room:IWBRoom, player:Player){
 
     console.log('found scene to delete multiplayer')
 
+
     let gaming = scene[COMPONENT_TYPES.GAME_COMPONENT].get(player.gameData.aid)
     if(!gaming){
         return
     }
 
-    console.log('found game to delete multiplayer')
+    gaming.gameManager.removeStalePlayer(player)
+}
 
-    let mateIndex = gaming.lobby.findIndex(($:any)=> $ === player.address)
-    if(mateIndex >= 0){
-        gaming.lobby.splice(mateIndex,1)
-    }
-
-    if(gaming.teams){
-        gaming.teams.forEach((team:TeamComponent, id:string)=>{
-            let mateIndex = team.mates.findIndex(($:any)=> $ === player.address)
-            if(mateIndex >= 0){
-                team.mates.splice(mateIndex,1)
-            }
+export function garbageCollectRealmGames(room:IWBRoom){
+    room.state.scenes.forEach((scene:Scene)=>{
+        scene[COMPONENT_TYPES.GAME_COMPONENT].forEach((gameComponent:GameComponent, aid:string)=>{
+            gameComponent.gameManager.garbageCollect()
         })
-    }
+    })
 }

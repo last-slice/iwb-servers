@@ -354,13 +354,13 @@ export function createNewItem(room:IWBRoom, client:Client, scene:Scene, item:any
     createParentingComponent(scene, item)
 }
 
-function deleteComponent(scene:any, item:any){
-    scene[item.type].delete(item.aid)
+async function deleteComponent(scene:any, item:any){
     switch(item.type){
         case COMPONENT_TYPES.GAME_COMPONENT:
-            deleteGameComponent(scene, item.aid)
+            await deleteGameComponent(scene, item.aid)
             break;
     }
+    scene[item.type].delete(item.aid)
 }
 
 function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
@@ -417,7 +417,7 @@ function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
                 client.send(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"A game component already exists on this scene", sound:'error_2'})
                 return
             }
-            createGameComponent(scene, item.aid, undefined, true)
+            createGameComponent(room, scene, item.aid, undefined, true)
             break;
     }
 }

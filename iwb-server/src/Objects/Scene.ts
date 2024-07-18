@@ -196,7 +196,7 @@ export class Scene extends Schema {
                         break;
                     case COMPONENT_TYPES.GAME_COMPONENT:
                         for (const aid in data[component]) {
-                            createGameComponent(this, aid,  data[component][aid])
+                            createGameComponent(room, this, aid,  data[component][aid])
                         }
                         break;
 
