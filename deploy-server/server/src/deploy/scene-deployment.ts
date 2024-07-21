@@ -70,7 +70,7 @@ async function deploy(key:string, data:DeploymentData){
         //     production: true
         //   })
         
-        // await deployBucket(key)
+        await deployBucket(key)
     
           successIWBServer(key, data)
           .then(()=>{
@@ -214,7 +214,6 @@ export async function resetBucket(key:string){
     try{
         //remove assets files
         await fs.emptyDir(path.join(worldBucketDirectory, key, "assets"))
-        // await fs.emptyDir(path.join(worldBucketDirectory, key, "src", "iwb"))
 
         b.status = "free"
         b.available = true
@@ -265,6 +264,7 @@ async function buildBucket(key:string, bucket:any, data:any){
             let res = await fetch(data.url)
             let json = await res.json()
             assets = json
+            // console.log('assets are ', assets)
         }
 
         // const dep1FolderPath = path.join(worldBucketDirectory, key); // Path to the "dep1" folder inside "buckets"
@@ -296,10 +296,17 @@ async function buildBucket(key:string, bucket:any, data:any){
 
 async function copyFiles(sourceFolder:string, destinationFolder:string, assets?:any[]) {
     try {
-        if(assets){
+        // console.log('assets area', assets)
+        if(assets && assets.length >0){
+
             for(let i = 0; i < Object.values(REQUIRED_ASSETS).length; i++){
                 let file = Object.values(REQUIRED_ASSETS)[i]
-                await fs.copy(path.join(sourceFolder, file), path.join(destinationFolder, file))
+                try{
+                    await fs.copy(path.join(sourceFolder, file), path.join(destinationFolder, file))
+                }
+                catch(e){
+                    console.log('file copy error', e)
+                }
             }
         }
 

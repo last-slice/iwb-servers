@@ -9,8 +9,17 @@ export class StateComponent extends Schema{
     @type("string") previousValue:string
 }
 
-export function createStateComponent(scene:Scene, aid:string){
-    let component = new StateComponent()
+export function createStateComponent(scene:Scene, aid:string, data?:any){
+    let component:any = new StateComponent()
+    for(let key in data){
+        if(key === "values"){
+            data[key].forEach(($:any) => {
+                component.values.push($)
+            });
+        }else{
+            component[key] = data[key]
+        }
+    }
     scene[COMPONENT_TYPES.STATE_COMPONENT].set(aid, component)
 }
 

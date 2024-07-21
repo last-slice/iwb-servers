@@ -22,6 +22,7 @@ export class IWBRoomState extends Schema {
 
   realm:string = ""
   version:number = 0
+  gcWorld:boolean = false
   // scenes: Scene[] = []
   // occupiedParcels: string[] = []
   reservedParcels: string[] = ["0,0", "0,1", "1,0", "1,1"]

@@ -98,10 +98,15 @@ export function iwbSceneHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT, async(client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT + " message", info)
 
+        if(!info || !info.sceneId){
+            console.log("invalid deployment parameters received")
+            return
+        }
+
         let player:Player = room.state.players.get(client.userData.userId)
         if(player){
             let world = iwbManager.worlds.find((w)=> w.ens === room.state.world)
-            if(world && world.owner === client.userData.userId){
+            if(world.owner === player.address || world.bps.includes(player.address)){
                 iwbManager.deployWorld(world, room)
             }else{
                 client.send(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, {valid:false})
@@ -336,7 +341,7 @@ export function iwbSceneHandler(room:IWBRoom){
         if(player){
             let scene = room.state.scenes.get(info.sceneId)
             if(scene){
-                if(scene.o === client.userData.userId){
+                if(canBuild(room, player.address, scene.id)){
                     clearSceneAssets(scene)
 
                     scene.si = 0
@@ -361,10 +366,11 @@ export function iwbSceneHandler(room:IWBRoom){
         if(player){
             let scene:Scene = room.state.scenes.get(info.sceneId)
             if(scene){
-                if(scene.o === client.userData.userId){
+                if(canBuild(room, player.address, info.sceneId)){
 
                     scene.n = info.name
                     scene.d = info.desc
+                    scene.im = info.image
 
                     let enabledView = false
                     scene.e !== info.enabled ? enabledView = true : null
@@ -391,6 +397,11 @@ export function iwbSceneHandler(room:IWBRoom){
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, async(client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.SCENE_DEPLOY + " message", info)
+        if(!info || !info.sceneId){
+            console.log("invalid deployment parameters received")
+            return
+        }
+
         let player:Player = room.state.players.get(client.userData.userId)
         // if(player){
             let scene:Scene = room.state.scenes.get(info.sceneId)
@@ -416,6 +427,7 @@ export function iwbSceneHandler(room:IWBRoom){
                                 title: scene.n,
                                 description: scene.d,
                                 owner: scene.ona,
+                                image: scene.im
                             },
                             assetIds:assetIds,
                             spawns:scene.sp,
@@ -424,6 +436,7 @@ export function iwbSceneHandler(room:IWBRoom){
                             user: client.userData.userId,// scene.o,
                             parcels: info.parcels,
                             tokenId: info.tokenId,
+                            sceneId: info.sceneId,
                             target: 'interconnected.online'
                         })
                     })
@@ -516,6 +529,11 @@ export function iwbSceneHandler(room:IWBRoom){
             console.log('not owner')
         }
     }) 
+
+    room.onMessage(SERVER_MESSAGE_TYPES.FORCE_BACKUP, async(client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.FORCE_BACKUP + " message", info)
+        iwbManager.backupWorld(room, client, info)
+    })
 }
 
 export function removeParcel(scene:Scene, parcel: any) {

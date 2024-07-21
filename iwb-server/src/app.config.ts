@@ -36,6 +36,7 @@ export default config({
         app.use(express.static(path.join(__dirname, '..', 'public')));
         app.use(express.static(path.join('/root/iwb', 'dapps', 'upload')));
         app.use(express.static(path.join('/root/iwb', 'dapps', 'deploy')));
+        app.use(express.static(path.join('/root/iwb-game-qa', 'dapps', 'deploy')));
         app.use('/colyseus', monitor())
         app.use("/playground", playground);
         app.use(router)

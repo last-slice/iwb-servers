@@ -11,7 +11,10 @@ import { editGameItemComponent } from "./GameItem";
 import { createActionComponent, editActionComponent } from "./Actions";
 import { createPointerComponent } from "./Pointers";
 import { GameManager } from "../rooms/IWBGameManager";
-import { editParentingComponent } from "./Parenting";
+import { addEntity, editParentingComponent } from "./Parenting";
+import { createStateComponent, editStateComponent } from "./State";
+import { createCounterComponent } from "./Counter";
+import { editNameComponent } from "./Names";
 
 let noBackup:any[] = [
     "gameCountdown",
@@ -248,6 +251,8 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
 
                     // case GAME_TYPES.MULTIPLAYER:
                     case 'MULTIPLAYER':
+                        //add multiplayer scene entities and variables
+                        createMultiplayerEntities(room, client, scene, info.aid, itemInfo)
                         break;
                 }
                 break;
@@ -454,4 +459,55 @@ export function garbageCollectRealmGames(room:IWBRoom){
             gameComponent.gameManager.garbageCollect()
         })
     })
+}
+
+async function createMultiplayerEntities(room:IWBRoom, client:Client, scene:Scene, aid:string, gameInfo:any){
+    //create game state entity, state
+    let currentParentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex($=> $.aid === aid)
+    if(currentParentIndex >= 0){
+        let newAid = await addEntity(room, client, scene, currentParentIndex)
+        await editNameComponent({
+            aid:newAid,
+            value:"Game State Entity"
+        }, scene)
+        
+        await editStateComponent({
+            aid:newAid,
+            action:'add',
+            data:{
+                value:"ended"
+            }
+        }, scene)
+        await editStateComponent({
+            aid:newAid,
+            action:'add',
+            data:{
+                value:"started"
+            }
+        }, scene)
+        await editStateComponent({
+            aid:newAid,
+            action:'add',
+            data:{
+                value:"ended"
+            }
+        }, scene)
+        await editStateComponent({
+            aid:newAid,
+            action:'add',
+            data:{
+                value:"startingSoon"
+            }
+        }, scene)
+        await editStateComponent({
+            aid:newAid,
+            action:'add',
+            data:{
+                value:"reset"
+            }
+        }, scene)
+        await createCounterComponent(scene, newAid, {
+            defaultValue:10
+        })
+    }
 }

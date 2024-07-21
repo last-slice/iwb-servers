@@ -173,7 +173,7 @@ export function iwbItemHandler(room:IWBRoom){
             let scene = room.state.scenes.get(info.item.sceneId)
             if(scene){
                 let catalogItem = item.ugc ? room.state.realmAssets.get(item.id) : itemManager.items.get(item.id)
-                console.log('catalog item is', catalogItem)
+                // console.log('catalog item is', catalogItem)
                 if(catalogItem){
                     if(checkSceneLimits(scene, catalogItem)){
                         createNewItem(room, client, scene, item, catalogItem)
@@ -293,7 +293,7 @@ export function iwbItemHandler(room:IWBRoom){
     })
 }
 
-export function canBuild(room:IWBRoom, user:string, sceneId:any){
+export function canBuild(room:IWBRoom, user:string, sceneId?:any){
     let scene:Scene = room.state.scenes.get(sceneId)
     if(!scene){
         return false

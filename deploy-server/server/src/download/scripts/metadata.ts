@@ -13,14 +13,17 @@ export async function updateWorldMetadata(location:string, data:any){
     await fs.promises.writeFile(location, JSON.stringify(metadata,null, 2));
 }
 
-export async function writeSceneMetadata(location:string, data:any){
+export async function writeSceneMetadata(location:string, data:any, image:string){
     let fileData = await fs.promises.readFile(location)
     let metadata = JSON.parse(fileData.toString())
+
+    console.log('image is', image)
 
     let {title, description, owner} = data.metadata
     
     metadata.display.title = title
     metadata.display.description = description
+    metadata.display.navmapThumbnail = (image === "" || image === undefined ? "images/scene-thumbnail.png" : "images/" + image)
     metadata.owner = owner
 
     metadata.scene.parcels = []
@@ -43,6 +46,10 @@ export async function writeSceneMetadata(location:string, data:any){
 
     metadata['iwb'] = {
         name: data.worldName
+    }
+
+    if(data.sceneId){
+        metadata.iwb.scene = data.sceneId
     }
 
     metadata.spawnPoints = []

@@ -26,7 +26,7 @@ export class IWBRoom extends Room<IWBRoomState> {
         console.log('on create options are ', options)
         this.setState(new IWBRoomState());
         this.state.world = options.world
-
+        options.island !== "world" ? this.state.gcWorld = true : null
         
         iwbItemHandler(this)
         iwbSceneActionHandler(this)
@@ -35,7 +35,7 @@ export class IWBRoom extends Room<IWBRoomState> {
         iwbPlayerHandler(this)
         iwbSceneHandler(this)
 
-        initServerScenes(this)
+        initServerScenes(this, options.island !== "world" ? options : undefined)
         // loadRealmScenes(this, data)
         initServerAssets(this)
 
@@ -83,7 +83,9 @@ export class IWBRoom extends Room<IWBRoomState> {
     onDispose() {
         console.log("room", this.roomId, "disposing...");
         iwbManager.removeRoom(this)
-        saveRealm(this)
+        if(!this.state.gcWorld){
+            saveRealm(this)
+        }
         // destroyCustomObjects(this)
         garbageCollectRealmGames(this)
     }

@@ -3,7 +3,7 @@ import { Scene } from "./Scene";
 import { Client, generateId } from "colyseus";
 import { itemManager } from "../app.config";
 import { addItemComponents, createNewItem } from "../rooms/messaging/ItemHandler";
-import { COMPONENT_TYPES } from "../utils/types";
+import { CATALOG_IDS, COMPONENT_TYPES } from "../utils/types";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { Quaternion, Vector3 } from "./Transform";
 
@@ -68,20 +68,9 @@ export function editParentingComponent(room:IWBRoom, client:Client, info:any, sc
                 break;
 
             case 'newchild':
-                let newAid = generateId(6)
                 let currentParentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex($=> $.aid === info.aid)
-                if(currentParentIndex){
-                    let catalogItem = itemManager.items.get("b9768002-c662-4b80-97a0-fb0d0b714fab")
-                    let item:any = {...catalogItem}
-                    item.pending = false
-                    item.ugc = false
-                    item.parent = currentParentIndex,
-                    item.aid = newAid
-                    item.position = {x:0, y:0,z:0}
-                    item.rotation = {x:0, y:0,z:0}
-                    item.scale = {x:0, y:0,z:0}
-                    createNewItem(room, client, scene, item, catalogItem)
-                    // addItemComponents(scene, item, catalogItem)
+                if(currentParentIndex >= 0){
+                    addEntity(room, client, scene, currentParentIndex)
                 }
                 break;
         }
@@ -148,4 +137,20 @@ export async function removeParenting(scene:Scene, aid:string){
             }
         }
     }
+}
+
+export function addEntity(room:IWBRoom, client:Client, scene:Scene, parent?:any){
+    let newAid = generateId(6)
+    let catalogItem = itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)
+    let item:any = {...catalogItem}
+    item.pending = false
+    item.ugc = false
+    item.parent = parent ? parent : 0,
+    item.aid = newAid
+    item.position = {x:0, y:0,z:0}
+    item.rotation = {x:0, y:0,z:0}
+    item.scale = {x:0, y:0,z:0}
+    createNewItem(room, client, scene, item, catalogItem)
+    addItemComponents(room, client, scene, item, catalogItem)
+    return newAid
 }

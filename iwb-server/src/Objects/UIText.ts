@@ -21,7 +21,7 @@ export class UITextComponent extends Schema{
 }
 
 export function createUITextComponent(scene:Scene, aid:string, data:any){
-    console.log('creating ui component', data)
+    // console.log('creating ui component', data)
     let component:any = new UITextComponent()
     for(let key in data){
         component[key] = data[key]

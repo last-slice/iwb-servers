@@ -4,8 +4,8 @@ import { IWBRoom } from "../rooms/IWBRoom"
 import { PlayfabId, abortFileUploads, addEvent, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getDownloadURL, getTitleData, initializeUploadPlayerFiles, playerLogin, playfabLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
-import { Scene } from "./Scene"
-import { generateId } from "colyseus"
+import { getRealmData, Scene } from "./Scene"
+import { Client, generateId } from "colyseus"
 import { DEBUG } from "../utils/config"
 import { getRandomIntInclusive } from "../utils/functions"
 
@@ -22,7 +22,9 @@ export class IWBManager{
     backingUp:boolean = false
     worlds:any[] = []
     pendingSaves:any[] = []
+    pendingBackups:any[] = []
     savingWorlds:any[] = []
+    savingBackups:any[] = []
 
     //server config
     version:number = 0
@@ -244,11 +246,31 @@ export class IWBManager{
 
     }
 
+    async backupWorld(room:IWBRoom, client:Client, info:any){
+        let player:Player = room.state.players.get(client.userData.userId)
+        if(player){
+            let world = iwbManager.worlds.find((w)=> w.ens === room.state.world)
+            if(world && world.owner === client.userData.userId || world.bps.includes(client.userData.userId)){
+                world.backedUp = Math.floor(Date.now()/1000)
+                this.worldsModified = true
+                                                                           
+                let realmScenes:any[] = getRealmData(room)
+                iwbManager.addWorldPendingBackup(room.state.world, room.roomId, ["" + room.state.world + "-backup.json"], room.state.realmToken, room.state.realmTokenType, room.state.realmId, [realmScenes])
+            }
+            else{
+                console.log('someone trying to back up world who isnt owner or has permissions', world.ens, player.address)
+            }  
+        }
+        else{
+            console.log('someone trying to back up world who isnt a player on the server', client.userData.userId)
+        }
+    }
+
     async initWorld(room:IWBRoom, world:any){
         let current = this.initQueue.find((w)=>w.ens === world.ens)
         if(!current){
             this.initQueue.push(world)
-            await this.deployWorld(world,room)
+            await this.deployWorld(world, room)
         }
     }
 
@@ -280,6 +302,41 @@ export class IWBManager{
         let index = this.initQueue.findIndex((w)=> w.ens === world.ens)
         if(index >=0){
             this.initQueue.splice(index,1)
+        }
+    }
+
+    checkPendingBackupQueue(world:string){
+        let pendingBackup:any = this.pendingBackups.find(($:any)=> $.world === world)
+        if(pendingBackup && !this.savingBackups.includes(world)){
+            this.savingBackups.push(world)
+            this.worldsModified = true
+
+            this.backupFiles(pendingBackup)
+        }
+    }
+
+    addWorldPendingBackup(world:string, roomId:string, filenames:string[], token:string, type:string, realmId:string, data:any[]){
+        this.pendingBackups.push({
+            world:world,
+            roomId:roomId,
+            filenames:filenames,
+            token:token,
+            type:type,
+            realmId:realmId,
+            data:data
+        })
+        this.checkPendingBackupQueue(world)
+    }
+
+    async removeWorldPendingBackup(world:string){
+        let index = this.pendingBackups.findIndex((w)=> w.world === world)
+        if(index >=0){
+            this.pendingBackups.splice(index,1)
+        }
+
+        let save = this.savingBackups.findIndex((w)=> w === world)
+        if(save >=0){
+            this.savingBackups.splice(index,1)
         }
     }
 
@@ -598,7 +655,7 @@ export class IWBManager{
             //     link += body.bucket + "/" + body.data.name +"/" + body.data.worldName
             // }
 
-            let link = (DEBUG ? "http://localhost:3000/" : "https://dcl-iwb.co/") + "toolset/" + body.user + "/" + body.data.dest + "/"
+            let link = (DEBUG ? "http://localhost:3000/" : "https://dcl-iwb.co/") + "toolset/qa/" + body.user + "/" + body.data.dest + "/"
             if(body.data.dest === "gc"){
                 link += body.data.tokenId === "" ? ("parcel/" + body.bucket + "/" + body.data.name +"/x/y") : ("estate/" +  body.bucket + "/" + body.data.tokenId + "/") 
             }else{

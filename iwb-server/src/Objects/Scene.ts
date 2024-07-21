@@ -427,11 +427,11 @@ export class Scene extends Schema {
     }
 }
 
-export function initServerScenes(room:IWBRoom){
+export function initServerScenes(room:IWBRoom, options?:any){
     if(iwbManager.pendingSaves.includes((room.state.world))){
         let timeout = setTimeout(()=>{
             clearTimeout(timeout)
-            initServerScenes(room)
+            initServerScenes(room, options)
         }, 1000 * 1)
     }else{
         setTimeout(()=>{
@@ -447,7 +447,7 @@ export function initServerScenes(room:IWBRoom){
                     .then((realmScenes)=>{
                         iwbManager.fetchRealmScenes(room.state.world, realmScenes)
                         .then((sceneData)=>{
-                            loadRealmScenes(room, sceneData)
+                            loadRealmScenes(room, sceneData, options)
                         })
                     })   
                 })
@@ -471,42 +471,31 @@ export async function initServerAssets(room:IWBRoom){
     })
 }
 
-export function loadRealmScenes(room:IWBRoom, scenes:any[]){
-    let filter = scenes.filter((scene)=> scene.w === room.state.world)
+export function loadRealmScenes(room:IWBRoom, scenes:any[], options?:any){
+    let filter = [...scenes.filter((scene)=> scene.w === room.state.world)]
     room.state.sceneCount = filter.length
 
-    // console.log('scenes are ', filter)
-
-    filter.forEach((scene)=>{
-        room.state.scenes.set(scene.id, new Scene(room, scene))
-    })
+    if(options){
+        console.log('we have connectoin from gc, only load specfic scene')
+        let scene = filter.find(($:any)=> $.id === options.localConfig.id)
+        if(scene){
+            console.log('we found scene to load for gc')
+            scene.pcls = options.localConfig.parcels
+            scene.bpcl = options.localConfig.base
+            room.state.scenes.set(scene.id, new Scene(room, scene))
+        }
+    }else{
+        filter.forEach((scene)=>{
+            room.state.scenes.set(scene.id, new Scene(room, scene))
+        })
+    }
 }
 
 export async function saveRealm(room:IWBRoom){
     let fileNames:any[] = []
     let data:any[] = []
 
-    let scenes:any[] = []
-    room.state.scenes.forEach(async (scene:any)=>{
-        let jsonScene:any = scene.toJSON()
-        // if(scene.id === "OaT46"){
-        //     // console.log('scene is', jsonScene)
-        //     await checkAssetCacheStates(scene, jsonScene)
-        // }
-       
-        
-
-
-        // Object.values(COMPONENT_TYPES).forEach((component:any)=>{
-        //     if(data[component]){
-        //         for(let aid in data[component]){
-
-        //         }
-        //     }
-        // })
-
-        scenes.push(jsonScene)
-    })
+    let scenes:any[] = getRealmData(room)
 
     if(scenes && scenes.length > 0){
         fileNames.push("" + room.state.world + "-scenes.json")
@@ -532,6 +521,31 @@ export async function saveRealm(room:IWBRoom){
         iwbManager.addWorldPendingSave(room.state.world, room.roomId, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
         // iwbManager.backupFiles(room.state.world, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
     }
+}
+
+export function getRealmData(room:IWBRoom){
+    let scenes:any[] = []
+    room.state.scenes.forEach(async (scene:any)=>{
+        let jsonScene:any = scene.toJSON()
+        // if(scene.id === "OaT46"){
+        //     // console.log('scene is', jsonScene)
+        //     await checkAssetCacheStates(scene, jsonScene)
+        // }
+       
+        
+
+
+        // Object.values(COMPONENT_TYPES).forEach((component:any)=>{
+        //     if(data[component]){
+        //         for(let aid in data[component]){
+
+        //         }
+        //     }
+        // })
+
+        scenes.push(jsonScene)
+    })
+    return scenes
 }
 
 export async function saveRealmScenes(room:IWBRoom){

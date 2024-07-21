@@ -32,6 +32,7 @@ export async function handleGenesisCityDeployment(key:string, data:any){
 
   bucket.owner = data.user
   bucket.address = data.user
+  bucket.status = "Building"
 
   let bucketDirectory = path.join(dclBucketDirectory, key)
   console.log('dcl bucket directory is', bucketDirectory, data)
@@ -46,7 +47,8 @@ export async function handleGenesisCityDeployment(key:string, data:any){
           name: data.metadata.title,
           dest: data.dest,
           worldName: data.worldName,
-          tokenId: data.tokenId
+          tokenId: data.tokenId,
+          sceneId: data.sceneId
         }
 
         await buildScene(data, "deploy", bucketDirectory)
@@ -112,7 +114,8 @@ export async function handleGenesisCityDeployment(key:string, data:any){
                 worldName:pendingDeployments[data.user].worldName,
                 name:pendingDeployments[data.user].name,
                 dest:pendingDeployments[data.user].dest,
-                tokenId: pendingDeployments[data.user].tokenId
+                tokenId: pendingDeployments[data.user].tokenId,
+                sceneId: pendingDeployments[data.user].sceneId
               },
               bucket: key
             })
@@ -123,6 +126,7 @@ export async function handleGenesisCityDeployment(key:string, data:any){
             if(res.valid){
               console.log('valid ping, now wait for user to accept link')
               pendingDeployments[data.user].status = "signature"
+              bucket.status = "awaiting signature"
             }else{
               resetDeployment(key)
             }
