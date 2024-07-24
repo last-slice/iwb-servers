@@ -6,7 +6,7 @@ import { IWBRoom } from "../IWBRoom";
 import { DEBUG } from "../../utils/config";
 import { Scene } from "../../Objects/Scene";
 import { generateId } from "colyseus";
-import { canBuild, removeAllAssetComponents } from "./ItemHandler";
+import { canBuild, hasWorldPermissions, removeAllAssetComponents } from "./ItemHandler";
 import { addBasicSceneParenting } from "../../Objects/Parenting";
 import { IWBComponent } from "../../Objects/IWB";
 
@@ -16,7 +16,7 @@ export function iwbSceneHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.ADD_WORLD_ASSETS, (client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.ADD_WORLD_ASSETS + " received", info)
         let player = room.state.players.get(client.userData.userId)
-        if(player && player.inHomeWorld(room.state.world)){
+        if(player && (player.inHomeWorld(room.state.world) || hasWorldPermissions(room, player.address))){
             if(info){
                 info.forEach((id:any, i:number)=>{
                     let item:any = itemManager.items.get(id)
@@ -27,9 +27,18 @@ export function iwbSceneHandler(room:IWBRoom){
                     }
                 })
 
-                room.broadcast(SERVER_MESSAGE_TYPES.ADD_WORLD_ASSETS, room.state.realmAssets)
-                console.log('realm assets', room.state.realmAssets.size)
-            }
+                let assets:any[] = []
+                room.state.realmAssets.forEach((item:any)=>{
+                    assets.push(item)
+                })
+
+                iwbManager.addWorldPendingSave(room.state.world, room.roomId, ["catalogs.json"], room.state.realmToken, room.state.realmTokenType, room.state.realmId, [assets])
+
+                iwbManager.checkSaveFinished(room, ()=>{
+                    room.broadcast(SERVER_MESSAGE_TYPES.ADD_WORLD_ASSETS, room.state.realmAssets)
+                    console.log('realm assets', room.state.realmAssets.size)
+                })
+        }
         }else{
             console.log('player not in home world, spamming?')
         }
@@ -98,7 +107,7 @@ export function iwbSceneHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT, async(client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.FORCE_DEPLOYMENT + " message", info)
 
-        if(!info || !info.sceneId){
+        if(!info){
             console.log("invalid deployment parameters received")
             return
         }
@@ -360,7 +369,11 @@ export function iwbSceneHandler(room:IWBRoom){
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_SAVE_EDITS, async(client, info)=>{
-       // console.log(SERVER_MESSAGE_TYPES.SCENE_SAVE_EDITS + " message", info)
+       console.log(SERVER_MESSAGE_TYPES.SCENE_SAVE_EDITS + " message", info)
+
+       if(!info){
+        return
+       }
 
         let player:Player = room.state.players.get(client.userData.userId)
         if(player){
@@ -372,16 +385,13 @@ export function iwbSceneHandler(room:IWBRoom){
                     scene.d = info.desc
                     scene.im = info.image
 
-                    let enabledView = false
-                    scene.e !== info.enabled ? enabledView = true : null
+                    let enabledView = (scene.e === info.enabled ? false : true)
                     scene.e = info.enabled
 
-                    let privateView = false
-                    scene.priv !== info.priv ? privateView = true : null
+                    let privateView = (scene.priv === info.priv ? false : true)
                     scene.priv = info.priv
 
-                    let limits = false
-                    scene.lim !== info.lim ? limits = true : null
+                    let limits = (scene.lim === info.lim ? false : true)
                     scene.lim = info.lim
 
                     let worldConfig = iwbManager.worlds.find((w)=> w.ens === room.state.world)
@@ -389,7 +399,7 @@ export function iwbSceneHandler(room:IWBRoom){
                         worldConfig.updated = Math.floor(Date.now()/1000)
                     }
                     
-                    room.broadcast(SERVER_MESSAGE_TYPES.SCENE_SAVE_EDITS, {sceneId:info.sceneId, enabledChanged:enabledView, privateChanged:privateView})
+                    room.broadcast(SERVER_MESSAGE_TYPES.SCENE_SAVE_EDITS, {sceneId:info.sceneId, lChanged:limits, eChanged:enabledView, pChanged:privateView})
                 }
             }
         }
@@ -519,14 +529,33 @@ export function iwbSceneHandler(room:IWBRoom){
 
         let player:Player = room.state.players.get(client.userData.userId)
         if(player && iwbManager.isOwner(player.address, room.state.world)){
-            let ugcAsset = room.state.realmAssets.get(info.id)
-            if(ugcAsset){
-                iwbManager.deleteUGCAsset(player, ugcAsset, room)
-            }else{
-                console.log('ugc asset does not exist')
+            if(info){
+                info.forEach((id:any, i:number)=>{
+                    let ugcAsset = room.state.realmAssets.get(id)
+                    if(ugcAsset){
+                        iwbManager.deleteUGCAsset(player, ugcAsset, room)
+                        // room.state.realmAssets.delete(id)
+                        // room.state.realmAssetsChanged = true
+                        room.broadcast(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, room.state.realmAssets)
+                    }
+                })
             }
         }else{
             console.log('not owner')
+        }
+
+        if(player && player.inHomeWorld(room.state.world)){
+            if(info){
+                info.forEach((id:any, i:number)=>{
+                    if(room.state.realmAssets.get(id)){
+                        room.state.realmAssets.delete(id)
+                        room.state.realmAssetsChanged = true
+                        room.broadcast(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, room.state.realmAssets)
+                    }
+                })
+            }
+        }else{
+            console.log('player not in home world, spamming?')
         }
     }) 
 
@@ -594,10 +623,13 @@ export function createScene(player:Player, room:IWBRoom, info:any, parcels:strin
       id: "" + generateId(5),
       im: info.image ? info.image : "",
       n: info.name,
-      d: info.desc,
+      d: info.description,
       o: player.dclData.userId,
       ona: player.dclData.name,
-      cat:"",
+      cat: info.cat,
+      rating: info.rat,
+      dpx: info.dPx,
+      dv: info.dV,
       bps:[],
       bpcl: parcels[0],
       cd: Math.floor(Date.now()/1000),
@@ -611,7 +643,7 @@ export function createScene(player:Player, room:IWBRoom, info:any, parcels:strin
       pcls:parcels,
       sp:["0,0,0"],
       cp:["0,0,0"],
-      priv:info.private,
+      priv:info.priv
     }
 
     // console.log('creating new scene with data', sceneData)

@@ -103,7 +103,8 @@ export class IWBRoom extends Room<IWBRoomState> {
             tutorials: {
                 videos: iwbManager.tutorials,
                 cid: iwbManager.tutorialsCID
-            }
+            },
+            settings: player.settings
         })
 
         pushPlayfabEvent(

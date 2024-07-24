@@ -34,6 +34,7 @@ import { LevelComponent, createLevelComponent } from "./Level";
 import { createLiveComponent, LiveShowComponent } from "./LiveShow";
 import { createTeamComponent, TeamComponent } from "./Team";
 import { createGameItemComponent, GameItemComponent } from "./GameItem";
+import { createDialogComponent, DialogComponent } from "./Dialog";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -71,6 +72,8 @@ export class Scene extends Schema {
     @type("boolean") isdl: boolean
     @type("boolean") e: boolean
     @type("boolean") priv: boolean
+    @type("boolean") dv: boolean = false
+    @type("boolean") dpx: boolean = false
     @type("boolean") lim: boolean = true
 
     @type({map:TransformComponent}) [COMPONENT_TYPES.TRANSFORM_COMPONENT]:MapSchema<TransformComponent>
@@ -105,6 +108,7 @@ export class Scene extends Schema {
     @type({map:LiveShowComponent}) [COMPONENT_TYPES.LIVE_COMPONENT]:MapSchema<LiveShowComponent>
     @type({map:TeamComponent}) [COMPONENT_TYPES.TEAM_COMPONENT]:MapSchema<TeamComponent>
     @type({map:GameItemComponent}) [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:MapSchema<GameItemComponent>
+    @type({map:DialogComponent}) [COMPONENT_TYPES.DIALOG_COMPONENT]:MapSchema<DialogComponent>
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent>
 
     // @type({map:"string"}) [COMPONENT_TYPES.CLICK_AREA_COMPONENT]:MapSchema<string>
@@ -169,11 +173,17 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.LIVE_COMPONENT] = new MapSchema<LiveShowComponent>()
         this[COMPONENT_TYPES.TEAM_COMPONENT] = new MapSchema<TeamComponent>()
         this[COMPONENT_TYPES.GAME_ITEM_COMPONENT] = new MapSchema<GameItemComponent>()
+        this[COMPONENT_TYPES.DIALOG_COMPONENT] = new MapSchema<DialogComponent>()
         // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()
 
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
+                    case COMPONENT_TYPES.DIALOG_COMPONENT:
+                        for (const aid in data[component]) {
+                            createDialogComponent(this, aid,  data[component][aid])
+                        }
+                        break;
                     case COMPONENT_TYPES.GAME_ITEM_COMPONENT:
                         for (const aid in data[component]) {
                             createGameItemComponent(this, aid,  data[component][aid])
@@ -480,8 +490,10 @@ export function loadRealmScenes(room:IWBRoom, scenes:any[], options?:any){
         let scene = filter.find(($:any)=> $.id === options.localConfig.id)
         if(scene){
             console.log('we found scene to load for gc')
-            scene.pcls = options.localConfig.parcels
-            scene.bpcl = options.localConfig.base
+            scene.pcls = translateGCParcels(scene.pcls)
+            scene.bpcl = "0,0"
+            // scene.pcls = options.localConfig.parcels
+            // scene.bpcl = options.localConfig.base
             room.state.scenes.set(scene.id, new Scene(room, scene))
         }
     }else{
@@ -626,3 +638,26 @@ export function checkAssetCacheStates(scene:Scene, jsonScene:any){
 // addNewScene(scene:Scene){
 //     this.room.state.scenes.set(scene, s)
 // }
+
+function translateGCParcels(parcels:any[]){
+    // Parse the coordinate strings into an array of tuples
+    const parsedCoords:any[] = parcels.map(coord => {
+        const [x, y] = coord.split(',').map(Number);
+        return [x, y];
+    });
+
+    // Find the minimum x and y values
+    const minX = Math.min(...parsedCoords.map(coord => coord[0]));
+    const minY = Math.min(...parsedCoords.map(coord => coord[1]));
+
+    // Translate the coordinates to start at (0, 0)
+    const translatedCoords = parsedCoords.map(([x, y]) => [x - minX, y - minY]);
+
+    // Convert the translated coordinates back to strings
+    const translatedCoordsStrings = translatedCoords.map(([x, y]) => `${x},${y}`);
+
+    return translatedCoordsStrings;
+    console.log('translated coords are ', translatedCoords)
+
+    return translatedCoords;
+}

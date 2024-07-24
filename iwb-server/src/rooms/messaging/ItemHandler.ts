@@ -34,6 +34,7 @@ import { createGameComponent, deleteGameComponent, editGameComponent, removeGame
 import { editLevelComponent } from "../../Objects/Level";
 import { createLiveComponent, editLiveComponent } from "../../Objects/LiveShow";
 import { createGameItemComponent } from "../../Objects/GameItem";
+import { createDialogComponent } from "../../Objects/Dialog";
 
 
 let updateComponentFunctions:any = {
@@ -88,6 +89,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.MATERIAL_COMPONENT]:(scene:any, aid:string, info:any)=>{createMaterialComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.BILLBOARD_COMPONENT]:(scene:any, aid:string, info:any)=>{createBillboardComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.LIVE_COMPONENT]:(scene:any, aid:string, info:any)=>{createLiveComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.DIALOG_COMPONENT]:(scene:any, aid:string, info:any)=>{createDialogComponent(scene, aid, info)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){
@@ -293,6 +295,18 @@ export function iwbItemHandler(room:IWBRoom){
     })
 }
 
+export function hasWorldPermissions(room:IWBRoom, user:string){
+    let world = iwbManager.worlds.find((w) => w.ens === room.state.world)
+    if(!world){
+        return false
+    }
+
+    if(world.owner === user || world.bps.includes(user)){
+        return true
+    }
+    return false
+}
+
 export function canBuild(room:IWBRoom, user:string, sceneId?:any){
     let scene:Scene = room.state.scenes.get(sceneId)
     if(!scene){
@@ -308,7 +322,7 @@ export function canBuild(room:IWBRoom, user:string, sceneId?:any){
         return false
     }
 
-    if(world.owner === user || world.bps.includes(user)){
+    if(world.owner === user || hasWorldPermissions(room, user)){
         return true
     }
 
@@ -365,6 +379,12 @@ async function deleteComponent(scene:any, item:any){
 
 function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
     switch(item.type){
+        case COMPONENT_TYPES.DIALOG_COMPONENT:
+            if(!scene[COMPONENT_TYPES.DIALOG_COMPONENT].has(item.aid)){
+                createDialogComponent(scene, item.aid)
+            }
+            break;
+
         case COMPONENT_TYPES.GAME_ITEM_COMPONENT:
             if(!scene[COMPONENT_TYPES.GAME_ITEM_COMPONENT].has(item.aid)){
                 createGameItemComponent(scene, item.aid)

@@ -119,6 +119,6 @@ export enum REQUIRED_ASSETS {
     //smart items
     VIDEO = 'bb3b0edf-377b-438b-80af-bd199455a9bb',
     UI_IMAGE = '4b245184-2862-4d92-8f96-58493b87e7bf',
-    UI_TEXT = '13b63e57-a636-4cf2-8449-488a5fd6d03e',
+    UI_TEXT = '13b63e57-a636-4cf2-8449-488a5fd6d03e.png',
     IMAGE = 'e6991f31-4b1e-4c17-82c2-2e484f53a123',
 }

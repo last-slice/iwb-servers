@@ -124,62 +124,6 @@ async function deployBucket(key:string){
     })
 }
 
-// async function deploy2(key:string, data:DeploymentData){
-//     try {
-//         let b = iwbBuckets.get(key)
-//         b.status = "Deploying"
-//         b.owner = data.ens
-//         b.address = data.owner
-
-//         let temp = command + " " + key + " " + process.env.DEPLOY_KEY
-
-//         // Execute the shell command
-//         b.process = exec(temp)
-  
-//         // Listen for stdout data events
-//         b.process.stdout.on('data', (data:any) => {
-//             // console.log(`stdout: ${data}`);
-//         });
-            
-//         // Listen for stderr data events
-//         b.process.stderr.on('data', (data:any) => {
-//             console.error(`stderr: ${data}`);
-
-//             if(data.substring(0,5) === "Error"){
-//                 console.log('we have an error with deployment')
-//             }
-            
-//             if(data === "Content uploaded successfully"){
-//                 console.log('we finished deploying')
-//             }
-//         });
-
-//         // You can also listen for the child process to exit
-//         b.process.on('exit', (code:any, signal:any) => {
-//             console.log('deploy bucket process exited with code', key, code)
-//             if (code === 0) {
-//                 console.log('Child process exited successfully.');
-//                 b.status = "Deployed"
-//                 b.process = null
-//                 successIWBServer(key, data).then(()=>{
-//                     resetBucket(key)
-//                 })
-//                 .catch((e)=>{
-//                     console.log("error pinging iwb-server")
-//                     resetBucket(key)
-//                 })
-//               } else {
-//                 console.error(`Child process exited with code ${code}.`);
-//                 throw new Error("DCL Deployment Error")
-//               }        
-//         });
-
-//       } catch (error) {
-//         console.error(error);
-//         throw new Error("DCL Deployment Error")
-//       }
-// }
-
 export async function resetBucket(key:string){
     console.log('resetting iwb world bucket', key)
 
@@ -283,7 +227,7 @@ async function buildBucket(key:string, bucket:any, data:any){
             await fs.access(ugcPath, fs.constants.F_OK);
             console.log('World contains UGC content')
 
-            await copyFiles(ugcPath, path.join(bucketPath, "assets"))
+            await copyFiles(ugcPath, path.join(bucketPath, "assets"), undefined, true)
         } catch (err) {
             console.log('World does not contain UGC content')
         }
@@ -294,43 +238,58 @@ async function buildBucket(key:string, bucket:any, data:any){
       }
 }
 
-async function copyFiles(sourceFolder:string, destinationFolder:string, assets?:any[]) {
-    try {
-        // console.log('assets area', assets)
-        if(assets && assets.length >0){
-
-            for(let i = 0; i < Object.values(REQUIRED_ASSETS).length; i++){
-                let file = Object.values(REQUIRED_ASSETS)[i]
+async function copyFiles(sourceFolder:string, destinationFolder:string, assets?:any[], ugc?:boolean) {
+    try{
+        const files = await fs.readdir(sourceFolder);
+        if(ugc){
+            for (const file of files) {
+                const sourceFilePath = path.join(sourceFolder, file);
                 try{
-                    await fs.copy(path.join(sourceFolder, file), path.join(destinationFolder, file))
+                    await fs.copy(sourceFilePath,  path.join(destinationFolder, file));
                 }
                 catch(e){
-                    console.log('file copy error', e)
+                    console.error(`Error copying files: ${e}`);
                 }
             }
         }
-
-        const files = await fs.readdir(sourceFolder);
-
-        for (const file of files) {
-            const sourceFilePath = path.join(sourceFolder, file);
-            let destinationFilePath:any
-                if(assets){
-                    if(assets.find(($:any)=> $.id === path.parse(file).name)){
-                        destinationFilePath = path.join(destinationFolder, file);
+        else{
+            try {
+                for(let i = 0; i < Object.values(REQUIRED_ASSETS).length; i++){
+                    let file = Object.values(REQUIRED_ASSETS)[i]
+                    try{
+                        await fs.copy(path.join(sourceFolder, file), path.join(destinationFolder, file))
                     }
-                }else{
-                    destinationFilePath = path.join(destinationFolder, file);
+                    catch(e){
+                        console.log('file copy error', e)
+                    }
                 }
-            
-            if(destinationFilePath){
-                await fs.copy(sourceFilePath, destinationFilePath);
+    
+                if(assets && assets.length > 0){
+                    const files = await fs.readdir(sourceFolder);
+                    for (const file of files) {
+                        const sourceFilePath = path.join(sourceFolder, file);
+                        let destinationFilePath:any
+                            if(assets){
+                                if(assets.find(($:any)=> $.id === path.parse(file).name)){
+                                    destinationFilePath = path.join(destinationFolder, file);
+                                }
+                            }else{
+                                destinationFilePath = path.join(destinationFolder, file);
+                            }
+                        
+                        if(destinationFilePath){
+                            await fs.copy(sourceFilePath, destinationFilePath);
+                        }
+                    }
+                }
+                
+            } catch (err) {
+                console.error(`Error copying files: ${err}`);
             }
         }
-
-        // console.log(`Files copied from ${sourceFolder} to ${destinationFolder}`);
-    } catch (err) {
-        console.error(`Error copying files: ${err}`);
+    }
+    catch(e){
+        console.error(`Error reading folder: ${e}`);
     }
 }
 

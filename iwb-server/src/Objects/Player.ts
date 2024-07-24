@@ -39,6 +39,7 @@ export class PlayerManager {
 }
 
 export class SelectedAsset extends Schema {
+  @type("string") sceneId: string
   @type("string") catalogId: string
   @type("string") assetId: string
   @type("boolean") catalogAsset:boolean = false
@@ -140,6 +141,7 @@ export class Player extends Schema {
       addSelectedAsset(info:any){
         console.log('player selected asset', info)
         this.selectedAsset = new SelectedAsset(info)
+        this.selectedAsset.sceneId = info.sceneId
       }
     
       removeSelectedAsset(){
@@ -313,8 +315,6 @@ export class Player extends Schema {
     
            //  console.log('player settings are ', this.settings)
         }
-    
-        this.client.send(SERVER_MESSAGE_TYPES.PLAYER_SETTINGS, {action:"load", value:this.settings})
       }
 
       startGame(sceneId:any, game:any, status:PLAYER_GAME_STATUSES, level?:any){

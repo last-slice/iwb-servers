@@ -174,7 +174,7 @@ export enum COMPONENT_TYPES {
     LIVE_COMPONENT = 'Live',
     TEAM_COMPONENT = 'Team',
     GAME_ITEM_COMPONENT = 'GameItem',
-    GAME_ROOM_COMPONENT = 'gaming'
+    GAME_ROOM_COMPONENT = 'gaming',
 }
 
 export enum COLLISION_LAYERS {

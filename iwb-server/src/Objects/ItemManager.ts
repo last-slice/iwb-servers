@@ -4,6 +4,7 @@ import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
 import data from '../tests/catalog.json'
 import marketplace from '../tests/marketplace.json'
+import { IWBRoom } from "../rooms/IWBRoom"
 
 export class ItemManager{
     
@@ -213,7 +214,13 @@ export class ItemManager{
     }
 
 
-
+    getUserCatalog(room:IWBRoom){
+        let assets:any[] = []
+        room.state.realmAssets.forEach(async (asset:any)=>{
+            assets.push(asset)
+        })
+        return assets
+    }
 
 }
 

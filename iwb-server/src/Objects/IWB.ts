@@ -77,7 +77,7 @@ export function editIWBComponent(info:any, scene:Scene){
 
 function checkAssetPolyAndSize(room:IWBRoom, scene:Scene, id:string){
     let catalogItem = room.state.realmAssets.get(id) //component.ugc ? room.state.realmAssets.get(component.id) : itemManager.items.get(component.id)
-    console.log('catalog item is', catalogItem)
+    // console.log('catalog item is', catalogItem)
     if(catalogItem){
         let size = catalogItem.si
         scene.pc += catalogItem.pc

@@ -66,6 +66,7 @@ export class IWBManager{
         let backupWorldConfigInterval = setInterval(async ()=>{
             if(this.worldsModified){
                 try{
+                    console.log('backing up worlds config to playfab')
                     await setTitleData({Key:'Worlds', Value: JSON.stringify(this.worlds)})
                     this.worldsModified = false
                 }
@@ -205,23 +206,27 @@ export class IWBManager{
         }
     }
 
-    async deployWorld(world:any, room?:IWBRoom){
+    async deployWorld(worldToDeploy:any, room?:IWBRoom){
         try{
-            console.log('deploying world', world)
+            console.log('deploying world', worldToDeploy)
 
-            let metadata = await fetchPlayfabMetadata(iwbManager.worlds.find((w:any)=> w.ens === world.ens).owner)
-            let url = getDownloadURL(metadata, "catalogs.json")
-
+            let url:any
+            let world = iwbManager.worlds.find((w:any)=> w.ens === worldToDeploy.ens)
+            if(world){
+                let metadata = await fetchPlayfabMetadata(world.owner)
+                url = getDownloadURL(metadata, "catalogs.json")
+            }
+            
             let res = await fetch((DEBUG ? process.env.DEPLOYMENT_SERVER_DEV : process.env.DEPLOYMENT_SERVER_PROD ) + process.env.DEPLOYMENT_WORLD_ENDPOINT,{
                 headers:{"content-type":"application/json"},
                 method:"POST",
                 body:JSON.stringify({
                     auth: process.env.DEPLOYMENT_AUTH,
                     world:{
-                        ens:world.ens,
-                        worldName: world.name,
-                        owner: world.owner,
-                        init: room ? false : true,
+                        ens:worldToDeploy.ens,
+                        worldName: worldToDeploy.name,
+                        owner: worldToDeploy.owner,
+                        init: world ? false : true,
                         url:url
                     },
                     
@@ -277,7 +282,8 @@ export class IWBManager{
     saveNewWorld(world:any){
         console.log('saving new world', world)
         world.updated = Math.floor(Date.now()/1000)
-        world.builds = 1
+        world.builds = 0
+        world.bps = []
         world.v = this.version
 
         this.rooms.forEach((room:IWBRoom)=>{
@@ -373,31 +379,15 @@ export class IWBManager{
         }
     }
 
-    // async createRealmLobby(room:IWBRoom, world:any, newWorld:boolean){
-    //     try{
-    //         let user = await playfabLogin(world.owner)
-    //         let realmMetadata = await fetchUserMetaData(user)
-    //         let scenes = await fetchPlayfabFile(realmMetadata, world +'-scenes.json')
-
-    //         scenes.push(this.createLobbyScene(room, world))
-    
-    //         if(newWorld){
-    //             world.builds = 1
-    //             world.updated = Math.floor(Date.now()/1000)
-    //             world.cv = 1
-    //             world.v = iwbManager.version    
-    //         } 
-
-    //         await this.backupScene(world.ens, user.EntityToken.EntityToken, user.EntityToken.Entity.Type, user.EntityToken.Entity.Id, scenes)
-            
-    //         if(newWorld){
-    //             this.worlds.push(world)  
-    //         }
-    //     }
-    //     catch(e){
-    //         console.log('error creating lobby for new world', world)
-    //     }
-    // }
+    async checkSaveFinished(room:IWBRoom, onComplete:any){
+        if(this.pendingSaves.find(($:any)=> $.world === room.state.world)){
+            setTimeout(()=>{
+                this.checkSaveFinished(room, onComplete)
+            }, 200)
+        }else{
+            onComplete()
+        }
+    }
 
     async initiateRealm(user:string){
         try{
@@ -509,7 +499,7 @@ export class IWBManager{
                 FileNames:filenames
             })
 
-            // console.log('initres is', initres)
+            // console.log('initres is', initres)//
 
             for(let i = 0; i < filenames.length; i++){
                 let uploadres = await uploadPlayerFiles(initres.UploadDetails[i].UploadUrl, JSON.stringify(data[i]))
@@ -640,11 +630,11 @@ export class IWBManager{
             player = room.state.players.get(body.user)
         }
 
-        player = room.state.players.get('0xaabe0ecfaf9e028d63cf7ea7e772cf52d662691a')
+        // player = room.state.players.get(body.user)
 
-        // if(!player && !room){
-        //     console.log('user not online anymore, delete deployment and free up bucket')
-        // }else{
+        if(!player && !room){
+            console.log('user not online anymore, delete deployment and free up bucket')
+        }else{
             console.log('found user, notify them of their deployment', body)
             player.pendingDeployment = body.data.auth
 
@@ -666,7 +656,7 @@ export class IWBManager{
 
             console.log('link is', link)
             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_READY, {link:link})
-        // }
+        }
     }
 
     async buildDeployLink(body:any){
@@ -777,6 +767,8 @@ export class IWBManager{
 
     async deleteUGCAsset(player:Player, ugcAsset:any, room:IWBRoom){
         console.log('ugc asset to delete is', ugcAsset)
+        let realmAssets:any[] = itemManager.getUserCatalog(room)
+
         let path = "" + player.address + "/" + ugcAsset.id
         switch(ugcAsset.ty){
             case '3D':
@@ -791,6 +783,7 @@ export class IWBManager{
 
         try{
             room.state.realmAssets.delete(ugcAsset.id)
+            room.state.realmAssetsChanged = true
 
             let response = await axios.get((DEBUG ? "http://localhost:3525/" : "https://deployment.dcl-iwb.co") + 
             "/ugc/delete/" + 
@@ -808,7 +801,9 @@ export class IWBManager{
                 console.log('failed to remove asset on ugc server', ugcAsset.id, player.address)
             }
 
-            await itemManager.uploadFile(player.address, "catalogs.json", [...room.state.realmAssets.values()])
+            let realmAssets:any[] = itemManager.getUserCatalog(room)
+            iwbManager.addWorldPendingBackup(room.state.world, room.roomId, ["catalogs.json"], room.state.realmToken, room.state.realmTokenType, room.state.realmId, [realmAssets])
+
             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET, {id:ugcAsset.id})
         }
         catch(e){
