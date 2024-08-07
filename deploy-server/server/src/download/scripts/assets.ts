@@ -7,9 +7,10 @@ export async function copyAssets(location:string, data:any){
     for(let i = 0; i < data.assetIds.length; i++){
         let asset = data.assetIds[i]
         if(!alreaadyCopied.includes(asset.id)){
+            console.log('copying asset', asset)
             let file = asset.id
 
-            let catalogDirectory:string = asset.ugc ? (ugcDirectory + data.o + "/") : assetDirectory
+            let catalogDirectory:string = asset.ugc ? (ugcDirectory + data.user + "/") : assetDirectory
             
             // console.log('copying asset', asset)
             switch(asset.type){

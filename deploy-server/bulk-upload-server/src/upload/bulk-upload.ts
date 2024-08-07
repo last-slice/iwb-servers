@@ -7,8 +7,8 @@ const { v4: uuidv4 } = require('uuid');
 const { exec } = require('child_process');
 
 const NFTStorageAuth = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDlCNTIyZDczN0UyOEMwOEFmNzhiQzM2Njk5QzVhMmM2ZDI4NDFBRmYiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY5NzI0MDY4MjY4OCwibmFtZSI6IklXQiBVUGxvYWRlciJ9.7nIofYjxMC6-y5RkNI6IYIOrxRritSH-NKGCz8KuMX4'
-const command = '../../bulk-asset-upload.sh';
-// const command = '/Users/lastraum/Desktop/programming/Decentraland/LastSlice/sdk7/iwb/servers/deploy-server/bulk-asset-upload.sh';
+// const command = '../../bulk-asset-upload.sh';
+const command = '/Users/lastraum/Desktop/programming/Decentraland/LastSlice/sdk7/iwb/servers/deploy-server/bulk-asset-upload.sh';
 const sourceDirectory = '/root/deployment/asset-git'; // The source directory
 const targetDirectory = '/root/iwb-assets/'; // The target directory where you want to copy files
 

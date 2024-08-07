@@ -1,15 +1,16 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
 import { ACTIONS, CATALOG_IDS, COMPONENT_TYPES, SERVER_MESSAGE_TYPES, Triggers } from "../utils/types";
-import { Quaternion, Vector3 } from "./Transform";
+import { editTransform, Quaternion, Vector3 } from "./Transform";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { Player } from "./Player";
 import { createStateComponent, editStateComponent } from "./State";
 import { Client, generateId } from "colyseus";
 import { itemManager } from "../app.config";
-import { createNewItem } from "../rooms/messaging/ItemHandler";
+import { addItemComponents, createNewItem, deleteSceneItem, removeItem, updateComponentFunctions } from "../rooms/messaging/ItemHandler";
 import { createActionComponent } from "./Actions";
 import { createTriggerComponent } from "./Trigger";
+import { addEntity, editParentingComponent } from "./Parenting";
 
 export class LevelComponent extends Schema{
     @type("number") number:number
@@ -44,12 +45,13 @@ export function createLevelComponent(scene:Scene, aid:string, data:any){
 }
 
 export function removeLevels(room:IWBRoom, scene:Scene, player:Player){
-    scene[COMPONENT_TYPES.LEVEL_COMPONENT].clear()
-
     scene[COMPONENT_TYPES.LEVEL_COMPONENT].forEach((levelComponent:any, aid:string)=>{
         console.log('removing level', aid)
-        let levelItem = {}
-
+        deleteSceneItem(room, player, {
+            assetId: aid,
+            childDelete:true,
+            sceneId:scene.id
+        })
     })
 }
 
@@ -58,7 +60,7 @@ export function editLevelComponent(info:any, scene:Scene){
     if(itemInfo){
         for(let key in info){
             if(key === "loadingSpawn" || key === "loadingSpawnLook"){
-                itemInfo[key] = new Vector3(info[key])  
+                itemInfo[key] = new Vector3(info[key]) 
             }
             else{
                 if(itemInfo.hasOwnProperty(key)){
@@ -69,20 +71,21 @@ export function editLevelComponent(info:any, scene:Scene){
     }
 }
 
-export function createGameLevel(room:IWBRoom, client:Client, scene:Scene, item:any, number:number){
+export async function createGameLevel(room:IWBRoom, client:Client, scene:Scene, player:Player, item:any, number:number){
     let newLevelCatalogInfo = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
     let aid = generateId(6)
     newLevelCatalogInfo.n = "Level " + number
     newLevelCatalogInfo.aid = aid
     newLevelCatalogInfo.pending = false
     newLevelCatalogInfo.ugc = false
-    newLevelCatalogInfo.position = new Vector3({x:0,y:0,z:0})
+    newLevelCatalogInfo.position = new Vector3(item.position)
     newLevelCatalogInfo.rotation = new Quaternion({x:0,y:0,z:0})
     newLevelCatalogInfo.scale = new Vector3({x:1,y:1,z:1})
 
-    createNewItem(room, client, scene, newLevelCatalogInfo, newLevelCatalogInfo) 
+    await createNewItem(room, client, scene, newLevelCatalogInfo, newLevelCatalogInfo) 
+    await addItemComponents(room, client, scene, player, newLevelCatalogInfo, newLevelCatalogInfo)
 
-    createLevelComponent(scene, aid, {
+    await createLevelComponent(scene, aid, {
         name: "Level " + number,
         number: number,
         loadingSpawn: new Vector3(item.position),
@@ -90,7 +93,7 @@ export function createGameLevel(room:IWBRoom, client:Client, scene:Scene, item:a
         invisibleStartBox:true,
     })
 
-    createActionComponent(scene, aid, 
+    await createActionComponent(scene, aid, 
         {
         actions:[
             {name:"Load Level", type:ACTIONS.LOAD_LEVEL},
@@ -100,14 +103,109 @@ export function createGameLevel(room:IWBRoom, client:Client, scene:Scene, item:a
         }
     )
 
-    createTriggerComponent(scene, aid, 
+    await createTriggerComponent(scene, aid, 
         {
             isArea:false,
             triggers:[
                 {input:0, pointer:0, type:Triggers.ON_LEVEL_LOADED, actions:[]},
-                {input:0, pointer:0, type:Triggers.ON_LEVEL_COMPLETE, actions:[]},
+            ],
+        }
+    )
+
+    await createStateComponent(scene, aid, {
+        defaultValue:"disabled",
+        values:["disabled", "enabled", "won", "lost"]
+    })
+
+    setTimeout(async ()=>{
+        await addWinLogicEntity(room, client, scene, player, aid, number)
+        await addLoseLogicEntity(room, client, scene, player, aid, number)
+    }, 500)
+}
+
+async function addWinLogicEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, parentAid:string, number:number){
+
+    let parentTransform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(parentAid)
+    let newEntityPosition = new Vector3({x:parentTransform.p.x, y:parentTransform.p.y + 1.5, z:parentTransform.p.z})
+
+    let newEntity = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
+    let newEntityAid = generateId(6)
+
+    newEntity.n = "Level " + number + " win logic"
+    newEntity.aid = newEntityAid
+    newEntity.pending = false
+    newEntity.ugc = false
+    newEntity.position = newEntityPosition
+    newEntity.rotation = new Quaternion({x:0,y:0,z:0})
+    newEntity.scale = new Vector3({x:1,y:1,z:1})
+
+    await createNewItem(room, client, scene, newEntity, newEntity) 
+    await addItemComponents(room, client, scene, player, newEntity, newEntity)
+
+    await createTriggerComponent(scene, newEntityAid, 
+        {
+            isArea:false,
+            triggers:[
                 {input:0, pointer:0, type:Triggers.ON_LEVEL_END, actions:[]}
             ],
         }
     )
+
+    setTimeout(()=>{
+        editParentingComponent(room, client,     {
+            component:COMPONENT_TYPES.PARENTING_COMPONENT,
+            sceneId:scene.id,
+            action:'edit', 
+            aid:newEntityAid, 
+            data:parentAid, 
+            pp:parentTransform.p.toJSON(), 
+            pr:parentTransform.r.toJSON(),
+            sp:newEntityPosition.toJSON(),
+            sr:new Vector3({x:0, y:0, z:0})
+        }, scene, player)
+    }, 500)
+
+
+}
+
+async function addLoseLogicEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, parentAid:string, number:number){
+    let parentTransform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(parentAid)
+    let newEntityPosition = new Vector3({x:parentTransform.p.x, y:parentTransform.p.y + 3, z:parentTransform.p.z})
+
+    let newEntity = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
+    let newEntityAid = generateId(6)
+
+    newEntity.n = "Level " + number + " lose logic"
+    newEntity.aid = newEntityAid
+    newEntity.pending = false
+    newEntity.ugc = false
+    newEntity.position = newEntityPosition
+    newEntity.rotation = new Quaternion({x:0,y:0,z:0})
+    newEntity.scale = new Vector3({x:1,y:1,z:1})
+
+    await createNewItem(room, client, scene, newEntity, newEntity) 
+    await addItemComponents(room, client, scene, player, newEntity, newEntity)
+
+    await createTriggerComponent(scene, newEntityAid, 
+        {
+            isArea:false,
+            triggers:[
+                {input:0, pointer:0, type:Triggers.ON_LEVEL_END, actions:[]}
+            ],
+        }
+    )
+    
+    setTimeout(()=>{
+        editParentingComponent(room, client,     {
+            component:COMPONENT_TYPES.PARENTING_COMPONENT,
+            sceneId:scene.id,
+            action:'edit', 
+            aid:newEntityAid, 
+            data:parentAid, 
+            pp:parentTransform.p.toJSON(), 
+            pr:parentTransform.r.toJSON(),
+            sp:newEntityPosition.toJSON(),
+            sr:new Vector3({x:0, y:0, z:0})
+        }, scene, player)
+    }, 500)
 }

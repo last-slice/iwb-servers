@@ -251,7 +251,11 @@ export function validateSceneToken(req:any, res:any){
                 );
                 console.log('result is', result.data)
                 if(result.data.valid){
-                    res.status(200).send({valid: true, token: result.data.token})
+                    res.status(200).send({valid: true, 
+                      token: result.data.token, 
+                      size:getFolderSize(
+                        path.join(status.DEBUG ? process.env.DEV_DOWNLOAD_UGC_DIRECTORY : process.env.PROD_DOWNLOAD_UGC_DIRECTORY, req.body.user))
+                      })
                 }else{
                     res.status(200).send({valid: false})
                 }
@@ -270,6 +274,8 @@ export function validateSceneToken(req:any, res:any){
 export async function postNewAssetData(req:any, res:any){
     const {name, polycount, image, scale, type, category, description, style, anims} = req.body
 
+    // let jsonScale = JSON.parse(scale)
+    // let newScale = {x:jsonScale.x.toFixed(2), y:jsonScale.x.toFixed(2), z:jsonScale.z.toFixed(2)}
     let assetData:any = {
         n:name,
         fs:req.file.size,
@@ -291,7 +297,7 @@ export async function postNewAssetData(req:any, res:any){
 
     console.log('need to send asset data to iwb server ', assetData)
 
-    const result = await Axios.post('https://dcl-iwb.co/toolset/asset/uploaded', assetData,
+    const result = await Axios.post((status.DEBUG ? "http://localhost:2751/" : "https://dcl-iwb.co/toolset/qa/") + 'asset/uploaded', assetData,
         {headers: {                      
             'Authorization': `Bearer ${req.key}`,
             'AssetAuth': `Bearer ${process.env.IWB_UPLOAD_AUTH_KEY}`,
@@ -623,4 +629,26 @@ export function returnQueue(res:any){
  `;
 
  res.send(html);
+}
+
+function getFolderSize(folderPath: string): number {
+  let totalSize = 0;
+
+  function calculateSize(directory: string) {
+      const files = fs.readdirSync(directory);
+      for (const file of files) {
+          const fullPath = path.join(directory, file);
+          const stats = fs.statSync(fullPath);
+
+          if (stats.isDirectory()) {
+              calculateSize(fullPath);
+          } else {
+              totalSize += stats.size;
+          }
+      }
+  }
+
+  calculateSize(folderPath);
+  console.log('folder size is', totalSize)
+  return totalSize;
 }

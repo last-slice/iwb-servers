@@ -12,6 +12,32 @@ import { DEBUG } from "../App";
 
 const NFTStorageAuth = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDlCNTIyZDczN0UyOEMwOEFmNzhiQzM2Njk5QzVhMmM2ZDI4NDFBRmYiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY5NzI0MDY4MjY4OCwibmFtZSI6IklXQiBVUGxvYWRlciJ9.7nIofYjxMC6-y5RkNI6IYIOrxRritSH-NKGCz8KuMX4"
 
+const styles = [
+  "Choose a Style",
+  "Cyberpunk",
+  "Dunes & Caves",
+  "Steampunk",
+  "Western",
+  "Fantasy",
+  "Pirates",
+  "Sci-Fi & Space",
+  "House/Modern",
+  "Weather/Environment",
+  "Gallery/Venue",
+  "Asian",
+  "Voxels",
+  "Ice",
+  "Water",
+  "Animals & WIldlife",
+  "Holiday",
+  "User Interface",
+  "Building Block",
+  "City & Commercial",
+  "Old Fashioned",
+  "Parks & Recreation",
+  "Food"
+]
+
 function AudioAssets({handleFileSelect, audioFile, resetLoader,token, sceneKey}) {
     let file = null
 
@@ -37,7 +63,8 @@ function AudioAssets({handleFileSelect, audioFile, resetLoader,token, sceneKey})
   const [modelImage, setModelImage] = useState('')
   const [modelName, setModelName] = useState('')
   const [modelDescription, setModelDescription] = useState('')
-  const [option, setSelectedOption] = useState('Local')
+  const [style, setSelectedOption] = useState(styles[0]); // Set the initial selected option
+
 
   const [imageUploadStatus, setImageUploadStatus] = useState('')
   const [allChecksPassed, setAllChecksPassed] = useState(false)
@@ -135,13 +162,13 @@ const checkModelSize = ()=>{
     formData.append('scale', JSON.stringify({x:1, y:1, z:1}))
     formData.append('type', 'Audio')
     formData.append('description', modelDescription)
-    formData.append('style', option)
+    formData.append('style', style)
     formData.append('category', '')
 
     try {
 
       console.log('upload data is')
-      const result = await axios.post((DEBUG ? "http://localhost:3525" : 'https://deployment.dcl-iwb.co/dcl') + "/upload", formData, 
+      const result = await axios.post((DEBUG ? "http://localhost:3525" : 'https://deployment.dcl-iwb.co') + "/upload", formData, 
         {headers: {
           'UploadAuth': `Bearer ${token}`,
           'SceneAuth': `Bearer ${sceneKey}`,
@@ -288,9 +315,10 @@ const checkModelSize = ()=>{
         <td className="closed" style={{padding:'1em'}}>
       <div className="ui sub header"><label>Asset Style</label></div>
       <div className="" style={{width:'100%'}}>
-        <select value={option} onChange={handleOptionChange}>
-              <option className="ui dropdown menu item" value="Local">Local</option>
-              <option className="ui dropdown menu item" value="Stream">Stream</option>
+        <select value={style} onChange={handleOptionChange}>
+        {styles.map((style, i)=>(
+              <option className="ui dropdown menu item" key={i} value={style}>{style}</option>
+            ))}
             </select>
        </div>
           </td>

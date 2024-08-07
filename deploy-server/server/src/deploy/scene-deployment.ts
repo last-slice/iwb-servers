@@ -207,7 +207,7 @@ async function buildBucket(key:string, bucket:any, data:any){
         if(data.url){
             let res = await fetch(data.url)
             let json = await res.json()
-            assets = json
+            assets = json.hasOwnProperty("items") ? json.items : json
             // console.log('assets are ', assets)
         }
 

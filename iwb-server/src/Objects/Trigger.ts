@@ -29,6 +29,7 @@ export class TriggerComponentSchema extends Schema{
 export class TriggerComponent extends Schema{
     @type("boolean") isArea:boolean
     @type([TriggerComponentSchema]) triggers:ArraySchema<TriggerComponentSchema>
+    trigger:any
 }
 
 export async function createTriggerComponent(scene:Scene, aid:string, data?:any){
@@ -95,8 +96,8 @@ export function editTriggerComponent(data:any, scene:Scene){
             case 'add':
                 let schema = new TriggerComponentSchema()
                 schema.type = triggerData.type
-                schema.input = 0    
-                schema.pointer = 0
+                schema.input = triggerData.input ? triggerData.input : 0
+                schema.pointer = triggerData.pointer ? triggerData.pointer : 0
 
                 schema.caid = new ArraySchema<string>()
                 schema.ctype = new ArraySchema<string>()

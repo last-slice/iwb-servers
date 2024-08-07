@@ -21,7 +21,6 @@ export class ActionComponentSchema extends Schema{
     @type("boolean") loop:boolean
     @type("number") showSize:number
     @type("string") showPos:string
-    @type("number") startDTimer:number
     @type("string") startDId:string
 
     @type("string") dialID:string
@@ -86,6 +85,7 @@ export async function createActionComponent(scene:Scene, aid:string, data:any){
 }
 
 export function editActionComponent(data:any, scene:Scene){
+    console.log('editing action component')
     let actions = scene[COMPONENT_TYPES.ACTION_COMPONENT].get(data.aid)
     if(!actions){
         scene[COMPONENT_TYPES.ACTION_COMPONENT].set(data.aid, new ActionComponent())
@@ -113,10 +113,12 @@ export function editActionComponent(data:any, scene:Scene){
             }
             newAction['id'] = generateRandomId(6)
             actions.actions.push(newAction)
+            // console.log('new action is', newAction)
             break;
 
-        case 'delete':
+        case 'delete':            
             let toDelete = actions.actions.findIndex($=> $.id === data.data.id)
+            console.log('deleting action', actions.actions[toDelete])
             if(toDelete >= 0){
                 actions.actions.splice(toDelete, 1)
                 removeActionFromTriggers(scene, data.data.id)

@@ -14,6 +14,7 @@ function App() {
   const [selectedAssetType, setSelectedAssetType] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [assetUploadToken, setUploadToken] = useState(null)
+  const [totalUGCSize, setTotalUGCSize] = useState(50000)
 
   const [user, setUser] = useState('');
   const [sceneKey, setKey] = useState('');
@@ -27,6 +28,7 @@ function App() {
     console.log('urlparts', urlParts)
     
     if (urlParts.length === 6) {
+      console.log('we have correct parts')
       // Extract the dynamic values
       const value1 = urlParts[4];
       const value2 = urlParts[5];
@@ -44,8 +46,9 @@ function App() {
         );
         
         if(result.data.valid){
-          console.log('we ahv valid token', result.data.token)
+          console.log('we ahv valid token', result.data)
           setUploadToken(result.data.token)
+          setTotalUGCSize((result.data.size / (1024 ** 2)).toFixed(2))
         }else{
           console.log('error getting upload token')
         }
@@ -104,7 +107,7 @@ function App() {
 
 
       {selectedAssetType === '3D' && 
-      <ThreeDAssets sceneKey={sceneKey} token={assetUploadToken} handleFileSelect={handleFileSelect} glbFile={selectedFile} resetLoader={resetLoader}/>
+      <ThreeDAssets sceneKey={sceneKey} size={totalUGCSize} token={assetUploadToken} handleFileSelect={handleFileSelect} glbFile={selectedFile} resetLoader={resetLoader}/>
       }
 
       {selectedAssetType === 'Audio' && 

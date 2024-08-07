@@ -1,6 +1,6 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
-import { ACTIONS, COMPONENT_TYPES, GAME_TYPES, PLAYER_GAME_STATUSES, SERVER_MESSAGE_TYPES, Triggers } from "../utils/types";
+import { ACTIONS, CATALOG_IDS, COMPONENT_TYPES, GAME_TYPES, PLAYER_GAME_STATUSES, SERVER_MESSAGE_TYPES, Triggers } from "../utils/types";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { Client, generateId } from "colyseus";
 import { Vector3 } from "./Transform";
@@ -15,6 +15,8 @@ import { addEntity, editParentingComponent } from "./Parenting";
 import { createStateComponent, editStateComponent } from "./State";
 import { createCounterComponent } from "./Counter";
 import { editNameComponent } from "./Names";
+import { itemManager } from "../app.config";
+import { addItemComponents, createNewItem } from "../rooms/messaging/ItemHandler";
 
 let noBackup:any[] = [
     "gameCountdown",
@@ -45,6 +47,7 @@ export class GameComponent extends Schema{
     @type("string") startScreen:string = "iwb"
     @type("string") loadingScreen:string
     @type("string") type:string
+    @type("string") currentLevelAid:string
     @type("number") startLevel:number
     @type("number") currentLevel:number
     @type("boolean") disableTeleport:boolean = false
@@ -56,23 +59,23 @@ export class GameComponent extends Schema{
     @type(Vector3) sp:Vector3 = new Vector3({x:0, y:0, z:0})
     @type(Vector3) ss:Vector3 = new Vector3({x:1, y:1, z:1})
 
-    @type("number") minTeams:number = 2
+    @type("number") minTeams:number
     @type("boolean") playerTimers:boolean
     @type(["string"]) variables:ArraySchema<string> = new ArraySchema()
     @type({map:"number"}) pvariables:MapSchema<number> = new MapSchema()
-    @type({map: TeamComponent}) teams:MapSchema<TeamComponent> = new MapSchema()
+    @type({map: TeamComponent}) teams:MapSchema<TeamComponent>
 
 
     //gameplay variables
-    @type(["string"]) lobby:ArraySchema<string> = new ArraySchema()
+    @type(["string"]) lobby:ArraySchema<string>
     @type("number") gameCountdown:number
-    @type("boolean") assigningPlayer:boolean = false
-    @type("boolean") startingSoon:boolean = false
-    @type("boolean") started:boolean = false
-    @type("boolean") ended:boolean = false
-    @type("boolean") reset:boolean = false
-    @type("string") winner:string = ""
-    @type("string") winnerId:string = ""
+    @type("boolean") assigningPlayer:boolean
+    @type("boolean") startingSoon:boolean
+    @type("boolean") started:boolean
+    @type("boolean") ended:boolean
+    @type("boolean") reset:boolean
+    @type("string") winner:string
+    @type("string") winnerId:string
     gameManager: GameManager
 }
 
@@ -82,6 +85,7 @@ export function createGameComponent(room:IWBRoom, scene:Scene, aid:string, data?
     component.name = scene.n + " Game"
     for(let key in data){
         if(key === "teams"){
+            component.teams = new MapSchema()
             for(let id in data[key]){
                 // console.log('create game component team', data[key])//
                 let team = data[key][id]
@@ -118,13 +122,14 @@ export function createGameComponent(room:IWBRoom, scene:Scene, aid:string, data?
     //could someone hack these and change the state of the game elsewhere in the scene? we would have to prevent this
 }
 
-export function deleteGameComponent(scene:Scene, aid:string){
+export function deleteGameComponent(room:IWBRoom, scene:Scene, player:Player, aid:string){
     console.log('deleting game component, clean up any timers and things')
     deleteGameActions(scene, {aid:aid})
+    removeLevels(room, scene, player)
     //delete timers
 }
 
-export async function editGameComponent(room:IWBRoom, client:Client, info:any, scene:Scene){
+export async function editGameComponent(room:IWBRoom, client:Client, info:any, scene:Scene, player:Player){
     console.log('editing game component')
     let itemInfo:any = scene[COMPONENT_TYPES.GAME_COMPONENT].get(info.aid)
     if(itemInfo){
@@ -160,7 +165,8 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
             case 'delete-team':
                 itemInfo.teams.delete(info.team)
                 break;
-            case 'add-team':
+            
+                case 'add-team':
                 let id = generateId(5)
                 itemInfo.teams.set(id, new TeamComponent())
                 let team = itemInfo.teams.get(id)
@@ -208,6 +214,7 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
                         }
                         else if(key === "pvariables" && !isNaN(parseFloat(info[key].value))){
                             itemInfo.pvariables.set(info[key].id, parseFloat(info[key].value))
+                            addPlayerVariableItem(room, scene, client, player, info[key])
                         }
                         else{
                             itemInfo[key] = info[key]
@@ -219,7 +226,7 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
             case 'addlevel':
                 console.log('adding game level')
                 let transform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(info.aid)
-                createGameLevel(room, client, scene, {position:transform.p}, scene[COMPONENT_TYPES.LEVEL_COMPONENT].size + 1)
+                createGameLevel(room, client, scene, player, {position:transform.p}, scene[COMPONENT_TYPES.LEVEL_COMPONENT].size + 1)
                 break;
 
             case 'edit-type':
@@ -230,8 +237,7 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
                 //to do
 
                 //remove all current game variables and players etc
-                itemInfo.teams.clear()
-                itemInfo.minTeams = undefined
+                itemInfo.teams && itemInfo.teams.clear()
 
                 //remove all init actions
                 deleteGameActions(scene, info)
@@ -241,18 +247,33 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
                 //do other clean up of things specific to both game types
 
                 itemInfo.type = info.gameType
-                addGameConsoleTriggers(room, scene, info.aid, itemInfo, 0, 2)
+                await addGameConsoleTriggers(room, scene, info.aid, itemInfo, 0, 2)
 
                 switch(info.gameType){
                     // case GAME_TYPES.SOLO:
                     case 'SOLO':
                         console.log('chose solo game mode, load config here')
+                        itemInfo.startLevel = 1
+                        itemInfo.currentLevel = 0
+                        createSoloEntities(room, client, scene, player, info.aid, itemInfo)
                         break;
 
                     // case GAME_TYPES.MULTIPLAYER:
                     case 'MULTIPLAYER':
+                        itemInfo.minTeams = 1
+                        itemInfo.lobby = new ArraySchema()
+                        itemInfo.teams = new MapSchema()
+                        itemInfo.assigningPlayer = false
+                        itemInfo.startingSoon = false
+                        itemInfo.started = false
+                        itemInfo.ended = false
+                        itemInfo.reset = false
+                        itemInfo.winner = ""
+                        itemInfo.winnerId = ""
+                        // itemInfo
+                        
                         //add multiplayer scene entities and variables
-                        createMultiplayerEntities(room, client, scene, info.aid, itemInfo)
+                        createMultiplayerEntities(room, client, scene, player, info.aid, itemInfo)
                         break;
                 }
                 break;
@@ -260,19 +281,44 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
     }
 }
 
-export function addGameComponent(room:IWBRoom, client:Client, scene:Scene, item:any, catalogInfo:any){
-    // let gameComponentInfo:any = {
-    //     id: scene.id,
-    //     name: scene.n + " Game",
-    //     description: "IWB Game",
-    //     type:0,
-    //     startLevel: 1,
-    // }
+function addPlayerVariableItem(room:IWBRoom, scene:Scene, client:Client, player:Player, variable:any){
+    let emptyCatalogItem = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
+    if(emptyCatalogItem){
+        emptyCatalogItem.n = "Player Var - " + variable.id
+        let item:any = {
+            aid:generateId(5),
+            sceneId:scene.id,
+            id:CATALOG_IDS.EMPTY_ENTITY,
+            position:{x:0, y:0, z:0},
+            rotation:{x:0, y:0, z:0},
+            scale:{x:0, y:0, z:0},
+            parent:1
+        }
 
-    // createGameComponent(scene, item.aid, gameComponentInfo)
-    // addGameConsoleTriggers(scene, item.aid, 0, 2)
-    // createGameLevel(room, client, scene, item, 1)  
+        emptyCatalogItem.components = {
+            Counters: {
+                defaultValue: parseFloat(variable.value),
+            }
+        }
+
+        createNewItem(room, client, scene, item, emptyCatalogItem)
+        addItemComponents(room, client, scene, player, item, emptyCatalogItem)
+    }
 }
+
+// export function addGameComponent(room:IWBRoom, client:Client, scene:Scene, item:any, catalogInfo:any){
+//     // let gameComponentInfo:any = {
+//     //     id: scene.id,
+//     //     name: scene.n + " Game",
+//     //     description: "IWB Game",
+//     //     type:0,
+//     //     startLevel: 1,
+//     // }
+
+//     // createGameComponent(scene, item.aid, gameComponentInfo)
+//     // addGameConsoleTriggers(scene, item.aid, 0, 2)
+//     // createGameLevel(room, client, scene, item, 1)  
+// }
 
 async function addGameConsoleTriggers(room:IWBRoom, scene:Scene, aid:string, gameInfo:GameComponent, index:number, max:number){
     console.log('add game triggers')
@@ -285,6 +331,26 @@ async function addGameConsoleTriggers(room:IWBRoom, scene:Scene, aid:string, gam
                 {input:2, pointer:1, actions:[], type:Triggers.ON_INPUT_ACTION}
             ]
         })
+    }else{
+        editTriggerComponent({
+            aid:aid,
+            action:"add",
+            data:{
+                type:Triggers.ON_INPUT_ACTION,
+                input: 1,
+                pointer:1
+            }
+        }, scene)
+
+        editTriggerComponent({
+            aid:aid,
+            action:"add",
+            data:{
+                type:Triggers.ON_INPUT_ACTION,
+                input: 2,
+                pointer:1
+            }
+        }, scene)
     }
 
     let pointerInfo = scene[COMPONENT_TYPES.POINTER_COMPONENT].get(aid)
@@ -301,12 +367,12 @@ async function addGameConsoleTriggers(room:IWBRoom, scene:Scene, aid:string, gam
         {
             "actions": [
                 {
-                    "name": "Attempt Start Game",
-                    "type": "attempt_game_start"
+                    "name": "Attempt Game Start",
+                    "type": ACTIONS.ATTEMPT_GAME_START
                 },
                 {
                     "name": "End Game",
-                    "type": "end_game"
+                    "type": ACTIONS.END_GAME
                 }
             ]
         }
@@ -320,25 +386,27 @@ async function addGameConsoleTriggers(room:IWBRoom, scene:Scene, aid:string, gam
     let startTrigger = triggerInfo.triggers.find(($:any)=> $.input === 1 && $.pointer === 1 && $.type === Triggers.ON_INPUT_ACTION)
     let endTrigger = triggerInfo.triggers.find(($:any)=> $.input === 2 && $.pointer === 1 && $.type === Triggers.ON_INPUT_ACTION)
 
-    let data:any = {
-        aid:aid,
-        action:"addaction",
-        data:{
-            tid:startTrigger.id,
-            id:startAction.id,
+    if(startTrigger && endTrigger){
+        let data:any = {
+            aid:aid,
+            action:"addaction",
+            data:{
+                tid:startTrigger.id,
+                id:startAction.id,
+            }
         }
-    }
-    editTriggerComponent(data, scene)
-
-    data = {
-        aid:aid,
-        action:"addaction",
-        data:{
-            tid:endTrigger.id,
-            id:endAction.id,
+        editTriggerComponent(data, scene)
+    
+        data = {
+            aid:aid,
+            action:"addaction",
+            data:{
+                tid:endTrigger.id,
+                id:endAction.id,
+            }
         }
+        editTriggerComponent(data, scene)
     }
-    editTriggerComponent(data, scene)
 }
 
 export async function deleteGameActions(scene:Scene, info:any){
@@ -350,16 +418,13 @@ export async function deleteGameActions(scene:Scene, info:any){
         endAction ? await editActionComponent({action:"delete", aid:info.aid, data:{id:endAction.id}}, scene) : null
     }
 }
+
 export function sceneHasGame(scene:Scene){
     let count = 0
     scene[COMPONENT_TYPES.GAME_COMPONENT].forEach((component)=>{
         count++
     })
     return count > 0
-}
-
-export function removeGameComponent(room:IWBRoom, scene:Scene, player:Player,aid:string, info:any){
-    removeLevels(room, scene, player)
 }
 
 export function attemptGameStart(room:IWBRoom, client:any, info:any){
@@ -398,7 +463,7 @@ export function attemptGameEnd(room:IWBRoom, client:any, info:any){
     // }
 
     let player = room.state.players.get(client.userData.userId)
-    // let scene = room.state.scenes.get(info.sceneId)
+    // let scene = room.state.scenes.get(info.sceneId)//
     if(player){
         player.endGame()
         if(player.gameData){
@@ -461,11 +526,11 @@ export function garbageCollectRealmGames(room:IWBRoom){
     })
 }
 
-async function createMultiplayerEntities(room:IWBRoom, client:Client, scene:Scene, aid:string, gameInfo:any){
+async function createMultiplayerEntities(room:IWBRoom, client:Client, scene:Scene, player:Player, aid:string, gameInfo:any){
     //create game state entity, state
     let currentParentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex($=> $.aid === aid)
     if(currentParentIndex >= 0){
-        let newAid = await addEntity(room, client, scene, currentParentIndex)
+        let newAid = await addEntity(room, client, scene, player, currentParentIndex)
         await editNameComponent({
             aid:newAid,
             value:"Game State Entity"
@@ -508,6 +573,42 @@ async function createMultiplayerEntities(room:IWBRoom, client:Client, scene:Scen
         }, scene)
         await createCounterComponent(scene, newAid, {
             defaultValue:10
+        })
+    }
+}
+
+async function createSoloEntities(room:IWBRoom, client:Client, scene:Scene, player:Player, aid:string, gameInfo:any){
+    await createSoloStartLevelEntity(room, client, scene, player, aid, gameInfo)
+    await createSoloCurrentLevelEntity(room, client, scene, player, aid, gameInfo)
+}
+
+async function createSoloStartLevelEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, aid:string, gameInfo:GameComponent){
+    let currentParentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex($=> $.aid === aid)
+    if(currentParentIndex >= 0){
+        let newAid = await addEntity(room, client, scene, player, currentParentIndex)
+        await editNameComponent({
+            aid:newAid,
+            value:"Game Start Level Entity"
+        }, scene)
+
+        await createCounterComponent(scene, newAid, {
+            defaultValue:gameInfo.startLevel
+        })
+        gameInfo.currentLevelAid = newAid 
+    }
+}
+
+async function createSoloCurrentLevelEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, aid:string, gameInfo:any){
+    let currentParentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex($=> $.aid === aid)
+    if(currentParentIndex >= 0){
+        let newAid = await addEntity(room, client, scene, player, currentParentIndex)
+        await editNameComponent({
+            aid:newAid,
+            value:"Game Current Level Entity"
+        }, scene)
+
+        await createCounterComponent(scene, newAid, {
+            defaultValue:0
         })
     }
 }

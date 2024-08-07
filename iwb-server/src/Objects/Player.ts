@@ -8,6 +8,8 @@ import axios from "axios";
 import { Scene } from "./Scene";
 import { IWBComponent } from "./IWB";
 import { removeStalePlayer } from "./Game";
+import { Vector3 } from "./Transform";
+import { garbageCollectPlaylist } from "./Playlist";
 
 export class PlayerManager {
     
@@ -47,15 +49,23 @@ export class SelectedAsset extends Schema {
   @type(IWBComponent) iwbData:IWBComponent
   @type("boolean") grabbed:boolean
   @type("boolean") ugc:boolean
+  @type({map:Vector3}) childTransform:MapSchema
 
   constructor(info:any){
     super()
     this.iwbData = new IWBComponent(info.componentData)
     this.catalogId = info.catalogId
     this.assetId = info.assetId
-    this.catalogAsset = info.catalogAsset
+    this.catalogAsset = info.isCatalogSelect
     this.grabbed = info.grabbed ? info.grabbed : undefined
     this.ugc = this.iwbData.ugc
+
+    if(info.childTransform){
+      this.childTransform = new MapSchema()
+      for(let aid in info.childTransform){
+        this.childTransform.set(aid, info.childTransform[aid])
+      }
+    }
   }
 }
 
@@ -117,6 +127,14 @@ export class Player extends Schema {
     parent:any
     parentEntity:any
     canTeleport:any
+
+
+    //game objects
+    canAttack:boolean
+    hasWeaponEquipped:boolean
+    inCooldown:boolean
+    weapon:any
+    hitBox:any
 
     constructor(room:IWBRoom, client:Client){
         super()
@@ -223,7 +241,7 @@ export class Player extends Schema {
       async saveToDB(){
         // console.log('saving player updates to db', this.dclData.userId)
 
-        // await this.saveSetttingsDB()
+        await this.saveSetttingsDB()
 
         
         // let stats:any = []
@@ -281,6 +299,9 @@ export class Player extends Schema {
        
        updatePlayMode(mode:SCENE_MODES){
         this.mode = mode
+        if(this.mode === SCENE_MODES.BUILD_MODE){
+          garbageCollectPlaylist(this.room)
+        }
       }
 
       async cancelPendingDeployment(){

@@ -92,45 +92,76 @@ export class ItemManager{
     async saveNewAsset(user:string, data:any){
         console.log('saving new asset', user, data)
         let asset = await this.createNewAsset(data, true)
-        // this.newItemsToDeploy.push(asset)
-    
-        // this.items.set(asset.id, asset)
 
-        let player:Player = iwbManager.findUser(user)
-        if(player){
-            console.log('we have player, get their info')
-            asset.on = "" + player.dclData.name
-            player.uploadAsset(asset, true)
+        // let world = iwbManager.worlds.find((w)=> w.owner === user).ens
+        // if(!world){
+        //     return
+        // }//
 
-            pushPlayfabEvent(
-                SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, 
-                player, 
-                [{name:data.n, type:data.ty}]
-            )
+        let ownerWorldsOnline:IWBRoom[] = iwbManager.rooms.filter(($:any)=> $.owner === user)
+        ownerWorldsOnline.forEach((room:IWBRoom)=>{
+            console.log('world is already online, add to cached catalog')
+            room.state.realmAssets.set(asset.id, asset)
+            room.broadcast(SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, asset)
 
-        }else{
-            asset.on = "" + iwbManager.worlds.find((w)=> w.owner === user).worldName
-            console.log("player no longer here, need to add to their profile")
+            if(room.state.world === data.world){
+                room.state.catalogVersion += 1 
+                room.state.realmAssetsChanged = true
+            }
+        })
 
+        if(ownerWorldsOnline.length === 0){
+            console.log('world is not found, need to log in and add to catalog')
             let userData = await playfabLogin(user)
             let metadata = await fetchUserMetaData(userData)
 
-            let catalog = await fetchPlayfabFile(metadata, 'catalogs.json')
-
-            asset.pending = true
-            asset.ugc = true
-            
-            catalog.push(asset)
-            await this.uploadFile(data.o, "catalogs.json", catalog)
-
-            player.playFabData.PlayFabId,
-            
-            pushPlayfabEvent(
-                SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, 
-                {playfabData:{PlayFabId:userData.PlayFabId}}, 
-                [{name:data.n, type:data.ty}]
-            )
+            let json = await fetchPlayfabFile(metadata, 'catalogs.json')
+            json.version += 1
+            json.items.push(asset)
+            await this.uploadFile(data.o, "catalogs.json", json)
         }
+
+        // pushPlayfabEvent(
+        //     SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, 
+        //     player, 
+        //     [{name:data.n, type:data.ty}]
+        // )
+
+        // let player:Player = iwbManager.findUser(user)
+        // if(player){
+        //     console.log('we have player, get their info')
+        //     asset.on = "" + player.dclData.name
+        //     player.uploadAsset(asset, true)
+
+        //     pushPlayfabEvent(
+        //         SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, 
+        //         player, 
+        //         [{name:data.n, type:data.ty}]
+        //     )
+
+        // }else{
+        //     asset.on = "" + iwbManager.worlds.find((w)=> w.owner === user).worldName
+        //     console.log("player no longer here, need to add to their profile")
+
+        //     let userData = await playfabLogin(user)
+        //     let metadata = await fetchUserMetaData(userData)
+
+        //     let catalog = await fetchPlayfabFile(metadata, 'catalogs.json')
+
+        //     asset.pending = true
+        //     asset.ugc = true
+            
+        //     catalog.push(asset)
+        //     await this.uploadFile(data.o, "catalogs.json", catalog)
+
+        //     player.playFabData.PlayFabId,
+            
+        //     pushPlayfabEvent(
+        //         SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, 
+        //         {playfabData:{PlayFabId:userData.PlayFabId}}, 
+        //         [{name:data.n, type:data.ty}]
+        //     )
+        // }
     }
 
     async createNewAsset(data:any, ugc?:boolean){
@@ -151,18 +182,23 @@ export class ItemManager{
             bb:data.bb,
             sty:data.sty ? data.sty : data.style ? data.style : undefined,
             anim: data.anims ? data.anims : undefined,
-            v: ugc ? iwbManager.worlds.find((w)=> w.owner === data.o).cv + 1 : iwbManager.version + 1
+            ugc: ugc? true : undefined,
+            pending: true
         }
+
+        let version = ugc ? iwbManager.worlds.find((w)=> w.owner === data.o).cv + 1 : iwbManager.version + 1
+        asset.v = version
+
         if(data.bb){
             if(data.ty === "3D"){
                 if(typeof data.bb === "string"){
                     data.bb = JSON.parse(data.bb)
                 }
                 asset.bb = data.bb
-                asset.bb = {x:parseFloat(data.bb.x.toFixed(2)), y:parseFloat(data.bb.y.toFixed(2)), z:parseFloat(data.bb.z.toFixed(2))  } 
+                asset.bb = {x:parseFloat(data.bb.x.toFixed(2)), y:parseFloat(data.bb.z.toFixed(2)), z:parseFloat(data.bb.y.toFixed(2))  } 
             }else{
                 let size = JSON.parse(data.bb)
-                asset.bb = {x:parseFloat(size.x.toFixed(2)), y:parseFloat(size.y.toFixed(2)), z:parseFloat(size.z.toFixed(2))  } 
+                asset.bb = {x:parseFloat(size.x.toFixed(2)), y:parseFloat(size.z.toFixed(2)), z:parseFloat(size.y.toFixed(2))  } 
 
             }   
             

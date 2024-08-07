@@ -45,6 +45,12 @@ export function editTransform(client:Client, data:any, scene:Scene){
       switch(data.modifier){
         case EDIT_MODIFIERS.POSITION:
             switch(data.axis){
+              case 'ALL':
+                transform.p.x = data.x
+                transform.p.y = data.y
+                transform.p.z = data.z
+                break;
+
                 case 'x':
                     if(data.manual){
                       transform.p.x = data.value === "" ? 0 : data.value
@@ -73,6 +79,11 @@ export function editTransform(client:Client, data:any, scene:Scene){
 
         case EDIT_MODIFIERS.ROTATION:
             switch(data.axis){
+              case 'ALL':
+                transform.r.x = data.x
+                transform.r.y = data.y
+                transform.r.z = data.z
+                break;
                 case 'x':
                     if(data.manual){
                       transform.r.x = data.value === "" ? 0 : data.value
@@ -101,6 +112,11 @@ export function editTransform(client:Client, data:any, scene:Scene){
 
         case EDIT_MODIFIERS.SCALE:
             switch(data.axis){
+              case 'ALL':
+                transform.r.x = data.x
+                transform.r.y = data.y
+                transform.r.z = data.z
+                break;
                 case 'x':
                     if(data.manual){
                       transform.s.x = data.value === "" ? 0 : data.value

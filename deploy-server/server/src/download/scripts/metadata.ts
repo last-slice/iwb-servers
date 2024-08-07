@@ -25,6 +25,10 @@ export async function writeSceneMetadata(location:string, data:any, image:string
     metadata.display.description = description
     metadata.display.navmapThumbnail = (image === "" || image === undefined ? "images/scene-thumbnail.png" : "images/" + image)
     metadata.owner = owner
+    metadata.contact = {
+        name: owner,
+        email: "lastraum@lastslice.co"
+    }
 
     metadata.scene.parcels = []
     metadata.scene.base = ""

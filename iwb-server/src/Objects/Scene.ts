@@ -4,7 +4,7 @@ import { ActionComponent, ActionComponentSchema } from "./Actions";
 import { AnimatorComponent, createAnimationComponent } from "./Animator";
 import { CounterComponent, CounterBarComponent, createCounterComponent } from "./Counter";
 import { GltfComponent, createGLTFComponent } from "./Gltf";
-import { NameComponent } from "./Names";
+import { createNameComponent, NameComponent } from "./Names";
 import { ParentingComponent } from "./Parenting";
 import { PointerComponent, PointerComponentEvent, createPointerComponent } from "./Pointers";
 import { SoundComponent, createAudioSourceComponent } from "./Sound";
@@ -16,11 +16,11 @@ import { VisibilityComponent } from "./Visibility";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { iwbManager } from "../app.config";
 import { fetchPlayfabMetadata, fetchPlayfabFile } from "../utils/Playfab";
-import { RewardComponent } from "./Rewards";
-import { MeshRendererComponent } from "./MeshRenderers";
+import { checkRewardCache, createRewardComponent, RewardComponent } from "./Rewards";
+import { createMeshRendererComponent, MeshRendererComponent } from "./MeshRenderers";
 import { MaterialComponent, createMaterialComponent } from "./Materials";
 import { VideoComponent } from "./Video";
-import { IWBComponent, setIWBComponent } from "./IWB";
+import { checkIWBCache, IWBComponent, setIWBComponent } from "./IWB";
 import { NftShapeComponent, createNftShapeComponent } from "./NftShape";
 import { MeshColliderComponent } from "./MeshColliders";
 import { TextureComponent } from "./Textures";
@@ -35,6 +35,7 @@ import { createLiveComponent, LiveShowComponent } from "./LiveShow";
 import { createTeamComponent, TeamComponent } from "./Team";
 import { createGameItemComponent, GameItemComponent } from "./GameItem";
 import { createDialogComponent, DialogComponent } from "./Dialog";
+import { createPlaylistComponent, PlaylistComponent } from "./Playlist";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -109,6 +110,10 @@ export class Scene extends Schema {
     @type({map:TeamComponent}) [COMPONENT_TYPES.TEAM_COMPONENT]:MapSchema<TeamComponent>
     @type({map:GameItemComponent}) [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:MapSchema<GameItemComponent>
     @type({map:DialogComponent}) [COMPONENT_TYPES.DIALOG_COMPONENT]:MapSchema<DialogComponent>
+    @type({map:RewardComponent}) [COMPONENT_TYPES.REWARD_COMPONENT]:MapSchema<RewardComponent>
+    @type({map:PlaylistComponent}) [COMPONENT_TYPES.PLAYLIST_COMPONENT]:MapSchema<PlaylistComponent>
+
+
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent>
 
     // @type({map:"string"}) [COMPONENT_TYPES.CLICK_AREA_COMPONENT]:MapSchema<string>
@@ -121,6 +126,9 @@ export class Scene extends Schema {
     parentEntity:any
     entities:any[] = []
     components:any
+    checkEnabled:boolean
+    checkDisabled:boolean
+    loaded:boolean
 
     constructor(room?:IWBRoom, data?:any) {
         super(data)
@@ -174,11 +182,23 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.TEAM_COMPONENT] = new MapSchema<TeamComponent>()
         this[COMPONENT_TYPES.GAME_ITEM_COMPONENT] = new MapSchema<GameItemComponent>()
         this[COMPONENT_TYPES.DIALOG_COMPONENT] = new MapSchema<DialogComponent>()
+        this[COMPONENT_TYPES.REWARD_COMPONENT] = new MapSchema<RewardComponent>()
+        this[COMPONENT_TYPES.PLAYLIST_COMPONENT] = new MapSchema<PlaylistComponent>()
         // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()
 
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
+                    case COMPONENT_TYPES.PLAYLIST_COMPONENT:
+                        for (const aid in data[component]) {
+                            createPlaylistComponent(this, aid,  data[component][aid])
+                        }
+                        break;
+                    case COMPONENT_TYPES.REWARD_COMPONENT:
+                        for (const aid in data[component]) {
+                            createRewardComponent(this, aid,  data[component][aid])
+                        }
+                        break;
                     case COMPONENT_TYPES.DIALOG_COMPONENT:
                         for (const aid in data[component]) {
                             createDialogComponent(this, aid,  data[component][aid])
@@ -236,7 +256,8 @@ export class Scene extends Schema {
 
                     case COMPONENT_TYPES.NAMES_COMPONENT:
                         for (const aid in data[component]) {
-                            this[COMPONENT_TYPES.NAMES_COMPONENT].set(aid, new NameComponent(data[component][aid]))
+                            createNameComponent(this, aid, data[component][aid], true)
+                            // this[COMPONENT_TYPES.NAMES_COMPONENT].set(aid, new NameComponent(data[component][aid]))
                         }
                         break;
 
@@ -355,7 +376,8 @@ export class Scene extends Schema {
 
                     case COMPONENT_TYPES.MESH_RENDER_COMPONENT:
                         for (const aid in data[component]) {
-                            this[COMPONENT_TYPES.MESH_RENDER_COMPONENT].set(aid, new MeshRendererComponent(data[component][aid]))
+                            data[component][aid].aid = aid
+                            createMeshRendererComponent(this, data[component][aid])
                         }
                         break;
 
@@ -456,8 +478,9 @@ export function initServerScenes(room:IWBRoom, options?:any){
                     iwbManager.fetchRealmData(realmData)
                     .then((realmScenes)=>{
                         iwbManager.fetchRealmScenes(room.state.world, realmScenes)
-                        .then((sceneData)=>{
-                            loadRealmScenes(room, sceneData, options)
+                        .then(async (sceneData)=>{
+                            await loadRealmScenes(room, sceneData, options)
+                            iwbManager.initUsers(room)
                         })
                     })   
                 })
@@ -472,16 +495,28 @@ export function initServerScenes(room:IWBRoom, options?:any){
 export async function initServerAssets(room:IWBRoom){
     let metadata = await fetchPlayfabMetadata(iwbManager.worlds.find((w:any)=> w.ens === room.state.world).owner)
 
-    let catalog = await fetchPlayfabFile(metadata, "catalogs.json")
-    catalog.forEach((item:any)=>{
-    //   if(item.v > this.room.state.cv){
-    //     item.pending = true
-    //   }
-      room.state.realmAssets.set(item.id, item)
-    })
+    let json = await fetchPlayfabFile(metadata, "catalogs.json")
+    let catalogVersion = json.hasOwnProperty("version") ? json.version : 0
+    room.state.catalogVersion = catalogVersion
+
+    if(json.hasOwnProperty("items")){
+        json.items.forEach((item:any)=>{
+            item.v = catalogVersion
+            room.state.realmAssets.set(item.id, item)
+        })
+    }else{
+        json.forEach((item:any)=>{
+            item.v = catalogVersion
+            room.state.realmAssets.set(item.id, item)
+        })
+        room.state.realmAssetsChanged = true
+    }
+
+    // console.log(room.state.realmAssets)
+    console.log('realm catalog version is', room.state.catalogVersion)
 }
 
-export function loadRealmScenes(room:IWBRoom, scenes:any[], options?:any){
+export async function loadRealmScenes(room:IWBRoom, scenes:any[], options?:any){
     let filter = [...scenes.filter((scene)=> scene.w === room.state.world)]
     room.state.sceneCount = filter.length
 
@@ -507,20 +542,29 @@ export async function saveRealm(room:IWBRoom){
     let fileNames:any[] = []
     let data:any[] = []
 
-    let scenes:any[] = getRealmData(room)
+    let scenes:any[] = await getRealmData(room)
 
     if(scenes && scenes.length > 0){
         fileNames.push("" + room.state.world + "-scenes.json")
         data.push(scenes)
     }
 
-    let assets:any[] = []
-    room.state.realmAssets.forEach((item:any)=>{
-        assets.push(item)
-    })
-    if(scenes && scenes.length > 0){
-        fileNames.push("catalogs.json")
-        data.push(assets)
+    if(room.state.realmAssetsChanged){
+        console.log('back up catalog assets')
+        let json:any = {
+            version:room.state.catalogVersion + 1,
+            items:[]
+        }
+
+        room.state.realmAssets.forEach((item:any)=>{
+            json.items.push(item)
+        })
+        if(scenes && scenes.length > 0){
+            fileNames.push("catalogs.json")
+            data.push(json)
+        }
+    }else{
+        console.log('dont back up catalog assets')
     }
 
     if(fileNames.length > 0){
@@ -528,6 +572,11 @@ export async function saveRealm(room:IWBRoom){
         if(world){
             world.builds = scenes.length
             world.updated = Math.floor(Date.now()/1000)
+
+            if(room.state.realmAssetsChanged){
+                world.cv = room.state.catalogVersion + 1
+            }
+            iwbManager.worldsModified = true
         }
 
         iwbManager.addWorldPendingSave(room.state.world, room.roomId, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
@@ -539,56 +588,9 @@ export function getRealmData(room:IWBRoom){
     let scenes:any[] = []
     room.state.scenes.forEach(async (scene:any)=>{
         let jsonScene:any = scene.toJSON()
-        // if(scene.id === "OaT46"){
-        //     // console.log('scene is', jsonScene)
-        //     await checkAssetCacheStates(scene, jsonScene)
-        // }
-       
-        
-
-
-        // Object.values(COMPONENT_TYPES).forEach((component:any)=>{
-        //     if(data[component]){
-        //         for(let aid in data[component]){
-
-        //         }
-        //     }
-        // })
-
+        jsonScene =  await checkAssetCacheStates(scene, jsonScene)
         scenes.push(jsonScene)
     })
-    return scenes
-}
-
-export async function saveRealmScenes(room:IWBRoom){
-    let scenes:any[] = []
-    room.state.scenes.forEach(async (scene:any)=>{
-        let jsonScene:any = scene.toJSON()
-        // console.log('scene is', jsonScene)
-        // await checkAssetCacheStates(scene, jsonScene)
-
-
-        // Object.values(COMPONENT_TYPES).forEach((component:any)=>{
-        //     if(data[component]){
-        //         for(let aid in data[component]){
-
-        //         }
-        //     }
-        // })
-
-        scenes.push(jsonScene)
-    })
-
-    // let world = iwbManager.worlds.find((w)=>w.ens === room.state.world)
-    // if(world){
-    //     world.builds = scenes.length
-    //     world.updated = Math.floor(Date.now()/1000)
-    // }
-
-    // if(scenes.length > 0){
-    //     iwbManager.backupScene(room.state.world, room.state.realmToken, room.state.realmTokenType, room.state.realmId, scenes)
-    // }
-
     return scenes
 }
 
@@ -602,23 +604,12 @@ export function saveRealmAssets(room:IWBRoom){
     // iwbManager.backupFile(room.state.world, "catalogs.json", room.state.realmToken, room.state.realmTokenType, room.state.realmId, assets)
 }
 
-export function checkAssetCacheStates(scene:Scene, jsonScene:any){
-    scene[COMPONENT_TYPES.IWB_COMPONENT].forEach((iwbComponent:IWBComponent, aid:string)=>{
-        console.log('ugc is', iwbComponent.ugc)
-        console.log('type is', iwbComponent.type)
+export async function checkAssetCacheStates(scene:Scene, jsonScene:any){
+    scene[COMPONENT_TYPES.IWB_COMPONENT].forEach(async (iwbComponent:IWBComponent, aid:string)=>{
+        jsonScene = await checkIWBCache(scene, aid, jsonScene) 
+        jsonScene = await checkRewardCache(scene, aid, jsonScene)
     })
-    // scene.parenting.forEach((assetItem:any, index:number)=>{
-    //     let iwbAsset = scene.itemInfo.get(assetItem.aid)
-    //     iwbAsset.editing = false
-    //     iwbAsset.editor = ""
-
-    //     //Reward Component
-    //     let rewardInfo = scene.rewards.get(assetItem.aid)
-    //     if(rewardInfo){
-    //         let jsonItem = rewardInfo.toJSON()
-    //         jsondata[COMPONENT_TYPES.REWARD_COMPONENT][assetItem.aid] = jsonItem
-    //     }
-    // })
+    return jsonScene
 }
 
 // async saveWorldScenes(scenes:Map<string, Scene>){

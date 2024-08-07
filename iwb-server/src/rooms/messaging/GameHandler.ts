@@ -13,4 +13,9 @@ export function iwbSceneGameHandler(room:IWBRoom){
         console.log(SERVER_MESSAGE_TYPES.END_GAME + " received", info)
         attemptGameEnd(room, client, info)
     })
+
+    room.onMessage(SERVER_MESSAGE_TYPES.SHOOT, (client:Client, info:any)=>{
+        console.log(SERVER_MESSAGE_TYPES.SHOOT + " received", info)
+        room.broadcast(SERVER_MESSAGE_TYPES.SHOOT, info)
+    })
 }

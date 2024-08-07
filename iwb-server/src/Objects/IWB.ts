@@ -35,7 +35,7 @@ export function createIWBComponent(room:IWBRoom, scene:Scene, data:any){
     component.ugc = data.item.hasOwnProperty("ugc") ? data.item.ugc : false
     component.pending = data.item.hasOwnProperty("pending") ? data.item.pending : false
     component.style = data.item.sty
-    component.buildVis = true
+    component.buildVis = data.scene.hasOwnProperty("buildVis") ? data.scene.buildVis : true
     component.locked = false
     component.editing = false
     component.priv = false
@@ -52,6 +52,7 @@ export function setIWBComponent(room:IWBRoom, scene:Scene,aid:string, data:any){
                 aid:aid,
                 id:data.id,
                 n:catalogItem.n,
+                buildVis:data.buildVis
             },
             item:{
                 pending:catalogItem.pending,
@@ -90,4 +91,15 @@ function checkAssetPolyAndSize(room:IWBRoom, scene:Scene, id:string){
         })
         scene.si += size
    }
+}
+
+export async function checkIWBCache(scene:Scene, aid:string, jsonScene:any){
+    let itemInfo = scene[COMPONENT_TYPES.IWB_COMPONENT].get(aid)
+    if(itemInfo){
+        let itemJSON = itemInfo.toJSON()
+        itemJSON.editing = false
+        itemJSON.editor = ""
+        jsonScene[COMPONENT_TYPES.REWARD_COMPONENT][aid] = itemJSON
+    }
+    return jsonScene
 }

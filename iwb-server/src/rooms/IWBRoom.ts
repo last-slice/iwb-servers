@@ -1,6 +1,6 @@
 import {Client, Room} from "@colyseus/core";
 import {IWBRoomState} from "./IWBRoomState";
-import { Scene, initServerAssets, initServerScenes, loadRealmScenes, saveRealm, saveRealmScenes } from "../Objects/Scene";
+import { Scene, initServerAssets, initServerScenes, loadRealmScenes, saveRealm } from "../Objects/Scene";
 import { testData } from "../tests/data";
 import { iwbSceneActionHandler } from "./messaging/ActionHandler";
 import { Player } from "../Objects/Player";
@@ -8,40 +8,36 @@ import { SERVER_MESSAGE_TYPES } from "../utils/types";
 import { iwbRewardHandler } from "./messaging/RewardHandler";
 import { addPlayerToWorld, iwbPlayerHandler, removePlayer, savePlayerCache } from "./messaging/PlayerHandler";
 import { itemManager, iwbManager } from "../app.config";
-import { playerLogin, pushPlayfabEvent, updatePlayerDisplayName, updatePlayerInternalData } from "../utils/Playfab";
-import { checkAssetsForEditByPlayer, iwbSceneHandler } from "./messaging/SceneHandler";
-import { iwbItemHandler } from "./messaging/ItemHandler";
-import { iwbSceneGameHandler } from "./messaging/GameHandler";
+import { playerLogin, PLAYFAB_DATA_ACCOUNT, pushPlayfabEvent, updatePlayerDisplayName, updatePlayerInternalData } from "../utils/Playfab";
 
 import data from '../tests/data.json'
 import { garbageCollectRealmGames } from "../Objects/Game";
+import { garbageCollectPlaylist } from "../Objects/Playlist";
 
 export class IWBRoom extends Room<IWBRoomState> {
 
     async onAuth(client: Client, options: any, req: any) {
-        return await this.doLogin(client, options, req)   
+        try{
+            return await this.doLogin(client, options, req) 
+        }
+        catch(e){
+            console.log('authentication error', e)
+            return false
+        }
     }
 
     onCreate(options: any) {
-        console.log('on create options are ', options)
+        // console.log('on create options are ', options)
         this.setState(new IWBRoomState());
         this.state.world = options.world
         options.island !== "world" ? this.state.gcWorld = true : null
-        
-        iwbItemHandler(this)
-        iwbSceneActionHandler(this)
-        // iwbRewardHandler(this)
-        iwbSceneGameHandler(this)
-        iwbPlayerHandler(this)
-        iwbSceneHandler(this)
+        this.state.options = options
 
-        initServerScenes(this, options.island !== "world" ? options : undefined)
-        // loadRealmScenes(this, data)
-        initServerAssets(this)
-
-        // createCustomObjects(this)
-
-        iwbManager.addRoom(this)
+        let worldConfig = iwbManager.worlds.find(($:any) => $.ens === options.world)
+        if(worldConfig){
+            this.state.cv = worldConfig.cv
+            this.state.owner = worldConfig.owner
+        }
     }
  
     onJoin(client: Client, options: any) {
@@ -82,12 +78,15 @@ export class IWBRoom extends Room<IWBRoomState> {
 
     onDispose() {
         console.log("room", this.roomId, "disposing...");
+       if(iwbManager.rooms.find(($:any)=> $.roomId === this.roomId)){
+        console.log('room is online, clean up', this.state.world)
         iwbManager.removeRoom(this)
         if(!this.state.gcWorld){
             saveRealm(this)
         }
-        // destroyCustomObjects(this)
-        garbageCollectRealmGames(this)
+
+        iwbManager.garbageCollectRoom(this)
+       }
     }
 
     async getPlayerInfo(client: Client, options: any) {
@@ -95,34 +94,42 @@ export class IWBRoom extends Room<IWBRoomState> {
         this.state.players.set(options.userData.userId, player)
         addPlayerToWorld(player)
 
-        client.send(SERVER_MESSAGE_TYPES.INIT, {
-            realmAssets: this.state.realmAssets,
-            styles: iwbManager.styles,
-            worlds: iwbManager.worlds,
-            iwb: {v: iwbManager.version, updates:iwbManager.versionUpdates},
-            tutorials: {
-                videos: iwbManager.tutorials,
-                cid: iwbManager.tutorialsCID
-            },
-            settings: player.settings
-        })
+        await iwbManager.processPendingRoom(this, player)
+        console.log('process pending room completed')
 
         pushPlayfabEvent(
             SERVER_MESSAGE_TYPES.PLAYER_JOINED, 
             player, 
-            [{world:options.world}]
+            [{world:options.world, island:options.island}]
         )
     }
 
     async doLogin(client: any, options: any, request: any) {
         // console.log('login options', options)
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             setTimeout(async() => {
                 // console.log('Timeout finished!');
+
+                const ipAddress = request.headers['x-forwarded-for'] || request.socket.address().address;
+
+                if(!await optionsValidated(options)){
+                    console.log('rejected validation', options)
+                    reject(options)
+
+                    pushPlayfabEvent(
+                        SERVER_MESSAGE_TYPES.PLAYER_JOINED, 
+                        PLAYFAB_DATA_ACCOUNT, 
+                        [{world:options.world, ip:ipAddress, island:options.island, potentialBot:true}]
+                    )
+
+                    return false
+                }
+
+                console.log('we are logged in')
+
                 let info:any = false
                 try {
 
-                    const ipAddress = request.headers['x-forwarded-for'] || request.socket.address().address;
                     // console.log(`Client IP address: ${ipAddress}`);
                     const playfabInfo = await playerLogin(
                         {
@@ -147,7 +154,9 @@ export class IWBRoom extends Room<IWBRoomState> {
                         })
         
                     if (playfabInfo.error) {
-                     //    console.log('playfab login error => ', playfabInfo.error)
+                        console.log('playfab login error => ', playfabInfo.error)
+                        reject(options)
+                        return false
                     } else {
                        //  console.log('playfab login success')
                         client.auth = {}
@@ -170,10 +179,12 @@ export class IWBRoom extends Room<IWBRoomState> {
                             info = client.auth
                         }
                     }
+                    resolve(info); // Resolve the Promise with the data
                 } catch (e) {
                     console.log('playfab connection error', e)
+                    reject(info)
                 }
-                resolve(info); // Resolve the Promise with the data
+                
               }, 2000); // Adjust the timeout duration as needed
             });
     }
@@ -231,4 +242,18 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         return [data, stats]
     }
+}
+
+function optionsValidated(options:any){
+    // console.log("validation options", options)
+    if(!options || 
+        !options.world ||
+        !options.userData || 
+        !options.userData.userId || 
+        !options.userData.name || 
+        options.userData.name === ""
+    ){
+        return false
+    }
+    return true
 }

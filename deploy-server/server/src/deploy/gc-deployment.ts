@@ -44,6 +44,8 @@ export async function handleGenesisCityDeployment(key:string, data:any){
         pendingDeployments[data.user] = {
           status:"building",
           data: data,
+          description: data.metadata.description,
+          owner:data.metadata.owner,
           name: data.metadata.title,
           dest: data.dest,
           worldName: data.worldName,

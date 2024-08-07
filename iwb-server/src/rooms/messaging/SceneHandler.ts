@@ -18,21 +18,30 @@ export function iwbSceneHandler(room:IWBRoom){
         let player = room.state.players.get(client.userData.userId)
         if(player && (player.inHomeWorld(room.state.world) || hasWorldPermissions(room, player.address))){
             if(info){
+                room.state.realmAssetsChanged = true
+
                 info.forEach((id:any, i:number)=>{
-                    let item:any = itemManager.items.get(id)
+                    let item:any = {...itemManager.items.get(id)}
                     if(item){
-                        item.pending = true
+                        // item.pending = true
+                        // item.v = room.state.cv + 1
+                        item.v = room.state.catalogVersion + 1
                         room.state.realmAssets.set(id, item)
-                        room.state.realmAssetsChanged = true
+                        
                     }
                 })
 
-                let assets:any[] = []
+                let json:any = {
+                    version:room.state.catalogVersion + 1,
+                    items:[]
+                }
+
+                // let assets:any[] = []
                 room.state.realmAssets.forEach((item:any)=>{
-                    assets.push(item)
+                    json.items.push(item)
                 })
 
-                iwbManager.addWorldPendingSave(room.state.world, room.roomId, ["catalogs.json"], room.state.realmToken, room.state.realmTokenType, room.state.realmId, [assets])
+                iwbManager.addWorldPendingSave(room.state.world, room.roomId, ["catalogs.json"], room.state.realmToken, room.state.realmTokenType, room.state.realmId, [json])
 
                 iwbManager.checkSaveFinished(room, ()=>{
                     room.broadcast(SERVER_MESSAGE_TYPES.ADD_WORLD_ASSETS, room.state.realmAssets)
@@ -46,20 +55,7 @@ export function iwbSceneHandler(room:IWBRoom){
 
     room.onMessage(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, (client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS + " received", info)
-        let player = room.state.players.get(client.userData.userId)
-        if(player && player.inHomeWorld(room.state.world)){
-            if(info){
-                info.forEach((id:any, i:number)=>{
-                    if(room.state.realmAssets.get(id)){
-                        room.state.realmAssets.delete(id)
-                        room.state.realmAssetsChanged = true
-                        room.broadcast(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, room.state.realmAssets)
-                    }
-                })
-            }
-        }else{
-            console.log('player not in home world, spamming?')
-        }
+        iwbManager.deleteWorldAssets(room, client, info)
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.GET_MARKETPLACE, (client, info)=>{
@@ -175,6 +171,15 @@ export function iwbSceneHandler(room:IWBRoom){
 
         if(player && player.mode === SCENE_MODES.CREATE_SCENE_MODE){
             if(room.state.temporaryParcels.length > 0){
+
+                let world = iwbManager.worlds.find((w)=>w.ens === room.state.world)
+                if(world){
+                    world.builds += 1
+                    world.updated = Math.floor(Date.now()/1000)
+                }
+
+                info.worldOwner = world.owner
+
                 let scene:Scene = createScene(player, room, info, [...room.state.temporaryParcels])
                 room.state.scenes.set(scene.id, scene)
                 room.state.sceneCount += 1
@@ -184,14 +189,8 @@ export function iwbSceneHandler(room:IWBRoom){
                 })
                 freeTemporaryParcels(room)
 
-                let world = iwbManager.worlds.find((w)=>w.ens === room.state.world)
-                if(world){
-                    world.builds += 1
-                    world.updated = Math.floor(Date.now()/1000)
-                }
-
                 player.updatePlayMode(SCENE_MODES.BUILD_MODE)
-                client.send(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED, {mode:player.mode})
+                client.send(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED, {mode:SCENE_MODES.BUILD_MODE})
                 room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ADDED_NEW, {name:player.name, sceneName:scene.n})
 
                 pushPlayfabEvent(
@@ -319,13 +318,14 @@ export function iwbSceneHandler(room:IWBRoom){
         if(player){
             let scene = room.state.scenes.get(info.sceneId)
             if(scene){
-                if(scene.o === client.userData.userId){
+                if(scene.o === client.userData.userId || hasWorldPermissions(room, player.address)){
                     let worldConfig = iwbManager.worlds.find((w)=> w.ens === room.state.world)
                     if(worldConfig){
                         worldConfig.builds -= 1
                         worldConfig.updated = Math.floor(Date.now()/1000)
                     }
                     room.state.scenes.delete(info.sceneId)
+
                     scene.bps.forEach((user)=>{
                         let player:Player = room.state.players.get(user) 
                         if(player){
@@ -351,7 +351,7 @@ export function iwbSceneHandler(room:IWBRoom){
             let scene = room.state.scenes.get(info.sceneId)
             if(scene){
                 if(canBuild(room, player.address, scene.id)){
-                    clearSceneAssets(scene)
+                    clearSceneAssets(room, player, scene)
 
                     scene.si = 0
                     scene.pc = 0
@@ -524,40 +524,40 @@ export function iwbSceneHandler(room:IWBRoom){
         )
     })
 
-    room.onMessage(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET, async(client, info)=>{
-         console.log(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET + " message", info)
+    // room.onMessage(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET, async(client, info)=>{
+    //      console.log(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET + " message", info)
 
-        let player:Player = room.state.players.get(client.userData.userId)
-        if(player && iwbManager.isOwner(player.address, room.state.world)){
-            if(info){
-                info.forEach((id:any, i:number)=>{
-                    let ugcAsset = room.state.realmAssets.get(id)
-                    if(ugcAsset){
-                        iwbManager.deleteUGCAsset(player, ugcAsset, room)
-                        // room.state.realmAssets.delete(id)
-                        // room.state.realmAssetsChanged = true
-                        room.broadcast(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, room.state.realmAssets)
-                    }
-                })
-            }
-        }else{
-            console.log('not owner')
-        }
+    //     let player:Player = room.state.players.get(client.userData.userId)
+    //     if(player && iwbManager.isOwner(player.address, room.state.world)){
+    //         if(info){
+    //             info.forEach((id:any, i:number)=>{
+    //                 let ugcAsset = room.state.realmAssets.get(id)
+    //                 if(ugcAsset){
+    //                     iwbManager.deleteUGCAsset(player, ugcAsset, room)
+    //                     // room.state.realmAssets.delete(id)
+    //                     // room.state.realmAssetsChanged = true
+    //                     room.broadcast(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, room.state.realmAssets)
+    //                 }
+    //             })
+    //         }
+    //     }else{
+    //         console.log('not owner')
+    //     }
 
-        if(player && player.inHomeWorld(room.state.world)){
-            if(info){
-                info.forEach((id:any, i:number)=>{
-                    if(room.state.realmAssets.get(id)){
-                        room.state.realmAssets.delete(id)
-                        room.state.realmAssetsChanged = true
-                        room.broadcast(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, room.state.realmAssets)
-                    }
-                })
-            }
-        }else{
-            console.log('player not in home world, spamming?')
-        }
-    }) 
+    //     if(player && player.inHomeWorld(room.state.world)){
+    //         if(info){
+    //             info.forEach((id:any, i:number)=>{
+    //                 if(room.state.realmAssets.get(id)){
+    //                     room.state.realmAssets.delete(id)
+    //                     room.state.realmAssetsChanged = true
+    //                     room.broadcast(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, room.state.realmAssets)
+    //                 }
+    //             })
+    //         }
+    //     }else{
+    //         console.log('player not in home world, spamming?')
+    //     }
+    // }) 
 
     room.onMessage(SERVER_MESSAGE_TYPES.FORCE_BACKUP, async(client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.FORCE_BACKUP + " message", info)
@@ -624,7 +624,7 @@ export function createScene(player:Player, room:IWBRoom, info:any, parcels:strin
       im: info.image ? info.image : "",
       n: info.name,
       d: info.description,
-      o: player.dclData.userId,
+      o: info.worldOwner,
       ona: player.dclData.name,
       cat: info.cat,
       rating: info.rat,
@@ -657,14 +657,19 @@ export function createScene(player:Player, room:IWBRoom, info:any, parcels:strin
     return scene
   }
 
-  function clearSceneAssets(scene:any){
-    Object.values(COMPONENT_TYPES).forEach((component:any)=>{
-        if(scene[component] && component !== COMPONENT_TYPES.PARENTING_COMPONENT){
-            scene[component].forEach((component:any, aid:string)=>{
-                removeAllAssetComponents(scene, aid)
-            })
-        }
+  function clearSceneAssets(room:IWBRoom, player:Player, scene:any){
+    scene[COMPONENT_TYPES.IWB_COMPONENT].forEach((iwb:IWBComponent, aid:string)=>{
+        removeAllAssetComponents(room, player, scene, {aid:aid})
     })
+    // removeAllAssetComponents(room, player, scene, {aid:aid)
+    // Object.values(COMPONENT_TYPES).forEach((component:any)=>{
+    //     if(scene.hasOwnProperty(component) && component !== COMPONENT_TYPES.PARENTING_COMPONENT){
+    //         scene[component].forEach((component:any, aid:string)=>{
+                
+    //         })
+    //         scene[component].clear()
+    //     }
+    // })
 
     addBasicSceneParenting(scene)
   }

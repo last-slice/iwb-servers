@@ -4,7 +4,7 @@ import { status } from "../config/config";
 
 export function deleteRouter(router:any){
     router.get("/ugc/delete/:user/:id/:type/:auth", async function(req: express.Request, res: express.Response) {
-        console.log("attempting to remove ugc asset")
+        console.log("attempting to remove ugc asset", req.params)
         try{
             if(!req.params.user || !req.params.id || !req.params.type || !req.params.auth){
                 throw new Error("invalid parameters")
@@ -15,7 +15,7 @@ export function deleteRouter(router:any){
             }
 
             let path = "" + req.params.user + "/" + req.params.id
-            switch(req.params.ty){
+            switch(req.params.type){
                 case '3D':
                     path += ".glb"
                     break;
@@ -25,11 +25,13 @@ export function deleteRouter(router:any){
                     break;
             }
 
+            console.log('path to delete is', path)
+
             fs.unlinkSync("" + (status.DEBUG ? process.env.DEV_DOWNLOAD_UGC_DIRECTORY : process.env.PROD_DOWNLOAD_UGC_DIRECTORY) + path);
             res.status(200).json({valid:true})
         }
-        catch(e){
-            console.log("error deleting ugc assets")
+        catch(e:any){
+            console.log("error deleting ugc assets", e.message)
             res.status(200).json({valid:false})
         }
     })

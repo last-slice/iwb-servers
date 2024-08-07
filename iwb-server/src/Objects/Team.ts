@@ -29,8 +29,8 @@ export function editGameComponent(room:IWBRoom, client:Client, info:any, scene:S
     }
 }
 
-export function removeAllTeams(scene:Scene){
-    scene[COMPONENT_TYPES.TEAM_COMPONENT].forEach((team:TeamComponent, aid:string)=>{
-        removeAllAssetComponents(scene, aid)
-    })
-}
+// export function removeAllTeams(scene:Scene){
+//     scene[COMPONENT_TYPES.TEAM_COMPONENT].forEach((team:TeamComponent, aid:string)=>{
+//         removeAllAssetComponents(scene, aid)
+//     })
+// }

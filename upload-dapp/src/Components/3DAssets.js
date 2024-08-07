@@ -8,9 +8,13 @@ import axios from 'axios'
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { DEBUG } from "../App";
 
-const NFTStorageAuth = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDlCNTIyZDczN0UyOEMwOEFmNzhiQzM2Njk5QzVhMmM2ZDI4NDFBRmYiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY5NzI0MDY4MjY4OCwibmFtZSI6IklXQiBVUGxvYWRlciJ9.7nIofYjxMC6-y5RkNI6IYIOrxRritSH-NKGCz8KuMX4"
+const pinataBearer = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJlMjc2ZTk4Zi1iMjU2LTQyZWEtYTE5MC1jOTM3MTllZGZkYmMiLCJlbWFpbCI6Imxhc3RyYXVtQGxhc3RzbGljZS5vcmciLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJOWUMxIn1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiZjFmYzJiOTEyODk4NDM5YTZmZWMiLCJzY29wZWRLZXlTZWNyZXQiOiJhNTgzMmUwODQ1NmQwZTAxNmE1MzVjNmIyYWNlNGMzYmZkNmYwODg5OTEzZWE3MGY5MmM2MWY2ZGVmOTg5MjU3IiwiZXhwIjoxNzUyMjc4MTc5fQ.VljjHh3h-p57SgAm2Md_AH4ETez4a4-c8ufnU7g2vRI"
+// const pinataSDK = require('@pinata/sdk');
 
-function ThreeDAssets({handleFileSelect, glbFile, resetLoader,token, sceneKey}) {
+
+// const NFTStorageAuth = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDlCNTIyZDczN0UyOEMwOEFmNzhiQzM2Njk5QzVhMmM2ZDI4NDFBRmYiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY5NzI0MDY4MjY4OCwibmFtZSI6IklXQiBVUGxvYWRlciJ9.7nIofYjxMC6-y5RkNI6IYIOrxRritSH-NKGCz8KuMX4"
+
+function ThreeDAssets({handleFileSelect, glbFile, resetLoader,token, sceneKey, size}) {
   const model = glbFile
 
   const centerDivStyle = {
@@ -25,10 +29,11 @@ function ThreeDAssets({handleFileSelect, glbFile, resetLoader,token, sceneKey}) 
     window.close();
   }
 
+  
   const [polygonCount, setPolygonCount] = useState(0)
   const [modelSize, setSize] = useState(0)
   const [modelImageFile, setModelImageFile] = useState(null)
-  const [modelImageLink, setModelImageLink] = useState('')
+  const [modelImageLink, setModelImageLink] = useState(DEBUG ? "iamge" : '')
   const [modelImage, setModelImage] = useState('')
   const [modelName, setModelName] = useState('')
   const [modelDescription, setModelDescription] = useState('')
@@ -74,28 +79,94 @@ function ThreeDAssets({handleFileSelect, glbFile, resetLoader,token, sceneKey}) 
   const uploadImage = async () =>{
     setImageUploadStatus('uploading')
 
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", NFTStorageAuth);
+    // var myHeaders = new Headers();
+    // myHeaders.append("Authorization", NFTStorageAuth);
   
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: modelImageFile
-    };
+    // var requestOptions = {
+    //   method: 'POST',
+    //   headers: myHeaders,
+    //   body: modelImageFile
+    // };
     
-    let response = await fetch("https://api.nft.storage/upload", requestOptions)
-    let json = await response.json()
+    // let response = await fetch("https://api.nft.storage/upload", requestOptions)
+    // let json = await response.json()
 
-    if(json.ok){
-      setModelImageLink("https://" + json.value.cid + ".ipfs.dweb.link")
-      console.log("https://" + json.value.cid + ".ipfs.dweb.link")
-      setImageUploadStatus('uploaded')
-      checkFormCompletion(true)
-    }
-    else{
-      console.log('error image upload')
+    // if(json.ok){
+    //   setModelImageLink("https://" + json.value.cid + ".ipfs.dweb.link")
+    //   console.log("https://" + json.value.cid + ".ipfs.dweb.link")
+    //   setImageUploadStatus('uploaded')
+    //   checkFormCompletion(true)
+    // }
+    // else{
+    //   console.log('error image upload')
+    //   setImageUploadStatus('')
+    // }
+
+    try {
+      const formData = new FormData();
+      formData.append("file", modelImageFile);
+  
+      const pinataMetadata = JSON.stringify({
+        name: modelName + modelImageFile.type,
+      });
+      formData.append("pinataMetadata", pinataMetadata);
+  
+      const pinataOptions = JSON.stringify({
+        cidVersion: 0,
+      });
+      formData.append("pinataOptions", pinataOptions);
+  
+      const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${pinataBearer}`,
+        },
+        body: formData,
+      });
+      const resData = await res.json();
+      console.log(resData);
+      if(resData && resData.IpfsHash){
+        // console.log("wait over")
+        console.log("https://lsnft.mypinata.cloud/ipfs/" + resData.IpfsHash)
+        setModelImageLink("https://lsnft.mypinata.cloud/ipfs/" + resData.IpfsHash)
+        checkFormCompletion(true)
+        setImageUploadStatus('uploaded')
+      }else{
+        setImageUploadStatus('')
+      }
+    } catch (error) {
+      console.log(error);
       setImageUploadStatus('')
     }
+
+    // try{
+
+    //   const options = {
+    //     pinataMetadata: {
+    //         name: modelName + modelImageFile.type
+    //     },
+    //     pinataOptions: {
+    //         cidVersion: 1
+    //     }
+    //   };
+  
+    //   // const stream = fse.createReadStream(directory + file);
+    //   const res = await pinata.pinFileToIPFS(modelImageFile, options)
+    //   // console.log('res is', res)
+    //   if(res && res.IpfsHash){
+    //     // console.log("wait over")
+    //     console.log("https://lsnft.mypinata.cloud/ipfs/" + res.IpfsHash)
+    //     setModelImageLink("https://lsnft.mypinata.cloud/ipfs/" + res.IpfsHash)
+    //     checkFormCompletion(true)
+    //   }else{
+    //     setImageUploadStatus('')
+    //   }
+    // }
+    // catch(e){
+    //   console.log('error pinning image', e)
+    //   setImageUploadStatus('')
+    // }
+
   }
 
   const handleImageInput = (e) => {
@@ -154,6 +225,11 @@ const checkModelSize = ()=>{
 }
 
   const checkFormCompletion = (image) =>{
+    // if(DEBUG){
+    //   setAllChecksPassed(true)
+    //   return
+    // }
+
     if(style !== styles[0] && modelDescription!== "" && modelName !== "" && (image || modelImageLink) !== "" && model && checkModelSize()){
       setAllChecksPassed(true)
     }else{
@@ -254,7 +330,19 @@ const checkModelSize = ()=>{
 
       <div className="dcl page">
 
-        <div className="ui container">
+        <div className="ui container text-center align-items-center">
+          <Row>
+            <Col>
+            <h1 style={{color:"#ffffff"}}>Custom Assets</h1></Col>
+          </Row>
+
+            <Row>
+            <Col>
+            <h3 style={{color:"#ffffff"}}>Space Used: {((size/100) * 100).toFixed(2)}%</h3>
+            <h3 style={{color:"#ffffff"}}>{size} MB out of 100MB</h3>
+            </Col>
+          </Row>
+
       <Row>
 
 <Col md={8} className="d-flex text-center align-items-center">

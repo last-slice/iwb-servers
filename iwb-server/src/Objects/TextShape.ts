@@ -18,6 +18,7 @@ export class TextShapeComponent extends Schema{
     @type("number") outlineWidth:number
     @type("boolean") fontAutoSize:boolean
     @type("boolean") onPlay:boolean = false
+    @type("boolean") isText:boolean = true
     @type(Color4) outlineColor:Color4 = new Color4({r:1, g:1, b:1, a:1})
     @type(Color4) color:Color4 = new Color4({r:1, g:1, b:1, a:1})
 }

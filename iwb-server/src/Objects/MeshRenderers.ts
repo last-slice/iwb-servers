@@ -8,9 +8,12 @@ export class MeshRendererComponent extends Schema{
 }
 
 export function createMeshRendererComponent(scene:Scene, data:any){
-    console.log('creating mesh renderer', data)
     let component = new MeshRendererComponent()
-    component.shape = data.shape
+    if(data){
+        component.shape = data.shape
+        component.onPlay = data.onPlay
+    }
+    
     scene[COMPONENT_TYPES.MESH_RENDER_COMPONENT].set(data.aid, component)
 }
 

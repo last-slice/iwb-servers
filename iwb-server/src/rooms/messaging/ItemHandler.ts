@@ -1,6 +1,6 @@
 import { Client } from "colyseus";
 import { IWBRoom } from "../IWBRoom";
-import { CATALOG_IDS, COMPONENT_TYPES, SCENE_MODES, SERVER_MESSAGE_TYPES, TRIGGER_TYPES } from "../../utils/types";
+import { CATALOG_IDS, COMPONENT_TYPES, EDIT_MODIFIERS, SCENE_MODES, SERVER_MESSAGE_TYPES, TRIGGER_TYPES } from "../../utils/types";
 import { Quaternion, Vector3, createTransformComponent, editTransform } from "../../Objects/Transform";
 import { createVisibilityComponent, editVisibility } from "../../Objects/Visibility";
 import { createTextComponent, editTextShape } from "../../Objects/TextShape";
@@ -30,76 +30,102 @@ import { createStateComponent, editStateComponent } from "../../Objects/State";
 import { createUITextComponent, editUIComponent } from "../../Objects/UIText";
 import { createUIImageComponent, editUIImageComponent } from "../../Objects/UIImage";
 import { createBillboardComponent } from "../../Objects/Billboard";
-import { createGameComponent, deleteGameComponent, editGameComponent, removeGameComponent, sceneHasGame } from "../../Objects/Game";
+import { createGameComponent, deleteGameComponent, editGameComponent, sceneHasGame } from "../../Objects/Game";
 import { editLevelComponent } from "../../Objects/Level";
 import { createLiveComponent, editLiveComponent } from "../../Objects/LiveShow";
 import { createGameItemComponent } from "../../Objects/GameItem";
-import { createDialogComponent } from "../../Objects/Dialog";
+import { createDialogComponent, editDialogComponent } from "../../Objects/Dialog";
+import { createRewardComponent, editRewardComponent } from "../../Objects/Rewards";
+import { createPlaylistComponent, editPlaylistComponent } from "../../Objects/Playlist";
 
 
-let updateComponentFunctions:any = {
-    ['Delete']: (scene:any, info:any)=>{deleteComponent(scene, info)},
-    ['Add']: (scene:any, info:any, client:any, room:IWBRoom)=>{addNewComponent(scene, info, client, room)},
-    [COMPONENT_TYPES.TRANSFORM_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editTransform(client,info, scene)}, 
-    [COMPONENT_TYPES.VISBILITY_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editVisibility(client, info, scene)}, 
-    [COMPONENT_TYPES.TEXT_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editTextShape(client, info, scene)}, 
-    [COMPONENT_TYPES.IWB_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editIWBComponent(info, scene)}, 
-    [COMPONENT_TYPES.NAMES_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{ editNameComponent(info, scene)}, 
-    [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
-    [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
-    [COMPONENT_TYPES.NFT_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editNftShape(info, scene)}, 
-    [COMPONENT_TYPES.GLTF_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editGltfComponent(info, scene)}, 
-    [COMPONENT_TYPES.VIDEO_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editVideoComponent(info, scene)}, 
-    [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editMeshColliderComponent(info, scene)}, 
-    [COMPONENT_TYPES.MESH_RENDER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editMeshRendererComponent(info, scene)}, 
-    [COMPONENT_TYPES.TEXTURE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editTextureComponent(info, scene)},
-    [COMPONENT_TYPES.PARENTING_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editParentingComponent(room, client, info, scene)},
-    [COMPONENT_TYPES.ACTION_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editActionComponent(info, scene)},
-    [COMPONENT_TYPES.TRIGGER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editTriggerComponent(info, scene)},
-    [COMPONENT_TYPES.POINTER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{ editPointerComponent(info, scene)},
-    [COMPONENT_TYPES.STATE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editStateComponent(info, scene)},
-    [COMPONENT_TYPES.UI_TEXT_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editUIComponent(info, scene)},
-    [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editUIImageComponent(info, scene)},
-    [COMPONENT_TYPES.COUNTER_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editCounterComponent(info, scene)}, 
-    [COMPONENT_TYPES.GAME_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editGameComponent(room, client, info, scene)}, 
-    [COMPONENT_TYPES.LEVEL_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editLevelComponent(info, scene)}, 
-    [COMPONENT_TYPES.LIVE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editLiveComponent(info, scene)}, 
-    [COMPONENT_TYPES.MATERIAL_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editMaterialComponent(info, scene)}, 
+export let updateComponentFunctions:any = {
+    ['Delete']: (scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{deleteComponent(room, scene, player, info)},
+    ['Add']: (scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{addNewComponent(scene, info, client, room)},
+    [COMPONENT_TYPES.TRANSFORM_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editTransform(client,info, scene)}, 
+    [COMPONENT_TYPES.VISBILITY_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editVisibility(client, info, scene)}, 
+    [COMPONENT_TYPES.TEXT_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editTextShape(client, info, scene)}, 
+    [COMPONENT_TYPES.IWB_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editIWBComponent(info, scene)}, 
+    [COMPONENT_TYPES.NAMES_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{ editNameComponent(info, scene)}, 
+    [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
+    [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
+    [COMPONENT_TYPES.NFT_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editNftShape(info, scene)}, 
+    [COMPONENT_TYPES.GLTF_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editGltfComponent(info, scene)}, 
+    [COMPONENT_TYPES.VIDEO_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editVideoComponent(info, scene)}, 
+    [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editMeshColliderComponent(info, scene)}, 
+    [COMPONENT_TYPES.MESH_RENDER_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editMeshRendererComponent(info, scene)}, 
+    [COMPONENT_TYPES.TEXTURE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editTextureComponent(info, scene)},
+    [COMPONENT_TYPES.PARENTING_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editParentingComponent(room, client, info, scene, player)},
+    [COMPONENT_TYPES.ACTION_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editActionComponent(info, scene)},
+    [COMPONENT_TYPES.TRIGGER_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editTriggerComponent(info, scene)},
+    [COMPONENT_TYPES.POINTER_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{ editPointerComponent(info, scene)},
+    [COMPONENT_TYPES.STATE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editStateComponent(info, scene)},
+    [COMPONENT_TYPES.UI_TEXT_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editUIComponent(info, scene)},
+    [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editUIImageComponent(info, scene)},
+    [COMPONENT_TYPES.COUNTER_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editCounterComponent(info, scene)}, 
+    [COMPONENT_TYPES.GAME_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editGameComponent(room, client, info, scene, player)}, 
+    [COMPONENT_TYPES.LEVEL_COMPONENT]:(scene:any, info:any, client:any, player:Player,room:IWBRoom)=>{editLevelComponent(info, scene)}, 
+    [COMPONENT_TYPES.LIVE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editLiveComponent(info, scene)}, 
+    [COMPONENT_TYPES.MATERIAL_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editMaterialComponent(info, scene)}, 
+    [COMPONENT_TYPES.DIALOG_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editDialogComponent(info, scene)}, 
+    [COMPONENT_TYPES.REWARD_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editRewardComponent(info, scene)}, 
+    [COMPONENT_TYPES.PLAYLIST_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editPlaylistComponent(info, scene)}, 
 }
 
 let createComponentFunctions:any = {
-    ['Delete']: (scene:any, info:any)=>{deleteComponent(scene, info)},
-    ['Add']: (scene:any, info:any, client:Client, room:IWBRoom)=>{addNewComponent(scene, info, client, room)},
-    [COMPONENT_TYPES.TEXT_COMPONENT]:(scene:any, aid:string, info:any)=>{createTextComponent(scene, aid, info)}, 
+    ['Delete']: (room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{deleteComponent(room, scene, player, info)},
+    ['Add']: (room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{addNewComponent(scene, info, client, room)},
+    [COMPONENT_TYPES.TEXT_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createTextComponent(scene, aid, info)}, 
     // [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
     // [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
-    [COMPONENT_TYPES.NFT_COMPONENT]:(scene:any, aid:string, info:any)=>{createNftShapeComponent(scene, aid, info)}, 
-    [COMPONENT_TYPES.GLTF_COMPONENT]:(scene:any, aid:string, info:any)=>{createGLTFComponent(scene, info)}, 
+    [COMPONENT_TYPES.NFT_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createNftShapeComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.GLTF_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createGLTFComponent(scene, info)}, 
     // [COMPONENT_TYPES.VIDEO_COMPONENT]:(scene:any, info:any, client:any, room:IWBRoom)=>{editVideoComponent(info, scene)}, 
-    [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:(scene:any, aid:string, info:any)=>{createMeshColliderComponent(scene, info)}, 
-    [COMPONENT_TYPES.MESH_RENDER_COMPONENT]:(scene:any, aid:string, info:any)=>{createMeshRendererComponent(scene, info)}, 
-    [COMPONENT_TYPES.TEXTURE_COMPONENT]:(scene:any, aid:string, info:any)=>{createTextureComponent(scene, info)},
-    [COMPONENT_TYPES.ACTION_COMPONENT]:(scene:any, aid:string, info:any)=>{createActionComponent(scene, aid, info)},
-    [COMPONENT_TYPES.TRIGGER_COMPONENT]:(scene:any, aid:string, info:any)=>{ createTriggerComponent(scene, aid, info)},
-    [COMPONENT_TYPES.POINTER_COMPONENT]:(scene:any, aid:string, info:any)=>{createPointerComponent(scene, aid, info)},
-    [COMPONENT_TYPES.STATE_COMPONENT]:(scene:any, aid:string, info:any)=>{createStateComponent(scene, aid)},
-    [COMPONENT_TYPES.UI_TEXT_COMPONENT]:(scene:any, aid:string, info:any)=>{createUITextComponent(scene, aid, info)},
-    [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:(scene:any, aid:string, info:any)=>{createUIImageComponent(scene, aid, info)},
-    [COMPONENT_TYPES.COUNTER_COMPONENT]:(scene:any, aid:string, info:any)=>{createCounterComponent(scene, aid, info)}, 
-    [COMPONENT_TYPES.MATERIAL_COMPONENT]:(scene:any, aid:string, info:any)=>{createMaterialComponent(scene, aid, info)}, 
-    [COMPONENT_TYPES.BILLBOARD_COMPONENT]:(scene:any, aid:string, info:any)=>{createBillboardComponent(scene, aid, info)}, 
-    [COMPONENT_TYPES.LIVE_COMPONENT]:(scene:any, aid:string, info:any)=>{createLiveComponent(scene, aid, info)}, 
-    [COMPONENT_TYPES.DIALOG_COMPONENT]:(scene:any, aid:string, info:any)=>{createDialogComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createMeshColliderComponent(scene, info)}, 
+    [COMPONENT_TYPES.MESH_RENDER_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createMeshRendererComponent(scene, info)}, 
+    [COMPONENT_TYPES.TEXTURE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createTextureComponent(scene, info)},
+    [COMPONENT_TYPES.ACTION_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createActionComponent(scene, aid, info)},
+    [COMPONENT_TYPES.TRIGGER_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{ createTriggerComponent(scene, aid, info)},
+    [COMPONENT_TYPES.POINTER_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPointerComponent(scene, aid, info)},
+    [COMPONENT_TYPES.STATE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createStateComponent(scene, aid)},
+    [COMPONENT_TYPES.UI_TEXT_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createUITextComponent(scene, aid, info)},
+    [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createUIImageComponent(scene, aid, info)},
+    [COMPONENT_TYPES.COUNTER_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createCounterComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.MATERIAL_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createMaterialComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.BILLBOARD_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createBillboardComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.LIVE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createLiveComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.DIALOG_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createDialogComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.REWARD_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createRewardComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.PLAYLIST_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPlaylistComponent(scene, aid, info)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){
+    room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DROPPED_GRABBED, (client:Client, info:any)=>{
+        console.log(SERVER_MESSAGE_TYPES.SCENE_DROPPED_GRABBED + " received", info)
+        let scene = room.state.scenes.get(info.sceneId)
+        let player = room.state.players.get(client.userData.userId)
+
+        if(scene && canBuild(room, player.address, scene.id)){
+            let itemInfo = scene[COMPONENT_TYPES.IWB_COMPONENT].get(info.aid)
+            if(itemInfo){
+                console.log('can build and found item to place grabbed')
+                itemInfo.editing = false
+                itemInfo.editor = undefined
+                editTransform(client, {aid:info.aid,modifier:EDIT_MODIFIERS.POSITION, axis: 'ALL', x:info.position.x, y:info.position.y, z:info.position.z} , scene)
+                editTransform(client, {aid:info.aid, modifier:EDIT_MODIFIERS.ROTATION, axis: 'ALL', x:info.rotation.x, y:info.rotation.y, z:info.rotation.z} , scene)
+            }
+        }else{
+            console.log('cannot build')
+        }
+      })
+
     room.onMessage(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, async(client, info)=>{
         // console.log(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS + " message", info)
         // room.broadcast(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, {user:client.userData.userId, y:info.y, aid:info.aid})
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, (client:Client, info:any)=>{
-        console.log("edit asset message", info)
+        console.log(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET + " received", info)
         let scene = room.state.scenes.get(info.sceneId)
         let player = room.state.players.get(client.userData.userId)
 
@@ -108,7 +134,7 @@ export function iwbItemHandler(room:IWBRoom){
             if(itemInfo){
                 itemInfo.editing = true
                 itemInfo.editor = client.userData.userId
-                updateComponentFunctions[info.component](scene, info, client, room)
+                updateComponentFunctions[info.component](scene, info, client, player, room)
             }
         }else{
             console.log('cannot build')
@@ -138,7 +164,8 @@ export function iwbItemHandler(room:IWBRoom){
             if(player && player.mode === SCENE_MODES.BUILD_MODE){
                 info.catalogAsset = true
                 info.grabbed = true
-                info.editor = 
+                info.editor = player.address
+                info.isCatalogSelect = info.isCatalogSelect
                 // let catalogItem = item.ugc ? room.state.realmAssets.get(item.id) : itemManager.items.get(item.id)
 
                 player.addSelectedAsset(info)
@@ -168,6 +195,7 @@ export function iwbItemHandler(room:IWBRoom){
         console.log(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM + " message", info)
 
         let player:Player = room.state.players.get(client.userData.userId)
+        // console.log('player is', player, player.mode, canBuild(room, client.userData.userId, info.item.sceneId))
         if(player && player.mode === SCENE_MODES.BUILD_MODE && canBuild(room, client.userData.userId, info.item.sceneId)){
             console.log('player can add assets')
             const {item} = info
@@ -182,7 +210,7 @@ export function iwbItemHandler(room:IWBRoom){
 
                         if(item.duplicate){
                             console.log('need to copy item')
-                            copyItem(room, scene, info, catalogItem)
+                            copyItem(room, scene, client, player, info, catalogItem)
 
                             pushPlayfabEvent(
                                 SERVER_MESSAGE_TYPES.SCENE_COPY_ITEM, 
@@ -192,7 +220,7 @@ export function iwbItemHandler(room:IWBRoom){
                         }
 
                         else{
-                            addItemComponents(room, client, scene, item, catalogItem)
+                            addItemComponents(room, client, scene, player, item, catalogItem)
 
                             pushPlayfabEvent(
                                 SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, 
@@ -216,7 +244,8 @@ export function iwbItemHandler(room:IWBRoom){
             room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ADD_ITEM, info)
 
             player.removeSelectedAsset()
-        }else{
+        }
+        else{
             console.log('something wrong here with adding item', info)
         }
     })
@@ -229,8 +258,7 @@ export function iwbItemHandler(room:IWBRoom){
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE_GRABBED_ITEM, async(client, info)=>{
         // console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_GRABBED_ITEM + " message", info)
-        let player:Player = room.state.players.get(client.userData.userId)
-        deleteGrabbedItem(room, player)
+        deleteGrabbedItem(room, client, info)
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.PLAYER_CANCELED_CATALOG_ASSET, async(client, info)=>{
@@ -262,12 +290,21 @@ export function iwbItemHandler(room:IWBRoom){
                     itemInfo.editor = client.userData.userId
                     data.assetId = info.assetId,
                     data.catalogId = itemInfo.id
+                    data.sceneId = scene.id
                     data.grabbed = true
                     data.componentData = {...itemInfo}
+
+                    // let childTransform:any
+                    // let parenting = scene[COMPONENT_TYPES.PARENTING_COMPONENT].find(($:any)=> $.aid === info.assetId)
+                    // parenting && parenting.children.forEach((aid:string, i:number)=>{
+                    //     let transform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(aid)
+                    //     childTransform.set(aid, transform)
+                    // })
+                    // data.childTransform = childTransform
+                
                     player.addSelectedAsset(data)
-                    // player.selectedAsset.componentData.comps.includes(COMPONENT_TYPES.IMAGE_COMPONENT) ? addImageComponent(player.selectedAsset.componentData, player.selectedAsset.componentData.imgComp.url) : null
-                    // player.selectedAsset.componentData.comps.includes(COMPONENT_TYPES.NFT_COMPONENT) ? addNFTComponent(player.selectedAsset.componentData, player.selectedAsset.componentData.nftComp) : null
-                    deleteSceneItem(room, player, info,true)
+
+                    // deleteSceneItem(room, player, info,true)
                 }
                 // client.send(SERVER_MESSAGE_TYPES.SELECTED_SCENE_ASSET, {valid:true, reason:"", player:player.address})
             }else{
@@ -308,8 +345,10 @@ export function hasWorldPermissions(room:IWBRoom, user:string){
 }
 
 export function canBuild(room:IWBRoom, user:string, sceneId?:any){
+    console.log('can build check')
     let scene:Scene = room.state.scenes.get(sceneId)
     if(!scene){
+        console.log('no scene')
         return false
     }
 
@@ -319,6 +358,7 @@ export function canBuild(room:IWBRoom, user:string, sceneId?:any){
 
     let world = iwbManager.worlds.find((w) => w.ens === room.state.world)
     if(!world){
+        console.log('no world to build')
         return false
     }
 
@@ -330,6 +370,7 @@ export function canBuild(room:IWBRoom, user:string, sceneId?:any){
         return true
     }
 
+    console.log('we got here can build')
     return false
 }
 
@@ -346,13 +387,13 @@ function checkSceneLimits(scene:Scene, item:any){
         // console.log('scene is over limitations', scene.si + item.si > totalSize, (scene.pc + item.pc) > totalPoly)
         return false
     }else{
-        // console.log('scene is within limitations')
+        // console.log('scene is within limitations')//
         return true
     }
 }
 
-export function createNewItem(room:IWBRoom, client:Client, scene:Scene, item:any, catalogItemInfo:any){
-    //check if new item is a game comonent, if so, check if already exists
+export async function createNewItem(room:IWBRoom, client:Client, scene:Scene, item:any, catalogItemInfo:any){
+    //check if new item is a game component, if so, check if already exists
 
     if(catalogItemInfo.id === CATALOG_IDS.GAME_COMPONENT){
         if(sceneHasGame(scene)){
@@ -361,17 +402,17 @@ export function createNewItem(room:IWBRoom, client:Client, scene:Scene, item:any
         }
     }
 
-    createIWBComponent(room, scene, {scene:item, item:catalogItemInfo})
-    createNameComponent(scene, {aid:item.aid, value:catalogItemInfo.n})
-    createVisibilityComponent(scene, item)
-    createTransformComponent(scene, item)
-    createParentingComponent(scene, item)
+    await createIWBComponent(room, scene, {scene:item, item:catalogItemInfo})
+    await createNameComponent(scene, item.aid, {aid:item.aid, value:catalogItemInfo.n})
+    await createVisibilityComponent(scene, item)
+    await createParentingComponent(scene, item)
+    await createTransformComponent(scene, item)   
 }
 
-async function deleteComponent(scene:any, item:any){
+async function deleteComponent(room:IWBRoom, scene:any, player:Player, item:any){
     switch(item.type){
         case COMPONENT_TYPES.GAME_COMPONENT:
-            await deleteGameComponent(scene, item.aid)
+            await deleteGameComponent(room, scene, player, item.aid)
             break;
     }
     scene[item.type].delete(item.aid)
@@ -442,7 +483,7 @@ function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
     }
 }
 
-export function addItemComponents(room:IWBRoom, client:Client, scene:Scene, item:any, data:any){
+export function addItemComponents(room:IWBRoom, client:Client, scene:Scene, player:Player, item:any, data:any){
     // if(item.type === "SM"){}
     // else{
 
@@ -480,25 +521,25 @@ export function addItemComponents(room:IWBRoom, client:Client, scene:Scene, item
             createVideoComponent(scene, item.aid, catalogItemInfo)
             createMeshRendererComponent(scene, {aid:item.aid, shape:0})
             createMeshColliderComponent(scene, {aid:item.aid, shape:0, layer:3})
-            createTextureComponent(scene, {aid:item.aid, type:1})
-            createEmissiveComponent(scene, item.aid, {type:0})
-            createMaterialComponent(scene, item.aid, {type:0})
+            // createTextureComponent(scene, {aid:item.aid, type:1})
+            // createEmissiveComponent(scene, item.aid, {type:0})
+            createMaterialComponent(scene, item.aid, {onPlay:true, type:0, textureType:1, texture:"", emissiveType:1, emissiveTexture:""})
         break;
 
         case 'Image':
             createMeshRendererComponent(scene, {aid:item.aid, shape:0})
             createMeshColliderComponent(scene, {aid:item.aid, shape:0, layer:3})
-            createTextureComponent(scene, {aid:item.aid, type:0, path:""})
-            createEmissiveComponent(scene, item.aid, {type:0})
-            createMaterialComponent(scene, item.aid, {type:0})
+            // createTextureComponent(scene, {aid:item.aid, type:0, path:""})
+            // createEmissiveComponent(scene, item.aid, {type:0})
+            createMaterialComponent(scene, item.aid, {onPlay:true, type:0, textureType:0, texture:""})
         break;
 
         case 'Audio':
             createMeshRendererComponent(scene, {aid:item.aid, shape:1})
             createMeshColliderComponent(scene, {aid:item.aid, shape:1, layer:3})
             createTextComponent(scene, item.aid, {text:"" + catalogItemInfo.n, onPlay:false})
-            createAudioSourceComponent(scene, item.aid, {url:catalogItemInfo.m})
-            createActionComponent(scene, item.aid, {actions:[{name:"Play Sound", type:"play_sound"}, {name:"Stop Sound", type:"stop_sound"}]})
+            createAudioSourceComponent(scene, item.aid, {url:"assets/" + catalogItemInfo.id + ".mp3"})
+            createActionComponent(scene, item.aid, {actions:[{name:"Play Sound", type:"audio_play"}, {name:"Stop Sound", type:"audio_stop"}]})
             break;
     }
 
@@ -506,15 +547,31 @@ export function addItemComponents(room:IWBRoom, client:Client, scene:Scene, item
         for(let componentType in catalogItemInfo.components){
             let componentData = {...catalogItemInfo.components[componentType]}
             componentData.aid = item.aid
-            createComponentFunctions[componentType](scene, item.aid, componentData)
+            createComponentFunctions[componentType](room, scene, client, player, item.aid, componentData)
         }
     }
 }
 
-function deleteGrabbedItem(room:IWBRoom, player:Player){
+function deleteGrabbedItem(room:IWBRoom, client:Client, info:any){
     try{
+        if(!info || !info.sceneId || !info.aid){
+            return
+        }
+
+        let player:Player = room.state.players.get(client.userData.userId)
+        let scene = room.state.scenes.get(info.sceneId)
+        if(!scene){
+            return
+        }
+
+        let itemInfo = scene[COMPONENT_TYPES.IWB_COMPONENT].get(info.aid)
+        if(!itemInfo){
+            return
+        }
+
         if(player && player.mode === SCENE_MODES.BUILD_MODE){
             player.removeSelectedAsset()
+            removeItem(room, player, scene, {assetId:info.aid}, undefined, true)
 
             // pushPlayfabEvent(
             //     SERVER_MESSAGE_TYPES.SCENE_DELETE_GRABBED_ITEM, 
@@ -528,60 +585,12 @@ function deleteGrabbedItem(room:IWBRoom, player:Player){
     }
 }
 
-function deleteSceneItem(room:IWBRoom, player:Player, info:any, edit?:boolean){
+export function deleteSceneItem(room:IWBRoom, player:Player, info:any, edit?:boolean){
     try{
         if(player && player.mode === SCENE_MODES.BUILD_MODE){
             let scene = room.state.scenes.get(info.sceneId)
             if(scene && canBuild(room, player.address, scene.id)){
-                let itemInfo = scene[COMPONENT_TYPES.IWB_COMPONENT].get(info.assetId)
-                if(itemInfo && !itemInfo.locked){
-                    let pc:any
-                    let si:any
-
-                    console.log('deleting item info', itemInfo.id)
-
-                    if(itemInfo.ugc){
-                        let realmAsset = room.state.realmAssets.get(itemInfo.id)
-                        pc = realmAsset ? realmAsset.pc : undefined
-                        si = realmAsset ? realmAsset.si : undefined
-                    }
-                    else{
-                        let item = itemManager.items.get(itemInfo.id)
-                        pc = item ? item.pc : undefined
-                        si = item ? item.si : undefined
-                    }
-
-                    scene.pc -= pc ? pc : 0
-                    scene.si -= si ? si : 0
-
-                    removeAllAssetComponents(scene, info.assetId)
-
-                    let itemData = itemInfo.ugc ? 
-                        room.state.realmAssets.get(itemInfo.id) : 
-                        itemManager.items.get(itemInfo.id)
-
-                    if(edit){
-                        console.log('player editing asset, dont remove from selectecd tree')
-                    }
-                    else{
-                        if(info.childDelete){}
-                        else{
-                            player.removeSelectedAsset()
-                        }
-                        
-                        pushPlayfabEvent(
-                            SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM, 
-                            player, 
-                            [{name:itemData.n, type:itemInfo.type}]
-                        )
-                    }
-
-                    //check if game component and remove all levels and children
-                    if(itemInfo.id === CATALOG_IDS.GAME_COMPONENT){
-                        console.log('removing game component, need to remove all levels as well')
-                        removeGameComponent(room, scene, player, info.assetId, itemInfo)
-                    }
-                }
+                removeItem(room, player, scene, info, edit, true)
             }
         }
     }
@@ -590,28 +599,82 @@ function deleteSceneItem(room:IWBRoom, player:Player, info:any, edit?:boolean){
     }
 }
 
-export function removeAllAssetComponents(scene:any, aid:string){
+export async function removeItem(room:IWBRoom, player:Player, scene:Scene, info:any, edit?:boolean, topLevelItem?:boolean){
+    let itemInfo = scene[COMPONENT_TYPES.IWB_COMPONENT].get(info.assetId)
+    if(itemInfo && !itemInfo.locked){
+        let pc:any
+        let si:any
+
+        console.log('deleting item info', itemInfo.id)
+
+        if(itemInfo.ugc){
+            let realmAsset = room.state.realmAssets.get(itemInfo.id)
+            pc = realmAsset ? realmAsset.pc : undefined
+            si = realmAsset ? realmAsset.si : undefined
+        }
+        else{
+            let item = itemManager.items.get(itemInfo.id)
+            pc = item ? item.pc : undefined
+            si = item ? item.si : undefined
+        }
+
+        scene.pc -= pc ? pc : 0
+        scene.si -= si ? si : 0
+
+        await removeParenting(room, player, scene, {aid:info.assetId}, topLevelItem)
+        removeAllAssetComponents(room, player, scene, {aid:info.assetId})
+
+        let itemData = itemInfo.ugc ? 
+            room.state.realmAssets.get(itemInfo.id) : 
+            itemManager.items.get(itemInfo.id)
+
+        if(edit){
+            console.log('player editing asset, dont remove from selectecd tree')
+        }
+        else{
+            if(info.childDelete){}
+            else{
+                player.removeSelectedAsset()
+            }
+            
+            pushPlayfabEvent(
+                SERVER_MESSAGE_TYPES.SCENE_DELETE_ITEM, 
+                player, 
+                [{name:itemData.n, type:itemInfo.type}]
+            )
+        }
+
+        //check if game component and remove all levels and children
+        // if(itemInfo.id === CATALOG_IDS.GAME_COMPONENT){
+        //     console.log('removing game component, need to remove all levels as well')
+        //     removeGameComponent(room, scene, player, info.assetId, itemInfo)
+        // }
+    }
+}
+
+export function removeAllAssetComponents(room:IWBRoom, player:Player, scene:any, info:any){
     Object.values(COMPONENT_TYPES).forEach((component:any)=>{
         if(scene[component] && component !== COMPONENT_TYPES.PARENTING_COMPONENT){
             if(component === COMPONENT_TYPES.ACTION_COMPONENT){
-                let actions = scene[component].get(aid)
+                let actions = scene[component].get(info.aid)
                 if(actions){
                     actions.actions.forEach((action:any)=>{
                         removeActionFromTriggers(scene, action.id)
                     })
                 }
             }
-            scene[component].delete(aid)
+            scene[component].delete(info.aid)
         }
     })
 
-    if(["0","1","2"].includes(aid)){
+    if(["0","1","2"].includes(info.aid)){
         return
     }
-    removeParenting(scene, aid)
+    scene.si = 0
+    scene.pc = 0
 }
 
-function copyItem(room:IWBRoom, scene:any, info:any, catalogInfo:any){
+function copyItem(room:IWBRoom, scene:any, client:Client, player:Player, info:any, catalogInfo:any){
     let omittedComponents:COMPONENT_TYPES[] = [
         COMPONENT_TYPES.PARENTING_COMPONENT,
         COMPONENT_TYPES.VISBILITY_COMPONENT,
@@ -647,7 +710,7 @@ function copyItem(room:IWBRoom, scene:any, info:any, catalogInfo:any){
                 //     })
                 // }
     
-                createComponentFunctions[component](scene, currentComponent.aid, currentComponent)
+                createComponentFunctions[component](room, scene, client, player, currentComponent.aid, currentComponent)
                 }
             }
         }

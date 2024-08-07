@@ -32,7 +32,7 @@ export function isInPrivateWorld(player:Player){
 
 export function iwbPlayerHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED, async(client, info)=>{
-        //  console.log(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED + " message", info)
+         console.log(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED + " message", info)
  
          let player:Player = room.state.players.get(client.userData.userId)
          if(player){

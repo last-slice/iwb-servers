@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // app.use(express.static('/root/iwb-deployment/dapps'));
 app.use(express.static(path.join('/root/iwb-deployment/dapps', 'deploy')));
+app.use(express.static(path.join('/root/iwb-deployment/dapps', 'upload')));
 
 app.use("/", router);
 export default app;

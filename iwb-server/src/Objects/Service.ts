@@ -163,6 +163,16 @@ export function handlBulkWorldsDeployments(req:any, res:any){
     }
 }
 
+export async function handleAdminDeployRequest(req:any, res:any){
+    if (req.params.auth !== process.env.IWB_DEPLOYMENT_AUTH) {
+        console.log('invalid asset auth key')
+        return res.status(200).json({valid:false, message: 'Unauthorized' });
+    }else{
+        res.status(200).send({valid: true})
+        iwbManager.adminDeploy(req.params.user, req.params.world)
+    }
+}
+
 export function handleSceneDeploymentReady(req:any, res:any){
     if(DEBUG){
         res.status(200).send({valid: true})

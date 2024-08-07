@@ -9,6 +9,7 @@ export class IWBRoomState extends Schema {
   @type("number") cv:number = 0 
   @type("number") sceneCount:number = 0 
   
+  catalogVersion:number = 0
   realmAssets:Map<string,any> = new Map()
   realmAssetsChanged = false
 
@@ -17,13 +18,12 @@ export class IWBRoomState extends Schema {
   @type(["string"]) occupiedParcels = new ArraySchema<string>()
   @type(["string"]) temporaryParcels = new ArraySchema<string>()
   
-    @type({ map: Player }) players = new MapSchema<Player>();
   @type({map: Scene}) scenes = new MapSchema<Scene>()
-
+  @type({ map: Player }) players = new MapSchema<Player>();
 
   realm:string = ""
   version:number = 0
-  gcWorld:boolean = false
+  @type("boolean") gcWorld:boolean = false
   // scenes: Scene[] = []
   // occupiedParcels: string[] = []
   reservedParcels: string[] = ["0,0", "0,1", "1,0", "1,1"]
@@ -35,6 +35,7 @@ export class IWBRoomState extends Schema {
   realmToken:string
   realmId:string
   realmTokenType:string
+  options:any
 
 
 }

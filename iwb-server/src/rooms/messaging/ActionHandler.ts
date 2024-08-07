@@ -3,6 +3,8 @@ import { IWBRoom } from "../IWBRoom";
 import { ACTIONS, COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../../utils/types";
 import { ActionComponent, ActionComponentSchema, handleCloneAction } from "../../Objects/Actions";
 import { Player } from "../../Objects/Player";
+import { handleReward } from "../../Objects/Rewards";
+import { handlePlaylistAction } from "../../Objects/Playlist";
 
 export function iwbSceneActionHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ACTION, (client:Client, info:any)=>{
@@ -16,6 +18,16 @@ export function iwbSceneActionHandler(room:IWBRoom){
         let scene = room.state.scenes.get(sceneId)
 
         switch(info.type){
+            case ACTIONS.STOP_PLAYLIST:
+            case ACTIONS.SEEK_PLAYLIST:
+            case ACTIONS.PLAY_PLAYLIST:
+                handlePlaylistAction(room, client, scene, info)
+                break;
+
+            case ACTIONS.GIVE_REWARD:
+                handleReward(room, client, scene, info)
+                break;
+
             case 'live-action':
                 if(!info.actionId || !info.aid){
                     return
@@ -45,7 +57,8 @@ export function iwbSceneActionHandler(room:IWBRoom){
                     console.log('error trying to bounce', e)
                     }
                 break;
-            case 'live-players-get':
+            
+                case 'live-players-get':
                 if(scene){
                     let players:any[] = []
                     room.state.players.forEach((player:Player, userId:string)=>{
