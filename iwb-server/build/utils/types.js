@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GAME_TYPES = exports.CATALOG_IDS = exports.TRIGGER_TYPES = exports.ACCESS_FILTERS = exports.ACCESS_CATEGORIES = exports.ACCESS_TYPES = exports.REWARD_TYPES = exports.Triggers = exports.ACTIONS = exports.BLOCKCHAINS = exports.COLLISION_LAYERS = exports.COMPONENT_TYPES = exports.EDIT_MODIFIERS = exports.EDIT_MODES = exports.VIEW_MODES = exports.SCENE_MODES = exports.SERVER_MESSAGE_TYPES = exports.Color4 = void 0;
+exports.PLAYER_GAME_STATUSES = exports.GAME_TYPES = exports.CATALOG_IDS = exports.TRIGGER_TYPES = exports.ACCESS_FILTERS = exports.ACCESS_CATEGORIES = exports.ACCESS_TYPES = exports.REWARD_TYPES = exports.Triggers = exports.ACTIONS = exports.BLOCKCHAINS = exports.COLLISION_LAYERS = exports.COMPONENT_TYPES = exports.EDIT_MODIFIERS = exports.EDIT_MODES = exports.VIEW_MODES = exports.SCENE_MODES = exports.SERVER_MESSAGE_TYPES = exports.Color4 = void 0;
 const schema_1 = require("@colyseus/schema");
 class Color4 extends schema_1.Schema {
 }
@@ -65,6 +65,7 @@ var SERVER_MESSAGE_TYPES;
     SERVER_MESSAGE_TYPES["SCENE_SAVE_NEW"] = "scene_save_new";
     SERVER_MESSAGE_TYPES["SCENE_ADD_ITEM"] = "scene_add_item";
     SERVER_MESSAGE_TYPES["SCENE_ADDED_NEW"] = "scene_added_new";
+    SERVER_MESSAGE_TYPES["SCENE_DROPPED_GRABBED"] = "scene_dropped_grabbed";
     SERVER_MESSAGE_TYPES["SCENE_LOAD"] = "scene_load";
     SERVER_MESSAGE_TYPES["SCENE_UPDATE_ITEM"] = "scene_update_item";
     SERVER_MESSAGE_TYPES["SCENE_DELETE_ITEM"] = "scene_delete_item";
@@ -98,6 +99,7 @@ var SERVER_MESSAGE_TYPES;
     SERVER_MESSAGE_TYPES["WORLD_ADD_BP"] = "world_add_build_permissions";
     SERVER_MESSAGE_TYPES["WORLD_DELETE_BP"] = "world_delete_build_permissions";
     SERVER_MESSAGE_TYPES["GET_MARKETPLACE"] = "get_marketplace";
+    SERVER_MESSAGE_TYPES["FORCE_BACKUP"] = "force_backup";
     SERVER_MESSAGE_TYPES["CUSTOM"] = "custom";
     SERVER_MESSAGE_TYPES["IWB_VERSION_UPDATE"] = "iwb_version_update";
     SERVER_MESSAGE_TYPES["VERIFY_ACCESS"] = "verify_access";
@@ -110,6 +112,8 @@ var SERVER_MESSAGE_TYPES;
     SERVER_MESSAGE_TYPES["GAME_FINISHED_EARLY"] = "game_finished_early";
     SERVER_MESSAGE_TYPES["WIN_GAME"] = "win_game";
     SERVER_MESSAGE_TYPES["GAME_TIED"] = "game_tied";
+    SERVER_MESSAGE_TYPES["HIT_OBJECT"] = "hit_object";
+    SERVER_MESSAGE_TYPES["SHOOT"] = "shoot";
 })(SERVER_MESSAGE_TYPES || (exports.SERVER_MESSAGE_TYPES = SERVER_MESSAGE_TYPES = {}));
 var SCENE_MODES;
 (function (SCENE_MODES) {
@@ -249,9 +253,9 @@ var ACTIONS;
     ACTIONS["SET_NUMBER"] = "set_number";
     ACTIONS["SUBTRACT_NUMBER"] = "subtract_number";
     ACTIONS["CHANGE_LEVEL"] = "change_level";
-    ACTIONS["LOAD_LEVEL"] = "load_level";
-    ACTIONS["END_LEVEL"] = "end_level";
-    ACTIONS["COMPLETE_LEVEL"] = "complete_level";
+    ACTIONS["LOAD_LEVEL"] = "level_load";
+    ACTIONS["END_LEVEL"] = "level_lose";
+    ACTIONS["COMPLETE_LEVEL"] = "level_win";
     ACTIONS["START_TIMER"] = "start_timer";
     ACTIONS["STOP_TIMER"] = "stop_timer";
     ACTIONS["LOCK_PLAYER"] = "lock_player";
@@ -283,7 +287,7 @@ var Triggers;
     // ON_DAMAGE
     // ON_GLOBAL_CLICK
     // ON_TICK
-    // ON_HEAL//
+    // ON_HEAL//s
     Triggers["ON_STATE_CHANGE"] = "on_state_change";
     Triggers["ON_COUNTER_CHANGE"] = "on_counter_change";
     Triggers["ON_RAYCAST_HIT"] = "on_raycast_hit";
@@ -291,6 +295,7 @@ var Triggers;
     Triggers["ON_LEVEL_LOADED"] = "on_level_loaded";
     Triggers["ON_LEVEL_COMPLETE"] = "on_level_complete";
     Triggers["ON_LEVEL_END"] = "on_level_end";
+    Triggers["ON_JOIN_LOBBY"] = "on_join_lobby";
 })(Triggers || (exports.Triggers = Triggers = {}));
 var REWARD_TYPES;
 (function (REWARD_TYPES) {
@@ -324,3 +329,11 @@ var GAME_TYPES;
     GAME_TYPES[GAME_TYPES["SOLO"] = 0] = "SOLO";
     GAME_TYPES[GAME_TYPES["MULTIPLAYER"] = 1] = "MULTIPLAYER";
 })(GAME_TYPES || (exports.GAME_TYPES = GAME_TYPES = {}));
+var PLAYER_GAME_STATUSES;
+(function (PLAYER_GAME_STATUSES) {
+    PLAYER_GAME_STATUSES["NONE"] = "none";
+    PLAYER_GAME_STATUSES["PLAYING"] = "playing";
+    PLAYER_GAME_STATUSES["LOBBY"] = "lobby";
+    PLAYER_GAME_STATUSES["WAITING"] = "waiting";
+    PLAYER_GAME_STATUSES["ELIMINATED"] = "eliminated";
+})(PLAYER_GAME_STATUSES || (exports.PLAYER_GAME_STATUSES = PLAYER_GAME_STATUSES = {}));

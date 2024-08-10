@@ -23,9 +23,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handlBulkWorldsDeployments = exports.handleWorldDeployment = exports.updateCatalogAssets = exports.updateIWBVersion = exports.authenticateToken = exports.handleNewAssetData = exports.handleAssetUploaderSigning = void 0;
+exports.handleDeploymentFinished = exports.handleSceneDeploymentReady = exports.handleAdminDeployRequest = exports.handlBulkWorldsDeployments = exports.handleWorldDeployment = exports.updateCatalogAssets = exports.updateIWBVersion = exports.authenticateToken = exports.handleNewAssetData = exports.handleAssetUploaderSigning = void 0;
 const jwt = __importStar(require("jsonwebtoken"));
 const app_config_1 = require("../app.config");
+const config_1 = require("../utils/config");
+const types_1 = require("../utils/types");
 function handleAssetUploaderSigning(req, res) {
     if (req.body.user && req.header('Authorization') && req.header('AssetAuth')) {
         const assetAuth = req.header('AssetAuth').replace('Bearer ', '').trim();
@@ -53,30 +55,36 @@ function handleAssetUploaderSigning(req, res) {
 }
 exports.handleAssetUploaderSigning = handleAssetUploaderSigning;
 function handleNewAssetData(req, res) {
-    if (req.body.user && req.header('Authorization') && req.header('AssetAuth')) {
-        const assetAuth = req.header('AssetAuth').replace('Bearer ', '').trim();
-        const sceneToken = req.header('Authorization').replace('Bearer ', '').trim();
-        if (!sceneToken || !assetAuth) {
-            console.log('no scene or asset token');
-            return res.status(200).json({ valid: false, message: 'Unauthorized' });
-        }
-        if (assetAuth !== process.env.IWB_UPLOAD_AUTH_KEY) {
-            console.log('invalid asset auth key');
-            return res.status(200).json({ valid: false, message: 'Unauthorized' });
-        }
-        jwt.verify(sceneToken, process.env.SERVER_SECRET, (err, user) => {
-            if (err) {
-                console.log('error validating scene upload token for user', req.body.user);
-                return res.status(200).json({ valid: false, message: 'Invalid token' });
-            }
-            console.log('new asset signature verified, need to store data in playfab');
-            res.status(200).send({ valid: true });
-            app_config_1.itemManager.saveNewAsset(req.body.user, req.body);
-        });
+    if (config_1.DEBUG) {
+        res.status(200).send({ valid: true });
+        app_config_1.itemManager.saveNewAsset(req.body.user, req.body);
     }
     else {
-        console.log('invalue body and user');
-        res.status(200).send({ valid: false, token: false });
+        if (req.body.user && req.header('Authorization') && req.header('AssetAuth')) {
+            const assetAuth = req.header('AssetAuth').replace('Bearer ', '').trim();
+            const sceneToken = req.header('Authorization').replace('Bearer ', '').trim();
+            if (!sceneToken || !assetAuth) {
+                console.log('no scene or asset token');
+                return res.status(200).json({ valid: false, message: 'Unauthorized' });
+            }
+            if (assetAuth !== process.env.IWB_UPLOAD_AUTH_KEY) {
+                console.log('invalid asset auth key');
+                return res.status(200).json({ valid: false, message: 'Unauthorized' });
+            }
+            jwt.verify(sceneToken, process.env.SERVER_SECRET, (err, user) => {
+                if (err) {
+                    console.log('error validating scene upload token for user', req.body.user);
+                    return res.status(200).json({ valid: false, message: 'Invalid token' });
+                }
+                console.log('new asset signature verified, need to store data in playfab');
+                res.status(200).send({ valid: true });
+                app_config_1.itemManager.saveNewAsset(req.body.user, req.body);
+            });
+        }
+        else {
+            console.log('invalue body and user');
+            res.status(200).send({ valid: false, token: false });
+        }
     }
 }
 exports.handleNewAssetData = handleNewAssetData;
@@ -111,6 +119,9 @@ function updateIWBVersion(req, res, manual) {
         else {
             app_config_1.itemManager.notifyUsersDeploymentReady();
         }
+        app_config_1.iwbManager.rooms.forEach((room) => {
+            room.broadcast(types_1.SERVER_MESSAGE_TYPES.IWB_VERSION_UPDATE, { updates: req.body.updates, version: app_config_1.iwbManager.version });
+        });
         res.status(200).send({ valid: true });
     }
     else {
@@ -159,3 +170,44 @@ function handlBulkWorldsDeployments(req, res) {
     }
 }
 exports.handlBulkWorldsDeployments = handlBulkWorldsDeployments;
+async function handleAdminDeployRequest(req, res) {
+    if (req.params.auth !== process.env.IWB_DEPLOYMENT_AUTH) {
+        console.log('invalid asset auth key');
+        return res.status(200).json({ valid: false, message: 'Unauthorized' });
+    }
+    else {
+        res.status(200).send({ valid: true });
+        app_config_1.iwbManager.adminDeploy(req.params.user, req.params.world);
+    }
+}
+exports.handleAdminDeployRequest = handleAdminDeployRequest;
+function handleSceneDeploymentReady(req, res) {
+    if (config_1.DEBUG) {
+        res.status(200).send({ valid: true });
+        app_config_1.iwbManager.sceneReady(req.body);
+    }
+    else {
+        if (!req.header("Authorization") || req.header("Authorization") !== process.env.IWB_DEPLOYMENT_AUTH || !req.body) {
+            console.log('invalid auth key');
+            return res.status(200).json({ valid: false, message: 'Unauthorized' });
+        }
+        else {
+            res.status(200).send({ valid: true });
+            app_config_1.iwbManager.sceneReady(req.body);
+        }
+    }
+}
+exports.handleSceneDeploymentReady = handleSceneDeploymentReady;
+function handleDeploymentFinished(req, res) {
+    res.status(200).send({ valid: true });
+    let player = app_config_1.iwbManager.findUser(req.body.user);
+    if (player) {
+        if (req.body.valid) {
+            player.sendPlayerMessage(req.body.type, { world: req.body.world, name: req.body.name, valid: req.body.valid, dest: req.body.dest });
+        }
+        else {
+            player.sendPlayerMessage(req.body.type, { valid: req.body.valid });
+        }
+    }
+}
+exports.handleDeploymentFinished = handleDeploymentFinished;

@@ -23,6 +23,7 @@ export class RewardComponent extends Schema {
 }
 
 export function createRewardComponent(scene:Scene, aid:string, data?:any){
+    console.log('creating rewrd component',data)
     let component:any = new RewardComponent()
     if(data){
         for(let key in data){

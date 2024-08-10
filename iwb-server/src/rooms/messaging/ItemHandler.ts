@@ -1,6 +1,6 @@
 import { Client } from "colyseus";
 import { IWBRoom } from "../IWBRoom";
-import { CATALOG_IDS, COMPONENT_TYPES, EDIT_MODIFIERS, SCENE_MODES, SERVER_MESSAGE_TYPES, TRIGGER_TYPES } from "../../utils/types";
+import { ACTIONS, CATALOG_IDS, COMPONENT_TYPES, EDIT_MODIFIERS, SCENE_MODES, SERVER_MESSAGE_TYPES, TRIGGER_TYPES } from "../../utils/types";
 import { Quaternion, Vector3, createTransformComponent, editTransform } from "../../Objects/Transform";
 import { createVisibilityComponent, editVisibility } from "../../Objects/Visibility";
 import { createTextComponent, editTextShape } from "../../Objects/TextShape";
@@ -13,7 +13,7 @@ import { NameComponent, createNameComponent, editNameComponent } from "../../Obj
 import { GltfComponent, createGLTFComponent, editGltfComponent } from "../../Objects/Gltf";
 import { ParentingComponent, createParentingComponent, editParentingComponent, removeParenting } from "../../Objects/Parenting";
 import { AnimatorComponentSchema, createAnimationComponent } from "../../Objects/Animator";
-import { createAudioSourceComponent, editAudioComponent } from "../../Objects/Sound";
+import { createAudioSourceComponent, createAudioStreamComponent, editAudioComponent } from "../../Objects/Sound";
 import { createMaterialComponent, editMaterialComponent } from "../../Objects/Materials";
 import { createVideoComponent, editVideoComponent } from "../../Objects/Video";
 import { IWBComponent, createIWBComponent, editIWBComponent } from "../../Objects/IWB";
@@ -531,7 +531,7 @@ export function addItemComponents(room:IWBRoom, client:Client, scene:Scene, play
             createMeshColliderComponent(scene, {aid:item.aid, shape:0, layer:3})
             // createTextureComponent(scene, {aid:item.aid, type:0, path:""})
             // createEmissiveComponent(scene, item.aid, {type:0})
-            createMaterialComponent(scene, item.aid, {onPlay:true, type:0, textureType:0, texture:""})
+            createMaterialComponent(scene, item.aid, {onPlay:true, type:0, textureType:'TEXTURE', texture:""})
         break;
 
         case 'Audio':
@@ -540,6 +540,26 @@ export function addItemComponents(room:IWBRoom, client:Client, scene:Scene, play
             createTextComponent(scene, item.aid, {text:"" + catalogItemInfo.n, onPlay:false})
             createAudioSourceComponent(scene, item.aid, {url:"assets/" + catalogItemInfo.id + ".mp3"})
             createActionComponent(scene, item.aid, {actions:[{name:"Play Sound", type:"audio_play"}, {name:"Stop Sound", type:"audio_stop"}]})
+            createMaterialComponent(scene, item.aid, {onPlay:false, type:0, "albedoColor": {
+                "r": 0,
+                "g": 0,
+                "b": 1,
+                "a": 0.5
+            }})
+            break;
+
+        case 'Audio Stream':
+            createMeshRendererComponent(scene, {aid:item.aid, shape:1})
+            createMeshColliderComponent(scene, {aid:item.aid, shape:1, layer:3})
+            createTextComponent(scene, item.aid, {text:"" + catalogItemInfo.n, onPlay:false})
+            createMaterialComponent(scene, item.aid, {onPlay:false, type:0, "albedoColor": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 1,
+                    "a": 0.5
+                }})
+                createAudioSourceComponent(scene, item.aid, {url:""})
+            // createActionComponent(scene, item.aid, {actions:[{name:"Start Audio Stream", type:ACTIONS.PLAY_AUDIO_STREAM}, {name:"Stop Audio Stream", type:ACTIONS.STOP_AUDIO_STREAM}]})
             break;
     }
 

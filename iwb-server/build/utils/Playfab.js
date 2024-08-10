@@ -27,7 +27,7 @@ async function checkEventQueue() {
         catch (e) {
             console.log('error posting event', e);
             postingEvents = false;
-            eventQueue.push(event);
+            // eventQueue.push(event) 
         }
     }
 }

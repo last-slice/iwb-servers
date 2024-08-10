@@ -260,6 +260,8 @@ export enum ACTIONS {
     LOAD_LEVEL = 'level_load',
     END_LEVEL = 'level_end',
     COMPLETE_LEVEL = 'level_win',
+    ADVANCED_LEVEL = 'level_advance',
+    LOSE_LEVEL = 'level_lose',
     START_TIMER = 'timer_start',//
     STOP_TIMER = 'timer_stop',
     LOCK_PLAYER = 'player_lock',
@@ -281,7 +283,10 @@ export enum ACTIONS {
     END_GAME = 'game_end',
     PLAY_PLAYLIST = 'playlist_play',
     SEEK_PLAYLIST = 'playlist_seek',
-    STOP_PLAYLIST = 'playlist_stop'
+    STOP_PLAYLIST = 'playlist_stop',
+    POPUP_SHOW = 'popup_show',
+    POPUP_HIDE = 'popup_hide',
+    RANDOM_NUMBER ='random_number'
 }
 
 export enum Triggers {
@@ -313,6 +318,11 @@ export enum Triggers {
     ON_LEVEL_END = 'on_level_end',
     ON_JOIN_LOBBY = 'on_join_lobby'
 }
+
+export enum TriggerConditionOperation {
+    AND = 'and',
+    OR = 'or',
+  }
 
 export enum REWARD_TYPES {
     DCL_ITEM = 'dcl_item'

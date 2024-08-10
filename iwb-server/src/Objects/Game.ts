@@ -3,11 +3,11 @@ import { Scene } from "./Scene";
 import { ACTIONS, CATALOG_IDS, COMPONENT_TYPES, GAME_TYPES, PLAYER_GAME_STATUSES, SERVER_MESSAGE_TYPES, Triggers } from "../utils/types";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { Client, generateId } from "colyseus";
-import { Vector3 } from "./Transform";
+import { Quaternion, Vector3 } from "./Transform";
 import { LevelComponent, createGameLevel, createLevelComponent, removeLevels } from "./Level";
 import { createTriggerComponent, editTriggerComponent } from "./Trigger";
 import { Player } from "./Player";
-import { editGameItemComponent } from "./GameItem";
+import { createGameItemComponent, editGameItemComponent } from "./GameItem";
 import { createActionComponent, editActionComponent } from "./Actions";
 import { createPointerComponent } from "./Pointers";
 import { GameManager } from "../rooms/IWBGameManager";
@@ -51,6 +51,7 @@ export class GameComponent extends Schema{
     @type("number") startLevel:number
     @type("number") currentLevel:number
     @type("boolean") disableTeleport:boolean = false
+    @type("boolean") disableMap:boolean = false
     @type("boolean") saveProgress:boolean //do we need this?
     @type("boolean") premiumAccess:boolean //do we need this? ifo
     @type("boolean") premiumAccessType:boolean //do we need this? ifo
@@ -252,7 +253,6 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
                 switch(info.gameType){
                     // case GAME_TYPES.SOLO:
                     case 'SOLO':
-                        console.log('chose solo game mode, load config here')
                         itemInfo.startLevel = 1
                         itemInfo.currentLevel = 0
                         createSoloEntities(room, client, scene, player, info.aid, itemInfo)
@@ -373,6 +373,10 @@ async function addGameConsoleTriggers(room:IWBRoom, scene:Scene, aid:string, gam
                 {
                     "name": "End Game",
                     "type": ACTIONS.END_GAME
+                },
+                {
+                    "name": "Advance Level",
+                    "type": ACTIONS.ADVANCED_LEVEL
                 }
             ]
         }
@@ -583,32 +587,81 @@ async function createSoloEntities(room:IWBRoom, client:Client, scene:Scene, play
 }
 
 async function createSoloStartLevelEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, aid:string, gameInfo:GameComponent){
-    let currentParentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex($=> $.aid === aid)
-    if(currentParentIndex >= 0){
-        let newAid = await addEntity(room, client, scene, player, currentParentIndex)
-        await editNameComponent({
-            aid:newAid,
-            value:"Game Start Level Entity"
-        }, scene)
+    // let currentParentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex($=> $.aid === aid)
+    // if(currentParentIndex >= 0){
+    //     let newAid = await addEntity(room, client, scene, player, currentParentIndex)
+    //     await editNameComponent({
+    //         aid:newAid,
+    //         value:"Game Start Level Entity"
+    //     }, scene)
 
-        await createCounterComponent(scene, newAid, {
-            defaultValue:gameInfo.startLevel
-        })
-        gameInfo.currentLevelAid = newAid 
-    }
+    //     await createCounterComponent(scene, newAid, {
+    //         defaultValue:gameInfo.startLevel
+    //     })
+    //     gameInfo.currentLevelAid = newAid 
+    // }
+
+
+    let parentTransform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(aid)
+    let newEntityPosition = new Vector3({x:parentTransform.p.x, y:parentTransform.p.y + 1.5, z:parentTransform.p.z})
+
+    let newEntity = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
+    let newEntityAid = generateId(6)
+
+    newEntity.n = "Game Start Level Entity"
+    newEntity.aid = newEntityAid
+    newEntity.pending = false
+    newEntity.ugc = false
+    newEntity.position = newEntityPosition
+    newEntity.rotation = new Quaternion({x:0,y:0,z:0})
+    newEntity.scale = new Vector3({x:1,y:1,z:1})
+
+    await createNewItem(room, client, scene, newEntity, newEntity) 
+    await addItemComponents(room, client, scene, player, newEntity, newEntity)
+    await createGameItemComponent(scene, newEntityAid)
+
+    await createCounterComponent(scene, newEntityAid, {
+        defaultValue:gameInfo.startLevel
+    })
 }
 
 async function createSoloCurrentLevelEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, aid:string, gameInfo:any){
-    let currentParentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex($=> $.aid === aid)
-    if(currentParentIndex >= 0){
-        let newAid = await addEntity(room, client, scene, player, currentParentIndex)
-        await editNameComponent({
-            aid:newAid,
-            value:"Game Current Level Entity"
-        }, scene)
+    // let currentParentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex($=> $.aid === aid)
+    // if(currentParentIndex >= 0){
+    //     let newAid = await addEntity(room, client, scene, player, currentParentIndex)
+    //     await editNameComponent({
+    //         aid:newAid,
+    //         value:"Game Current Level Entity"
+    //     }, scene)
 
-        await createCounterComponent(scene, newAid, {
-            defaultValue:0
-        })
-    }
+    //     await createCounterComponent(scene, newAid, {
+    //         defaultValue:0
+    //     })
+    // }
+
+    let parentTransform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(aid)
+    let newEntityPosition = new Vector3({x:parentTransform.p.x, y:parentTransform.p.y + 2.5, z:parentTransform.p.z})
+
+    let newEntity = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
+    let newEntityAid = generateId(6)
+
+    newEntity.n = "Game Current Level Entity"
+    newEntity.aid = newEntityAid
+    newEntity.pending = false
+    newEntity.ugc = false
+    newEntity.position = newEntityPosition
+    newEntity.rotation = new Quaternion({x:0,y:0,z:0})
+    newEntity.scale = new Vector3({x:1,y:1,z:1})
+
+    await createNewItem(room, client, scene, newEntity, newEntity) 
+    await addItemComponents(room, client, scene, player, newEntity, newEntity)
+    await createGameItemComponent(scene, newEntityAid)
+
+    await createCounterComponent(scene, newEntityAid, {
+        defaultValue:0
+    })
+    gameInfo.currentLevelAid = newEntityAid 
+
+    await createActionComponent(scene, newEntityAid, {actions:[{value:1, name: 'Advance Level', type:ACTIONS.ADD_NUMBER}]})
+   
 }

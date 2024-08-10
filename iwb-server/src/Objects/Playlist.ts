@@ -110,6 +110,10 @@ export function handlePlaylistAction(room:IWBRoom, client:Client, scene:Scene, i
          stopPlaylist(playlistInfo)
             break;
 
+        case ACTIONS.SEEK_PLAYLIST:
+            seekPlaylist(room, client, scene, playlistInfo, info.meshAid)
+            break;
+
         case ACTIONS.PLAY_PLAYLIST:
             switch(playlistInfo.type){
                 case 0: //images
@@ -137,24 +141,22 @@ export function garbageCollectPlaylist(room:IWBRoom){
 
 export function stopPlaylist(playlist:PlaylistComponent){
     clearInterval(playlist.player)
-    playlist.current = undefined
-    playlist.currentKeyframe = undefined
+    playlist.current = -1
+    playlist.currentKeyframe = -1
 }
 
 export function playImagePlaylist(room:IWBRoom, client:Client, scene:Scene, playlistInfo:any, meshAid:string){
-    console.log('playing image playlist')
     playlistInfo.current = -1
 
-    sendPlaylistUpdate(room, client, scene, playlistInfo, meshAid)
+    seekPlaylist(room, client, scene, playlistInfo, meshAid)
     playlistInfo.player = setInterval(()=>{
-        sendPlaylistUpdate(room, client, scene, playlistInfo, meshAid)
+        seekPlaylist(room, client, scene, playlistInfo, meshAid)
     }, 1000 * playlistInfo.slideTime)
 }
 
-function sendPlaylistUpdate(room:IWBRoom, client:Client, scene:Scene, playlistInfo:any, meshAid:string){
+function seekPlaylist(room:IWBRoom, client:Client, scene:Scene, playlistInfo:any, meshAid:string){
     playlistInfo.current += 1
     let currentSlide = playlistInfo.playtype === 0 ? (playlistInfo.current > playlistInfo.playlist.length - 1 ? 0 : playlistInfo.current) : getRandomIntInclusive(0, playlistInfo.playlist.length - 1)
-    console.log('current slide to play is', currentSlide)
     playlistInfo.current = currentSlide
     // room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ACTION, {
     //     action:ACTIONS.PLAY_PLAYLIST,

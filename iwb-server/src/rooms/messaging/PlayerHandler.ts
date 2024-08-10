@@ -42,11 +42,12 @@ export function iwbPlayerHandler(room:IWBRoom){
      })
 
      room.onMessage(SERVER_MESSAGE_TYPES.INIT_WORLD, async(client, info)=>{
-       //   console.log(SERVER_MESSAGE_TYPES.INIT_WORLD + " message", info)
+         console.log(SERVER_MESSAGE_TYPES.INIT_WORLD + " message", info)
  
          let player:Player = room.state.players.get(client.userData.userId)
          if(player){
-            //  console.log('need to initiate deployment to world')
+            info.world.worldName = info.world.name
+            delete info.world.name
              iwbManager.initWorld(room, info.world)
          }
      })

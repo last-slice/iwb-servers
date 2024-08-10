@@ -33,6 +33,8 @@ export class ActionComponentSchema extends Schema{
     @type("string") type:string
     @type("string") game:string
     @type("string") emote:string
+    @type("string") label:string
+    @type("string") variableText:string
     @type("string") text:string
     @type("string") url:string
     @type("string") movePos:string
@@ -40,6 +42,8 @@ export class ActionComponentSchema extends Schema{
     @type("string") counter:string
     @type("string") state:string
     @type("string") message:string
+    @type("string") button1Label:string
+    @type("string") button2Label:string
 
     @type("number") anchor:number
     @type("number") timer:number
@@ -53,11 +57,17 @@ export class ActionComponentSchema extends Schema{
     @type("number") size:number
     @type("number") ttype:number
     @type("number") tloop:number
+    @type("number") min:number
+    @type("number") max:number
 
     @type("boolean") visible:boolean
     @type("boolean") moveRel:boolean
+    @type("boolean") button1:boolean
+    @type("boolean") button2:boolean
 
     @type(["string"]) actions:ArraySchema<string>
+    @type(["string"]) button1Actions:ArraySchema<string>
+    @type(["string"]) button2Actions:ArraySchema<string>
 }
 
 export class ActionComponent extends Schema {
@@ -108,6 +118,28 @@ export function editActionComponent(data:any, scene:Scene){
                             newAction.actions.push(actionId)
                         })
                     }
+                    
+                    if(key === "button1"){
+                        newAction.button1 = action.button1
+                        if(action.button2){
+                            newAction.button1Label = action.button1.label
+                            if(action.button1.actionId){
+                                newAction.button1Actions = new ArraySchema<string>()
+                                newAction.button1Actions.push(action.button1.actionId)
+                            }
+                        }
+                    }
+                    if(key === "button2"){
+                        newAction.button2 = action.button2
+                        if(action.button2){
+                            newAction.button2Label = action.button2.label
+                            if(action.button2.actionId){
+                                newAction.button2Actions = new ArraySchema<string>()
+                                newAction.button2Actions.push(action.button2.actionId)
+                            }
+                        }
+                    }
+
                     newAction[key] = action[key]
                 }
             }

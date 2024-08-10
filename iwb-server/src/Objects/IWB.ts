@@ -99,7 +99,7 @@ export async function checkIWBCache(scene:Scene, aid:string, jsonScene:any){
         let itemJSON = itemInfo.toJSON()
         itemJSON.editing = false
         itemJSON.editor = ""
-        jsonScene[COMPONENT_TYPES.REWARD_COMPONENT][aid] = itemJSON
+        jsonScene[COMPONENT_TYPES.IWB_COMPONENT][aid] = itemJSON
     }
     return jsonScene
 }

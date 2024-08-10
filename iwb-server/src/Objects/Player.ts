@@ -287,7 +287,9 @@ export class Player extends Schema {
 
       async saveSetttingsDB(){
         //  console.log('saving player settings to db', this.dclData.userId)
-         // console.log('server settings are ', this.settings)
+         console.log('server settings are ', this.settings)
+         
+         this.settings.firstTime = false
          let res = await updatePlayerData({
            PlayFabId: this.playFabData.PlayFabId,
            Data:{

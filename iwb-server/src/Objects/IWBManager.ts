@@ -58,7 +58,7 @@ export class IWBManager{
             firstTime: true,
             nots: true,
             confirms: true,
-            music: false
+            music: false 
         }
 
     constructor(){
@@ -188,6 +188,8 @@ export class IWBManager{
             this.versionUpdates = config.updates
             this.styles = config.styles
 
+            // console.log('config is', config)
+
             let worlds = JSON.parse(response.Data['Worlds'])
             this.worlds = worlds
 
@@ -276,7 +278,7 @@ export class IWBManager{
                     ens:world.ens,
                     worldName: world.name,
                     owner: world.owner,
-                    init: world ? false : true,
+                    init: world.hasOwnProperty("init") ? true : false,
                     url:url
                 },
                 
@@ -300,7 +302,7 @@ export class IWBManager{
             if(DEBUG){
                 this.saveNewWorld(worldToDeploy)
             }else{
-                await this.deploy(world.owner, worldToDeploy, url)    
+                await this.deploy(worldToDeploy.owner, worldToDeploy, url)    
             }
         }
         catch(e){
@@ -332,6 +334,7 @@ export class IWBManager{
     async initWorld(room:IWBRoom, world:any){
         let current = this.initQueue.find((w)=>w.ens === world.ens)
         if(!current){
+            world.init = true
             this.initQueue.push(world)
             await this.deployWorld(world, room)
         }
@@ -344,6 +347,7 @@ export class IWBManager{
         world.bps = []
         world.v = this.version
         world.cv = 0
+        world.worldName = world.ens.split(".")[0]
 
         this.rooms.forEach((room:IWBRoom)=>{
             room.broadcast(SERVER_MESSAGE_TYPES.NEW_WORLD_CREATED, world)

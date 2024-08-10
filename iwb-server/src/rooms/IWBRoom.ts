@@ -68,11 +68,11 @@ export class IWBRoom extends Room<IWBRoomState> {
         //         player.cancelPendingDeployment()
         //     }
 
-        //   setTimeout(()=>{
-        //     removePlayer(player.dclData.userId)
-        //     savePlayerCache(player)
-        //     this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
-        //   }, 1000 * 5)
+          setTimeout(()=>{
+            removePlayer(player.dclData.userId)
+            savePlayerCache(player)
+            this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
+          }, 1000 * 5)
         }
     }
 
@@ -214,6 +214,8 @@ export class IWBRoom extends Room<IWBRoomState> {
         let def: any = {}
         def.address = options.userData.userId
         def.web3 = !options.userData.isGuest
+
+        
 
         //set initial player data
         const initPlayerDataRes = await updatePlayerInternalData({

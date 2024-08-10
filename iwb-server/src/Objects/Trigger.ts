@@ -1,7 +1,7 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
 import { generateRandomId } from "../utils/functions";
-import { COMPONENT_TYPES } from "../utils/types";
+import { COMPONENT_TYPES, TRIGGER_TYPES, TriggerConditionOperation } from "../utils/types";
 import { generateId } from "colyseus";
 
 export class TriggerConditionComponent extends Schema{
@@ -9,6 +9,7 @@ export class TriggerConditionComponent extends Schema{
     @type("string") type:string
     @type("string") value:string
     @type("number") counter:number
+    @type("string") operator:string = TriggerConditionOperation.AND
 }
 
 export class TriggerComponentSchema extends Schema{

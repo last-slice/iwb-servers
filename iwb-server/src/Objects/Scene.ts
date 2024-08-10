@@ -7,7 +7,7 @@ import { GltfComponent, createGLTFComponent } from "./Gltf";
 import { createNameComponent, NameComponent } from "./Names";
 import { ParentingComponent } from "./Parenting";
 import { PointerComponent, PointerComponentEvent, createPointerComponent } from "./Pointers";
-import { SoundComponent, createAudioSourceComponent } from "./Sound";
+import { SoundComponent, createAudioSourceComponent, createAudioStreamComponent } from "./Sound";
 import { StateComponent } from "./State";
 import { TextShapeComponent, createTextComponent } from "./TextShape";
 import { TransformComponent } from "./Transform";
@@ -184,7 +184,7 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.DIALOG_COMPONENT] = new MapSchema<DialogComponent>()
         this[COMPONENT_TYPES.REWARD_COMPONENT] = new MapSchema<RewardComponent>()
         this[COMPONENT_TYPES.PLAYLIST_COMPONENT] = new MapSchema<PlaylistComponent>()
-        // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()
+        // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()//
 
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
@@ -435,7 +435,8 @@ export class Scene extends Schema {
 
                     case COMPONENT_TYPES.AUDIO_STREAM_COMPONENT:
                         for (const aid in data[component]) {
-                            this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT].set(aid, new SoundComponent(data[component][aid]))
+                            createAudioStreamComponent(this, aid, data[component][aid])
+                            // this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT].set(aid, new SoundComponent(data[component][aid]))
                         }
                         break;
 
@@ -493,7 +494,9 @@ export function initServerScenes(room:IWBRoom, options?:any){
 }
 
 export async function initServerAssets(room:IWBRoom){
-    let metadata = await fetchPlayfabMetadata(iwbManager.worlds.find((w:any)=> w.ens === room.state.world).owner)
+    let world = iwbManager.worlds.find((w:any)=> w.ens === room.state.world)
+    console.log('init server assets for world', world)
+    let metadata = await fetchPlayfabMetadata(world.owner)
 
     let json = await fetchPlayfabFile(metadata, "catalogs.json")
     let catalogVersion = json.hasOwnProperty("version") ? json.version : 0

@@ -158,6 +158,7 @@ export async function resetBucket(key:string){
     try{
         //remove assets files
         await fs.emptyDir(path.join(worldBucketDirectory, key, "assets"))
+        // await fs.emptyDir(path.join(worldBucketDirectory, key, "bin"))
 
         b.status = "free"
         b.available = true

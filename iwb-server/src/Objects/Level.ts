@@ -89,7 +89,7 @@ export async function createGameLevel(room:IWBRoom, client:Client, scene:Scene, 
         name: "Level " + number,
         number: number,
         loadingSpawn: new Vector3(item.position),
-        loadingSpawnLook: new Vector3({x:0, y:0, z:0}),
+        loadingSpawnLook: new Vector3(item.position),
         invisibleStartBox:true,
     })
 
@@ -97,8 +97,9 @@ export async function createGameLevel(room:IWBRoom, client:Client, scene:Scene, 
         {
         actions:[
             {name:"Load Level", type:ACTIONS.LOAD_LEVEL},
-            {name:"Complete Level", type:ACTIONS.COMPLETE_LEVEL},
             {name:"End Level", type:ACTIONS.END_LEVEL},
+            // {name:"Win Level", type:ACTIONS.COMPLETE_LEVEL},
+            // {name:"Lose Level", type:ACTIONS.LOSE_LEVEL},
         ]
         }
     )
@@ -112,15 +113,15 @@ export async function createGameLevel(room:IWBRoom, client:Client, scene:Scene, 
         }
     )
 
-    await createStateComponent(scene, aid, {
-        defaultValue:"disabled",
-        values:["disabled", "enabled", "won", "lost"]
-    })
+    // await createStateComponent(scene, aid, {
+    //     defaultValue:"disabled",
+    //     values:["disabled", "enabled", "won", "lost"]
+    // })
 
-    setTimeout(async ()=>{
-        await addWinLogicEntity(room, client, scene, player, aid, number)
-        await addLoseLogicEntity(room, client, scene, player, aid, number)
-    }, 500)
+    // setTimeout(async ()=>{
+    //     await addWinLogicEntity(room, client, scene, player, aid, number)
+    //     await addLoseLogicEntity(room, client, scene, player, aid, number)
+    // }, 500)
 }
 
 async function addWinLogicEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, parentAid:string, number:number){
