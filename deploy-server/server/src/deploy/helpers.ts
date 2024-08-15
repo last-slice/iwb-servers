@@ -33,7 +33,7 @@ export function buildTypescript({
   production: boolean
   silence?: boolean
 }): Promise<void> {
-  const command = watch ? 'watch' : 'build'
+  const command = watch ? 'watch' : 'build -- -p'
   const NODE_ENV = production ? 'production' : ''
 
   return new Promise((resolve, reject) => {

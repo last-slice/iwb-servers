@@ -1,6 +1,7 @@
 const { exec } = require('child_process');
 
 import axios from 'axios';
+import { Vector3 } from '../Objects/Transform';
 
 const command = '../iwb-server.sh';
 
@@ -143,35 +144,70 @@ export const getStartOfDayUTC = () => {
   };
 
   // Define a simple Vector3-like class or object
-export class Vector3 {
-  x:number
-  y:number
-  z:number
+// export class Vector3 {
+//   x:number
+//   y:number
+//   z:number
 
-  constructor(x:number, y:number, z:number) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-  }
+//   constructor(x:number, y:number, z:number) {
+//     this.x = x;
+//     this.y = y;
+//     this.z = z;
+//   }
 
-  lerp(target:Vector3, t:number) {
-    return new Vector3(
-      lerp(this.x, target.x, t),
-      lerp(this.y, target.y, t),
-      lerp(this.z, target.z, t)
-    );
-  }
+//   lerp(target:Vector3, t:number) {
+//     return new Vector3(
+//       lerp(this.x, target.x, t),
+//       lerp(this.y, target.y, t),
+//       lerp(this.z, target.z, t)
+//     );
+//   }
 
-   // Method to subtract two Vector3 positions
-   subtract(other: Vector3): Vector3 {
-    return new Vector3(
-        this.x - other.x,
-        this.y - other.y,
-        this.z - other.z
-    );
-}
-}
+//    // Method to subtract two Vector3 positions
+//    subtract(other: Vector3): Vector3 {
+//     return new Vector3(
+//         this.x - other.x,
+//         this.y - other.y,
+//         this.z - other.z
+//     );
+// }
+// }
 
 function lerp(start:number, end:number, t:number) {
   return (1 - t) * start + t * end;
+}
+
+
+// Rotate the vector around the Y axis
+export function rotateY(vector:any, angle: number): Vector3 {
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  return new Vector3(
+    {x:cos * vector.x - sin * vector.z,
+    y:vector.y,
+    z:sin * vector.x + cos * vector.z}
+);
+}
+
+// Rotate the vector around the X axis
+export function rotateX(vector:any, angle: number): Vector3 {
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  return new Vector3(
+    {x:vector.x,
+    y:cos * vector.y - sin * vector.z,
+    z:sin * vector.y + cos * vector.z}
+  );
+}
+
+// Rotate the vector around the Z axis
+export function rotateZ(vector:any, angle: number): Vector3 {
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+      
+  return new Vector3(
+    {x:cos * vector.x - sin * vector.y,
+    y:sin * vector.x + cos * vector.y,
+    z:vector.z}
+  );
 }

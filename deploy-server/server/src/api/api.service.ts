@@ -199,10 +199,26 @@ export function authenticateToken(req:any, res:any, next:any) {
   console.log('authenticate body is', req.body)
   // next(req, res)
     if(status.DEBUG){
-      req.user = '0x3edfae1ce7aeb54ed6e171c4b13e343ba81669b6'
-      req.key = 'key'
-      req.pending = {name: 'audio file', type:'Audio'}
-      next();
+      // req.user = '0x3edfae1ce7aeb54ed6e171c4b13e343ba81669b6'
+      // req.key = 'key'
+      // req.pending = {name: 'audio file', type:'Audio'}
+      // next();
+
+      const token = req.header('SceneAuth').replace('Bearer ', '').trim();
+      const uploadAuth = req.header('UploadAuth').replace('Bearer ', '').trim();
+      
+      jwt.verify(token, process.env.SERVER_SECRET, (err:any, info:any) => {
+        if (err) {
+            return res.status(200).json({valid:false, message: 'Invalid token' });
+        }
+        console.log('asset upload token verified')
+        req.user = info.userId;
+        req.key = uploadAuth
+        req.pending = {name: req.body.name, type:req.body.type}
+        next();
+    });
+
+
     }
     else{
       if(req.header('SceneAuth')){

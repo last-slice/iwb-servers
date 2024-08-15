@@ -322,37 +322,6 @@ function addPlayerVariableItem(room:IWBRoom, scene:Scene, client:Client, player:
 
 async function addGameConsoleTriggers(room:IWBRoom, scene:Scene, aid:string, gameInfo:GameComponent, index:number, max:number){
     console.log('add game triggers')
-    //check if asset already has triggers
-    let triggerInfo = scene[COMPONENT_TYPES.TRIGGER_COMPONENT].get(aid)
-    if(!triggerInfo){
-        await createTriggerComponent(scene, aid, {
-            triggers:[
-                {input:1, pointer:1, actions:[], type:Triggers.ON_INPUT_ACTION},
-                {input:2, pointer:1, actions:[], type:Triggers.ON_INPUT_ACTION}
-            ]
-        })
-    }else{
-        editTriggerComponent({
-            aid:aid,
-            action:"add",
-            data:{
-                type:Triggers.ON_INPUT_ACTION,
-                input: 1,
-                pointer:1
-            }
-        }, scene)
-
-        editTriggerComponent({
-            aid:aid,
-            action:"add",
-            data:{
-                type:Triggers.ON_INPUT_ACTION,
-                input: 2,
-                pointer:1
-            }
-        }, scene)
-    }
-
     let pointerInfo = scene[COMPONENT_TYPES.POINTER_COMPONENT].get(aid)
     if(!pointerInfo){
         await createPointerComponent(scene, aid, {
@@ -382,35 +351,122 @@ async function addGameConsoleTriggers(room:IWBRoom, scene:Scene, aid:string, gam
         }
     )
 
-    let actions = scene[COMPONENT_TYPES.ACTION_COMPONENT].get(aid)
-    let startAction = actions.actions.find(($:any)=> $.type === ACTIONS.ATTEMPT_GAME_START)
-    let endAction = actions.actions.find(($:any)=> $.type === ACTIONS.END_GAME)
+    //check if asset already has triggers
+    let triggerInfo = scene[COMPONENT_TYPES.TRIGGER_COMPONENT].get(aid)
+    if(!triggerInfo){
+        // await createTriggerComponent(scene, aid, {
+        //     triggers:[
+        //         {input:1, pointer:1, decisions:[], type:Triggers.ON_INPUT_ACTION},
+        //         {input:2, pointer:1, decisions:[], type:Triggers.ON_INPUT_ACTION}
+        //     ]
+        // })
 
-    triggerInfo = scene[COMPONENT_TYPES.TRIGGER_COMPONENT].get(aid)
-    let startTrigger = triggerInfo.triggers.find(($:any)=> $.input === 1 && $.pointer === 1 && $.type === Triggers.ON_INPUT_ACTION)
-    let endTrigger = triggerInfo.triggers.find(($:any)=> $.input === 2 && $.pointer === 1 && $.type === Triggers.ON_INPUT_ACTION)
+        let gameTriggers:any = [
+            {
+                type: Triggers.ON_INPUT_ACTION,
+                pointer:1,
+                input:1,
+                decisions:[
+                    {
+                        conditions:[],
+                        actions:["Attempt Game Start"]
+                    }
+                ]
+            },
+            {
+                type: Triggers.ON_INPUT_ACTION,
+                pointer:1,
+                input:2,
+                decisions:[
+                    {
+                        conditions:[],
+                        actions:["End Game"]
+                    }
+                ]
+            }
+        ]
 
-    if(startTrigger && endTrigger){
-        let data:any = {
-            aid:aid,
-            action:"addaction",
-            data:{
-                tid:startTrigger.id,
-                id:startAction.id,
-            }
-        }
-        editTriggerComponent(data, scene)
-    
-        data = {
-            aid:aid,
-            action:"addaction",
-            data:{
-                tid:endTrigger.id,
-                id:endAction.id,
-            }
-        }
-        editTriggerComponent(data, scene)
+        gameTriggers.forEach((trigger:any)=>{
+            trigger.decisions.forEach((decision:any)=>{
+                decision.id = generateId(5)
+                decision.name = decision.id
+        
+                console.log('decision is', decision)
+        
+                let actionIds:any[] = []
+                decision.actions.forEach((decisionAction:any)=>{
+                    let actions = scene[COMPONENT_TYPES.ACTION_COMPONENT].get(aid)
+                    if(actions && actions.actions.length > 0){
+                        let found = actions.actions.find(($:any)=> $.name === decisionAction)
+                        console.log("action found", found)
+                        if(found){
+                            actionIds.push(found.id)
+                        }
+                    }
+                })
+                decision.actions = actionIds
+            })
+        })
+
+        
+        await createTriggerComponent(scene, aid, {triggers:gameTriggers})
+    }else{
+
     }
+
+
+
+// await createTriggerComponent(scene, item.aid, catalogItemInfo.components.Triggers)
+
+//         editTriggerComponent({
+//             aid:aid,
+//             action:"add",
+//             data:{
+//                 type:Triggers.ON_INPUT_ACTION,
+//                 input: 1,
+//                 pointer:1
+//             }
+//         }, scene)
+
+//         editTriggerComponent({
+//             aid:aid,
+//             action:"add",
+//             data:{
+//                 type:Triggers.ON_INPUT_ACTION,
+//                 input: 2,
+//                 pointer:1
+//             }
+//         }, scene)
+
+//     let actions = scene[COMPONENT_TYPES.ACTION_COMPONENT].get(aid)
+//     let startAction = actions.actions.find(($:any)=> $.type === ACTIONS.ATTEMPT_GAME_START)
+//     let endAction = actions.actions.find(($:any)=> $.type === ACTIONS.END_GAME)
+
+//     triggerInfo = scene[COMPONENT_TYPES.TRIGGER_COMPONENT].get(aid)
+//     let startTrigger = triggerInfo.triggers.find(($:any)=> $.input === 1 && $.pointer === 1 && $.type === Triggers.ON_INPUT_ACTION)
+//     let endTrigger = triggerInfo.triggers.find(($:any)=> $.input === 2 && $.pointer === 1 && $.type === Triggers.ON_INPUT_ACTION)
+
+//     if(startTrigger && endTrigger){
+//         let data:any = {
+//             aid:aid,
+//             action:"addaction",
+//             data:{
+//                 tid:startTrigger.id,
+//                 id:startAction.id,
+//             }
+//         }
+//         editTriggerComponent(data, scene)
+    
+//         data = {
+//             aid:aid,
+//             action:"addaction",
+//             data:{
+//                 tid:endTrigger.id,
+//                 id:endAction.id,
+//             }
+//         }
+//         editTriggerComponent(data, scene)
+//     }
 }
 
 export async function deleteGameActions(scene:Scene, info:any){

@@ -98,34 +98,47 @@ export class ItemManager{
         //     return
         // }//
 
-        let ownerWorldsOnline:IWBRoom[] = iwbManager.rooms.filter(($:any)=> $.owner === user)
-        ownerWorldsOnline.forEach((room:IWBRoom)=>{
-            console.log('world is already online, add to cached catalog')
-            room.state.realmAssets.set(asset.id, asset)
-            room.broadcast(SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, asset)
 
-            if(room.state.world === data.world){
-                room.state.catalogVersion += 1 
-                room.state.realmAssetsChanged = true
-            }
-        })
+        console.log('iwb manager room count', iwbManager.rooms.length, iwbManager.rooms)
+        let ownerWorldsOnline:IWBRoom[] = iwbManager.rooms.filter(($:IWBRoom)=> $.state.owner === user)
 
-        if(ownerWorldsOnline.length === 0){
-            console.log('world is not found, need to log in and add to catalog')
-            let userData = await playfabLogin(user)
-            let metadata = await fetchUserMetaData(userData)
+        let userData = await playfabLogin(user)
+        let metadata = await fetchUserMetaData(userData)
 
-            let json = await fetchPlayfabFile(metadata, 'catalogs.json')
-            json.version += 1
-            json.items.push(asset)
-            await this.uploadFile(data.o, "catalogs.json", json)
+        let json = await fetchPlayfabFile(metadata, 'catalogs.json')
+        json.version += 1
+        json.items.push(asset)
+        await this.uploadFile(data.o, "catalogs.json", json)
+
+        // iwbManager.addWorldPendingSave(room.state.world, room.roomId, ["catalogs.json"], room.state.realmToken, room.state.realmTokenType, room.state.realmId, [json])
+
+        if(ownerWorldsOnline.length > 0){
+            console.log('wrold found')
+            let foundRoom:IWBRoom =ownerWorldsOnline[0]
+
+            ownerWorldsOnline.forEach((room:IWBRoom)=>{
+                // console.log('world is already online, add to cached catalog')
+                // room.state.realmAssets.set(asset.id, asset)
+                // room.broadcast(SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, asset)
+    
+                // if(room.state.world === data.world){
+                //     room.state.catalogVersion += 1 
+                //     room.state.realmAssetsChanged = true
+                // }
+    
+                let player = room.state.players.get(user)
+                if(player){
+                    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, asset)
+                    pushPlayfabEvent(
+                        SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, 
+                        player, 
+                        [{name:data.n, type:data.ty}]
+                    )
+                }
+            })
         }
 
-        // pushPlayfabEvent(
-        //     SERVER_MESSAGE_TYPES.PLAYER_ASSET_UPLOADED, 
-        //     player, 
-        //     [{name:data.n, type:data.ty}]
-        // )
+
 
         // let player:Player = iwbManager.findUser(user)
         // if(player){

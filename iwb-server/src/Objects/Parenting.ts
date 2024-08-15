@@ -7,6 +7,7 @@ import { CATALOG_IDS, COMPONENT_TYPES } from "../utils/types";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { Quaternion, Vector3 } from "./Transform";
 import { Player } from "./Player";
+import { rotateX, rotateY, rotateZ } from "../utils/functions";
 
 export class ParentingComponent extends Schema{
     @type("string") aid:string
@@ -51,10 +52,23 @@ export async function editParentingComponent(room:IWBRoom, client:Client, info:a
                     let parent = scene[COMPONENT_TYPES.PARENTING_COMPONENT].find(($:any)=> $.aid === parentData)
                     if(parent){
                         parent.children.push(info.aid)
-                        console.log('distance is', {x: info.sp.x - info.pp.x, y:info.sp.y - info.pp.y, z:info.sp.z - info.pp.z})
-                        let newPosition = new Vector3({x: info.sp.x - info.pp.x, y:info.sp.y - info.pp.y, z:info.sp.z - info.pp.z})
-                        let newRotation = new Quaternion({x: info.sr.x - info.pr.x, y:info.sr.y - info.pr.y, z:info.sr.z - info.pr.z})
-                        console.log('new position is', newPosition, newRotation)
+                        // console.log('distance is', {x: info.sp.x - info.pp.x, y:info.sp.y - info.pp.y, z:info.sp.z - info.pp.z})
+                        let newPosition:any
+                        let newRotation:any
+
+                        if(info.force){
+                            newPosition = new Vector3({x: info.pp.x, y:info.pp.y, z:info.pp.z})
+                            console.log('new forced position is', newPosition.x, newPosition.y, newPosition.z, newRotation)
+    
+                            newRotation = new Quaternion({x:info.pr.x, y:info.pr.y, z:info.pr.z})
+                        }else{
+
+                            let childLocalPosition = new Vector3({x: info.sp.x - info.pp.x, y:info.sp.y - info.pp.y, z:info.sp.z - info.pp.z})
+                            let parentRotation = info.pr.y * (Math.PI / 180)
+
+                            newPosition = rotateY(childLocalPosition, parentRotation);
+                            newRotation = new Quaternion({x: info.sr.x - info.pr.x, y:info.sr.y - info.pr.y, z:info.sr.z - info.pr.z})
+                        }
     
                         let transform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(info.aid)
                         if(transform){

@@ -1,7 +1,7 @@
-import { Client } from "colyseus";
+import { Client, generateId } from "colyseus";
 import { IWBRoom } from "../IWBRoom";
 import { ACTIONS, CATALOG_IDS, COMPONENT_TYPES, EDIT_MODIFIERS, SCENE_MODES, SERVER_MESSAGE_TYPES, TRIGGER_TYPES } from "../../utils/types";
-import { Quaternion, Vector3, createTransformComponent, editTransform } from "../../Objects/Transform";
+import { Quaternion, TransformComponent, Vector3, createTransformComponent, editTransform } from "../../Objects/Transform";
 import { createVisibilityComponent, editVisibility } from "../../Objects/Visibility";
 import { createTextComponent, editTextShape } from "../../Objects/TextShape";
 import { Player } from "../../Objects/Player";
@@ -24,7 +24,7 @@ import { createTextureComponent, editTextureComponent } from "../../Objects/Text
 import { createEmissiveComponent } from "../../Objects/Emissive";
 import { createCounterComponent, editCounterComponent } from "../../Objects/Counter";
 import { createActionComponent, editActionComponent } from "../../Objects/Actions";
-import { createTriggerComponent, editTriggerComponent, removeActionFromTriggers } from "../../Objects/Trigger";
+import { createTriggerComponent, editTriggerComponent, removeActionFromTriggers, TriggerDecisionComponent } from "../../Objects/Trigger";
 import { createPointerComponent, editPointerComponent } from "../../Objects/Pointers";
 import { createStateComponent, editStateComponent } from "../../Objects/State";
 import { createUITextComponent, editUIComponent } from "../../Objects/UIText";
@@ -206,11 +206,10 @@ export function iwbItemHandler(room:IWBRoom){
                 // console.log('catalog item is', catalogItem)
                 if(catalogItem){
                     if(checkSceneLimits(scene, catalogItem)){
-                        createNewItem(room, client, scene, item, catalogItem)
 
                         if(item.duplicate){
                             console.log('need to copy item')
-                            copyItem(room, scene, client, player, info, catalogItem)
+                            copyItem(room, scene, client, player, info, catalogItem, 1)
 
                             pushPlayfabEvent(
                                 SERVER_MESSAGE_TYPES.SCENE_COPY_ITEM, 
@@ -220,6 +219,7 @@ export function iwbItemHandler(room:IWBRoom){
                         }
 
                         else{
+                            await createNewItem(room, client, scene, item, catalogItem)
                             addItemComponents(room, client, scene, player, item, catalogItem)
 
                             pushPlayfabEvent(
@@ -483,7 +483,7 @@ function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
     }
 }
 
-export function addItemComponents(room:IWBRoom, client:Client, scene:Scene, player:Player, item:any, data:any){
+export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene, player:Player, item:any, data:any){
     // if(item.type === "SM"){}
     // else{
 
@@ -563,6 +563,47 @@ export function addItemComponents(room:IWBRoom, client:Client, scene:Scene, play
             break;
     }
 
+    if(catalogItemInfo.sty === "Smart Items"){
+        console.log('popuplating smart item')
+        if(catalogItemInfo.components){
+            if(catalogItemInfo.components.Actions){
+                await createActionComponent(scene, item.aid, catalogItemInfo.components.Actions)
+                delete catalogItemInfo.components.Actions
+            }
+
+            if(catalogItemInfo.components.Pointers){
+                await createPointerComponent(scene, item.aid, catalogItemInfo.components.Pointers)
+                delete catalogItemInfo.components.Pointers
+            }
+
+            if(catalogItemInfo.components.Triggers){
+                catalogItemInfo.components.Triggers.triggers.forEach((trigger:any)=>{
+                    trigger.decisions.forEach((decision:any)=>{
+                        decision.id = generateId(5)
+                        decision.name = decision.id
+
+                        console.log('decision is', decision)
+    
+                        let actionIds:any[] = []
+                        decision.actions.forEach((decisionAction:any)=>{
+                            let actions = scene[COMPONENT_TYPES.ACTION_COMPONENT].get(item.aid)
+                            if(actions && actions.actions.length > 0){
+                                let found = actions.actions.find(($:any)=> $.name === decisionAction)
+                                console.log("action found", found)
+                                if(found){
+                                    actionIds.push(found.id)
+                                }
+                            }
+                        })
+                        decision.actions = actionIds
+                    })
+                })
+                await createTriggerComponent(scene, item.aid, catalogItemInfo.components.Triggers)
+                delete catalogItemInfo.components.Triggers
+            }
+        }
+    }
+    
     if(catalogItemInfo.components){
         for(let componentType in catalogItemInfo.components){
             let componentData = {...catalogItemInfo.components[componentType]}
@@ -683,7 +724,10 @@ export function removeAllAssetComponents(room:IWBRoom, player:Player, scene:any,
                     })
                 }
             }
-            scene[component].delete(info.aid)
+            try{
+                scene[component].delete(info.aid)
+            }catch(e){}
+            
         }
     })
 
@@ -694,45 +738,106 @@ export function removeAllAssetComponents(room:IWBRoom, player:Player, scene:any,
     scene.pc = 0
 }
 
-function copyItem(room:IWBRoom, scene:any, client:Client, player:Player, info:any, catalogInfo:any){
-    let omittedComponents:COMPONENT_TYPES[] = [
-        COMPONENT_TYPES.PARENTING_COMPONENT,
-        COMPONENT_TYPES.VISBILITY_COMPONENT,
-        COMPONENT_TYPES.TRANSFORM_COMPONENT,
-        COMPONENT_TYPES.IWB_COMPONENT,
-    ]
-    Object.values(COMPONENT_TYPES).forEach((component:any)=>{
-        if(scene[component] && !omittedComponents.includes(component)){
-            let itemInfo:any
-
-            if(component === COMPONENT_TYPES.NAMES_COMPONENT){
-                itemInfo = scene[component].get(info.item.aid)
-                if(itemInfo){
-                    itemInfo.value += " Copy"
-                }
-            }
-            else{
-                itemInfo = scene[component].get(info.item.duplicate)
-                if(itemInfo){
-                    let currentComponent:any = {...itemInfo}
-                    currentComponent.aid = info.item.aid
-                    console.log('copy component', component)
-
-                // if(component === COMPONENT_TYPES.TRIGGER_COMPONENT){
-                //     let triggers:any[] = []
-                //     itemInfo.triggers.forEach((trigger:any)=>{
-                //         triggers.push({
-                //             type:trigger.type,
-                //             input:trigger.input,
-                //             pointer:trigger.pointer,
-
-                //         })
-                //     })
-                // }
+async function copyItem(room:IWBRoom, scene:any, client:Client, player:Player, info:any, catalogInfo:any, topLevel?:any){
     
-                createComponentFunctions[component](room, scene, client, player, currentComponent.aid, currentComponent)
-                }
+    // console.log('copying item', info, catalogInfo)
+    console.log('copying item', info.item.aid, info.item.duplicate, info.item.parent)
+    console.log('aprent index is', scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate))
+    console.log(scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate) >= 0 && scene[COMPONENT_TYPES.PARENTING_COMPONENT][scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate)].children.length > 0)
+    let parent = scene[COMPONENT_TYPES.PARENTING_COMPONENT][scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate)]
+    console.log(parent.children.length)
+
+    catalogInfo.n += " Copy"
+    info.item.n = catalogInfo.n
+
+    if(topLevel < 3){
+        await createNewItem(room, client, scene, info.item, catalogInfo)
+        await addItemComponents(room, client, scene, player, info.item, catalogInfo)
+    
+        let parentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate)
+        if(parentIndex >= 0 && scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentIndex].children.length > 0){
+            console.log('parent has children to copy', scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentIndex].children.length)
+            let parent = {...scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentIndex]}
+            let childrenLoop:any[] = []
+            parent.children.forEach((child:any)=>{
+                childrenLoop.push(child)
+            })
+    
+            for(let i = 0; i < childrenLoop.length; i++){
+                let childAid = childrenLoop[i]
+                console.log('child aid is', childAid, scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.aid))
+                let iwbInfo = scene[COMPONENT_TYPES.IWB_COMPONENT].get(childAid)
+                let transform:any = {...scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(childAid)}
+                console.log('child transform is', transform.p.x)
+
+                let catalogItem = iwbInfo.ugc ? room.state.realmAssets.get(iwbInfo.id) : itemManager.items.get(iwbInfo.id)
+    
+                let parentTransform = {...scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(info.item.aid)}
+                console.log('parentTransform transform is', parentTransform.p.x)
+                let parentAid = info.item.aid
+
+                let newItemInfo = {...info}
+                newItemInfo.item.position = transform.p
+                newItemInfo.item.rotation = transform.r
+                newItemInfo.item.scale = transform.s
+    
+                let newAid = generateId(6)
+                newItemInfo.item.id = catalogItem.id
+                newItemInfo.item.duplicate = info.item.aid
+                newItemInfo.item.aid = newAid
+    
+                topLevel += 1
+                newItemInfo.item.parent = 0
+                console.log('item to copy is', newItemInfo, catalogItem)
+                await copyItem(room, scene, client, player, newItemInfo, catalogItem, topLevel)
+
+                editParentingComponent(room, client,{action:'edit', aid:newAid, data:parentAid, sp:{...parentTransform.p}, sr:{...parentTransform.r}, pp:{...transform.p}, pr:{...transform.r}, force:true} , scene, player)
             }
         }
-    })
+    }
+    
+
+    
+    
+    // let omittedComponents:COMPONENT_TYPES[] = [
+    //     COMPONENT_TYPES.PARENTING_COMPONENT,
+    //     COMPONENT_TYPES.VISBILITY_COMPONENT,
+    //     COMPONENT_TYPES.TRANSFORM_COMPONENT,
+    //     COMPONENT_TYPES.IWB_COMPONENT,
+    // ]
+
+    // Object.values(COMPONENT_TYPES).forEach((component:any)=>{
+    //     if(scene[component] && !omittedComponents.includes(component)){
+    //         let itemInfo:any
+
+    //         if(component === COMPONENT_TYPES.NAMES_COMPONENT){
+    //             itemInfo = scene[component].get(info.item.aid)
+    //             if(itemInfo){
+    //                 itemInfo.value += " Copy"
+    //             }
+    //         }
+    //         else{
+    //             itemInfo = scene[component].get(info.item.duplicate)
+    //             if(itemInfo){
+    //                 let currentComponent:any = {...itemInfo}
+    //                 currentComponent.aid = info.item.aid
+    //                 console.log('copy component', component)
+
+    //             // if(component === COMPONENT_TYPES.TRIGGER_COMPONENT){
+    //             //     let triggers:any[] = []
+    //             //     itemInfo.triggers.forEach((trigger:any)=>{
+    //             //         triggers.push({
+    //             //             type:trigger.type,
+    //             //             input:trigger.input,
+    //             //             pointer:trigger.pointer,
+
+    //             //         })
+    //             //     })
+    //             // }
+    
+    //             createComponentFunctions[component](room, scene, client, player, currentComponent.aid, currentComponent)
+    //             }
+    //         }
+    //     }
+    // })
 }

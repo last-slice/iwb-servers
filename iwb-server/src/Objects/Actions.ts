@@ -59,6 +59,8 @@ export class ActionComponentSchema extends Schema{
     @type("number") tloop:number
     @type("number") min:number
     @type("number") max:number
+    @type("number") speed:number
+    @type("number") channel:number
 
     @type("boolean") visible:boolean
     @type("boolean") moveRel:boolean
@@ -120,8 +122,8 @@ export function editActionComponent(data:any, scene:Scene){
                     }
                     
                     if(key === "button1"){
-                        newAction.button1 = action.button1
-                        if(action.button2){
+                        newAction.button1 = action.button1.enabled
+                        if(action.button2.enabled){
                             newAction.button1Label = action.button1.label
                             if(action.button1.actionId){
                                 newAction.button1Actions = new ArraySchema<string>()
@@ -130,8 +132,8 @@ export function editActionComponent(data:any, scene:Scene){
                         }
                     }
                     if(key === "button2"){
-                        newAction.button2 = action.button2
-                        if(action.button2){
+                        newAction.button2 = action.button2.enabled
+                        if(action.button2.enabled){
                             newAction.button2Label = action.button2.label
                             if(action.button2.actionId){
                                 newAction.button2Actions = new ArraySchema<string>()

@@ -76,14 +76,15 @@ export class IWBRoom extends Room<IWBRoomState> {
         }
     }
 
-    onDispose() {
+    async onDispose() {
         console.log("room", this.roomId, "disposing...");
        if(iwbManager.rooms.find(($:any)=> $.roomId === this.roomId)){
         console.log('room is online, clean up', this.state.world)
-        iwbManager.removeRoom(this)
         if(!this.state.gcWorld){
-            saveRealm(this)
+            await saveRealm(this)
         }
+
+        iwbManager.removeRoom(this)
 
         iwbManager.garbageCollectRoom(this)
        }

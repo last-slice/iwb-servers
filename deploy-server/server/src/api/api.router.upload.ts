@@ -2,7 +2,6 @@ import express, { Request, Response } from "express";
 import fs from 'fs';
 import { promises as fsPromises } from 'fs';
 import { authenticateToken, handleAssetSigning, postNewAssetData } from "./api.service";
-import { postPendingAsset } from "../upload";
 
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');

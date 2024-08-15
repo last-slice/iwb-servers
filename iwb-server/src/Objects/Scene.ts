@@ -11,7 +11,7 @@ import { SoundComponent, createAudioSourceComponent, createAudioStreamComponent 
 import { StateComponent } from "./State";
 import { TextShapeComponent, createTextComponent } from "./TextShape";
 import { TransformComponent } from "./Transform";
-import { TriggerComponent, TriggerComponentSchema, TriggerConditionComponent } from "./Trigger";
+import { createTriggerComponent, TriggerComponent, TriggerComponentSchema, TriggerConditionComponent } from "./Trigger";
 import { VisibilityComponent } from "./Visibility";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { iwbManager } from "../app.config";
@@ -129,6 +129,7 @@ export class Scene extends Schema {
     checkEnabled:boolean
     checkDisabled:boolean
     loaded:boolean
+    hiddenForGame:boolean
 
     constructor(room?:IWBRoom, data?:any) {
         super(data)
@@ -307,45 +308,7 @@ export class Scene extends Schema {
                 
                     case COMPONENT_TYPES.TRIGGER_COMPONENT:
                         for (const aid in data[component]) {
-                            let triggerData = data[component][aid]
-
-                            let trigger = new TriggerComponent()
-                            trigger.triggers = new ArraySchema<TriggerComponentSchema>()
-                            trigger.isArea = data[component][aid].isArea
-
-                            triggerData.triggers.forEach((data:any)=>{
-                                let schema = new TriggerComponentSchema()
-                                schema.id = data.id
-                                schema.type = data.type
-                                schema.input = data.input
-                                schema.pointer = data.pointer
-
-                                schema.caid = new ArraySchema<string>()
-                                schema.ctype = new ArraySchema<string>()
-                                schema.cvalue = new ArraySchema<string>()
-                                schema.ccounter = new ArraySchema<number>()
-
-                                data.caid.forEach((caid:any)=>{
-                                    schema.caid.push(caid)
-                                })
-                                data.ctype.forEach((ctype:any)=>{
-                                    schema.ctype.push(ctype)
-                                })
-                                data.cvalue.forEach((cvalue:any)=>{
-                                    schema.cvalue.push(cvalue)
-                                })
-                                data.ccounter.forEach((ccounter:any)=>{
-                                    schema.ccounter.push(ccounter)
-                                })
-
-                                schema.actions = new ArraySchema<string>()
-                                data.actions.forEach((action:any)=>{
-                                    schema.actions.push(action)
-                                })
-                                trigger.triggers.push(schema)
-                            })
-
-                            this[COMPONENT_TYPES.TRIGGER_COMPONENT].set(aid, trigger)
+                            createTriggerComponent(this, aid, data[component][aid])
                         }
                         break;
 

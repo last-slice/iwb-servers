@@ -8913,7 +8913,44 @@
                 "name": "trigger",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Button",
+                        "type": "animation_start",
+                        "anim":"trigger"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Play Button"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "285c7a3e-887a-4a95-be07-37cb9963bb9c",
@@ -9403,7 +9440,44 @@
                 "name": "trigger",
                 "duration": 1
             }
-        ]
+        ],
+"components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Button",
+                        "type": "animation_start",
+                        "anim":"trigger"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Play Button"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "86e181a1-96d5-43aa-9dd8-40a890beaa1e",
@@ -9453,7 +9527,44 @@
                 "name": "trigger",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Button",
+                        "type": "animation_start",
+                        "anim":"trigger"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Play Button"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "3fd154a9-2b30-49e6-84f6-94a7218e8862",
@@ -13883,7 +13994,28 @@
                 "name": "main",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Open",
+                        "type": "animation_start",
+                        "anim":"open"
+                    },
+                    {
+                        "name": "Close",
+                        "type": "animation_start",
+                        "anim":"close"
+                    },
+                    {
+                        "name": "Main",
+                        "type": "animation_start",
+                        "anim":"main"
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "0836bbcb-7ba7-4bad-9744-107023d39239",
@@ -17165,8 +17297,8 @@
     },
     {
         "id": "aee77210-e7de-47c9-bc40-4333e2d35edd",
-        "m": "Cyberpunk Door Anim",
-        "n": "Cyberpunk Door Anim",
+        "m": "Cyberpunk Door",
+        "n": "Cyberpunk Door",
         "im": "https://lsnft.mypinata.cloud/ipfs/bafkreiczbnwktb6xhdtf6i65mosrmtl6fsoqauzyz2sckt4f4e6usmuwia",
         "d": "",
         "cat": "",
@@ -17193,7 +17325,23 @@
                 "name": "close",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Open",
+                        "type": "animation_start",
+                        "anim":"open"
+                    },
+                    {
+                        "name": "Close",
+                        "type": "animation_start",
+                        "anim":"close"
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "cdf45688-f236-452c-b529-b8273abca564",
@@ -17375,7 +17523,44 @@
                 "name": "trigger",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Button",
+                        "type": "animation_start",
+                        "anim":"trigger"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Play Button"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "afeada11-9218-4e24-93fb-9313914e34f1",
@@ -27419,7 +27604,44 @@
                 "name": "trigger",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Button",
+                        "type": "animation_start",
+                        "anim":"trigger"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Play Button"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "bd1afbd0-0d8d-4129-96ce-810963a865d6",
@@ -27447,7 +27669,44 @@
                 "name": "trigger",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Button",
+                        "type": "animation_start",
+                        "anim":"trigger"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Play Button"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "02f2a978-6672-47cf-8eeb-28233b9d8230",
@@ -28121,7 +28380,28 @@
                 "name": "main",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Open",
+                        "type": "animation_start",
+                        "anim":"open"
+                    },
+                    {
+                        "name": "Close",
+                        "type": "animation_start",
+                        "anim":"close"
+                    },
+                    {
+                        "name": "Main",
+                        "type": "animation_start",
+                        "anim":"main"
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "e4204354-bc93-45c3-a085-2e0dfbce4ba3",
@@ -35219,7 +35499,54 @@
                 "name": "main",
                 "duration": 1
             }
-        ]
+        ],
+            "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Activate",
+                        "type": "animation_start",
+                        "anim":"activate"
+                    },
+                    {
+                        "name": "Deactivate",
+                        "type": "animation_start",
+                        "anim":"deactivate"
+                    },
+                    {
+                        "name": "Main",
+                        "type": "animation_start",
+                        "anim":"main"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Activate"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "3a95ecde-0183-4330-abe5-e2d8a60e0ee4",
@@ -42199,7 +42526,44 @@
                 "name": "trigger",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Button",
+                        "type": "animation_start",
+                        "anim":"trigger"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Play Button"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "07f6ce26-d66e-4f92-b5e1-e1856c6b8ccd",
@@ -46253,7 +46617,44 @@
                 "name": "trigger",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Button",
+                        "type": "animation_start",
+                        "anim":"trigger"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Play Button"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "cf3266cc-076f-464a-aaaa-07daa557ee2e",
@@ -46303,7 +46704,44 @@
                 "name": "trigger",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Button",
+                        "type": "animation_start",
+                        "anim":"trigger"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Play Button"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "293b3300-c73f-4473-9864-6f33ea3052da",
@@ -49081,7 +49519,44 @@
                 "name": "trigger",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Spin Wheel",
+                        "type": "animation_start",
+                        "anim":"trigger"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Spin Wheel"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "8eed45d3-3fb3-4d2e-9608-9914af27651b",
@@ -53919,7 +54394,44 @@
                 "name": "trigger",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Button",
+                        "type": "animation_start",
+                        "anim":"trigger"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Play Button"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "7e04071d-b222-4213-a50b-34cac903feca",
@@ -54593,7 +55105,54 @@
                 "name": "activate",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Activate",
+                        "type": "animation_start",
+                        "anim":"activate"
+                    },
+                    {
+                        "name": "Deactivate",
+                        "type": "animation_start",
+                        "anim":"deactivate"
+                    },
+                    {
+                        "name": "Main",
+                        "type": "animation_start",
+                        "anim":"main"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Activate"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "7347cece-11a4-4c3f-9adc-aeb09d927328",
@@ -61527,7 +62086,44 @@
                 "name": "trigger",
                 "duration": 1
             }
-        ]
+        ],
+        "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Button",
+                        "type": "animation_start",
+                        "anim":"trigger"
+                    }
+                ]
+            },
+            "Pointers": {
+                "events": [
+                    {
+                        "eventType": 1,
+                        "button": 0,
+                        "hoverText": "Click Here",
+                        "maxDistance": 5,
+                        "showFeedback": true
+                    }
+                ]
+            },
+            "Triggers": {
+                "triggers": [
+                    {
+                        "type": "on_input_action",
+                        "input": 0,
+                        "pointer":1,
+                        "decisions":[
+                            {
+                                "conditions": [],
+                                "actions": ["Play Button"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "2dadea41-9379-4021-91bc-fd328ae914b3",
@@ -72938,8 +73534,7 @@
                     {
                         "type": "on_input_action",
                         "input": 0,
-                        "conditions": [],
-                        "actions": []
+                        "decisions":[]
                     }
                 ]
             }
@@ -97278,107 +97873,12 @@
                 "triggers": [
                     {
                         "type": "on_enter",
-                        "conditions": [],
-                        "actions": []
+                        "decisions":[]
                     },
                     {
                         "type": "on_leave",
                         "conditions": [],
-                        "actions": []
-                    }
-                ]
-            }
-        }
-    },
-    {
-        "id": "e7a63c71-c2ba-4e6d-8e62-d77e2c8dc93a",
-        "m": "",
-        "n": "IWB Game Module",
-        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
-        "d": "Add a game to your scene!",
-        "cat": "Gallery/Venue",
-        "on": "IWB Builder",
-        "o": "IWB Team",
-        "isdl": true,
-        "ty": "SM",
-        "pc": 0,
-        "si": 0,
-        "tag": [],
-        "v": 20,
-        "bb": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-        },
-        "sty": "Smart Items",
-        "components": {
-            "Material": {
-                "type": 0,
-                "onPlay": false,
-                "albedoColor": {
-                    "r": 0.925,
-                    "g": 0.819,
-                    "b": 0.0361,
-                    "a": 0.5
-                }
-            },
-            "Gltf": {
-                "src": "90048a13-0171-4e5d-84be-662492b775ea",
-                "visibleCollision": 1,
-                "invisibleCollision": 2
-            },
-            "Actions": {
-                "actions": [
-                    {
-                        "name": "Attempt Start Game",
-                        "type": "game_start_attempt"
-                    },
-                    {
-                        "name": "End Game",
-                        "type": "game_end"
-                    }
-                ]
-            },
-            "Pointers": {
-                "events": [
-                    {
-                        "eventType": 1,
-                        "button": 1,
-                        "hoverText": "Start Game",
-                        "maxDistance": 5,
-                        "showFeedback": true
-                    },
-                    {
-                        "eventType": 1,
-                        "button": 2,
-                        "hoverText": "End Game",
-                        "maxDistance": 5,
-                        "showFeedback": true
-                    }
-                ]
-            },
-            "Triggers": {
-                "triggers": [
-                    {
-                        "type": "on_input_action",
-                        "input": 1,
-                        "pointer": 1,
-                        "conditions": [],
-                        "actions": []
-                    },
-                    {
-                        "type": "on_input_action",
-                        "input": 2,
-                        "pointer": 1,
-                        "conditions": [],
-                        "actions": []
-                    },
-                    {
-                        "type": "on_game_start",
-                        "input": 0,
-                        "pointer": 0,
-                        "conditions": [],
-                        "actions": []
+                        "decisions":[]
                     }
                 ]
             }

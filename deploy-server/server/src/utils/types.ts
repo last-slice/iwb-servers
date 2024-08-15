@@ -115,6 +115,9 @@ export enum REQUIRED_ASSETS {
     FLOOR_WOOD = 'FloorBaseWood 01.png',
     FLOOR_FANTASY_ROCK = 'FloorFantasyRocks 01.png',
     GROUND_FLOOR_SCIFI = 'GroundFloorSciFi 01.png',
+    SCIFI_FLOOR_RED = 'SciFi_Floor_Red2.png',
+    SCIFI_FLOOR_VIOLET = 'SciFi_Floor_Violet.png',
+    FILE1 = 'file1.png',
 
     //smart items
     VIDEO = 'bb3b0edf-377b-438b-80af-bd199455a9bb',

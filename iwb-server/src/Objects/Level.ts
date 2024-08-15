@@ -108,7 +108,7 @@ export async function createGameLevel(room:IWBRoom, client:Client, scene:Scene, 
         {
             isArea:false,
             triggers:[
-                {input:0, pointer:0, type:Triggers.ON_LEVEL_LOADED, actions:[]},
+                {input:0, pointer:0, type:Triggers.ON_LEVEL_LOADED, decisions:[]},
             ],
         }
     )

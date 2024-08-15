@@ -102,42 +102,51 @@ function ThreeDAssets({handleFileSelect, glbFile, resetLoader,token, sceneKey, s
     //   setImageUploadStatus('')
     // }
 
-    try {
-      const formData = new FormData();
-      formData.append("file", modelImageFile);
-  
-      const pinataMetadata = JSON.stringify({
-        name: modelName + modelImageFile.type,
-      });
-      formData.append("pinataMetadata", pinataMetadata);
-  
-      const pinataOptions = JSON.stringify({
-        cidVersion: 0,
-      });
-      formData.append("pinataOptions", pinataOptions);
-  
-      const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${pinataBearer}`,
-        },
-        body: formData,
-      });
-      const resData = await res.json();
-      console.log(resData);
-      if(resData && resData.IpfsHash){
-        // console.log("wait over")
-        console.log("https://lsnft.mypinata.cloud/ipfs/" + resData.IpfsHash)
-        setModelImageLink("https://lsnft.mypinata.cloud/ipfs/" + resData.IpfsHash)
-        checkFormCompletion(true)
-        setImageUploadStatus('uploaded')
-      }else{
+    if(DEBUG){
+      setModelImageLink("test image")
+      checkFormCompletion(true)
+      setImageUploadStatus('uploaded')
+    }
+    else{
+      try {
+        const formData = new FormData();
+        formData.append("file", modelImageFile);
+    
+        const pinataMetadata = JSON.stringify({
+          name: modelName + modelImageFile.type,
+        });
+        formData.append("pinataMetadata", pinataMetadata);
+    
+        const pinataOptions = JSON.stringify({
+          cidVersion: 0,
+        });
+        formData.append("pinataOptions", pinataOptions);
+    
+        const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${pinataBearer}`,
+          },
+          body: formData,
+        });
+        const resData = await res.json();
+        console.log(resData);
+        if(resData && resData.IpfsHash){
+          // console.log("wait over")
+          console.log("https://lsnft.mypinata.cloud/ipfs/" + resData.IpfsHash)
+          setModelImageLink("https://lsnft.mypinata.cloud/ipfs/" + resData.IpfsHash)
+          checkFormCompletion(true)
+          setImageUploadStatus('uploaded')
+        }else{
+          setImageUploadStatus('')
+        }
+      } catch (error) {
+        console.log(error);
         setImageUploadStatus('')
       }
-    } catch (error) {
-      console.log(error);
-      setImageUploadStatus('')
     }
+
+   
 
     // try{
 
