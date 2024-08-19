@@ -64,7 +64,7 @@ export function iwbSceneActionHandler(room:IWBRoom){
                     room.state.players.forEach((player:Player, userId:string)=>{
                         players.push({name:player.dclData.name, userId:userId})
                     })
-                    client.send(SERVER_MESSAGE_TYPES.SCENE_ACTION, {type:info.type, players: players})
+                    client.send(SERVER_MESSAGE_TYPES.SCENE_ACTION, {type:info.type, players: players, sceneId:scene.id})
                 }
                 break;
 

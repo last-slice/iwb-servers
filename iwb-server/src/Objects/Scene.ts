@@ -14,7 +14,7 @@ import { TransformComponent } from "./Transform";
 import { createTriggerComponent, TriggerComponent, TriggerComponentSchema, TriggerConditionComponent } from "./Trigger";
 import { VisibilityComponent } from "./Visibility";
 import { IWBRoom } from "../rooms/IWBRoom";
-import { iwbManager } from "../app.config";
+import { itemManager, iwbManager } from "../app.config";
 import { fetchPlayfabMetadata, fetchPlayfabFile } from "../utils/Playfab";
 import { checkRewardCache, createRewardComponent, RewardComponent } from "./Rewards";
 import { createMeshRendererComponent, MeshRendererComponent } from "./MeshRenderers";
@@ -471,12 +471,28 @@ export async function initServerAssets(room:IWBRoom){
     if(json.hasOwnProperty("items")){
         json.items.forEach((item:any)=>{
             item.v = catalogVersion
-            room.state.realmAssets.set(item.id, item)
+            if(item.ugc){
+                room.state.realmAssets.set(item.id, item)
+            }
+            else{
+                let catalogItem = itemManager.items.get(item.id)
+                if(catalogItem){
+                    room.state.realmAssets.set(item.id, {...catalogItem})
+                }
+            }
         })
     }else{
         json.forEach((item:any)=>{
             item.v = catalogVersion
-            room.state.realmAssets.set(item.id, item)
+            if(item.ugc){
+                room.state.realmAssets.set(item.id, item)
+            }
+            else{
+                let catalogItem = itemManager.items.get(item.id)
+                if(catalogItem){
+                    room.state.realmAssets.set(item.id, {...catalogItem})
+                }
+            }
         })
         room.state.realmAssetsChanged = true
     }

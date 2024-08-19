@@ -36,7 +36,7 @@ import { createLiveComponent, editLiveComponent } from "../../Objects/LiveShow";
 import { createGameItemComponent } from "../../Objects/GameItem";
 import { createDialogComponent, editDialogComponent } from "../../Objects/Dialog";
 import { createRewardComponent, editRewardComponent } from "../../Objects/Rewards";
-import { createPlaylistComponent, editPlaylistComponent } from "../../Objects/Playlist";
+import { createPlaylistComponent, editPlaylistComponent } from "../../Objects/Playlist";//
 
 
 export let updateComponentFunctions:any = {

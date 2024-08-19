@@ -41,7 +41,13 @@
             "y": 1,
             "z": 1
         },
-        "sty": "Smart Items"
+        "sty": "Smart Items",
+        "components":{
+            "Mesh_Collider": {
+                "shape": 0,
+                "layer": 0
+            }
+        }
     },
     {
         "id": "dca7f300-ce1b-41a8-9f94-01bd2005c660",
@@ -97651,6 +97657,22 @@
         },
         "sty": "Smart Items",
         "components": {
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Playlist",
+                        "type": "playlist_play"
+                    },
+                    {
+                        "name": "Seek Playlist",
+                        "type": "playlist_seek"
+                    },
+                    {
+                        "name": "Stop Playlist",
+                        "type": "playlist_stop"
+                    }
+                ]
+            },
             "Playlist": {},
             "Mesh_Collider": {
                 "shape": 1,
