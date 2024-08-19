@@ -519,15 +519,15 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
 
         case 'Video':
             createVideoComponent(scene, item.aid, catalogItemInfo)
-            createMeshRendererComponent(scene, {aid:item.aid, shape:0})
+            createMeshRendererComponent(scene, {aid:item.aid, shape:0, onPlay:true})
             createMeshColliderComponent(scene, {aid:item.aid, shape:0, layer:3})
             // createTextureComponent(scene, {aid:item.aid, type:1})
             // createEmissiveComponent(scene, item.aid, {type:0})
-            createMaterialComponent(scene, item.aid, {onPlay:true, type:0, textureType:1, texture:"", emissiveType:1, emissiveTexture:""})
+            createMaterialComponent(scene, item.aid, {onPlay:true, type:0, textureType:"VIDEO", texture:""})
         break;
 
         case 'Image':
-            createMeshRendererComponent(scene, {aid:item.aid, shape:0})
+            createMeshRendererComponent(scene, {aid:item.aid, shape:0, onPlay:true})
             createMeshColliderComponent(scene, {aid:item.aid, shape:0, layer:3})
             // createTextureComponent(scene, {aid:item.aid, type:0, path:""})
             // createEmissiveComponent(scene, item.aid, {type:0})
@@ -540,7 +540,7 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
             createTextComponent(scene, item.aid, {text:"" + catalogItemInfo.n, onPlay:false})
             createAudioSourceComponent(scene, item.aid, {url:"assets/" + catalogItemInfo.id + ".mp3"})
             createActionComponent(scene, item.aid, {actions:[{name:"Play Sound", type:"audio_play"}, {name:"Stop Sound", type:"audio_stop"}]})
-            createMaterialComponent(scene, item.aid, {onPlay:false, type:0, "albedoColor": {
+            createMaterialComponent(scene, item.aid, {onPlay:false, type:0,  textureType:"COLOR", "albedoColor": {
                 "r": 0,
                 "g": 0,
                 "b": 1,
@@ -552,13 +552,13 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
             createMeshRendererComponent(scene, {aid:item.aid, shape:1})
             createMeshColliderComponent(scene, {aid:item.aid, shape:1, layer:3})
             createTextComponent(scene, item.aid, {text:"" + catalogItemInfo.n, onPlay:false})
-            createMaterialComponent(scene, item.aid, {onPlay:false, type:0, "albedoColor": {
+            createMaterialComponent(scene, item.aid, {onPlay:false, textureType:"COLOR", type:0, "albedoColor": {
                     "r": 0,
                     "g": 0,
                     "b": 1,
                     "a": 0.5
                 }})
-                createAudioSourceComponent(scene, item.aid, {url:""})
+                createAudioStreamComponent(scene, item.aid, {url:""})
             // createActionComponent(scene, item.aid, {actions:[{name:"Start Audio Stream", type:ACTIONS.PLAY_AUDIO_STREAM}, {name:"Stop Audio Stream", type:ACTIONS.STOP_AUDIO_STREAM}]})
             break;
     }
@@ -725,7 +725,7 @@ export function removeAllAssetComponents(room:IWBRoom, player:Player, scene:any,
                 }
             }
             try{
-                scene[component].delete(info.aid)
+                scene[component].clear()
             }catch(e){}
             
         }

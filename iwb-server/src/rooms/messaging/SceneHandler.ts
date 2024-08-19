@@ -211,7 +211,7 @@ export function iwbSceneHandler(room:IWBRoom){
         if(player){
             let world = iwbManager.worlds.find(($=> $.ens === room.state.world))
             if(world && world.owner === player.address){
-                world.bps.push(info.user)
+                world.bps.push(info.user.toLowerCase())
 
                 client.send(SERVER_MESSAGE_TYPES.WORLD_ADD_BP, info)
                 let otherPlayer = room.state.players.get(info.user)
@@ -384,6 +384,7 @@ export function iwbSceneHandler(room:IWBRoom){
                     scene.n = info.name
                     scene.d = info.desc
                     scene.im = info.image
+                    info.direction ? scene.direction += info.direction : null
 
                     let enabledView = (scene.e === info.enabled ? false : true)
                     scene.e = info.enabled

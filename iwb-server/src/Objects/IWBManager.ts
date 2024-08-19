@@ -102,31 +102,49 @@ export class IWBManager{
         this.pendingRooms.set(room.roomId, room)
     }
 
-    processPendingRoom(room:IWBRoom, player:Player){
+    async processPendingRoom(room:IWBRoom, player:Player){
         if(!this.rooms.find(($:any)=> $.roomId === room.roomId)){
-            this.addRoom(room)
 
             console.log('we have not init room yet')
-            iwbItemHandler(room)
-            iwbSceneActionHandler(room)
+            await iwbItemHandler(room)
+            await iwbSceneActionHandler(room)
             // iwbRewardHandler(this)
-            iwbSceneGameHandler(room)
-            iwbPlayerHandler(room)
-            iwbSceneHandler(room)
+            await iwbSceneGameHandler(room)
+            await iwbPlayerHandler(room)
+            await iwbSceneHandler(room)
 
-            initServerScenes(room, room.state.options.island !== "world" ? room.state.options : undefined)
+            await initServerScenes(room, room.state.options.island !== "world" ? room.state.options : undefined)
             // loadRealmScenes(this, data)
-            initServerAssets(room)
+            await initServerAssets(room)
 
-            // createCustomObjects(this)            
+            // createCustomObjects(this)     
+            this.addRoom(room)       
         }else{
             this.initPlayer(room, player)
         }
     }
 
+    sendItemsInChunks(room: IWBRoom, player:Player): void {
+        const totalItems = room.state.realmAssets.size
+        let items:any[] = [...room.state.realmAssets.values()]
+        console.log('items size is', totalItems, items.length)
+        let chunkSize = 100
+        let chunkIndex = 0;
+    
+        while (chunkIndex * chunkSize < totalItems) {
+            // Get the current chunk of items
+            const chunk = items.slice(chunkIndex * chunkSize, (chunkIndex + 1) * chunkSize);
+            console.log('chunk size', chunk.length)
+            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.CHUNK_SEND_ASSETS, chunk)
+            chunkIndex++;
+        }
+    }
+
     initPlayer(room:IWBRoom, player:Player){
+        console.log('asset count ', room.state.realmAssets.size)
         player.sendPlayerMessage(SERVER_MESSAGE_TYPES.INIT,{
             realmAssets: room.state.realmAssets,
+            realmAssetSize:room.state.realmAssets.size,
             styles: iwbManager.styles,
             worlds: iwbManager.worlds,
             iwb: {v: iwbManager.version, updates:iwbManager.versionUpdates},
@@ -136,6 +154,9 @@ export class IWBManager{
             },
             settings: player.settings
         })
+        // setTimeout(()=>{
+        //     this.sendItemsInChunks(room, player)
+        // },200)
     }
 
     initUsers(room:IWBRoom){

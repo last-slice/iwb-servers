@@ -12,7 +12,7 @@ export function createMeshColliderComponent(scene:Scene, data:any){
     let component = new MeshColliderComponent()
     component.shape = data.shape
     component.layer = data.layer
-    data.hasOwnProperty("onPlay") ? component.onPlay = data.onPlay : false
+    component.onPlay = data.hasOwnProperty("onPlay") ? data.onPlay : false
     scene[COMPONENT_TYPES.MESH_COLLIDER_COMPONENT].set(data.aid, component)
 }
 

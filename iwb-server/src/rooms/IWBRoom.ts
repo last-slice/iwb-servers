@@ -10,10 +10,6 @@ import { addPlayerToWorld, iwbPlayerHandler, removePlayer, savePlayerCache } fro
 import { itemManager, iwbManager } from "../app.config";
 import { playerLogin, PLAYFAB_DATA_ACCOUNT, pushPlayfabEvent, updatePlayerDisplayName, updatePlayerInternalData } from "../utils/Playfab";
 
-import data from '../tests/data.json'
-import { garbageCollectRealmGames } from "../Objects/Game";
-import { garbageCollectPlaylist } from "../Objects/Playlist";
-
 export class IWBRoom extends Room<IWBRoomState> {
 
     async onAuth(client: Client, options: any, req: any) {
@@ -253,8 +249,8 @@ function optionsValidated(options:any){
         !options.world ||
         !options.userData || 
         !options.userData.userId || 
-        !options.userData.name || 
-        options.userData.name === ""
+        !options.userData.name //|| 
+        // options.userData.name === ""
     ){
         return false
     }

@@ -73503,7 +73503,8 @@
                     "g": 0.87,
                     "b": 0.753,
                     "a": 0.5
-                }
+                },
+                "textureType":"COLOR"
             },
             "Text": {
                 "text": "Click Area",
@@ -97456,7 +97457,8 @@
                     "g": 0,
                     "b": 1,
                     "a": 0.5
-                }
+                },
+                "textureType":"COLOR"
             },
             "Text": {
                 "text": "Dialog",
@@ -97515,7 +97517,8 @@
                     "g": 0.1,
                     "b": 0.1,
                     "a": 0.5
-                }
+                },
+                "textureType":"COLOR"
             },
             "Text": {
                 "text": "Rewards",
@@ -97570,7 +97573,8 @@
                     "g": 0.35,
                     "b": 0.25,
                     "a": 0.5
-                }
+                },
+                "textureType":"COLOR"
             },
             "Text": {
                 "text": "Empty Entity",
@@ -97611,7 +97615,8 @@
         "components": {
             "Material": {
                 "type": 0,
-                "onPlay": true
+                "onPlay": true,
+                "textureType":"COLOR"
             },
             "Mesh_Collider": {
                 "shape": 0,
@@ -97664,7 +97669,8 @@
                     "g": 0.35,
                     "b": 0.25,
                     "a": 0.5
-                }
+                },
+                "textureType":"COLOR"
             },
             "Billboard": {
                 "mode": 2
@@ -97717,7 +97723,8 @@
                     "g": 1,
                     "b": 0.749,
                     "a": 0.5
-                }
+                },
+                "textureType":"COLOR"
             },
             "Text": {
                 "text": "UI Text",
@@ -97788,7 +97795,8 @@
                     "g": 0,
                     "b": 0,
                     "a": 0.5
-                }
+                },
+                "textureType":"COLOR"
             },
             "Text": {
                 "text": "UI Image",
@@ -97846,10 +97854,8 @@
                     "g": 0.819,
                     "b": 0.0361,
                     "a": 0.5
-                }
-            },
-            "Billboard": {
-                "mode": 2
+                },
+                "textureType":"COLOR"
             },
             "Text": {
                 "text": "Trigger Area",
@@ -97915,7 +97921,8 @@
                     "g": 0,
                     "b": 0,
                     "a": 0.5
-                }
+                },
+                "textureType":"COLOR"
             },
             "Mesh_Collider": {
                 "shape": 1,

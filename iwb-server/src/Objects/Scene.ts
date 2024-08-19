@@ -69,6 +69,7 @@ export class Scene extends Schema {
     @type("number") toc: number
     @type("number") pc: number = 0
     @type("number") pcnt: number
+    @type("number") direction: number = 0
 
     @type("boolean") isdl: boolean
     @type("boolean") e: boolean
@@ -76,6 +77,7 @@ export class Scene extends Schema {
     @type("boolean") dv: boolean = false
     @type("boolean") dpx: boolean = false
     @type("boolean") lim: boolean = true
+
 
     @type({map:TransformComponent}) [COMPONENT_TYPES.TRANSFORM_COMPONENT]:MapSchema<TransformComponent>
     @type({map:GltfComponent}) [COMPONENT_TYPES.GLTF_COMPONENT]:MapSchema<GltfComponent>
@@ -144,6 +146,7 @@ export class Scene extends Schema {
             this.lim = data.hasOwnProperty("lim") ? data.lim : true
             this.sp = data.sp[0].split(",").length === 2 ? [data.sp[0].split(",")[0] + ",0," + data.sp[0].split(",")[1]] : data.sp
             this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"]
+            data.hasOwnProperty("direction") ? this.direction = data.direction : null
 
             this.setComponents(data, room)
         }
@@ -478,7 +481,7 @@ export async function initServerAssets(room:IWBRoom){
         room.state.realmAssetsChanged = true
     }
 
-    // console.log(room.state.realmAssets)
+    console.log('realm asset size', room.state.realmAssets.size)
     console.log('realm catalog version is', room.state.catalogVersion)
 }
 

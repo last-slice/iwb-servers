@@ -12,7 +12,7 @@ export class MaterialComponent extends Schema{
     @type("string") textureType:string
     @type("string") texture:string
     @type("string") emissiveType:string = "NONE"
-    @type("string") emissveTexture:string = ''
+    @type("string") emissiveTexture:string = ''
     @type("string") transparencyMode:string
     @type("string") alphaType:string
     @type("string") alphaTexture:string
@@ -46,7 +46,7 @@ export function editMaterialComponent(info:any, scene:Scene){
                 break;
 
             case 'emissivetexturetype':
-                materialInfo.emissiveTexture = info.data
+                materialInfo.emissiveType = info.data
                 break;
 
              case 'emissiveIntensity':
@@ -55,6 +55,14 @@ export function editMaterialComponent(info:any, scene:Scene){
 
             case 'albedoColor':
                 materialInfo.albedoColor[info.data.hue] = info.data.value
+                break;
+
+            case 'emissivetexture':
+                materialInfo.emissiveTexture = info.data
+                break;
+
+            case 'texture':
+                materialInfo.texture = info.data
                 break;
         }
     }

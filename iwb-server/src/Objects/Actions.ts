@@ -50,6 +50,9 @@ export class ActionComponentSchema extends Schema{
     @type("number") x:number
     @type("number") y:number
     @type("number") z:number
+    @type("number") xLook:number
+    @type("number") yLook:number
+    @type("number") zLook:number
     @type("number") value:number
     @type("number") textAlign:number
     @type("number") vMask:number
