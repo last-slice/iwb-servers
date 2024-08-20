@@ -1,6 +1,7 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
 import { COMPONENT_TYPES, Color4 } from "../utils/types";
+import { editPlaylistComponent } from "./Playlist";
 
 export class MaterialComponent extends Schema{
     @type("number") type:number // 0 - pbr, 1 - unit
@@ -18,6 +19,7 @@ export class MaterialComponent extends Schema{
     @type("string") alphaTexture:string
     @type(Color4) albedoColor:Color4 = new Color4({r:1, g:1, b:1, a:1})
     @type(Color4) emissiveColor:Color4 = new Color4({r:1, g:1, b:1, a:1})
+    @type("boolean") shadows:boolean
     @type("boolean") onPlay:boolean = false
 }
 
@@ -33,16 +35,29 @@ export function createMaterialComponent(scene:Scene, aid:string, data:any){
     scene[COMPONENT_TYPES.MATERIAL_COMPONENT].set(aid, component)
 }
 
-export function editMaterialComponent(info:any, scene:Scene){
+export async function editMaterialComponent(info:any, scene:Scene){
     let materialInfo:any = scene[COMPONENT_TYPES.MATERIAL_COMPONENT].get(info.aid)
     if(materialInfo){
         switch(info.type){
+            case 'shadows':
+                materialInfo.shadows = info.data
+                break;
+            case 'type':
+                materialInfo.type = info.data
+                break;
+
             case 'playlist':
+                console.log('updating playlist')
+                await editPlaylistComponent({aid:materialInfo.playlist, meshAid:info.aid, action:"deletemesh"}, scene)
                 materialInfo.playlist = info.data
+                await editPlaylistComponent({aid:materialInfo.playlist, meshAid:info.aid, action:"addmesh"}, scene)
                 break;
 
             case 'texturetype':
                 materialInfo.textureType = info.data
+                if(info.data !== "PLAYLIST"){
+                    await editPlaylistComponent({aid:materialInfo.playlist, meshAid:info.aid, action:"deletemesh"}, scene)
+                }
                 break;
 
             case 'emissivetexturetype':

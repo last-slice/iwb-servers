@@ -4,7 +4,7 @@ import { ACTIONS, COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../../utils/type
 import { ActionComponent, ActionComponentSchema, handleCloneAction } from "../../Objects/Actions";
 import { Player } from "../../Objects/Player";
 import { handleReward } from "../../Objects/Rewards";
-import { handlePlaylistAction } from "../../Objects/Playlist";
+import { handlePlaylistAction, stopAllPlaylist, stopPlaylist } from "../../Objects/Playlist";
 
 export function iwbSceneActionHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ACTION, (client:Client, info:any)=>{
@@ -18,6 +18,10 @@ export function iwbSceneActionHandler(room:IWBRoom){
         let scene = room.state.scenes.get(sceneId)
 
         switch(info.type){
+            case 'ENDALL':
+                stopAllPlaylist(scene)
+                break;
+
             case ACTIONS.STOP_PLAYLIST:
             case ACTIONS.SEEK_PLAYLIST:
             case ACTIONS.PLAY_PLAYLIST:

@@ -44,6 +44,7 @@ export class ActionComponentSchema extends Schema{
     @type("string") message:string
     @type("string") button1Label:string
     @type("string") button2Label:string
+    @type("string") playlistAid:string
 
     @type("number") anchor:number
     @type("number") timer:number

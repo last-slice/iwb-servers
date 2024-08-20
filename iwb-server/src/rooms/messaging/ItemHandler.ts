@@ -725,7 +725,7 @@ export function removeAllAssetComponents(room:IWBRoom, player:Player, scene:any,
                 }
             }
             try{
-                scene[component].clear()
+                scene[component].delete(info.aid)
             }catch(e){}
             
         }

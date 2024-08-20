@@ -659,8 +659,8 @@ export function createScene(player:Player, room:IWBRoom, info:any, parcels:strin
   }
 
   function clearSceneAssets(room:IWBRoom, player:Player, scene:any){
-    scene[COMPONENT_TYPES.IWB_COMPONENT].forEach((iwb:IWBComponent, aid:string)=>{
-        removeAllAssetComponents(room, player, scene, {aid:aid})
+    scene[COMPONENT_TYPES.IWB_COMPONENT].forEach(async (iwb:IWBComponent, aid:string)=>{
+        // await removeAllAssetComponents(room, player, scene, {aid:aid})
     })
     // removeAllAssetComponents(room, player, scene, {aid:aid)
     // Object.values(COMPONENT_TYPES).forEach((component:any)=>{

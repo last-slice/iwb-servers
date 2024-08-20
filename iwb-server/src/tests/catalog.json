@@ -97681,7 +97681,7 @@
             "Mesh_Renderer": {
                 "shape": 1,
                 "layer": 2,
-                "onPlay": true
+                "onPlay": false
             },
             "Material": {
                 "type": 0,

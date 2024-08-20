@@ -96,6 +96,8 @@ export enum SERVER_MESSAGE_TYPES {
 
     VERIFY_ACCESS = 'verify_access',
 
+    //AUDIUS SPECIFIC ACTIONS
+    PLAY_AUDIUS_TRACK = 'play_audius_track',
 
     //REMOTE SERVER ACTIONS
     CLAIM_REWARD = 'claim_reward',
