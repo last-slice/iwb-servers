@@ -345,7 +345,7 @@ export function iwbSceneHandler(room:IWBRoom){
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_CLEAR_ASSETS, async(client, info)=>{
-        // console.log(SERVER_MESSAGE_TYPES.SCENE_CLEAR_ASSETS + " message", info)
+        console.log(SERVER_MESSAGE_TYPES.SCENE_CLEAR_ASSETS + " message", info)
         let player:Player = room.state.players.get(client.userData.userId)
         if(player){
             let scene = room.state.scenes.get(info.sceneId)
@@ -660,7 +660,7 @@ export function createScene(player:Player, room:IWBRoom, info:any, parcels:strin
 
   function clearSceneAssets(room:IWBRoom, player:Player, scene:any){
     scene[COMPONENT_TYPES.IWB_COMPONENT].forEach(async (iwb:IWBComponent, aid:string)=>{
-        // await removeAllAssetComponents(room, player, scene, {aid:aid})
+        await removeAllAssetComponents(room, player, scene, {aid:aid})
     })
     // removeAllAssetComponents(room, player, scene, {aid:aid)
     // Object.values(COMPONENT_TYPES).forEach((component:any)=>{

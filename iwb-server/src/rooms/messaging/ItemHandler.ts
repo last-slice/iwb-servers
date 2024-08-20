@@ -37,6 +37,7 @@ import { createGameItemComponent } from "../../Objects/GameItem";
 import { createDialogComponent, editDialogComponent } from "../../Objects/Dialog";
 import { createRewardComponent, editRewardComponent } from "../../Objects/Rewards";
 import { createPlaylistComponent, editPlaylistComponent } from "../../Objects/Playlist";//
+import { createAvatarShapeComponent, editAvatarShapeComponent } from "../../Objects/AvatarShape";
 
 
 export let updateComponentFunctions:any = {
@@ -70,6 +71,7 @@ export let updateComponentFunctions:any = {
     [COMPONENT_TYPES.DIALOG_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editDialogComponent(info, scene)}, 
     [COMPONENT_TYPES.REWARD_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editRewardComponent(info, scene)}, 
     [COMPONENT_TYPES.PLAYLIST_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editPlaylistComponent(info, scene)}, 
+    [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAvatarShapeComponent(info, scene)}, 
 }
 
 let createComponentFunctions:any = {
@@ -97,6 +99,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.DIALOG_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createDialogComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.REWARD_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createRewardComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.PLAYLIST_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPlaylistComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createAvatarShapeComponent(scene, aid, info)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){

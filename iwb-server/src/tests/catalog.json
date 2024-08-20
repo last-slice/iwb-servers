@@ -97407,7 +97407,7 @@
     {
         "id": "78f04fcf-5c50-4001-840c-6ba717ce6037",
         "m": "",
-        "n": "NPC",
+        "n": "NPC Avatar",
         "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
         "d": "Add NPC Avatars to your scene!",
         "cat": "Gallery/Venue",
@@ -97424,7 +97424,10 @@
             "y": 1,
             "z": 1
         },
-        "sty": "Smart Items"
+        "sty": "Smart Items",
+        "components":{
+            "Avatar_Shape":{}
+        }
     },
     {
         "id": "be9b3cb5-30c2-4aa4-bb9a-124b2f29d2c6",
