@@ -57,8 +57,8 @@ export class Scene extends Schema {
     @type("string") im: string
 
     @type(['string']) bps = new ArraySchema<string>();
-    @type(['string']) rat = new ArraySchema<string>();
-    @type(['string']) rev = new ArraySchema<string>();
+    // @type(['string']) rat = new ArraySchema<string>();
+    // @type(['string']) rev = new ArraySchema<string>();
     @type(['string']) pcls = new ArraySchema<string>();
     @type(['string']) sp = new ArraySchema<string>();
     @type(['string']) cp = new ArraySchema<string>();
@@ -66,7 +66,7 @@ export class Scene extends Schema {
     @type("number") cd: number
     @type("number") upd: number
     @type("number") si: number = 0
-    @type("number") toc: number
+    // @type("number") toc: number
     @type("number") pc: number = 0
     @type("number") pcnt: number
     @type("number") direction: number = 0
