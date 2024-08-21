@@ -153,10 +153,8 @@ export enum COMPONENT_TYPES {
     TEXT_COMPONENT = "Text",
     TRIGGER_COMPONENT = "Triggers",
     ACTION_COMPONENT = 'Actions',
-    TRIGGER_AREA_COMPONENT = "Trigger_Area",
     CLICK_AREA_COMPONENT = "Click_Area",
     ANIMATION_COMPONENT = "Animator",
-    NPC_COMPONENT = 'NPC',
     DIALOG_COMPONENT = 'Dialog',
     REWARD_COMPONENT ='Reward',
     PARENTING_COMPONENT = 'Parenting',
@@ -173,7 +171,6 @@ export enum COMPONENT_TYPES {
     MESH_RENDER_COMPONENT = 'Mesh_Renderer',
     MESH_COLLIDER_COMPONENT = 'Mesh_Collider',
     TEXTURE_COMPONENT = 'Texture',
-    EMISSIVE_TEXTURE_COMPONENT = 'Emissive',
     AVATAR_SHAPE_COMPONENT = 'Avatar_Shape',
     GAME_COMPONENT = 'Game',
     LEVEL_COMPONENT = 'Levels',
@@ -182,7 +179,8 @@ export enum COMPONENT_TYPES {
     TEAM_COMPONENT = 'Team',
     GAME_ITEM_COMPONENT = 'GameItem',
     GAME_ROOM_COMPONENT = 'gaming',
-    PLAYLIST_COMPONENT ='Playlist'
+    PLAYLIST_COMPONENT ='Playlist',
+    PATH_COMPONENT = 'Path'
 }
 
 export enum COLLISION_LAYERS {

@@ -16,13 +16,10 @@ export class ActionComponentSchema extends Schema{
     @type("string") hoverText:string
     @type("string") aid:string
     @type("string") anim:string
-    @type("string") teleport:string
-    @type("string") teleCam:string
     @type("boolean") loop:boolean
     @type("number") showSize:number
     @type("string") showPos:string
     @type("string") startDId:string
-
     @type("string") dialID:string
 
 
@@ -45,6 +42,7 @@ export class ActionComponentSchema extends Schema{
     @type("string") button1Label:string
     @type("string") button2Label:string
     @type("string") playlistAid:string
+    @type("string") pathAid:string
 
     @type("number") anchor:number
     @type("number") timer:number

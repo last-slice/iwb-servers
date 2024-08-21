@@ -5,9 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkAssetCacheStates = exports.saveRealmAssets = exports.saveRealmScenes = exports.getRealmData = exports.saveRealm = exports.loadRealmScenes = exports.initServerAssets = exports.initServerScenes = exports.Scene = exports.TempScene = void 0;
+exports.checkAssetCacheStates = exports.saveRealmAssets = exports.getRealmData = exports.saveRealm = exports.loadRealmScenes = exports.initServerAssets = exports.initServerScenes = exports.Scene = exports.TempScene = void 0;
 const schema_1 = require("@colyseus/schema");
 const types_1 = require("../utils/types");
 const Actions_1 = require("./Actions");
@@ -44,6 +44,8 @@ const LiveShow_1 = require("./LiveShow");
 const Team_1 = require("./Team");
 const GameItem_1 = require("./GameItem");
 const Dialog_1 = require("./Dialog");
+const Playlist_1 = require("./Playlist");
+const Paths_1 = require("./Paths");
 class TempScene extends schema_1.Schema {
     constructor() {
         super(...arguments);
@@ -67,7 +69,7 @@ __decorate([
     (0, schema_1.type)(['string'])
 ], TempScene.prototype, "pcls", void 0);
 class Scene extends schema_1.Schema {
-    static { _a = types_1.COMPONENT_TYPES.TRANSFORM_COMPONENT, _b = types_1.COMPONENT_TYPES.GLTF_COMPONENT, _c = types_1.COMPONENT_TYPES.MESH_RENDER_COMPONENT, _d = types_1.COMPONENT_TYPES.MESH_COLLIDER_COMPONENT, _e = types_1.COMPONENT_TYPES.TEXTURE_COMPONENT, _f = types_1.COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT, _g = types_1.COMPONENT_TYPES.MATERIAL_COMPONENT, _h = types_1.COMPONENT_TYPES.NAMES_COMPONENT, _j = types_1.COMPONENT_TYPES.VISBILITY_COMPONENT, _k = types_1.COMPONENT_TYPES.ACTION_COMPONENT, _l = types_1.COMPONENT_TYPES.COUNTER_COMPONENT, _m = types_1.COMPONENT_TYPES.STATE_COMPONENT, _o = types_1.COMPONENT_TYPES.TRIGGER_COMPONENT, _p = types_1.COMPONENT_TYPES.TEXT_COMPONENT, _q = types_1.COMPONENT_TYPES.NFT_COMPONENT, _r = types_1.COMPONENT_TYPES.ANIMATION_COMPONENT, _s = types_1.COMPONENT_TYPES.POINTER_COMPONENT, _t = types_1.COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT, _u = types_1.COMPONENT_TYPES.AUDIO_STREAM_COMPONENT, _v = types_1.COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT, _w = types_1.COMPONENT_TYPES.VIDEO_COMPONENT, _x = types_1.COMPONENT_TYPES.IWB_COMPONENT, _y = types_1.COMPONENT_TYPES.UI_TEXT_COMPONENT, _z = types_1.COMPONENT_TYPES.UI_IMAGE_COMPONENT, _0 = types_1.COMPONENT_TYPES.GAME_COMPONENT, _1 = types_1.COMPONENT_TYPES.LEVEL_COMPONENT, _2 = types_1.COMPONENT_TYPES.BILLBOARD_COMPONENT, _3 = types_1.COMPONENT_TYPES.LIVE_COMPONENT, _4 = types_1.COMPONENT_TYPES.TEAM_COMPONENT, _5 = types_1.COMPONENT_TYPES.GAME_ITEM_COMPONENT, _6 = types_1.COMPONENT_TYPES.DIALOG_COMPONENT, _7 = types_1.COMPONENT_TYPES.PARENTING_COMPONENT; }
+    static { _a = types_1.COMPONENT_TYPES.TRANSFORM_COMPONENT, _b = types_1.COMPONENT_TYPES.GLTF_COMPONENT, _c = types_1.COMPONENT_TYPES.MESH_RENDER_COMPONENT, _d = types_1.COMPONENT_TYPES.MESH_COLLIDER_COMPONENT, _e = types_1.COMPONENT_TYPES.TEXTURE_COMPONENT, _f = types_1.COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT, _g = types_1.COMPONENT_TYPES.MATERIAL_COMPONENT, _h = types_1.COMPONENT_TYPES.NAMES_COMPONENT, _j = types_1.COMPONENT_TYPES.VISBILITY_COMPONENT, _k = types_1.COMPONENT_TYPES.ACTION_COMPONENT, _l = types_1.COMPONENT_TYPES.COUNTER_COMPONENT, _m = types_1.COMPONENT_TYPES.STATE_COMPONENT, _o = types_1.COMPONENT_TYPES.TRIGGER_COMPONENT, _p = types_1.COMPONENT_TYPES.TEXT_COMPONENT, _q = types_1.COMPONENT_TYPES.NFT_COMPONENT, _r = types_1.COMPONENT_TYPES.ANIMATION_COMPONENT, _s = types_1.COMPONENT_TYPES.POINTER_COMPONENT, _t = types_1.COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT, _u = types_1.COMPONENT_TYPES.AUDIO_STREAM_COMPONENT, _v = types_1.COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT, _w = types_1.COMPONENT_TYPES.VIDEO_COMPONENT, _x = types_1.COMPONENT_TYPES.IWB_COMPONENT, _y = types_1.COMPONENT_TYPES.UI_TEXT_COMPONENT, _z = types_1.COMPONENT_TYPES.UI_IMAGE_COMPONENT, _0 = types_1.COMPONENT_TYPES.GAME_COMPONENT, _1 = types_1.COMPONENT_TYPES.LEVEL_COMPONENT, _2 = types_1.COMPONENT_TYPES.BILLBOARD_COMPONENT, _3 = types_1.COMPONENT_TYPES.LIVE_COMPONENT, _4 = types_1.COMPONENT_TYPES.TEAM_COMPONENT, _5 = types_1.COMPONENT_TYPES.GAME_ITEM_COMPONENT, _6 = types_1.COMPONENT_TYPES.DIALOG_COMPONENT, _7 = types_1.COMPONENT_TYPES.REWARD_COMPONENT, _8 = types_1.COMPONENT_TYPES.PLAYLIST_COMPONENT, _9 = types_1.COMPONENT_TYPES.PATH_COMPONENT, _10 = types_1.COMPONENT_TYPES.PARENTING_COMPONENT; }
     constructor(room, data) {
         super(data);
         this.bps = new schema_1.ArraySchema();
@@ -78,6 +80,7 @@ class Scene extends schema_1.Schema {
         this.cp = new schema_1.ArraySchema();
         this.si = 0;
         this.pc = 0;
+        this.direction = 0;
         this.dv = false;
         this.dpx = false;
         this.lim = true;
@@ -92,6 +95,7 @@ class Scene extends schema_1.Schema {
             this.lim = data.hasOwnProperty("lim") ? data.lim : true;
             this.sp = data.sp[0].split(",").length === 2 ? [data.sp[0].split(",")[0] + ",0," + data.sp[0].split(",")[1]] : data.sp;
             this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"];
+            data.hasOwnProperty("direction") ? this.direction = data.direction : null;
             this.setComponents(data, room);
         }
     }
@@ -129,10 +133,28 @@ class Scene extends schema_1.Schema {
         this[types_1.COMPONENT_TYPES.TEAM_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.GAME_ITEM_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.DIALOG_COMPONENT] = new schema_1.MapSchema();
-        // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()
+        this[types_1.COMPONENT_TYPES.REWARD_COMPONENT] = new schema_1.MapSchema();
+        this[types_1.COMPONENT_TYPES.PLAYLIST_COMPONENT] = new schema_1.MapSchema();
+        // this[COMPONENT_TYPES.PATH_COMPONENT] = new MapSchema<PathComponent>()
+        // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()//
         Object.values(types_1.COMPONENT_TYPES).forEach((component) => {
             if (data[component]) {
                 switch (component) {
+                    // case COMPONENT_TYPES.PATH_COMPONENT:
+                    //     for (const aid in data[component]) {
+                    //         createPathComponent(this, aid,  data[component][aid])
+                    //     }
+                    //     break;
+                    case types_1.COMPONENT_TYPES.PLAYLIST_COMPONENT:
+                        for (const aid in data[component]) {
+                            (0, Playlist_1.createPlaylistComponent)(this, aid, data[component][aid]);
+                        }
+                        break;
+                    case types_1.COMPONENT_TYPES.REWARD_COMPONENT:
+                        for (const aid in data[component]) {
+                            (0, Rewards_1.createRewardComponent)(this, aid, data[component][aid]);
+                        }
+                        break;
                     case types_1.COMPONENT_TYPES.DIALOG_COMPONENT:
                         for (const aid in data[component]) {
                             (0, Dialog_1.createDialogComponent)(this, aid, data[component][aid]);
@@ -185,7 +207,8 @@ class Scene extends schema_1.Schema {
                         break;
                     case types_1.COMPONENT_TYPES.NAMES_COMPONENT:
                         for (const aid in data[component]) {
-                            this[types_1.COMPONENT_TYPES.NAMES_COMPONENT].set(aid, new Names_1.NameComponent(data[component][aid]));
+                            (0, Names_1.createNameComponent)(this, aid, data[component][aid], true);
+                            // this[COMPONENT_TYPES.NAMES_COMPONENT].set(aid, new NameComponent(data[component][aid]))
                         }
                         break;
                     case types_1.COMPONENT_TYPES.VISBILITY_COMPONENT:
@@ -227,39 +250,7 @@ class Scene extends schema_1.Schema {
                         break;
                     case types_1.COMPONENT_TYPES.TRIGGER_COMPONENT:
                         for (const aid in data[component]) {
-                            let triggerData = data[component][aid];
-                            let trigger = new Trigger_1.TriggerComponent();
-                            trigger.triggers = new schema_1.ArraySchema();
-                            trigger.isArea = data[component][aid].isArea;
-                            triggerData.triggers.forEach((data) => {
-                                let schema = new Trigger_1.TriggerComponentSchema();
-                                schema.id = data.id;
-                                schema.type = data.type;
-                                schema.input = data.input;
-                                schema.pointer = data.pointer;
-                                schema.caid = new schema_1.ArraySchema();
-                                schema.ctype = new schema_1.ArraySchema();
-                                schema.cvalue = new schema_1.ArraySchema();
-                                schema.ccounter = new schema_1.ArraySchema();
-                                data.caid.forEach((caid) => {
-                                    schema.caid.push(caid);
-                                });
-                                data.ctype.forEach((ctype) => {
-                                    schema.ctype.push(ctype);
-                                });
-                                data.cvalue.forEach((cvalue) => {
-                                    schema.cvalue.push(cvalue);
-                                });
-                                data.ccounter.forEach((ccounter) => {
-                                    schema.ccounter.push(ccounter);
-                                });
-                                schema.actions = new schema_1.ArraySchema();
-                                data.actions.forEach((action) => {
-                                    schema.actions.push(action);
-                                });
-                                trigger.triggers.push(schema);
-                            });
-                            this[types_1.COMPONENT_TYPES.TRIGGER_COMPONENT].set(aid, trigger);
+                            (0, Trigger_1.createTriggerComponent)(this, aid, data[component][aid]);
                         }
                         break;
                     case types_1.COMPONENT_TYPES.ACTION_COMPONENT:
@@ -284,7 +275,8 @@ class Scene extends schema_1.Schema {
                         break;
                     case types_1.COMPONENT_TYPES.MESH_RENDER_COMPONENT:
                         for (const aid in data[component]) {
-                            this[types_1.COMPONENT_TYPES.MESH_RENDER_COMPONENT].set(aid, new MeshRenderers_1.MeshRendererComponent(data[component][aid]));
+                            data[component][aid].aid = aid;
+                            (0, MeshRenderers_1.createMeshRendererComponent)(this, data[component][aid]);
                         }
                         break;
                     case types_1.COMPONENT_TYPES.MESH_COLLIDER_COMPONENT:
@@ -331,7 +323,8 @@ class Scene extends schema_1.Schema {
                         break;
                     case types_1.COMPONENT_TYPES.AUDIO_STREAM_COMPONENT:
                         for (const aid in data[component]) {
-                            this[types_1.COMPONENT_TYPES.AUDIO_STREAM_COMPONENT].set(aid, new Sound_1.SoundComponent(data[component][aid]));
+                            (0, Sound_1.createAudioStreamComponent)(this, aid, data[component][aid]);
+                            // this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT].set(aid, new SoundComponent(data[component][aid]))
                         }
                         break;
                     case types_1.COMPONENT_TYPES.VIDEO_COMPONENT:
@@ -413,6 +406,9 @@ __decorate([
 __decorate([
     (0, schema_1.type)("number")
 ], Scene.prototype, "pcnt", void 0);
+__decorate([
+    (0, schema_1.type)("number")
+], Scene.prototype, "direction", void 0);
 __decorate([
     (0, schema_1.type)("boolean")
 ], Scene.prototype, "isdl", void 0);
@@ -531,8 +527,17 @@ __decorate([
     (0, schema_1.type)({ map: Dialog_1.DialogComponent })
 ], Scene.prototype, _6, void 0);
 __decorate([
-    (0, schema_1.type)([Parenting_1.ParentingComponent])
+    (0, schema_1.type)({ map: Rewards_1.RewardComponent })
 ], Scene.prototype, _7, void 0);
+__decorate([
+    (0, schema_1.type)({ map: Playlist_1.PlaylistComponent })
+], Scene.prototype, _8, void 0);
+__decorate([
+    (0, schema_1.type)({ map: Paths_1.PathComponent })
+], Scene.prototype, _9, void 0);
+__decorate([
+    (0, schema_1.type)([Parenting_1.ParentingComponent])
+], Scene.prototype, _10, void 0);
 function initServerScenes(room, options) {
     if (app_config_1.iwbManager.pendingSaves.includes((room.state.world))) {
         let timeout = setTimeout(() => {
@@ -567,24 +572,42 @@ function initServerScenes(room, options) {
 }
 exports.initServerScenes = initServerScenes;
 async function initServerAssets(room) {
-    let metadata = await (0, Playfab_1.fetchPlayfabMetadata)(app_config_1.iwbManager.worlds.find((w) => w.ens === room.state.world).owner);
+    let world = app_config_1.iwbManager.worlds.find((w) => w.ens === room.state.world);
+    console.log('init server assets for world', world);
+    let metadata = await (0, Playfab_1.fetchPlayfabMetadata)(world.owner);
     let json = await (0, Playfab_1.fetchPlayfabFile)(metadata, "catalogs.json");
     let catalogVersion = json.hasOwnProperty("version") ? json.version : 0;
     room.state.catalogVersion = catalogVersion;
     if (json.hasOwnProperty("items")) {
         json.items.forEach((item) => {
             item.v = catalogVersion;
-            room.state.realmAssets.set(item.id, item);
+            if (item.ugc) {
+                room.state.realmAssets.set(item.id, item);
+            }
+            else {
+                let catalogItem = app_config_1.itemManager.items.get(item.id);
+                if (catalogItem) {
+                    room.state.realmAssets.set(item.id, { ...catalogItem });
+                }
+            }
         });
     }
     else {
         json.forEach((item) => {
             item.v = catalogVersion;
-            room.state.realmAssets.set(item.id, item);
+            if (item.ugc) {
+                room.state.realmAssets.set(item.id, item);
+            }
+            else {
+                let catalogItem = app_config_1.itemManager.items.get(item.id);
+                if (catalogItem) {
+                    room.state.realmAssets.set(item.id, { ...catalogItem });
+                }
+            }
         });
         room.state.realmAssetsChanged = true;
     }
-    // console.log(room.state.realmAssets)
+    console.log('realm asset size', room.state.realmAssets.size);
     console.log('realm catalog version is', room.state.catalogVersion);
 }
 exports.initServerAssets = initServerAssets;
@@ -613,7 +636,7 @@ exports.loadRealmScenes = loadRealmScenes;
 async function saveRealm(room) {
     let fileNames = [];
     let data = [];
-    let scenes = getRealmData(room);
+    let scenes = await getRealmData(room);
     if (scenes && scenes.length > 0) {
         fileNames.push("" + room.state.world + "-scenes.json");
         data.push(scenes);
@@ -654,46 +677,12 @@ function getRealmData(room) {
     let scenes = [];
     room.state.scenes.forEach(async (scene) => {
         let jsonScene = scene.toJSON();
-        // if(scene.id === "OaT46"){
-        //     // console.log('scene is', jsonScene)
-        //     await checkAssetCacheStates(scene, jsonScene)
-        // }
-        // Object.values(COMPONENT_TYPES).forEach((component:any)=>{
-        //     if(data[component]){
-        //         for(let aid in data[component]){
-        //         }
-        //     }
-        // })
+        jsonScene = await checkAssetCacheStates(scene, jsonScene);
         scenes.push(jsonScene);
     });
     return scenes;
 }
 exports.getRealmData = getRealmData;
-async function saveRealmScenes(room) {
-    let scenes = [];
-    room.state.scenes.forEach(async (scene) => {
-        let jsonScene = scene.toJSON();
-        // console.log('scene is', jsonScene)
-        // await checkAssetCacheStates(scene, jsonScene)
-        // Object.values(COMPONENT_TYPES).forEach((component:any)=>{
-        //     if(data[component]){
-        //         for(let aid in data[component]){
-        //         }
-        //     }
-        // })
-        scenes.push(jsonScene);
-    });
-    // let world = iwbManager.worlds.find((w)=>w.ens === room.state.world)
-    // if(world){
-    //     world.builds = scenes.length
-    //     world.updated = Math.floor(Date.now()/1000)
-    // }
-    // if(scenes.length > 0){
-    //     iwbManager.backupScene(room.state.world, room.state.realmToken, room.state.realmTokenType, room.state.realmId, scenes)
-    // }
-    return scenes;
-}
-exports.saveRealmScenes = saveRealmScenes;
 function saveRealmAssets(room) {
     let assets = [];
     room.state.realmAssets.forEach((item) => {
@@ -703,22 +692,12 @@ function saveRealmAssets(room) {
     // iwbManager.backupFile(room.state.world, "catalogs.json", room.state.realmToken, room.state.realmTokenType, room.state.realmId, assets)
 }
 exports.saveRealmAssets = saveRealmAssets;
-function checkAssetCacheStates(scene, jsonScene) {
-    scene[types_1.COMPONENT_TYPES.IWB_COMPONENT].forEach((iwbComponent, aid) => {
-        console.log('ugc is', iwbComponent.ugc);
-        console.log('type is', iwbComponent.type);
+async function checkAssetCacheStates(scene, jsonScene) {
+    scene[types_1.COMPONENT_TYPES.IWB_COMPONENT].forEach(async (iwbComponent, aid) => {
+        jsonScene = await (0, IWB_1.checkIWBCache)(scene, aid, jsonScene);
+        jsonScene = await (0, Rewards_1.checkRewardCache)(scene, aid, jsonScene);
     });
-    // scene.parenting.forEach((assetItem:any, index:number)=>{
-    //     let iwbAsset = scene.itemInfo.get(assetItem.aid)
-    //     iwbAsset.editing = false
-    //     iwbAsset.editor = ""
-    //     //Reward Component
-    //     let rewardInfo = scene.rewards.get(assetItem.aid)
-    //     if(rewardInfo){
-    //         let jsonItem = rewardInfo.toJSON()
-    //         jsondata[COMPONENT_TYPES.REWARD_COMPONENT][assetItem.aid] = jsonItem
-    //     }
-    // })
+    return jsonScene;
 }
 exports.checkAssetCacheStates = checkAssetCacheStates;
 // async saveWorldScenes(scenes:Map<string, Scene>){

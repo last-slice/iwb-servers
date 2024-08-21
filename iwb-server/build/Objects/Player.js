@@ -18,6 +18,7 @@ const axios_1 = __importDefault(require("axios"));
 const IWB_1 = require("./IWB");
 const Game_1 = require("./Game");
 const Transform_1 = require("./Transform");
+const Playlist_1 = require("./Playlist");
 class PlayerManager {
     constructor() {
         this.players = new Map();
@@ -187,7 +188,7 @@ class Player extends schema_1.Schema {
     }
     async saveToDB() {
         // console.log('saving player updates to db', this.dclData.userId)
-        // await this.saveSetttingsDB()
+        await this.saveSetttingsDB();
         // let stats:any = []
         // this.stats.forEach((stat,key)=>{
         //   stats.push({StatisticName:initManager.pDefaultStats.filter((stat)=> stat.pKey === key)[0].StatisticName, Value:stat})
@@ -224,7 +225,8 @@ class Player extends schema_1.Schema {
     }
     async saveSetttingsDB() {
         //  console.log('saving player settings to db', this.dclData.userId)
-        // console.log('server settings are ', this.settings)
+        console.log('server settings are ', this.settings);
+        this.settings.firstTime = false;
         let res = await (0, Playfab_1.updatePlayerData)({
             PlayFabId: this.playFabData.PlayFabId,
             Data: {
@@ -235,6 +237,9 @@ class Player extends schema_1.Schema {
     }
     updatePlayMode(mode) {
         this.mode = mode;
+        if (this.mode === types_1.SCENE_MODES.BUILD_MODE) {
+            (0, Playlist_1.garbageCollectPlaylist)(this.room);
+        }
     }
     async cancelPendingDeployment() {
         try {

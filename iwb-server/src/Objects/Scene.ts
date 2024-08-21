@@ -24,7 +24,6 @@ import { checkIWBCache, IWBComponent, setIWBComponent } from "./IWB";
 import { NftShapeComponent, createNftShapeComponent } from "./NftShape";
 import { MeshColliderComponent } from "./MeshColliders";
 import { TextureComponent } from "./Textures";
-import { EmissiveComponent, createEmissiveComponent } from "./Emissive";
 import { AvatarShapeComponent, createAvatarShapeComponent } from "./AvatarShape";
 import { UITextComponent, createUITextComponent } from "./UIText";
 import { GameComponent, createGameComponent } from "./Game";
@@ -36,6 +35,7 @@ import { createTeamComponent, TeamComponent } from "./Team";
 import { createGameItemComponent, GameItemComponent } from "./GameItem";
 import { createDialogComponent, DialogComponent } from "./Dialog";
 import { createPlaylistComponent, PlaylistComponent } from "./Playlist";
+import { createPathComponent, PathComponent } from "./Paths";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -84,7 +84,6 @@ export class Scene extends Schema {
     @type({map:MeshRendererComponent}) [COMPONENT_TYPES.MESH_RENDER_COMPONENT]:MapSchema<MeshRendererComponent>
     @type({map:MeshColliderComponent}) [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:MapSchema<MeshColliderComponent>
     @type({map:TextureComponent}) [COMPONENT_TYPES.TEXTURE_COMPONENT]:MapSchema<TextureComponent>
-    @type({map:EmissiveComponent}) [COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT]:MapSchema<EmissiveComponent>
     @type({map:MaterialComponent}) [COMPONENT_TYPES.MATERIAL_COMPONENT]:MapSchema<MaterialComponent>
     @type({map:NameComponent}) [COMPONENT_TYPES.NAMES_COMPONENT]:MapSchema<NameComponent>
     @type({map:VisibilityComponent}) [COMPONENT_TYPES.VISBILITY_COMPONENT]:MapSchema<VisibilityComponent>
@@ -101,7 +100,6 @@ export class Scene extends Schema {
     @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:MapSchema<SoundComponent>
     @type({map:AvatarShapeComponent}) [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:MapSchema<AvatarShapeComponent>
     @type({map:VideoComponent}) [COMPONENT_TYPES.VIDEO_COMPONENT]:MapSchema<VideoComponent>
-    @type({map:RewardComponent}) rewards:MapSchema<RewardComponent>
     @type({map:IWBComponent}) [COMPONENT_TYPES.IWB_COMPONENT]:MapSchema<IWBComponent>
     @type({map:UITextComponent}) [COMPONENT_TYPES.UI_TEXT_COMPONENT]:MapSchema<UITextComponent>
     @type({map:UIImageComponent}) [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:MapSchema<UIImageComponent>
@@ -114,6 +112,7 @@ export class Scene extends Schema {
     @type({map:DialogComponent}) [COMPONENT_TYPES.DIALOG_COMPONENT]:MapSchema<DialogComponent>
     @type({map:RewardComponent}) [COMPONENT_TYPES.REWARD_COMPONENT]:MapSchema<RewardComponent>
     @type({map:PlaylistComponent}) [COMPONENT_TYPES.PLAYLIST_COMPONENT]:MapSchema<PlaylistComponent>
+    @type({map:PathComponent}) [COMPONENT_TYPES.PATH_COMPONENT]:MapSchema<PathComponent>
 
 
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent>
@@ -146,7 +145,7 @@ export class Scene extends Schema {
             this.lim = data.hasOwnProperty("lim") ? data.lim : true
             this.sp = data.sp[0].split(",").length === 2 ? [data.sp[0].split(",")[0] + ",0," + data.sp[0].split(",")[1]] : data.sp
             this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"]
-            data.hasOwnProperty("direction") ? this.direction = data.direction : null
+            data.hasOwnProperty("direction") ? this.direction = data.direction : this.direction = 0
 
             this.setComponents(data, room)
         }
@@ -167,7 +166,6 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.MESH_RENDER_COMPONENT] = new MapSchema<MeshRendererComponent>()
         this[COMPONENT_TYPES.MESH_COLLIDER_COMPONENT] = new MapSchema<MeshColliderComponent>()
         this[COMPONENT_TYPES.TEXTURE_COMPONENT] = new MapSchema<TextureComponent>()
-        this[COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT] = new MapSchema<EmissiveComponent>()
         this[COMPONENT_TYPES.MATERIAL_COMPONENT] = new MapSchema<MaterialComponent>()
         this[COMPONENT_TYPES.STATE_COMPONENT] = new MapSchema<StateComponent>()
         this[COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT] = new MapSchema<SoundComponent>()
@@ -177,9 +175,8 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.NFT_COMPONENT] = new MapSchema<NftShapeComponent>()
         this[COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT] = new MapSchema<AvatarShapeComponent>()
         this[COMPONENT_TYPES.UI_TEXT_COMPONENT] = new MapSchema<UITextComponent>()
-        this[COMPONENT_TYPES.UI_TEXT_COMPONENT] = new MapSchema<UITextComponent>()
-        this[COMPONENT_TYPES.GAME_COMPONENT] = new MapSchema<GameComponent>()
         this[COMPONENT_TYPES.UI_IMAGE_COMPONENT] = new MapSchema<UIImageComponent>()
+        this[COMPONENT_TYPES.GAME_COMPONENT] = new MapSchema<GameComponent>()
         this[COMPONENT_TYPES.BILLBOARD_COMPONENT] = new MapSchema<BillboardComponent>()
         this[COMPONENT_TYPES.LEVEL_COMPONENT] = new MapSchema<LevelComponent>()
         this[COMPONENT_TYPES.LIVE_COMPONENT] = new MapSchema<LiveShowComponent>()
@@ -188,11 +185,17 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.DIALOG_COMPONENT] = new MapSchema<DialogComponent>()
         this[COMPONENT_TYPES.REWARD_COMPONENT] = new MapSchema<RewardComponent>()
         this[COMPONENT_TYPES.PLAYLIST_COMPONENT] = new MapSchema<PlaylistComponent>()
-        // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()//
+        this[COMPONENT_TYPES.PATH_COMPONENT] = new MapSchema<PathComponent>()
 
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
+                    case COMPONENT_TYPES.PATH_COMPONENT:
+                        for (const aid in data[component]) {
+                            createPathComponent(this, aid,  data[component][aid])
+                        }
+                        break;
+
                     case COMPONENT_TYPES.PLAYLIST_COMPONENT:
                         for (const aid in data[component]) {
                             createPlaylistComponent(this, aid,  data[component][aid])
@@ -359,12 +362,6 @@ export class Scene extends Schema {
                         }
                         break;
 
-                    case COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT:
-                        for (const aid in data[component]) {
-                            createEmissiveComponent(this, aid, data[component][aid])
-                        }
-                        break;
-
                      case COMPONENT_TYPES.MATERIAL_COMPONENT:
                         for (const aid in data[component]) {
                             createMaterialComponent(this, aid, data[component][aid])
@@ -518,6 +515,7 @@ export async function loadRealmScenes(room:IWBRoom, scenes:any[], options?:any){
         }
     }else{
         filter.forEach((scene)=>{
+            console.log('creating new iwb scene', scene.id)
             room.state.scenes.set(scene.id, new Scene(room, scene))
         })
     }

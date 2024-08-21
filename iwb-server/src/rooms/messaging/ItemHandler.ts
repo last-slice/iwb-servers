@@ -21,7 +21,6 @@ import { createNftShapeComponent, editNftShape } from "../../Objects/NftShape";
 import { createMeshRendererComponent, editMeshRendererComponent } from "../../Objects/MeshRenderers";
 import { MeshColliderComponent, createMeshColliderComponent, editMeshColliderComponent } from "../../Objects/MeshColliders";
 import { createTextureComponent, editTextureComponent } from "../../Objects/Textures";
-import { createEmissiveComponent } from "../../Objects/Emissive";
 import { createCounterComponent, editCounterComponent } from "../../Objects/Counter";
 import { createActionComponent, editActionComponent } from "../../Objects/Actions";
 import { createTriggerComponent, editTriggerComponent, removeActionFromTriggers, TriggerDecisionComponent } from "../../Objects/Trigger";
@@ -38,6 +37,7 @@ import { createDialogComponent, editDialogComponent } from "../../Objects/Dialog
 import { createRewardComponent, editRewardComponent } from "../../Objects/Rewards";
 import { createPlaylistComponent, editPlaylistComponent } from "../../Objects/Playlist";//
 import { createAvatarShapeComponent, editAvatarShapeComponent } from "../../Objects/AvatarShape";
+import { createPathComponent, editPathComponent } from "../../Objects/Paths";
 
 
 export let updateComponentFunctions:any = {
@@ -72,6 +72,7 @@ export let updateComponentFunctions:any = {
     [COMPONENT_TYPES.REWARD_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editRewardComponent(info, scene)}, 
     [COMPONENT_TYPES.PLAYLIST_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editPlaylistComponent(info, scene)}, 
     [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAvatarShapeComponent(info, scene)}, 
+    [COMPONENT_TYPES.PATH_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editPathComponent(info, scene)}, 
 }
 
 let createComponentFunctions:any = {
@@ -100,6 +101,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.REWARD_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createRewardComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.PLAYLIST_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPlaylistComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createAvatarShapeComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.PATH_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPathComponent(scene, aid, info)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){

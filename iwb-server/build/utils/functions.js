@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Vector3 = exports.getStartOfDayUTC = exports.deepCopyMap = exports.isJSON = exports.distanceObjects = exports.distance = exports.generateRandomId = exports.getRandomIntWithDecimals = exports.getRandomIntInclusive = exports.initDeployServerDeploy = exports.initIWBDeploy = void 0;
+exports.rotateZ = exports.rotateX = exports.rotateY = exports.getStartOfDayUTC = exports.deepCopyMap = exports.isJSON = exports.distanceObjects = exports.distance = exports.generateRandomId = exports.getRandomIntWithDecimals = exports.getRandomIntInclusive = exports.initDeployServerDeploy = exports.initIWBDeploy = void 0;
 const { exec } = require('child_process');
 const axios_1 = __importDefault(require("axios"));
+const Transform_1 = require("../Objects/Transform");
 const command = '../iwb-server.sh';
 function initIWBDeploy() {
     axios_1.default.post(process.env.DEPLOYMENT_ENDPOINT + "/false", {
@@ -126,21 +127,58 @@ const isEasternDaylightTime = () => {
     return currentDate >= dstStart && currentDate < dstEnd;
 };
 // Define a simple Vector3-like class or object
-class Vector3 {
-    constructor(x, y, z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-    lerp(target, t) {
-        return new Vector3(lerp(this.x, target.x, t), lerp(this.y, target.y, t), lerp(this.z, target.z, t));
-    }
-    // Method to subtract two Vector3 positions
-    subtract(other) {
-        return new Vector3(this.x - other.x, this.y - other.y, this.z - other.z);
-    }
-}
-exports.Vector3 = Vector3;
+// export class Vector3 {
+//   x:number
+//   y:number
+//   z:number
+//   constructor(x:number, y:number, z:number) {
+//     this.x = x;
+//     this.y = y;
+//     this.z = z;
+//   }
+//   lerp(target:Vector3, t:number) {
+//     return new Vector3(
+//       lerp(this.x, target.x, t),
+//       lerp(this.y, target.y, t),
+//       lerp(this.z, target.z, t)
+//     );
+//   }
+//    // Method to subtract two Vector3 positions
+//    subtract(other: Vector3): Vector3 {
+//     return new Vector3(
+//         this.x - other.x,
+//         this.y - other.y,
+//         this.z - other.z
+//     );
+// }
+// }
 function lerp(start, end, t) {
     return (1 - t) * start + t * end;
 }
+// Rotate the vector around the Y axis
+function rotateY(vector, angle) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    return new Transform_1.Vector3({ x: cos * vector.x - sin * vector.z,
+        y: vector.y,
+        z: sin * vector.x + cos * vector.z });
+}
+exports.rotateY = rotateY;
+// Rotate the vector around the X axis
+function rotateX(vector, angle) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    return new Transform_1.Vector3({ x: vector.x,
+        y: cos * vector.y - sin * vector.z,
+        z: sin * vector.y + cos * vector.z });
+}
+exports.rotateX = rotateX;
+// Rotate the vector around the Z axis
+function rotateZ(vector, angle) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    return new Transform_1.Vector3({ x: cos * vector.x - sin * vector.y,
+        y: sin * vector.x + cos * vector.y,
+        z: vector.z });
+}
+exports.rotateZ = rotateZ;

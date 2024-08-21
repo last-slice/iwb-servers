@@ -16,6 +16,8 @@ const GameHandler_1 = require("../rooms/messaging/GameHandler");
 const ItemHandler_1 = require("../rooms/messaging/ItemHandler");
 const PlayerHandler_1 = require("../rooms/messaging/PlayerHandler");
 const SceneHandler_1 = require("../rooms/messaging/SceneHandler");
+const Game_1 = require("./Game");
+const Playlist_1 = require("./Playlist");
 const fs = require('fs');
 class IWBManager {
     constructor() {
@@ -79,28 +81,44 @@ class IWBManager {
     addPendingRoom(room) {
         this.pendingRooms.set(room.roomId, room);
     }
-    processPendingRoom(room, player) {
+    async processPendingRoom(room, player) {
         if (!this.rooms.find(($) => $.roomId === room.roomId)) {
-            this.addRoom(room);
             console.log('we have not init room yet');
-            (0, ItemHandler_1.iwbItemHandler)(room);
-            (0, ActionHandler_1.iwbSceneActionHandler)(room);
+            await (0, ItemHandler_1.iwbItemHandler)(room);
+            await (0, ActionHandler_1.iwbSceneActionHandler)(room);
             // iwbRewardHandler(this)
-            (0, GameHandler_1.iwbSceneGameHandler)(room);
-            (0, PlayerHandler_1.iwbPlayerHandler)(room);
-            (0, SceneHandler_1.iwbSceneHandler)(room);
-            (0, Scene_1.initServerScenes)(room, room.state.options.island !== "world" ? room.state.options : undefined);
+            await (0, GameHandler_1.iwbSceneGameHandler)(room);
+            await (0, PlayerHandler_1.iwbPlayerHandler)(room);
+            await (0, SceneHandler_1.iwbSceneHandler)(room);
+            await (0, Scene_1.initServerScenes)(room, room.state.options.island !== "world" ? room.state.options : undefined);
             // loadRealmScenes(this, data)
-            (0, Scene_1.initServerAssets)(room);
-            // createCustomObjects(this)            
+            await (0, Scene_1.initServerAssets)(room);
+            // createCustomObjects(this)     
+            this.addRoom(room);
         }
         else {
             this.initPlayer(room, player);
         }
     }
+    sendItemsInChunks(room, player) {
+        const totalItems = room.state.realmAssets.size;
+        let items = [...room.state.realmAssets.values()];
+        console.log('items size is', totalItems, items.length);
+        let chunkSize = 100;
+        let chunkIndex = 0;
+        while (chunkIndex * chunkSize < totalItems) {
+            // Get the current chunk of items
+            const chunk = items.slice(chunkIndex * chunkSize, (chunkIndex + 1) * chunkSize);
+            console.log('chunk size', chunk.length);
+            player.sendPlayerMessage(types_1.SERVER_MESSAGE_TYPES.CHUNK_SEND_ASSETS, chunk);
+            chunkIndex++;
+        }
+    }
     initPlayer(room, player) {
+        console.log('asset count ', room.state.realmAssets.size);
         player.sendPlayerMessage(types_1.SERVER_MESSAGE_TYPES.INIT, {
             realmAssets: room.state.realmAssets,
+            realmAssetSize: room.state.realmAssets.size,
             styles: app_config_1.iwbManager.styles,
             worlds: app_config_1.iwbManager.worlds,
             iwb: { v: app_config_1.iwbManager.version, updates: app_config_1.iwbManager.versionUpdates },
@@ -110,6 +128,9 @@ class IWBManager {
             },
             settings: player.settings
         });
+        // setTimeout(()=>{
+        //     this.sendItemsInChunks(room, player)
+        // },200)
     }
     initUsers(room) {
         room.state.players.forEach((player) => {
@@ -153,6 +174,7 @@ class IWBManager {
             this.version = config.v;
             this.versionUpdates = config.updates;
             this.styles = config.styles;
+            // console.log('config is', config)
             let worlds = JSON.parse(response.Data['Worlds']);
             this.worlds = worlds;
             init ? await app_config_1.itemManager.initServerItems() : null;
@@ -232,7 +254,7 @@ class IWBManager {
                     ens: world.ens,
                     worldName: world.name,
                     owner: world.owner,
-                    init: world ? false : true,
+                    init: world.hasOwnProperty("init") ? true : false,
                     url: url
                 },
             })
@@ -253,7 +275,7 @@ class IWBManager {
                 this.saveNewWorld(worldToDeploy);
             }
             else {
-                await this.deploy(world.owner, worldToDeploy, url);
+                await this.deploy(worldToDeploy.owner, worldToDeploy, url);
             }
         }
         catch (e) {
@@ -267,7 +289,7 @@ class IWBManager {
             if (world && world.owner === client.userData.userId || world.bps.includes(client.userData.userId)) {
                 world.backedUp = Math.floor(Date.now() / 1000);
                 this.worldsModified = true;
-                let realmScenes = (0, Scene_1.getRealmData)(room);
+                let realmScenes = await (0, Scene_1.getRealmData)(room);
                 app_config_1.iwbManager.addWorldPendingBackup(room.state.world, room.roomId, ["" + room.state.world + "-backup.json"], room.state.realmToken, room.state.realmTokenType, room.state.realmId, [realmScenes]);
             }
             else {
@@ -281,6 +303,7 @@ class IWBManager {
     async initWorld(room, world) {
         let current = this.initQueue.find((w) => w.ens === world.ens);
         if (!current) {
+            world.init = true;
             this.initQueue.push(world);
             await this.deployWorld(world, room);
         }
@@ -292,6 +315,7 @@ class IWBManager {
         world.bps = [];
         world.v = this.version;
         world.cv = 0;
+        world.worldName = world.ens.split(".")[0];
         this.rooms.forEach((room) => {
             room.broadcast(types_1.SERVER_MESSAGE_TYPES.NEW_WORLD_CREATED, world);
         });
@@ -775,6 +799,11 @@ class IWBManager {
         catch (e) {
             console.log('error in deleting ugc asset from server', ugcAsset.id, e);
         }
+    }
+    async garbageCollectRoom(room) {
+        // destroyCustomObjects(this)
+        (0, Game_1.garbageCollectRealmGames)(room);
+        (0, Playlist_1.garbageCollectPlaylist)(room);
     }
 }
 exports.IWBManager = IWBManager;

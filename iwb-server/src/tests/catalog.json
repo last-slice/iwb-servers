@@ -97430,6 +97430,57 @@
         }
     },
     {
+        "id": "7811b6a0-540e-4082-a9ee-1b66ba902f2b",
+        "m": "",
+        "n": "Path System",
+        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
+        "d": "Add pathways for your assets to follow!",
+        "cat": "Gallery/Venue",
+        "on": "IWB Builder",
+        "o": "IWB Team",
+        "isdl": true,
+        "ty": "SM",
+        "pc": 0,
+        "si": 0,
+        "tag": [],
+        "v": 20,
+        "bb": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "sty": "Smart Items",
+        "components":{
+            "Path":{},
+            "Billboard": {
+                "mode": 2
+            },
+            "Material": {
+                "type": 0,
+                "onPlay": false,
+                "albedoColor": {
+                    "r": 1,
+                    "g": 0,
+                    "b": 1,
+                    "a": 0.5
+                },
+                "textureType":"COLOR"
+            },
+            "Text": {
+                "text": "Path",
+                "onPlay": false
+            },
+            "Mesh_Collider": {
+                "shape": 1,
+                "layer": 1
+            },
+            "Mesh_Renderer": {
+                "shape": 1,
+                "layer": 2
+            }
+        }
+    },
+    {
         "id": "be9b3cb5-30c2-4aa4-bb9a-124b2f29d2c6",
         "m": "",
         "n": "Dialog",

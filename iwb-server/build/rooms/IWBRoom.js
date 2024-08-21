@@ -9,7 +9,6 @@ const types_1 = require("../utils/types");
 const PlayerHandler_1 = require("./messaging/PlayerHandler");
 const app_config_1 = require("../app.config");
 const Playfab_1 = require("../utils/Playfab");
-const Game_1 = require("../Objects/Game");
 class IWBRoom extends core_1.Room {
     async onAuth(client, options, req) {
         try {
@@ -55,23 +54,22 @@ class IWBRoom extends core_1.Room {
             //     else{
             //         player.cancelPendingDeployment()
             //     }
-            //   setTimeout(()=>{
-            //     removePlayer(player.dclData.userId)
-            //     savePlayerCache(player)
-            //     this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
-            //   }, 1000 * 5)
+            setTimeout(() => {
+                (0, PlayerHandler_1.removePlayer)(player.dclData.userId);
+                (0, PlayerHandler_1.savePlayerCache)(player);
+                this.broadcast(types_1.SERVER_MESSAGE_TYPES.PLAYER_LEAVE, { player: client.userData.userId });
+            }, 1000 * 5);
         }
     }
-    onDispose() {
+    async onDispose() {
         console.log("room", this.roomId, "disposing...");
         if (app_config_1.iwbManager.rooms.find(($) => $.roomId === this.roomId)) {
             console.log('room is online, clean up', this.state.world);
-            app_config_1.iwbManager.removeRoom(this);
             if (!this.state.gcWorld) {
-                (0, Scene_1.saveRealm)(this);
+                await (0, Scene_1.saveRealm)(this);
             }
-            // destroyCustomObjects(this)
-            (0, Game_1.garbageCollectRealmGames)(this);
+            app_config_1.iwbManager.removeRoom(this);
+            app_config_1.iwbManager.garbageCollectRoom(this);
         }
     }
     async getPlayerInfo(client, options) {
@@ -205,8 +203,9 @@ function optionsValidated(options) {
         !options.world ||
         !options.userData ||
         !options.userData.userId ||
-        !options.userData.name ||
-        options.userData.name === "") {
+        !options.userData.name //|| 
+    // options.userData.name === ""
+    ) {
         return false;
     }
     return true;
