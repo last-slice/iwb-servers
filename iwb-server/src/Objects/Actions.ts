@@ -11,21 +11,20 @@ import { createGLTFComponent } from "./Gltf";
 
 export class ActionComponentSchema extends Schema{
 
-    @type("number") entity:number
+    
 
-    @type("string") hoverText:string
-    @type("string") aid:string
-    @type("string") anim:string
-    @type("boolean") loop:boolean
-    @type("number") showSize:number
-    @type("string") showPos:string
-    @type("string") startDId:string
-    @type("string") dialID:string
+    // @type("string") hoverText:string
+    
+    // @type("number") showSize:number
+    // @type("string") showPos:string
+    // @type("string") startDId:string
+    // @type("string") dialID:string
 
 
 
 
     @type("string") id:string
+    @type("string") aid:string
     @type("string") name:string
     @type("string") type:string
     @type("string") game:string
@@ -43,7 +42,11 @@ export class ActionComponentSchema extends Schema{
     @type("string") button2Label:string
     @type("string") playlistAid:string
     @type("string") pathAid:string
-
+    @type("string") anim:string
+    @type("string") questId:string
+    @type("string") actionId:string
+   
+    @type("number") entity:number
     @type("number") anchor:number
     @type("number") timer:number
     @type("number") x:number
@@ -64,6 +67,7 @@ export class ActionComponentSchema extends Schema{
     @type("number") speed:number
     @type("number") channel:number
 
+    @type("boolean") loop:boolean
     @type("boolean") visible:boolean
     @type("boolean") moveRel:boolean
     @type("boolean") button1:boolean

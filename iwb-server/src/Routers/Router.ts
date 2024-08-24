@@ -8,6 +8,7 @@ import { loginRouter } from "./login";
 import { messageRouter } from "./message";
 import { pagesRouter } from "./pages";
 import { uploadRouter } from "./upload";
+import { questsRouter } from "./quests";
 
 export const router = express.Router();
 
@@ -25,6 +26,7 @@ messageRouter(router)
 colyseusRouter(router)
 pagesRouter(router)
 gitRouter(router)
+questsRouter(router)
 // customRouters(router)
 
 

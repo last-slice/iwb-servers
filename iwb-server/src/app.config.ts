@@ -11,15 +11,18 @@ import { initPlayFab } from "./utils/Playfab";
 import { IWBManager } from "./Objects/IWBManager";
 import { ItemManager } from "./Objects/ItemManager";
 import { router } from "./Routers/Router";
+import { QuestManager } from "./Objects/QuestManager";
 
 export let itemManager: ItemManager
 export let iwbManager: IWBManager
+export let questManager: QuestManager
 
 export default config({
 
     initializeGameServer: (gameServer) => {
         initPlayFab()
 
+        questManager = new QuestManager()
         itemManager = new ItemManager()
         iwbManager = new IWBManager()
 

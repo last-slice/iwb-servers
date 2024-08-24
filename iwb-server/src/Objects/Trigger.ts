@@ -62,7 +62,7 @@ export async function createTriggerComponent(scene:Scene, aid:string, data?:any)
                 let triggerDecision = new TriggerDecisionComponent()
                 triggerDecision.id = decision.id
 
-                console.log('decision for trigger component is', decision)
+                // console.log('decision for trigger component is', decision)
                 triggerDecision.name = decision.name ? decision.name : decision.id
                 triggerDecision.operator = decision.operator ? decision.operator : TriggerConditionOperation.AND
                 

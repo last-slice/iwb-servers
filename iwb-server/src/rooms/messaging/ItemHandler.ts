@@ -13,7 +13,7 @@ import { NameComponent, createNameComponent, editNameComponent } from "../../Obj
 import { GltfComponent, createGLTFComponent, editGltfComponent } from "../../Objects/Gltf";
 import { ParentingComponent, createParentingComponent, editParentingComponent, removeParenting } from "../../Objects/Parenting";
 import { AnimatorComponentSchema, createAnimationComponent } from "../../Objects/Animator";
-import { createAudioSourceComponent, createAudioStreamComponent, editAudioComponent } from "../../Objects/Sound";
+import { createAudioComponent, editAudioComponent } from "../../Objects/Sound";
 import { createMaterialComponent, editMaterialComponent } from "../../Objects/Materials";
 import { createVideoComponent, editVideoComponent } from "../../Objects/Video";
 import { IWBComponent, createIWBComponent, editIWBComponent } from "../../Objects/IWB";
@@ -48,8 +48,8 @@ export let updateComponentFunctions:any = {
     [COMPONENT_TYPES.TEXT_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editTextShape(client, info, scene)}, 
     [COMPONENT_TYPES.IWB_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editIWBComponent(info, scene)}, 
     [COMPONENT_TYPES.NAMES_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{ editNameComponent(info, scene)}, 
-    [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
-    [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
+    // [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
+    // [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAudioComponent(info, scene, info.component)}, 
     [COMPONENT_TYPES.NFT_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editNftShape(info, scene)}, 
     [COMPONENT_TYPES.GLTF_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editGltfComponent(info, scene)}, 
     [COMPONENT_TYPES.VIDEO_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editVideoComponent(info, scene)}, 
@@ -73,6 +73,7 @@ export let updateComponentFunctions:any = {
     [COMPONENT_TYPES.PLAYLIST_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editPlaylistComponent(info, scene)}, 
     [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAvatarShapeComponent(info, scene)}, 
     [COMPONENT_TYPES.PATH_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editPathComponent(info, scene)}, 
+    [COMPONENT_TYPES.AUDIO_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAudioComponent(info, scene)}, 
 }
 
 let createComponentFunctions:any = {
@@ -102,6 +103,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.PLAYLIST_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPlaylistComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createAvatarShapeComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.PATH_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPathComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.AUDIO_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createAudioComponent(scene, aid, info)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){
@@ -543,7 +545,7 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
             createMeshRendererComponent(scene, {aid:item.aid, shape:1})
             createMeshColliderComponent(scene, {aid:item.aid, shape:1, layer:3})
             createTextComponent(scene, item.aid, {text:"" + catalogItemInfo.n, onPlay:false})
-            createAudioSourceComponent(scene, item.aid, {url:"assets/" + catalogItemInfo.id + ".mp3"})
+            createAudioComponent(scene, item.aid, {type:0, name:catalogItemInfo.n, url:"assets/" + catalogItemInfo.id + ".mp3"})
             createActionComponent(scene, item.aid, {actions:[{name:"Play Sound", type:"audio_play"}, {name:"Stop Sound", type:"audio_stop"}]})
             createMaterialComponent(scene, item.aid, {onPlay:false, type:0,  textureType:"COLOR", "albedoColor": {
                 "r": 0,
@@ -563,7 +565,7 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
                     "b": 1,
                     "a": 0.5
                 }})
-                createAudioStreamComponent(scene, item.aid, {url:""})
+            createAudioComponent(scene, item.aid, {type:catalogItemInfo.n === "Audio Stream" ? 1: 2, url:"", name:"" +  catalogItemInfo.n})
             // createActionComponent(scene, item.aid, {actions:[{name:"Start Audio Stream", type:ACTIONS.PLAY_AUDIO_STREAM}, {name:"Stop Audio Stream", type:ACTIONS.STOP_AUDIO_STREAM}]})
             break;
     }

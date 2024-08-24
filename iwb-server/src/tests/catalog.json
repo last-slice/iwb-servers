@@ -112660,5 +112660,36 @@
         "v": 20,
         "id": "45cdd02a-9598-4f66-82f6-efb0dd87ca3b",
         "time": 1723149177
+    },
+    {
+        "id": "bacbd946-6cc4-47de-9038-3eccb883dc76",
+        "m": "",
+        "n": "Audius Song",
+        "im": "https://bafkreihxmbloqwqgjljwtq4wzhmo5pclxavyedugdafn2dhuzghgpszuim.ipfs.nftstorage.link/",
+        "d": "Play a song from Audius in your scene!",
+        "cat": "Gallery/Venue",
+        "on": "IWB Builder",
+        "o": "IWB Team",
+        "isdl": true,
+        "ty": "Audio Stream",
+        "pc": 0,
+        "si": 0,
+        "tag": [
+            "Audio"
+        ],
+        "v": 2,
+        "bb": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "sty": "Smart Items",
+        "components":{
+            "Audio":{
+                "type":2,
+                "url":"",
+                "name":"Audius Song"
+            }
+        }
     }
 ]

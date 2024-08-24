@@ -1,5 +1,5 @@
 import { Player } from "../../Objects/Player";
-import { itemManager, iwbManager } from "../../app.config";
+import { itemManager, iwbManager, questManager } from "../../app.config";
 import { pushPlayfabEvent } from "../../utils/Playfab";
 import { SERVER_MESSAGE_TYPES, SCENE_MODES, COMPONENT_TYPES } from "../../utils/types";
 import { IWBRoom } from "../IWBRoom";
@@ -525,6 +525,16 @@ export function iwbSceneHandler(room:IWBRoom){
         )
     })
 
+    room.onMessage(SERVER_MESSAGE_TYPES.GET_QUEST_DEFINITIONS, async(client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.GET_QUEST_DEFINITIONS + " message", info)
+
+        let player:Player = room.state.players.get(client.userData.userId)
+        if(hasWorldPermissions(room, player.address)){
+            console.log('player has permissions to build, send them the quest definitions')
+            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.GET_QUEST_DEFINITIONS, questManager.quests)
+        }
+    })
+
     // room.onMessage(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET, async(client, info)=>{
     //      console.log(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET + " message", info)
 
@@ -662,15 +672,14 @@ export function createScene(player:Player, room:IWBRoom, info:any, parcels:strin
     scene[COMPONENT_TYPES.IWB_COMPONENT].forEach(async (iwb:IWBComponent, aid:string)=>{
         await removeAllAssetComponents(room, player, scene, {aid:aid})
     })
-    // removeAllAssetComponents(room, player, scene, {aid:aid)
-    // Object.values(COMPONENT_TYPES).forEach((component:any)=>{
-    //     if(scene.hasOwnProperty(component) && component !== COMPONENT_TYPES.PARENTING_COMPONENT){
-    //         scene[component].forEach((component:any, aid:string)=>{
-                
-    //         })
-    //         scene[component].clear()
-    //     }
-    // })
+
+    Object.values(COMPONENT_TYPES).forEach((component:any)=>{
+        try{
+            scene[component].clear()
+        }catch(e){
+            console.log('error clearing whole scene')
+        }
+    })
 
     addBasicSceneParenting(scene)
   }

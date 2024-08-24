@@ -136,6 +136,10 @@ export class Player extends Schema {
     weapon:any
     hitBox:any
 
+
+    //quest objects
+    questClients:any
+
     constructor(room:IWBRoom, client:Client){
         super()
         this.room = room

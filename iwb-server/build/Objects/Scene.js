@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkAssetCacheStates = exports.saveRealmAssets = exports.getRealmData = exports.saveRealm = exports.loadRealmScenes = exports.initServerAssets = exports.initServerScenes = exports.Scene = exports.TempScene = void 0;
 const schema_1 = require("@colyseus/schema");
@@ -33,7 +33,6 @@ const IWB_1 = require("./IWB");
 const NftShape_1 = require("./NftShape");
 const MeshColliders_1 = require("./MeshColliders");
 const Textures_1 = require("./Textures");
-const Emissive_1 = require("./Emissive");
 const AvatarShape_1 = require("./AvatarShape");
 const UIText_1 = require("./UIText");
 const Game_1 = require("./Game");
@@ -69,16 +68,17 @@ __decorate([
     (0, schema_1.type)(['string'])
 ], TempScene.prototype, "pcls", void 0);
 class Scene extends schema_1.Schema {
-    static { _a = types_1.COMPONENT_TYPES.TRANSFORM_COMPONENT, _b = types_1.COMPONENT_TYPES.GLTF_COMPONENT, _c = types_1.COMPONENT_TYPES.MESH_RENDER_COMPONENT, _d = types_1.COMPONENT_TYPES.MESH_COLLIDER_COMPONENT, _e = types_1.COMPONENT_TYPES.TEXTURE_COMPONENT, _f = types_1.COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT, _g = types_1.COMPONENT_TYPES.MATERIAL_COMPONENT, _h = types_1.COMPONENT_TYPES.NAMES_COMPONENT, _j = types_1.COMPONENT_TYPES.VISBILITY_COMPONENT, _k = types_1.COMPONENT_TYPES.ACTION_COMPONENT, _l = types_1.COMPONENT_TYPES.COUNTER_COMPONENT, _m = types_1.COMPONENT_TYPES.STATE_COMPONENT, _o = types_1.COMPONENT_TYPES.TRIGGER_COMPONENT, _p = types_1.COMPONENT_TYPES.TEXT_COMPONENT, _q = types_1.COMPONENT_TYPES.NFT_COMPONENT, _r = types_1.COMPONENT_TYPES.ANIMATION_COMPONENT, _s = types_1.COMPONENT_TYPES.POINTER_COMPONENT, _t = types_1.COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT, _u = types_1.COMPONENT_TYPES.AUDIO_STREAM_COMPONENT, _v = types_1.COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT, _w = types_1.COMPONENT_TYPES.VIDEO_COMPONENT, _x = types_1.COMPONENT_TYPES.IWB_COMPONENT, _y = types_1.COMPONENT_TYPES.UI_TEXT_COMPONENT, _z = types_1.COMPONENT_TYPES.UI_IMAGE_COMPONENT, _0 = types_1.COMPONENT_TYPES.GAME_COMPONENT, _1 = types_1.COMPONENT_TYPES.LEVEL_COMPONENT, _2 = types_1.COMPONENT_TYPES.BILLBOARD_COMPONENT, _3 = types_1.COMPONENT_TYPES.LIVE_COMPONENT, _4 = types_1.COMPONENT_TYPES.TEAM_COMPONENT, _5 = types_1.COMPONENT_TYPES.GAME_ITEM_COMPONENT, _6 = types_1.COMPONENT_TYPES.DIALOG_COMPONENT, _7 = types_1.COMPONENT_TYPES.REWARD_COMPONENT, _8 = types_1.COMPONENT_TYPES.PLAYLIST_COMPONENT, _9 = types_1.COMPONENT_TYPES.PATH_COMPONENT, _10 = types_1.COMPONENT_TYPES.PARENTING_COMPONENT; }
+    static { _a = types_1.COMPONENT_TYPES.TRANSFORM_COMPONENT, _b = types_1.COMPONENT_TYPES.GLTF_COMPONENT, _c = types_1.COMPONENT_TYPES.MESH_RENDER_COMPONENT, _d = types_1.COMPONENT_TYPES.MESH_COLLIDER_COMPONENT, _e = types_1.COMPONENT_TYPES.TEXTURE_COMPONENT, _f = types_1.COMPONENT_TYPES.MATERIAL_COMPONENT, _g = types_1.COMPONENT_TYPES.NAMES_COMPONENT, _h = types_1.COMPONENT_TYPES.VISBILITY_COMPONENT, _j = types_1.COMPONENT_TYPES.ACTION_COMPONENT, _k = types_1.COMPONENT_TYPES.COUNTER_COMPONENT, _l = types_1.COMPONENT_TYPES.STATE_COMPONENT, _m = types_1.COMPONENT_TYPES.TRIGGER_COMPONENT, _o = types_1.COMPONENT_TYPES.TEXT_COMPONENT, _p = types_1.COMPONENT_TYPES.NFT_COMPONENT, _q = types_1.COMPONENT_TYPES.ANIMATION_COMPONENT, _r = types_1.COMPONENT_TYPES.POINTER_COMPONENT, _s = types_1.COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT, _t = types_1.COMPONENT_TYPES.VIDEO_COMPONENT, _u = types_1.COMPONENT_TYPES.IWB_COMPONENT, _v = types_1.COMPONENT_TYPES.UI_TEXT_COMPONENT, _w = types_1.COMPONENT_TYPES.UI_IMAGE_COMPONENT, _x = types_1.COMPONENT_TYPES.GAME_COMPONENT, _y = types_1.COMPONENT_TYPES.LEVEL_COMPONENT, _z = types_1.COMPONENT_TYPES.BILLBOARD_COMPONENT, _0 = types_1.COMPONENT_TYPES.LIVE_COMPONENT, _1 = types_1.COMPONENT_TYPES.TEAM_COMPONENT, _2 = types_1.COMPONENT_TYPES.GAME_ITEM_COMPONENT, _3 = types_1.COMPONENT_TYPES.DIALOG_COMPONENT, _4 = types_1.COMPONENT_TYPES.REWARD_COMPONENT, _5 = types_1.COMPONENT_TYPES.PLAYLIST_COMPONENT, _6 = types_1.COMPONENT_TYPES.PATH_COMPONENT, _7 = types_1.COMPONENT_TYPES.AUDIO_COMPONENT, _8 = types_1.COMPONENT_TYPES.PARENTING_COMPONENT; }
     constructor(room, data) {
         super(data);
         this.bps = new schema_1.ArraySchema();
-        this.rat = new schema_1.ArraySchema();
-        this.rev = new schema_1.ArraySchema();
+        // @type(['string']) rat = new ArraySchema<string>();
+        // @type(['string']) rev = new ArraySchema<string>();
         this.pcls = new schema_1.ArraySchema();
         this.sp = new schema_1.ArraySchema();
         this.cp = new schema_1.ArraySchema();
         this.si = 0;
+        // @type("number") toc: number
         this.pc = 0;
         this.direction = 0;
         this.dv = false;
@@ -95,7 +95,7 @@ class Scene extends schema_1.Schema {
             this.lim = data.hasOwnProperty("lim") ? data.lim : true;
             this.sp = data.sp[0].split(",").length === 2 ? [data.sp[0].split(",")[0] + ",0," + data.sp[0].split(",")[1]] : data.sp;
             this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"];
-            data.hasOwnProperty("direction") ? this.direction = data.direction : null;
+            data.hasOwnProperty("direction") ? this.direction = data.direction : this.direction = 0;
             this.setComponents(data, room);
         }
     }
@@ -114,19 +114,17 @@ class Scene extends schema_1.Schema {
         this[types_1.COMPONENT_TYPES.MESH_RENDER_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.MESH_COLLIDER_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.TEXTURE_COMPONENT] = new schema_1.MapSchema();
-        this[types_1.COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.MATERIAL_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.STATE_COMPONENT] = new schema_1.MapSchema();
-        this[types_1.COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT] = new schema_1.MapSchema();
-        this[types_1.COMPONENT_TYPES.AUDIO_STREAM_COMPONENT] = new schema_1.MapSchema();
+        // this[COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT] = new MapSchema<SoundComponent>()
+        // this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT] = new MapSchema<SoundComponent>()
         this[types_1.COMPONENT_TYPES.VIDEO_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.ANIMATION_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.NFT_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.UI_TEXT_COMPONENT] = new schema_1.MapSchema();
-        this[types_1.COMPONENT_TYPES.UI_TEXT_COMPONENT] = new schema_1.MapSchema();
-        this[types_1.COMPONENT_TYPES.GAME_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.UI_IMAGE_COMPONENT] = new schema_1.MapSchema();
+        this[types_1.COMPONENT_TYPES.GAME_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.BILLBOARD_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.LEVEL_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.LIVE_COMPONENT] = new schema_1.MapSchema();
@@ -135,16 +133,16 @@ class Scene extends schema_1.Schema {
         this[types_1.COMPONENT_TYPES.DIALOG_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.REWARD_COMPONENT] = new schema_1.MapSchema();
         this[types_1.COMPONENT_TYPES.PLAYLIST_COMPONENT] = new schema_1.MapSchema();
-        // this[COMPONENT_TYPES.PATH_COMPONENT] = new MapSchema<PathComponent>()
-        // this[COMPONENT_TYPES.CLICK_AREA_COMPONENT] = new MapSchema<string>()//
+        this[types_1.COMPONENT_TYPES.PATH_COMPONENT] = new schema_1.MapSchema();
+        this[types_1.COMPONENT_TYPES.AUDIO_COMPONENT] = new schema_1.MapSchema();
         Object.values(types_1.COMPONENT_TYPES).forEach((component) => {
             if (data[component]) {
                 switch (component) {
-                    // case COMPONENT_TYPES.PATH_COMPONENT:
-                    //     for (const aid in data[component]) {
-                    //         createPathComponent(this, aid,  data[component][aid])
-                    //     }
-                    //     break;
+                    case types_1.COMPONENT_TYPES.PATH_COMPONENT:
+                        for (const aid in data[component]) {
+                            (0, Paths_1.createPathComponent)(this, aid, data[component][aid]);
+                        }
+                        break;
                     case types_1.COMPONENT_TYPES.PLAYLIST_COMPONENT:
                         for (const aid in data[component]) {
                             (0, Playlist_1.createPlaylistComponent)(this, aid, data[component][aid]);
@@ -289,11 +287,6 @@ class Scene extends schema_1.Schema {
                             this[types_1.COMPONENT_TYPES.TEXTURE_COMPONENT].set(aid, new Textures_1.TextureComponent(data[component][aid]));
                         }
                         break;
-                    case types_1.COMPONENT_TYPES.EMISSIVE_TEXTURE_COMPONENT:
-                        for (const aid in data[component]) {
-                            (0, Emissive_1.createEmissiveComponent)(this, aid, data[component][aid]);
-                        }
-                        break;
                     case types_1.COMPONENT_TYPES.MATERIAL_COMPONENT:
                         for (const aid in data[component]) {
                             (0, Materials_1.createMaterialComponent)(this, aid, data[component][aid]);
@@ -316,14 +309,20 @@ class Scene extends schema_1.Schema {
                             this[types_1.COMPONENT_TYPES.STATE_COMPONENT].set(aid, state);
                         }
                         break;
+                    case types_1.COMPONENT_TYPES.AUDIO_COMPONENT:
+                        for (const aid in data[component]) {
+                            (0, Sound_1.createAudioComponent)(this, aid, data[component][aid]);
+                        }
+                        break;
                     case types_1.COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT:
                         for (const aid in data[component]) {
-                            (0, Sound_1.createAudioSourceComponent)(this, aid, data[component][aid]);
+                            (0, Sound_1.createAudioComponent)(this, aid, data[component][aid]);
                         }
                         break;
                     case types_1.COMPONENT_TYPES.AUDIO_STREAM_COMPONENT:
                         for (const aid in data[component]) {
-                            (0, Sound_1.createAudioStreamComponent)(this, aid, data[component][aid]);
+                            data.type = 1;
+                            (0, Sound_1.createAudioComponent)(this, aid, data[component][aid]);
                             // this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT].set(aid, new SoundComponent(data[component][aid]))
                         }
                         break;
@@ -375,12 +374,6 @@ __decorate([
 ], Scene.prototype, "bps", void 0);
 __decorate([
     (0, schema_1.type)(['string'])
-], Scene.prototype, "rat", void 0);
-__decorate([
-    (0, schema_1.type)(['string'])
-], Scene.prototype, "rev", void 0);
-__decorate([
-    (0, schema_1.type)(['string'])
 ], Scene.prototype, "pcls", void 0);
 __decorate([
     (0, schema_1.type)(['string'])
@@ -397,9 +390,6 @@ __decorate([
 __decorate([
     (0, schema_1.type)("number")
 ], Scene.prototype, "si", void 0);
-__decorate([
-    (0, schema_1.type)("number")
-], Scene.prototype, "toc", void 0);
 __decorate([
     (0, schema_1.type)("number")
 ], Scene.prototype, "pc", void 0);
@@ -443,101 +433,92 @@ __decorate([
     (0, schema_1.type)({ map: Textures_1.TextureComponent })
 ], Scene.prototype, _e, void 0);
 __decorate([
-    (0, schema_1.type)({ map: Emissive_1.EmissiveComponent })
+    (0, schema_1.type)({ map: Materials_1.MaterialComponent })
 ], Scene.prototype, _f, void 0);
 __decorate([
-    (0, schema_1.type)({ map: Materials_1.MaterialComponent })
+    (0, schema_1.type)({ map: Names_1.NameComponent })
 ], Scene.prototype, _g, void 0);
 __decorate([
-    (0, schema_1.type)({ map: Names_1.NameComponent })
+    (0, schema_1.type)({ map: Visibility_1.VisibilityComponent })
 ], Scene.prototype, _h, void 0);
 __decorate([
-    (0, schema_1.type)({ map: Visibility_1.VisibilityComponent })
+    (0, schema_1.type)({ map: Actions_1.ActionComponent })
 ], Scene.prototype, _j, void 0);
 __decorate([
-    (0, schema_1.type)({ map: Actions_1.ActionComponent })
-], Scene.prototype, _k, void 0);
-__decorate([
     (0, schema_1.type)({ map: Counter_1.CounterComponent })
-], Scene.prototype, _l, void 0);
+], Scene.prototype, _k, void 0);
 __decorate([
     (0, schema_1.type)({ map: Counter_1.CounterBarComponent })
 ], Scene.prototype, "counterbars", void 0);
 __decorate([
     (0, schema_1.type)({ map: State_1.StateComponent })
-], Scene.prototype, _m, void 0);
+], Scene.prototype, _l, void 0);
 __decorate([
     (0, schema_1.type)({ map: Trigger_1.TriggerComponent })
-], Scene.prototype, _o, void 0);
+], Scene.prototype, _m, void 0);
 __decorate([
     (0, schema_1.type)({ map: TextShape_1.TextShapeComponent })
-], Scene.prototype, _p, void 0);
+], Scene.prototype, _o, void 0);
 __decorate([
     (0, schema_1.type)({ map: NftShape_1.NftShapeComponent })
-], Scene.prototype, _q, void 0);
+], Scene.prototype, _p, void 0);
 __decorate([
     (0, schema_1.type)({ map: Animator_1.AnimatorComponent })
-], Scene.prototype, _r, void 0);
+], Scene.prototype, _q, void 0);
 __decorate([
     (0, schema_1.type)({ map: Pointers_1.PointerComponent })
-], Scene.prototype, _s, void 0);
-__decorate([
-    (0, schema_1.type)({ map: Sound_1.SoundComponent })
-], Scene.prototype, _t, void 0);
-__decorate([
-    (0, schema_1.type)({ map: Sound_1.SoundComponent })
-], Scene.prototype, _u, void 0);
+], Scene.prototype, _r, void 0);
 __decorate([
     (0, schema_1.type)({ map: AvatarShape_1.AvatarShapeComponent })
-], Scene.prototype, _v, void 0);
+], Scene.prototype, _s, void 0);
 __decorate([
     (0, schema_1.type)({ map: Video_1.VideoComponent })
-], Scene.prototype, _w, void 0);
-__decorate([
-    (0, schema_1.type)({ map: Rewards_1.RewardComponent })
-], Scene.prototype, "rewards", void 0);
+], Scene.prototype, _t, void 0);
 __decorate([
     (0, schema_1.type)({ map: IWB_1.IWBComponent })
-], Scene.prototype, _x, void 0);
+], Scene.prototype, _u, void 0);
 __decorate([
     (0, schema_1.type)({ map: UIText_1.UITextComponent })
-], Scene.prototype, _y, void 0);
+], Scene.prototype, _v, void 0);
 __decorate([
     (0, schema_1.type)({ map: UIImage_1.UIImageComponent })
-], Scene.prototype, _z, void 0);
+], Scene.prototype, _w, void 0);
 __decorate([
     (0, schema_1.type)({ map: Game_1.GameComponent })
-], Scene.prototype, _0, void 0);
+], Scene.prototype, _x, void 0);
 __decorate([
     (0, schema_1.type)({ map: Level_1.LevelComponent })
-], Scene.prototype, _1, void 0);
+], Scene.prototype, _y, void 0);
 __decorate([
     (0, schema_1.type)({ map: Billboard_1.BillboardComponent })
-], Scene.prototype, _2, void 0);
+], Scene.prototype, _z, void 0);
 __decorate([
     (0, schema_1.type)({ map: LiveShow_1.LiveShowComponent })
-], Scene.prototype, _3, void 0);
+], Scene.prototype, _0, void 0);
 __decorate([
     (0, schema_1.type)({ map: Team_1.TeamComponent })
-], Scene.prototype, _4, void 0);
+], Scene.prototype, _1, void 0);
 __decorate([
     (0, schema_1.type)({ map: GameItem_1.GameItemComponent })
-], Scene.prototype, _5, void 0);
+], Scene.prototype, _2, void 0);
 __decorate([
     (0, schema_1.type)({ map: Dialog_1.DialogComponent })
-], Scene.prototype, _6, void 0);
+], Scene.prototype, _3, void 0);
 __decorate([
     (0, schema_1.type)({ map: Rewards_1.RewardComponent })
-], Scene.prototype, _7, void 0);
+], Scene.prototype, _4, void 0);
 __decorate([
     (0, schema_1.type)({ map: Playlist_1.PlaylistComponent })
-], Scene.prototype, _8, void 0);
+], Scene.prototype, _5, void 0);
 __decorate([
     (0, schema_1.type)({ map: Paths_1.PathComponent })
-], Scene.prototype, _9, void 0);
+], Scene.prototype, _6, void 0);
+__decorate([
+    (0, schema_1.type)({ map: Sound_1.SoundComponent })
+], Scene.prototype, _7, void 0);
 __decorate([
     (0, schema_1.type)([Parenting_1.ParentingComponent])
-], Scene.prototype, _10, void 0);
+], Scene.prototype, _8, void 0);
 function initServerScenes(room, options) {
     if (app_config_1.iwbManager.pendingSaves.includes((room.state.world))) {
         let timeout = setTimeout(() => {
@@ -555,8 +536,8 @@ function initServerScenes(room, options) {
                     room.state.realmId = realmData.EntityToken.Entity.Id;
                     room.state.realmTokenType = realmData.EntityToken.Entity.Type;
                     app_config_1.iwbManager.fetchRealmData(realmData)
-                        .then((realmScenes) => {
-                        app_config_1.iwbManager.fetchRealmScenes(room.state.world, realmScenes)
+                        .then((realmData) => {
+                        app_config_1.iwbManager.fetchRealmScenes(room.state.world, realmData)
                             .then(async (sceneData) => {
                             await loadRealmScenes(room, sceneData, options);
                             app_config_1.iwbManager.initUsers(room);
@@ -628,6 +609,7 @@ async function loadRealmScenes(room, scenes, options) {
     }
     else {
         filter.forEach((scene) => {
+            console.log('creating new iwb scene', scene.id);
             room.state.scenes.set(scene.id, new Scene(room, scene));
         });
     }

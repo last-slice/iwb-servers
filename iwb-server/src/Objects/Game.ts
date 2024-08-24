@@ -77,6 +77,8 @@ export class GameComponent extends Schema{
     @type("boolean") reset:boolean
     @type("string") winner:string
     @type("string") winnerId:string
+
+    @type({map:"string"}) leaderboard:MapSchema<number>
     gameManager: GameManager
 }
 

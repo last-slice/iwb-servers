@@ -112,6 +112,10 @@ export enum SERVER_MESSAGE_TYPES {
 
     HIT_OBJECT = 'hit_object',
     SHOOT = 'shoot',
+
+
+    //QUESTING
+    GET_QUEST_DEFINITIONS = 'get_quest_definitions',
 }
 
 export enum SCENE_MODES {
@@ -166,6 +170,7 @@ export enum COMPONENT_TYPES {
     GLTF_COMPONENT = 'Gltf',
     STATE_COMPONENT ='States',
     AUDIO_SOURCE_COMPONENT = 'Audio_Source',
+    AUDIO_COMPONENT = 'Audio',
     AUDIO_STREAM_COMPONENT = 'Audio_Stream',
     IWB_COMPONENT = 'IWB',
     MESH_RENDER_COMPONENT = 'Mesh_Renderer',

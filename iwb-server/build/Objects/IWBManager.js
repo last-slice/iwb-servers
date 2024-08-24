@@ -115,8 +115,10 @@ class IWBManager {
         }
     }
     initPlayer(room, player) {
-        console.log('asset count ', room.state.realmAssets.size);
+        // console.log('asset count ', room.state.realmAssets.size)
+        // console.log('quests are ', questManager.quests.values())
         player.sendPlayerMessage(types_1.SERVER_MESSAGE_TYPES.INIT, {
+            quests: app_config_1.questManager.quests.filter(quest => quest.owner === room.state.owner).map(({ definition, ...rest }) => rest),
             realmAssets: room.state.realmAssets,
             realmAssetSize: room.state.realmAssets.size,
             styles: app_config_1.iwbManager.styles,
@@ -454,15 +456,24 @@ class IWBManager {
             if (version > 0) {
                 let metadata = realmScenes.data.Metadata;
                 let count = 0;
+                let hasSceneFile = false;
                 for (const key in metadata) {
                     if (metadata.hasOwnProperty(key)) {
                         count++;
+                        if (key === world + '-' + this.realmFileKey) {
+                            hasSceneFile = true;
+                        }
                     }
                 }
                 if (count > 0) {
-                    let res = await fetch(metadata[world + '-' + this.realmFileKey].DownloadUrl);
-                    let json = await res.json();
-                    return json;
+                    if (hasSceneFile) {
+                        let res = await fetch(metadata[world + '-' + this.realmFileKey].DownloadUrl);
+                        let json = await res.json();
+                        return json;
+                    }
+                    else {
+                        return [];
+                    }
                 }
                 else {
                     return [];

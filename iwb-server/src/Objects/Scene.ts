@@ -7,7 +7,7 @@ import { GltfComponent, createGLTFComponent } from "./Gltf";
 import { createNameComponent, NameComponent } from "./Names";
 import { ParentingComponent } from "./Parenting";
 import { PointerComponent, PointerComponentEvent, createPointerComponent } from "./Pointers";
-import { SoundComponent, createAudioSourceComponent, createAudioStreamComponent } from "./Sound";
+import { createAudioComponent, SoundComponent } from "./Sound";
 import { StateComponent } from "./State";
 import { TextShapeComponent, createTextComponent } from "./TextShape";
 import { TransformComponent } from "./Transform";
@@ -31,7 +31,7 @@ import { UIImageComponent, createUIImageComponent } from "./UIImage";
 import { BillboardComponent, createBillboardComponent } from "./Billboard";
 import { LevelComponent, createLevelComponent } from "./Level";
 import { createLiveComponent, LiveShowComponent } from "./LiveShow";
-import { createTeamComponent, TeamComponent } from "./Team";
+// import { createTeamComponent, TeamComponent } from "./Team";
 import { createGameItemComponent, GameItemComponent } from "./GameItem";
 import { createDialogComponent, DialogComponent } from "./Dialog";
 import { createPlaylistComponent, PlaylistComponent } from "./Playlist";
@@ -96,8 +96,8 @@ export class Scene extends Schema {
     @type({map:NftShapeComponent}) [COMPONENT_TYPES.NFT_COMPONENT]:MapSchema<NftShapeComponent>
     @type({map:AnimatorComponent}) [COMPONENT_TYPES.ANIMATION_COMPONENT]:MapSchema<AnimatorComponent>
     @type({map:PointerComponent}) [COMPONENT_TYPES.POINTER_COMPONENT]:MapSchema<PointerComponent>
-    @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:MapSchema<SoundComponent>
-    @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:MapSchema<SoundComponent>
+    // @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:MapSchema<SoundComponent>
+    // @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:MapSchema<SoundComponent>
     @type({map:AvatarShapeComponent}) [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:MapSchema<AvatarShapeComponent>
     @type({map:VideoComponent}) [COMPONENT_TYPES.VIDEO_COMPONENT]:MapSchema<VideoComponent>
     @type({map:IWBComponent}) [COMPONENT_TYPES.IWB_COMPONENT]:MapSchema<IWBComponent>
@@ -107,12 +107,13 @@ export class Scene extends Schema {
     @type({map:LevelComponent}) [COMPONENT_TYPES.LEVEL_COMPONENT]:MapSchema<LevelComponent>
     @type({map:BillboardComponent}) [COMPONENT_TYPES.BILLBOARD_COMPONENT]:MapSchema<BillboardComponent>
     @type({map:LiveShowComponent}) [COMPONENT_TYPES.LIVE_COMPONENT]:MapSchema<LiveShowComponent>
-    @type({map:TeamComponent}) [COMPONENT_TYPES.TEAM_COMPONENT]:MapSchema<TeamComponent>
+    // @type({map:TeamComponent}) [COMPONENT_TYPES.TEAM_COMPONENT]:MapSchema<TeamComponent>
     @type({map:GameItemComponent}) [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:MapSchema<GameItemComponent>
     @type({map:DialogComponent}) [COMPONENT_TYPES.DIALOG_COMPONENT]:MapSchema<DialogComponent>
     @type({map:RewardComponent}) [COMPONENT_TYPES.REWARD_COMPONENT]:MapSchema<RewardComponent>
     @type({map:PlaylistComponent}) [COMPONENT_TYPES.PLAYLIST_COMPONENT]:MapSchema<PlaylistComponent>
     @type({map:PathComponent}) [COMPONENT_TYPES.PATH_COMPONENT]:MapSchema<PathComponent>
+    @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_COMPONENT]:MapSchema<SoundComponent>
 
 
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent>
@@ -168,8 +169,8 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.TEXTURE_COMPONENT] = new MapSchema<TextureComponent>()
         this[COMPONENT_TYPES.MATERIAL_COMPONENT] = new MapSchema<MaterialComponent>()
         this[COMPONENT_TYPES.STATE_COMPONENT] = new MapSchema<StateComponent>()
-        this[COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT] = new MapSchema<SoundComponent>()
-        this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT] = new MapSchema<SoundComponent>()
+        // this[COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT] = new MapSchema<SoundComponent>()
+        // this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT] = new MapSchema<SoundComponent>()
         this[COMPONENT_TYPES.VIDEO_COMPONENT] = new MapSchema<VideoComponent>()
         this[COMPONENT_TYPES.ANIMATION_COMPONENT] = new MapSchema<AnimatorComponent>()
         this[COMPONENT_TYPES.NFT_COMPONENT] = new MapSchema<NftShapeComponent>()
@@ -180,12 +181,13 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.BILLBOARD_COMPONENT] = new MapSchema<BillboardComponent>()
         this[COMPONENT_TYPES.LEVEL_COMPONENT] = new MapSchema<LevelComponent>()
         this[COMPONENT_TYPES.LIVE_COMPONENT] = new MapSchema<LiveShowComponent>()
-        this[COMPONENT_TYPES.TEAM_COMPONENT] = new MapSchema<TeamComponent>()
+        // this[COMPONENT_TYPES.TEAM_COMPONENT] = new MapSchema<TeamComponent>()
         this[COMPONENT_TYPES.GAME_ITEM_COMPONENT] = new MapSchema<GameItemComponent>()
         this[COMPONENT_TYPES.DIALOG_COMPONENT] = new MapSchema<DialogComponent>()
         this[COMPONENT_TYPES.REWARD_COMPONENT] = new MapSchema<RewardComponent>()
         this[COMPONENT_TYPES.PLAYLIST_COMPONENT] = new MapSchema<PlaylistComponent>()
         this[COMPONENT_TYPES.PATH_COMPONENT] = new MapSchema<PathComponent>()
+        this[COMPONENT_TYPES.AUDIO_COMPONENT] = new MapSchema<SoundComponent>()
 
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
@@ -216,11 +218,11 @@ export class Scene extends Schema {
                             createGameItemComponent(this, aid,  data[component][aid])
                         }
                         break;
-                    case COMPONENT_TYPES.TEAM_COMPONENT:
-                        for (const aid in data[component]) {
-                            createTeamComponent(this, aid,  data[component][aid])
-                        }
-                        break;
+                    // case COMPONENT_TYPES.TEAM_COMPONENT:
+                    //     for (const aid in data[component]) {
+                    //         createTeamComponent(this, aid,  data[component][aid])
+                    //     }
+                    //     break;
                     case COMPONENT_TYPES.LIVE_COMPONENT:
                         for (const aid in data[component]) {
                             createLiveComponent(this, aid,  data[component][aid])
@@ -390,15 +392,22 @@ export class Scene extends Schema {
                         }
                         break;
 
+                     case COMPONENT_TYPES.AUDIO_COMPONENT:
+                        for (const aid in data[component]){
+                            createAudioComponent(this, aid, data[component][aid])
+                        }
+                        break;
+
                     case COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT:
                         for (const aid in data[component]){
-                            createAudioSourceComponent(this, aid, data[component][aid])
+                            createAudioComponent(this, aid, data[component][aid])
                         }
                         break;
 
                     case COMPONENT_TYPES.AUDIO_STREAM_COMPONENT:
                         for (const aid in data[component]) {
-                            createAudioStreamComponent(this, aid, data[component][aid])
+                            data.type = 1
+                            createAudioComponent(this, aid, data[component][aid])
                             // this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT].set(aid, new SoundComponent(data[component][aid]))
                         }
                         break;
@@ -440,8 +449,8 @@ export function initServerScenes(room:IWBRoom, options?:any){
                     room.state.realmTokenType = realmData.EntityToken.Entity.Type
     
                     iwbManager.fetchRealmData(realmData)
-                    .then((realmScenes)=>{
-                        iwbManager.fetchRealmScenes(room.state.world, realmScenes)
+                    .then((realmData)=>{
+                        iwbManager.fetchRealmScenes(room.state.world, realmData)
                         .then(async (sceneData)=>{
                             await loadRealmScenes(room, sceneData, options)
                             iwbManager.initUsers(room)

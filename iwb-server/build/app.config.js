@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.iwbManager = exports.itemManager = void 0;
+exports.questManager = exports.iwbManager = exports.itemManager = void 0;
 const monitor_1 = require("@colyseus/monitor");
 const tools_1 = __importDefault(require("@colyseus/tools"));
 const IWBRoom_1 = require("./rooms/IWBRoom");
@@ -17,9 +17,11 @@ const Playfab_1 = require("./utils/Playfab");
 const IWBManager_1 = require("./Objects/IWBManager");
 const ItemManager_1 = require("./Objects/ItemManager");
 const Router_1 = require("./Routers/Router");
+const QuestManager_1 = require("./Objects/QuestManager");
 exports.default = (0, tools_1.default)({
     initializeGameServer: (gameServer) => {
         (0, Playfab_1.initPlayFab)();
+        exports.questManager = new QuestManager_1.QuestManager();
         exports.itemManager = new ItemManager_1.ItemManager();
         exports.iwbManager = new IWBManager_1.IWBManager();
         gameServer.define('iwb-world', IWBRoom_1.IWBRoom)

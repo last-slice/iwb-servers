@@ -1,5 +1,5 @@
 import axios from "axios"
-import { itemManager, iwbManager } from "../app.config"
+import { itemManager, iwbManager, questManager } from "../app.config"
 import { IWBRoom } from "../rooms/IWBRoom"
 import { PlayfabId, abortFileUploads, addEvent, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getDownloadURL, getTitleData, initializeUploadPlayerFiles, playerLogin, playfabLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
@@ -138,11 +138,13 @@ export class IWBManager{
             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.CHUNK_SEND_ASSETS, chunk)
             chunkIndex++;
         }
-    }
+    }   
 
     initPlayer(room:IWBRoom, player:Player){
-        console.log('asset count ', room.state.realmAssets.size)
+        // console.log('asset count ', room.state.realmAssets.size)
+        // console.log('quests are ', questManager.quests.values())
         player.sendPlayerMessage(SERVER_MESSAGE_TYPES.INIT,{
+            quests: questManager.quests.filter(quest => quest.owner === room.state.owner).map(({ definition, ...rest }) => rest),
             realmAssets: room.state.realmAssets,
             realmAssetSize:room.state.realmAssets.size,
             styles: iwbManager.styles,
@@ -525,16 +527,24 @@ export class IWBManager{
             if(version > 0){
                 let metadata = realmScenes.data.Metadata
                 let count = 0
+                let hasSceneFile = false
                 for (const key in metadata) {
                     if (metadata.hasOwnProperty(key)) {
                         count++
+                        if(key === world + '-' + this.realmFileKey){
+                            hasSceneFile = true
+                        }
                     }
                 }
 
                 if(count > 0){
-                    let res = await fetch( metadata[world + '-' + this.realmFileKey].DownloadUrl)
-                    let json = await res.json()
-                    return json
+                    if(hasSceneFile){
+                        let res = await fetch(metadata[world + '-' + this.realmFileKey].DownloadUrl)
+                        let json = await res.json()
+                        return json
+                    }else{
+                        return []
+                    }
                 }else{
                     return []
                 }
