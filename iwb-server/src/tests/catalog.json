@@ -112747,5 +112747,76 @@
                 "isText": false
             }
         }
+    },
+    {
+        "id": "7ba87c38-d87f-42ec-b166-082664b5a166",
+        "m": "",
+        "n": "Image Playlist",
+        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
+        "d": "Add an image slidshow to your scene!",
+        "cat": "Gallery/Venue",
+        "on": "IWB Builder",
+        "o": "IWB Team",
+        "isdl": true,
+        "ty": "SM",
+        "pc": 0,
+        "si": 0,
+        "tag": [],
+        "v": 20,
+        "bb": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "sty": "Smart Items",
+        "components": {
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Playlist",
+                        "type": "playlist_play"
+                    },
+                    {
+                        "name": "Seek Playlist",
+                        "type": "playlist_seek"
+                    },
+                    {
+                        "name": "Stop Playlist",
+                        "type": "playlist_stop"
+                    }
+                ]
+            },
+            "Playlist": {
+                "type":0
+            },
+            "Mesh_Collider": {
+                "shape": 1,
+                "layer": 1
+            },
+            "Mesh_Renderer": {
+                "shape": 1,
+                "layer": 2,
+                "onPlay": false
+            },
+            "Material": {
+                "type": 0,
+                "onPlay": true,
+                "albedoColor": {
+                    "r": 0.7,
+                    "g": 0.35,
+                    "b": 0.25,
+                    "a": 0.5
+                },
+                "textureType":"COLOR"
+            },
+            "Billboard": {
+                "mode": 2
+            },
+            "Text": {
+                "text": "Image Playlist",
+                "onPlay": false,
+                "isText": false
+            }
+        }
     }
 ]

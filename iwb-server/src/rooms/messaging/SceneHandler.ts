@@ -318,7 +318,7 @@ export function iwbSceneHandler(room:IWBRoom){
         if(player){
             let scene = room.state.scenes.get(info.sceneId)
             if(scene){
-                if(scene.o === client.userData.userId || hasWorldPermissions(room, player.address)){
+                if(canBuild(room, client.userData.userId, scene.id)){//} scene.o === client.userData.userId || hasWorldPermissions(room, player.address)){
                     let worldConfig = iwbManager.worlds.find((w)=> w.ens === room.state.world)
                     if(worldConfig){
                         worldConfig.builds -= 1
@@ -329,6 +329,7 @@ export function iwbSceneHandler(room:IWBRoom){
                     scene.bps.forEach((user)=>{
                         let player:Player = room.state.players.get(user) 
                         if(player){
+                            info.user = client.userData.userId
                             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE, info)
                         }
                     })

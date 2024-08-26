@@ -546,10 +546,10 @@ export async function saveRealm(room:IWBRoom){
 
     let scenes:any[] = await getRealmData(room)
 
-    if(scenes && scenes.length > 0){
+    // if(scenes && scenes.length > 0){
         fileNames.push("" + room.state.world + "-scenes.json")
         data.push(scenes)
-    }
+    // }
 
     if(room.state.realmAssetsChanged){
         console.log('back up catalog assets')

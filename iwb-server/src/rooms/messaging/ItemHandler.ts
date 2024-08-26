@@ -376,11 +376,6 @@ export function canBuild(room:IWBRoom, user:string, sceneId?:any){
         return true
     }
 
-    if(scene.bps.includes(user)){
-        return true
-    }
-
-    console.log('we got here can build')
     return false
 }
 
