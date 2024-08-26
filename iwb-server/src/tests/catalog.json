@@ -97690,75 +97690,6 @@
         }
     },
     {
-        "id": "c6cd23c7-286e-4d09-af6d-625236fb36cc",
-        "m": "",
-        "n": "Playlist",
-        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
-        "d": "Add a playlist to your scene! From images, to videos, to audio!",
-        "cat": "Gallery/Venue",
-        "on": "IWB Builder",
-        "o": "IWB Team",
-        "isdl": true,
-        "ty": "SM",
-        "pc": 0,
-        "si": 0,
-        "tag": [],
-        "v": 20,
-        "bb": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-        },
-        "sty": "Smart Items",
-        "components": {
-            "Actions": {
-                "actions": [
-                    {
-                        "name": "Play Playlist",
-                        "type": "playlist_play"
-                    },
-                    {
-                        "name": "Seek Playlist",
-                        "type": "playlist_seek"
-                    },
-                    {
-                        "name": "Stop Playlist",
-                        "type": "playlist_stop"
-                    }
-                ]
-            },
-            "Playlist": {},
-            "Mesh_Collider": {
-                "shape": 1,
-                "layer": 1
-            },
-            "Mesh_Renderer": {
-                "shape": 1,
-                "layer": 2,
-                "onPlay": false
-            },
-            "Material": {
-                "type": 0,
-                "onPlay": true,
-                "albedoColor": {
-                    "r": 0.7,
-                    "g": 0.35,
-                    "b": 0.25,
-                    "a": 0.5
-                },
-                "textureType":"COLOR"
-            },
-            "Billboard": {
-                "mode": 2
-            },
-            "Text": {
-                "text": "Playlist",
-                "onPlay": false,
-                "isText": false
-            }
-        }
-    },
-    {
         "id": "13b63e57-a636-4cf2-8449-488a5fd6d03e",
         "m": "13b63e57-a636-4cf2-8449-488a5fd6d03e",
         "n": "UI Text",
@@ -112689,6 +112620,131 @@
                 "type":2,
                 "url":"",
                 "name":"Audius Song"
+            }
+        }
+    },
+    {
+        "id": "959567a1-b5ad-45e1-942e-35f1425c8f90",
+        "m": "",
+        "n": "VLM Connector",
+        "im": "https://bafkreihxmbloqwqgjljwtq4wzhmo5pclxavyedugdafn2dhuzghgpszuim.ipfs.nftstorage.link/",
+        "d": "Connect VLM to your scene",
+        "cat": "Gallery/Venue",
+        "on": "IWB Builder",
+        "o": "IWB Team",
+        "isdl": true,
+        "ty": "Smart Items",
+        "pc": 0,
+        "si": 0,
+        "tag": [
+            "VLM"
+        ],
+        "v": 2,
+        "bb": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "sty": "Smart Items",
+        "components":{
+            "VLM":{},
+            "Billboard": {
+                "mode": 2
+            },
+            "Material": {
+                "type": 0,
+                "onPlay": false,
+                "albedoColor": {
+                    "r": 0.15,
+                    "g": 0.12,
+                    "b": 0.24,
+                    "a": 0.5
+                },
+                "textureType":"COLOR"
+            },
+            "Text": {
+                "text": "VLM Connector",
+                "onPlay": false
+            },
+            "Mesh_Collider": {
+                "shape": 1,
+                "layer": 1
+            },
+            "Mesh_Renderer": {
+                "shape": 1,
+                "layer": 2
+            }
+        }
+    },
+    {
+        "id": "c879c9620-56e5-4ecf-94ed-676ea3986db3",
+        "m": "",
+        "n": "Audius Playlist",
+        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
+        "d": "Add an Audius playlist to your scene!",
+        "cat": "Gallery/Venue",
+        "on": "IWB Builder",
+        "o": "IWB Team",
+        "isdl": true,
+        "ty": "SM",
+        "pc": 0,
+        "si": 0,
+        "tag": [],
+        "v": 20,
+        "bb": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "sty": "Smart Items",
+        "components": {
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Playlist",
+                        "type": "playlist_play"
+                    },
+                    {
+                        "name": "Seek Playlist",
+                        "type": "playlist_seek"
+                    },
+                    {
+                        "name": "Stop Playlist",
+                        "type": "playlist_stop"
+                    }
+                ]
+            },
+            "Playlist": {
+                "type":3,
+                "volume":1
+            },
+            "Mesh_Collider": {
+                "shape": 1,
+                "layer": 1
+            },
+            "Mesh_Renderer": {
+                "shape": 1,
+                "layer": 2,
+                "onPlay": false
+            },
+            "Material": {
+                "type": 0,
+                "onPlay": true,
+                "albedoColor": {
+                    "r": 0.7,
+                    "g": 0.35,
+                    "b": 0.25,
+                    "a": 0.5
+                },
+                "textureType":"COLOR"
+            },
+            "Billboard": {
+                "mode": 2
+            },
+            "Text": {
+                "text": "Audius Playlist",
+                "onPlay": false,
+                "isText": false
             }
         }
     }

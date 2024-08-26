@@ -64,9 +64,11 @@ export class IWBRoom extends Room<IWBRoomState> {
         //         player.cancelPendingDeployment()
         //     }
 
+        removePlayer(player.dclData.userId)
+        savePlayerCache(player)
+        
           setTimeout(()=>{
-            removePlayer(player.dclData.userId)
-            savePlayerCache(player)
+           
             this.broadcast(SERVER_MESSAGE_TYPES.PLAYER_LEAVE, {player: client.userData.userId})
           }, 1000 * 5)
         }

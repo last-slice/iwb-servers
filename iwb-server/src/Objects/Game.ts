@@ -17,6 +17,7 @@ import { createCounterComponent } from "./Counter";
 import { editNameComponent } from "./Names";
 import { itemManager } from "../app.config";
 import { addItemComponents, createNewItem } from "../rooms/messaging/ItemHandler";
+import { addPlayerVariableItem, createSoloEntities, startSoloGame } from "./SoloGame";
 
 let noBackup:any[] = [
     "gameCountdown",
@@ -215,9 +216,12 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
                                 itemInfo.pvariables.delete("timer")
                             }
                         }
-                        else if(key === "pvariables" && !isNaN(parseFloat(info[key].value))){
-                            itemInfo.pvariables.set(info[key].id, parseFloat(info[key].value))
-                            addPlayerVariableItem(room, scene, client, player, info[key])
+                        else if(key === "pvariables"){
+                            if(!isNaN(parseFloat(info[key].value))){
+                                addPlayerVariableItem(room, scene, client, player, itemInfo, info[key])
+                            }else{
+                                console.log('player variable not a number')
+                            }
                         }
                         else{
                             itemInfo[key] = info[key]
@@ -282,45 +286,6 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
         }
     }
 }
-
-function addPlayerVariableItem(room:IWBRoom, scene:Scene, client:Client, player:Player, variable:any){
-    let emptyCatalogItem = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
-    if(emptyCatalogItem){
-        emptyCatalogItem.n = "Player Var - " + variable.id
-        let item:any = {
-            aid:generateId(5),
-            sceneId:scene.id,
-            id:CATALOG_IDS.EMPTY_ENTITY,
-            position:{x:0, y:0, z:0},
-            rotation:{x:0, y:0, z:0},
-            scale:{x:0, y:0, z:0},
-            parent:1
-        }
-
-        emptyCatalogItem.components = {
-            Counters: {
-                defaultValue: parseFloat(variable.value),
-            }
-        }
-
-        createNewItem(room, client, scene, item, emptyCatalogItem)
-        addItemComponents(room, client, scene, player, item, emptyCatalogItem)
-    }
-}
-
-// export function addGameComponent(room:IWBRoom, client:Client, scene:Scene, item:any, catalogInfo:any){
-//     // let gameComponentInfo:any = {
-//     //     id: scene.id,
-//     //     name: scene.n + " Game",
-//     //     description: "IWB Game",
-//     //     type:0,
-//     //     startLevel: 1,
-//     // }
-
-//     // createGameComponent(scene, item.aid, gameComponentInfo)
-//     // addGameConsoleTriggers(scene, item.aid, 0, 2)
-//     // createGameLevel(room, client, scene, item, 1)  
-// }
 
 async function addGameConsoleTriggers(room:IWBRoom, scene:Scene, aid:string, gameInfo:GameComponent, index:number, max:number){
     console.log('add game triggers')
@@ -534,26 +499,6 @@ export function attemptGameEnd(room:IWBRoom, client:any, info:any){
     }
 }
 
-export function startSoloGame(client:Client, player:Player, scene:Scene, info:any, gameInfo:any){
-    console.log('starting solo game')
-    let canStartLevel = false
-    scene[COMPONENT_TYPES.LEVEL_COMPONENT].forEach((levelComponent:LevelComponent, aid:string)=>{
-        if(gameInfo.startLevel === levelComponent.number && levelComponent.live && !canStartLevel){
-            canStartLevel = true
-            info.canStart = true
-            info.level = aid
-
-            player.startGame(scene.id, gameInfo, PLAYER_GAME_STATUSES.PLAYING, aid)
-            client.send(SERVER_MESSAGE_TYPES.START_GAME, info)
-        }
-    })
-
-    if(!canStartLevel){
-        info.canStart = false
-        client.send(SERVER_MESSAGE_TYPES.START_GAME, info)
-    }
-}
-
 export function joinMultiplayerLobby(room:IWBRoom, player:Player, scene:Scene, info:any, gameInfo:any){
     console.log('joining multiplayer lobby')
     let gaming = scene[COMPONENT_TYPES.GAME_COMPONENT].get(gameInfo.aid)
@@ -637,89 +582,4 @@ async function createMultiplayerEntities(room:IWBRoom, client:Client, scene:Scen
             defaultValue:10
         })
     }
-}
-
-async function createSoloEntities(room:IWBRoom, client:Client, scene:Scene, player:Player, aid:string, gameInfo:any){
-    await createSoloStartLevelEntity(room, client, scene, player, aid, gameInfo)
-    await createSoloCurrentLevelEntity(room, client, scene, player, aid, gameInfo)
-}
-
-async function createSoloStartLevelEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, aid:string, gameInfo:GameComponent){
-    // let currentParentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex($=> $.aid === aid)
-    // if(currentParentIndex >= 0){
-    //     let newAid = await addEntity(room, client, scene, player, currentParentIndex)
-    //     await editNameComponent({
-    //         aid:newAid,
-    //         value:"Game Start Level Entity"
-    //     }, scene)
-
-    //     await createCounterComponent(scene, newAid, {
-    //         defaultValue:gameInfo.startLevel
-    //     })
-    //     gameInfo.currentLevelAid = newAid 
-    // }
-
-
-    let parentTransform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(aid)
-    let newEntityPosition = new Vector3({x:parentTransform.p.x, y:parentTransform.p.y + 1.5, z:parentTransform.p.z})
-
-    let newEntity = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
-    let newEntityAid = generateId(6)
-
-    newEntity.n = "Game Start Level Entity"
-    newEntity.aid = newEntityAid
-    newEntity.pending = false
-    newEntity.ugc = false
-    newEntity.position = newEntityPosition
-    newEntity.rotation = new Quaternion({x:0,y:0,z:0})
-    newEntity.scale = new Vector3({x:1,y:1,z:1})
-
-    await createNewItem(room, client, scene, newEntity, newEntity) 
-    await addItemComponents(room, client, scene, player, newEntity, newEntity)
-    await createGameItemComponent(scene, newEntityAid)
-
-    await createCounterComponent(scene, newEntityAid, {
-        defaultValue:gameInfo.startLevel
-    })
-}
-
-async function createSoloCurrentLevelEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, aid:string, gameInfo:any){
-    // let currentParentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex($=> $.aid === aid)
-    // if(currentParentIndex >= 0){
-    //     let newAid = await addEntity(room, client, scene, player, currentParentIndex)
-    //     await editNameComponent({
-    //         aid:newAid,
-    //         value:"Game Current Level Entity"
-    //     }, scene)
-
-    //     await createCounterComponent(scene, newAid, {
-    //         defaultValue:0
-    //     })
-    // }
-
-    let parentTransform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(aid)
-    let newEntityPosition = new Vector3({x:parentTransform.p.x, y:parentTransform.p.y + 2.5, z:parentTransform.p.z})
-
-    let newEntity = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
-    let newEntityAid = generateId(6)
-
-    newEntity.n = "Game Current Level Entity"
-    newEntity.aid = newEntityAid
-    newEntity.pending = false
-    newEntity.ugc = false
-    newEntity.position = newEntityPosition
-    newEntity.rotation = new Quaternion({x:0,y:0,z:0})
-    newEntity.scale = new Vector3({x:1,y:1,z:1})
-
-    await createNewItem(room, client, scene, newEntity, newEntity) 
-    await addItemComponents(room, client, scene, player, newEntity, newEntity)
-    await createGameItemComponent(scene, newEntityAid)
-
-    await createCounterComponent(scene, newEntityAid, {
-        defaultValue:0
-    })
-    gameInfo.currentLevelAid = newEntityAid 
-
-    await createActionComponent(scene, newEntityAid, {actions:[{value:1, name: 'Advance Level', type:ACTIONS.ADD_NUMBER}]})
-   
 }

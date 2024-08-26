@@ -116,6 +116,7 @@ export enum SERVER_MESSAGE_TYPES {
 
     //QUESTING
     GET_QUEST_DEFINITIONS = 'get_quest_definitions',
+    QUEST_EDIT = 'edit_quest'
 }
 
 export enum SCENE_MODES {
@@ -185,7 +186,8 @@ export enum COMPONENT_TYPES {
     GAME_ITEM_COMPONENT = 'GameItem',
     GAME_ROOM_COMPONENT = 'gaming',
     PLAYLIST_COMPONENT ='Playlist',
-    PATH_COMPONENT = 'Path'
+    PATH_COMPONENT = 'Path',
+    VLM_COMPONENT = 'VLM'
 }
 
 export enum COLLISION_LAYERS {

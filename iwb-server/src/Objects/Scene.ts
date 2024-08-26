@@ -36,6 +36,7 @@ import { createGameItemComponent, GameItemComponent } from "./GameItem";
 import { createDialogComponent, DialogComponent } from "./Dialog";
 import { createPlaylistComponent, PlaylistComponent } from "./Playlist";
 import { createPathComponent, PathComponent } from "./Paths";
+import { createVLMComponent, VLMComponent } from "./VLM";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -114,6 +115,7 @@ export class Scene extends Schema {
     @type({map:PlaylistComponent}) [COMPONENT_TYPES.PLAYLIST_COMPONENT]:MapSchema<PlaylistComponent>
     @type({map:PathComponent}) [COMPONENT_TYPES.PATH_COMPONENT]:MapSchema<PathComponent>
     @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_COMPONENT]:MapSchema<SoundComponent>
+    @type({map:VLMComponent}) [COMPONENT_TYPES.VLM_COMPONENT]:MapSchema<VLMComponent>
 
 
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent>
@@ -130,6 +132,7 @@ export class Scene extends Schema {
     components:any
     checkEnabled:boolean
     checkDisabled:boolean
+    checkLeave:boolean
     loaded:boolean
     hiddenForGame:boolean
 
@@ -188,10 +191,17 @@ export class Scene extends Schema {
         this[COMPONENT_TYPES.PLAYLIST_COMPONENT] = new MapSchema<PlaylistComponent>()
         this[COMPONENT_TYPES.PATH_COMPONENT] = new MapSchema<PathComponent>()
         this[COMPONENT_TYPES.AUDIO_COMPONENT] = new MapSchema<SoundComponent>()
+        this[COMPONENT_TYPES.VLM_COMPONENT] = new MapSchema<VLMComponent>()
 
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
+                    case COMPONENT_TYPES.VLM_COMPONENT:
+                        for (const aid in data[component]) {
+                            createVLMComponent(this, aid,  data[component][aid])
+                        }
+                        break;
+
                     case COMPONENT_TYPES.PATH_COMPONENT:
                         for (const aid in data[component]) {
                             createPathComponent(this, aid,  data[component][aid])

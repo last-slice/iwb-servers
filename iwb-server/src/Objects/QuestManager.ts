@@ -4,6 +4,7 @@
 //ca7fc75d-b052-4906-8669-5647bc4539dc
 
 import { fetchPlayfabFile, fetchPlayfabMetadata, PLAYFAB_DATA_ACCOUNT } from "../utils/Playfab"
+import { Scene } from "./Scene"
 import { createAuthchainHeaders, initWeb3Wallet, sendSignedAPI, signMessage, wallet } from "./Web3"
 
 export class QuestManager {
@@ -51,6 +52,7 @@ export class QuestManager {
     // }
 
     async getServerQuests(baseURL:string, address:string){
+      try{        
         const getQuests = `${baseURL}api/creators/${address}/quests`
         
         const timestamp = String(Date.now())
@@ -58,14 +60,34 @@ export class QuestManager {
         let commandData:any = { url: getQuests, method: 'GET', metadata: {}, actionType: 'list' }
         let payload = buildPayload(commandData, timestamp)
         let authchainHeaders = await createAuthchainHeaders(address,await signMessage(payload), payload, timestamp,JSON.stringify(commandData.metadata))
-        console.log('auth chain headers' ,authchainHeaders)
-        let response = await sendSignedAPI(getQuests, authchainHeaders)
+        // console.log('auth chain headers' ,authchainHeaders)
+        let response = await sendSignedAPI(getQuests, commandData.method, authchainHeaders, 200)
         response.quests.forEach((quest:any)=>{
           let toUpdate = this.quests.find(($:any)=> $.id === quest.id)
             if(toUpdate){
               toUpdate.definition = quest.definition
             }
-          })
+          })}
+      catch(e){
+        console.log('error getting server quests from quest service', e)
+      }
+    }
+
+    async createQuest(scene:Scene, quest:any){
+      try{        
+        const createQuest = `${this.baseURL}api/quests`
+        
+        const timestamp = String(Date.now())
+    
+        let commandData:any = { url: createQuest, method: 'POST', metadata:quest, actionType: 'create', extraData:{questName: quest.name, createQuest:quest} }
+        let payload = buildPayload(commandData, timestamp)
+        let authchainHeaders = await createAuthchainHeaders(this.creator,await signMessage(payload), payload, timestamp,JSON.stringify(commandData.metadata))
+        let response = await sendSignedAPI(createQuest, commandData.method, authchainHeaders, JSON.stringify(quest))
+        console.log('response is', response)
+    }
+    catch(e){
+        console.log('error getting quests', e)
+    }
     }
 }
 

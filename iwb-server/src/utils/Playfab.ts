@@ -252,7 +252,6 @@ export const getLeaderboard = (request:PlayFabServerModels.GetLeaderboardRequest
   })
 }
 
-
 export const initializeUploadPlayerFiles = (entityToken:string, request:PlayFabDataModels.InitiateFileUploadsRequest):Promise<PlayFabDataModels.InitiateFileUploadsResponse> =>{
   return new Promise((resolve, reject)=>{
     axios.post("https://"+PlayfabId+".playfabapi.com/File/InitiateFileUploads",
@@ -388,7 +387,7 @@ export async function fetchUserMetaData(realmData:any){
     return response.data
   }
   catch(e){
-    console.log('error fetching user metadata, maybe they dont have the file? ')
+    console.log('error fetching user metadata, maybe they dont have the file? ')//
     return null
   }
 }

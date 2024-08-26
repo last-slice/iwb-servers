@@ -35,19 +35,21 @@ export function createAuthchainHeaders(
   headers[AUTH_TIMESTAMP_HEADER] = timestamp
   headers[AUTH_METADATA_HEADER] = metadata
 
-  console.log('headers are ', headers)
+  // console.log('headers are ', headers)
   return headers
 }
 
-export async function sendSignedAPI(url:string, authchainHeaders:any){
+export async function sendSignedAPI(url:string, method:string, authchainHeaders:any, status?:any, body?:any){
     const res = await fetch(url, {
-        method: 'GET',
+        method: method,
         headers: {
           ...authchainHeaders,
           'Content-Type': 'application/json'
-        }
+        },
+        body: body ? body : undefined
       })
-      if (res.status === 200) {
+      // console.log('res is', res)
+      if (res.status === status ? status : 201) {
       //   const { quests } = (await res.json()) as { quests: { id: string; name: string }[] }
       const data = await res.json()
         if (data) {
@@ -58,7 +60,7 @@ export async function sendSignedAPI(url:string, authchainHeaders:any){
           return null
         }
       } else {
-        console.log(`> Error returned by Quests Server: `)
+        console.log(`> Error returned by Quests Server: `, await res.json())
         return null
       }
 }

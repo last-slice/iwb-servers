@@ -12,6 +12,7 @@ let APP_NAME = 'iwb-back-end-audius-player'
 
 export class PlaylistComponent extends Schema{
     @type("number") type:number = -500 // 0 - images, 1 - video, 2 - audio, 3 - audius
+    @type("number") volume:number
     @type("number") slideTime:number
     @type("number") playtype:number = 0 //0 - in order, 1 - shuffle
     @type("number") current:number
@@ -115,6 +116,10 @@ export function editPlaylistComponent(info:any, scene:Scene){
                     }
                     break;
             }
+            break;
+
+        case 'volume':
+            itemInfo.volume = info.data
             break;
     }
 }

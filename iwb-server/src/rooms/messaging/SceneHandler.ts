@@ -535,6 +535,23 @@ export function iwbSceneHandler(room:IWBRoom){
         }
     })
 
+    room.onMessage(SERVER_MESSAGE_TYPES.QUEST_EDIT, async(client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.QUEST_EDIT + " message", info)
+
+        if(!info || !info.action || !info.sceneId || !info.quest){
+            return
+        }
+
+        let player:Player = room.state.players.get(client.userData.userId)
+        let scene = room.state.scenes.get(info.sceneId)
+
+        if(!player || !scene){
+            return
+        }
+        
+        questManager.createQuest(scene, info.quest)
+    })
+
     // room.onMessage(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET, async(client, info)=>{
     //      console.log(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET + " message", info)
 

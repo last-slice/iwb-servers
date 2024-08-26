@@ -38,6 +38,7 @@ import { createRewardComponent, editRewardComponent } from "../../Objects/Reward
 import { createPlaylistComponent, editPlaylistComponent } from "../../Objects/Playlist";//
 import { createAvatarShapeComponent, editAvatarShapeComponent } from "../../Objects/AvatarShape";
 import { createPathComponent, editPathComponent } from "../../Objects/Paths";
+import { createVLMComponent, editVLMComponent } from "../../Objects/VLM";
 
 
 export let updateComponentFunctions:any = {
@@ -74,6 +75,7 @@ export let updateComponentFunctions:any = {
     [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAvatarShapeComponent(info, scene)}, 
     [COMPONENT_TYPES.PATH_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editPathComponent(info, scene)}, 
     [COMPONENT_TYPES.AUDIO_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAudioComponent(info, scene)}, 
+    [COMPONENT_TYPES.VLM_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editVLMComponent(info, scene)}, 
 }
 
 let createComponentFunctions:any = {
@@ -104,6 +106,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createAvatarShapeComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.PATH_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPathComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.AUDIO_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createAudioComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.VLM_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createVLMComponent(scene, aid, info)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){

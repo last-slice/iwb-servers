@@ -2,7 +2,7 @@ import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { COMPONENT_TYPES, PLAYER_GAME_STATUSES, SCENE_MODES, SERVER_MESSAGE_TYPES, VIEW_MODES } from "../utils/types";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { Client } from "colyseus";
-import { fetchPlayfabFile, fetchUserMetaData, pushPlayfabEvent, updatePlayerData } from "../utils/Playfab";
+import { abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, initializeUploadPlayerFiles, pushPlayfabEvent, updatePlayerData, uploadPlayerFiles } from "../utils/Playfab";
 import { itemManager, iwbManager } from "../app.config";
 import axios from "axios";
 import { Scene } from "./Scene";
@@ -135,6 +135,7 @@ export class Player extends Schema {
     inCooldown:boolean
     weapon:any
     hitBox:any
+    gameVariables:Map<string, any> = new Map()
 
 
     //quest objects
@@ -158,6 +159,7 @@ export class Player extends Schema {
         this.startTime = Math.floor(Date.now()/1000)
 
         this.setSettings(this.playFabData.InfoResultPayload.UserData)
+        this.loadGameVariables()
       }
 
       addSelectedAsset(info:any){
@@ -213,6 +215,43 @@ export class Player extends Schema {
        async saveCache(){
         await this.recordPlayerTime()
         await this.saveToDB()
+        await this.saveGameData()
+      }
+
+      async saveGameData(){
+        let gameData:any[] = []
+
+        try{
+          this.gameVariables.forEach((gameInfo:any)=>{
+            gameData.push(gameInfo)
+          })
+
+          console.log("game data is", gameData)
+
+          if(gameData.length > 0){
+            let initres = await initializeUploadPlayerFiles(this.playFabData.EntityToken.EntityToken,{
+                        Entity: {Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type},
+                        FileNames:['gamedata.json']
+                      })
+
+            await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(gameData))
+            await finalizeUploadFiles(this.playFabData.EntityToken.EntityToken,
+                {
+                    Entity: {Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type},
+                    FileNames:['gamedata.json'],
+                    ProfileVersion:initres.ProfileVersion,
+            })
+          }
+        }
+        catch(e:any){
+            console.log('backup file error', e.message)
+            if(gameData.length > 0){
+              await abortFileUploads(this.playFabData.EntityToken.EntityToken,{
+                Entity: {Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type},
+                FileNames:['gamedata.json'],
+              })
+            }
+        }
       }
 
       async recordPlayerTime(){
@@ -380,5 +419,20 @@ export class Player extends Schema {
           return true
         }
         return false
+      }
+
+      async loadGameVariables(){
+        try{
+          let metadata = await fetchUserMetaData(this.playFabData)
+          let gamedata = await fetchPlayfabFile(metadata, "gamedata.json")
+          if(gamedata && gamedata.length > 0){
+            gamedata.forEach((game:any)=>{
+              this.gameData.set(game.id, game)
+            })
+          }
+        }
+        catch(e){
+          console.log('error getting load game variables', e)
+        }
       }
 }
