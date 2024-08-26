@@ -367,7 +367,7 @@ async function fetchUserMetaData(realmData) {
         return response.data;
     }
     catch (e) {
-        console.log('error fetching user metadata, maybe they dont have the file? ');
+        console.log('error fetching user metadata, maybe they dont have the file? '); //
         return null;
     }
 }

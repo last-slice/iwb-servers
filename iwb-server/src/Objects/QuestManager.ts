@@ -25,20 +25,10 @@ export class QuestManager {
 
             let metadata = await fetchPlayfabMetadata(PLAYFAB_DATA_ACCOUNT)
             let questData = await fetchPlayfabFile(metadata, "quests.json")
-            console.log('server quest da is', questData)
+            // console.log('server quest da is', questData)
             this.quests = questData
         
             await this.getServerQuests(this.baseURL, this.creator)
-           
-            // let questResponse = await fetch("https://quests.decentraland.org/api/creators/" + this.creator + "/quests")
-            // let questData = await questResponse.json()
-            // if(questData){
-            //     // this.setQuests(questData.quests)
-            //     this.quests = questData.quests
-            // }
-            // console.log('quest data is', questData)
-
-            
         }
         catch(e){
             console.log('error getting quests', e)
@@ -83,7 +73,7 @@ export class QuestManager {
         let payload = buildPayload(commandData, timestamp)
         let authchainHeaders = await createAuthchainHeaders(this.creator,await signMessage(payload), payload, timestamp,JSON.stringify(commandData.metadata))
         let response = await sendSignedAPI(createQuest, commandData.method, authchainHeaders, JSON.stringify(quest))
-        console.log('response is', response)
+        // console.log('response is', response)
     }
     catch(e){
         console.log('error getting quests', e)

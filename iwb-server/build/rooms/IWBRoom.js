@@ -54,9 +54,9 @@ class IWBRoom extends core_1.Room {
             //     else{
             //         player.cancelPendingDeployment()
             //     }
+            (0, PlayerHandler_1.removePlayer)(player.dclData.userId);
+            (0, PlayerHandler_1.savePlayerCache)(player);
             setTimeout(() => {
-                (0, PlayerHandler_1.removePlayer)(player.dclData.userId);
-                (0, PlayerHandler_1.savePlayerCache)(player);
                 this.broadcast(types_1.SERVER_MESSAGE_TYPES.PLAYER_LEAVE, { player: client.userData.userId });
             }, 1000 * 5);
         }

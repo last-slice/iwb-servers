@@ -114,6 +114,7 @@ class Player extends schema_1.Schema {
         this.uploads = [];
         this.landsAvailable = [];
         this.worldsAvailable = [];
+        this.gameVariables = new Map();
         this.room = room;
         this.client = client;
         this.userId = client.userData.userId;
@@ -125,6 +126,7 @@ class Player extends schema_1.Schema {
         this.mode = types_1.SCENE_MODES.PLAYMODE;
         this.startTime = Math.floor(Date.now() / 1000);
         this.setSettings(this.playFabData.InfoResultPayload.UserData);
+        this.loadGameVariables();
     }
     addSelectedAsset(info) {
         console.log('player selected asset', info);
@@ -167,6 +169,37 @@ class Player extends schema_1.Schema {
     async saveCache() {
         await this.recordPlayerTime();
         await this.saveToDB();
+        await this.saveGameData();
+    }
+    async saveGameData() {
+        let gameData = [];
+        try {
+            this.gameVariables.forEach((gameInfo) => {
+                gameData.push(gameInfo);
+            });
+            console.log("game data is", gameData);
+            if (gameData.length > 0) {
+                let initres = await (0, Playfab_1.initializeUploadPlayerFiles)(this.playFabData.EntityToken.EntityToken, {
+                    Entity: { Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type },
+                    FileNames: ['gamedata.json']
+                });
+                await (0, Playfab_1.uploadPlayerFiles)(initres.UploadDetails[0].UploadUrl, JSON.stringify(gameData));
+                await (0, Playfab_1.finalizeUploadFiles)(this.playFabData.EntityToken.EntityToken, {
+                    Entity: { Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type },
+                    FileNames: ['gamedata.json'],
+                    ProfileVersion: initres.ProfileVersion,
+                });
+            }
+        }
+        catch (e) {
+            console.log('backup file error', e.message);
+            if (gameData.length > 0) {
+                await (0, Playfab_1.abortFileUploads)(this.playFabData.EntityToken.EntityToken, {
+                    Entity: { Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type },
+                    FileNames: ['gamedata.json'],
+                });
+            }
+        }
     }
     async recordPlayerTime() {
         let now = Math.floor(Date.now() / 1000);
@@ -298,6 +331,20 @@ class Player extends schema_1.Schema {
             return true;
         }
         return false;
+    }
+    async loadGameVariables() {
+        try {
+            let metadata = await (0, Playfab_1.fetchUserMetaData)(this.playFabData);
+            let gamedata = await (0, Playfab_1.fetchPlayfabFile)(metadata, "gamedata.json");
+            if (gamedata && gamedata.length > 0) {
+                gamedata.forEach((game) => {
+                    this.gameData.set(game.id, game);
+                });
+            }
+        }
+        catch (e) {
+            console.log('error getting load game variables', e);
+        }
     }
 }
 exports.Player = Player;
