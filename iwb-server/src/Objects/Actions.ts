@@ -130,9 +130,9 @@ export function editActionComponent(data:any, scene:Scene){
                         })
                     }
                     
-                    if(key === "button1"){
+                    else if(key === "button1"){
                         newAction.button1 = action.button1.enabled
-                        if(action.button2.enabled){
+                        if(action.button1.enabled){
                             newAction.button1Label = action.button1.label
                             if(action.button1.actionId){
                                 newAction.button1Actions = new ArraySchema<string>()
@@ -140,7 +140,7 @@ export function editActionComponent(data:any, scene:Scene){
                             }
                         }
                     }
-                    if(key === "button2"){
+                   else if(key === "button2"){
                         newAction.button2 = action.button2.enabled
                         if(action.button2.enabled){
                             newAction.button2Label = action.button2.label
@@ -150,8 +150,10 @@ export function editActionComponent(data:any, scene:Scene){
                             }
                         }
                     }
-
-                    newAction[key] = action[key]
+                    else{
+                        newAction[key] = action[key]
+                    }
+                    
                 }
             }
             newAction['id'] = generateRandomId(6)

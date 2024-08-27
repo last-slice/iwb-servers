@@ -324,7 +324,8 @@ export enum Triggers {
     ON_LEVEL_LOADED = 'on_level_loaded',
     ON_LEVEL_COMPLETE = 'on_level_complete',
     ON_LEVEL_END = 'on_level_end',
-    ON_JOIN_LOBBY = 'on_join_lobby'
+    ON_JOIN_LOBBY = 'on_join_lobby',
+    ON_CLOCK_TICK = 'on_scene_tick',
 }
 
 export enum TriggerConditionOperation {

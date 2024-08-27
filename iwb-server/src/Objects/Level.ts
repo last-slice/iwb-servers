@@ -13,10 +13,11 @@ import { createTriggerComponent } from "./Trigger";
 import { addEntity, editParentingComponent } from "./Parenting";
 
 export class LevelComponent extends Schema{
+    @type("string") gameAid:string
+    @type("string") loadingScreen:string
     @type("number") number:number
     @type("number") loadingMin:number = 3
     @type("number") loadingType:number = 0
-    @type("string") loadingScreen:string
     @type(Vector3) loadingSpawn:Vector3 = new Vector3({x:0, y:0, z:0})
     @type(Vector3) loadingSpawnLook:Vector3 = new Vector3({x:0, y:0, z:0})
     @type("boolean") invisibleStartBox:boolean //do we need this?
@@ -71,7 +72,7 @@ export function editLevelComponent(info:any, scene:Scene){
     }
 }
 
-export async function createGameLevel(room:IWBRoom, client:Client, scene:Scene, player:Player, item:any, number:number){
+export async function createGameLevel(room:IWBRoom, client:Client, scene:Scene, gameAid:any, player:Player, item:any, number:number){
     let newLevelCatalogInfo = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
     let aid = generateId(6)
     newLevelCatalogInfo.n = "Level " + number
@@ -91,6 +92,13 @@ export async function createGameLevel(room:IWBRoom, client:Client, scene:Scene, 
         loadingSpawn: new Vector3(item.position),
         loadingSpawnLook: new Vector3(item.position),
         invisibleStartBox:true,
+        gameAid:gameAid
+    })
+
+
+    await createStateComponent(scene, aid, {
+        defaultValue:"disabled",
+        values:["disabled", "enabled"]
     })
 
     await createActionComponent(scene, aid, 
@@ -98,8 +106,9 @@ export async function createGameLevel(room:IWBRoom, client:Client, scene:Scene, 
         actions:[
             {name:"Load Level", type:ACTIONS.LOAD_LEVEL},
             {name:"End Level", type:ACTIONS.END_LEVEL},
-            // {name:"Win Level", type:ACTIONS.COMPLETE_LEVEL},
-            // {name:"Lose Level", type:ACTIONS.LOSE_LEVEL},
+            {name:"Advance Level", type:ACTIONS.ADVANCED_LEVEL},
+            {name:"Disable Level", type:ACTIONS.SET_STATE, state:'disabled'},
+            {name:"Enable Level", type:ACTIONS.SET_STATE, state:'enabled'},
         ]
         }
     )
@@ -113,18 +122,12 @@ export async function createGameLevel(room:IWBRoom, client:Client, scene:Scene, 
         }
     )
 
-    // await createStateComponent(scene, aid, {
-    //     defaultValue:"disabled",
-    //     values:["disabled", "enabled", "won", "lost"]
-    // })
-
-    // setTimeout(async ()=>{
-    //     await addWinLogicEntity(room, client, scene, player, aid, number)
-    //     await addLoseLogicEntity(room, client, scene, player, aid, number)
-    // }, 500)
+    setTimeout(async ()=>{
+        await addLogicEntity(room, client, scene, player, aid, number)
+    }, 500)
 }
 
-async function addWinLogicEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, parentAid:string, number:number){
+async function addLogicEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, parentAid:string, number:number){
 
     let parentTransform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(parentAid)
     let newEntityPosition = new Vector3({x:parentTransform.p.x, y:parentTransform.p.y + 1.5, z:parentTransform.p.z})
@@ -132,7 +135,7 @@ async function addWinLogicEntity(room:IWBRoom, client:Client, scene:Scene, playe
     let newEntity = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
     let newEntityAid = generateId(6)
 
-    newEntity.n = "Level " + number + " win logic"
+    newEntity.n = "Level " + number + "logic"
     newEntity.aid = newEntityAid
     newEntity.pending = false
     newEntity.ugc = false
@@ -147,7 +150,7 @@ async function addWinLogicEntity(room:IWBRoom, client:Client, scene:Scene, playe
         {
             isArea:false,
             triggers:[
-                {input:0, pointer:0, type:Triggers.ON_LEVEL_END, actions:[]}
+                {input:0, pointer:0, type:Triggers.ON_CLOCK_TICK, decisions:[]}
             ],
         }
     )

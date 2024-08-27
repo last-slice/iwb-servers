@@ -233,7 +233,7 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
             case 'addlevel':
                 console.log('adding game level')
                 let transform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(info.aid)
-                createGameLevel(room, client, scene, player, {position:transform.p}, scene[COMPONENT_TYPES.LEVEL_COMPONENT].size + 1)
+                createGameLevel(room, client, scene, info.aid, player, {position:transform.p}, scene[COMPONENT_TYPES.LEVEL_COMPONENT].size + 1)
                 break;
 
             case 'edit-type':
