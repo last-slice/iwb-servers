@@ -32,7 +32,7 @@ import { createBillboardComponent } from "../../Objects/Billboard";
 import { createGameComponent, deleteGameComponent, editGameComponent, sceneHasGame } from "../../Objects/Game";
 import { editLevelComponent } from "../../Objects/Level";
 import { createLiveComponent, editLiveComponent } from "../../Objects/LiveShow";
-import { createGameItemComponent } from "../../Objects/GameItem";
+import { createGameItemComponent, editGameItemComponent } from "../../Objects/GameItem";
 import { createDialogComponent, editDialogComponent } from "../../Objects/Dialog";
 import { createRewardComponent, editRewardComponent } from "../../Objects/Rewards";
 import { createPlaylistComponent, editPlaylistComponent } from "../../Objects/Playlist";//
@@ -76,6 +76,7 @@ export let updateComponentFunctions:any = {
     [COMPONENT_TYPES.PATH_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editPathComponent(info, scene)}, 
     [COMPONENT_TYPES.AUDIO_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAudioComponent(info, scene)}, 
     [COMPONENT_TYPES.VLM_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editVLMComponent(info, scene)}, 
+    [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editGameItemComponent(info, scene)}, 
 }
 
 let createComponentFunctions:any = {
@@ -107,6 +108,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.PATH_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPathComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.AUDIO_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createAudioComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.VLM_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createVLMComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createGameItemComponent(scene, aid, info)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){
@@ -755,7 +757,7 @@ async function copyItem(room:IWBRoom, scene:any, client:Client, player:Player, i
     catalogInfo.n += " Copy"
     info.item.n = catalogInfo.n
 
-    if(topLevel < 3){
+    // if(topLevel < 3){
         await createNewItem(room, client, scene, info.item, catalogInfo)
         await addItemComponents(room, client, scene, player, info.item, catalogInfo)
     
@@ -799,7 +801,7 @@ async function copyItem(room:IWBRoom, scene:any, client:Client, player:Player, i
                 editParentingComponent(room, client,{action:'edit', aid:newAid, data:parentAid, sp:{...parentTransform.p}, sr:{...parentTransform.r}, pp:{...transform.p}, pr:{...transform.r}, force:true} , scene, player)
             }
         }
-    }
+    // }
     
 
     

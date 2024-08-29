@@ -99,6 +99,7 @@ export enum REQUIRED_ASSETS {
     SCIFI_PACK_TRANSPARENT = "SciFiPackTransp_TX.png",
     FANTASY_PACK = "FanstasyPack_TX.png",
     PIRATES_PACK = "PiratesPack_TX.png.png",
+    PIRATES_PACK2 = "PiratesPack_TX.png",
     SCIFI_PACK = "SciFiPack_TX.png",
     FLOOR_DIRT = "FloorBaseDirt 01.png",
     FLOOR_DIRT_2 = "FloorBaseDirt 02.png",

@@ -11,6 +11,7 @@ import { addItemComponents, createNewItem, deleteSceneItem, removeItem, updateCo
 import { createActionComponent } from "./Actions";
 import { createTriggerComponent } from "./Trigger";
 import { addEntity, editParentingComponent } from "./Parenting";
+import { createBillboardComponent } from "./Billboard";
 
 export class LevelComponent extends Schema{
     @type("string") gameAid:string
@@ -85,6 +86,7 @@ export async function createGameLevel(room:IWBRoom, client:Client, scene:Scene, 
 
     await createNewItem(room, client, scene, newLevelCatalogInfo, newLevelCatalogInfo) 
     await addItemComponents(room, client, scene, player, newLevelCatalogInfo, newLevelCatalogInfo)
+    await createBillboardComponent(scene, aid, {mode:2})
 
     await createLevelComponent(scene, aid, {
         name: "Level " + number,

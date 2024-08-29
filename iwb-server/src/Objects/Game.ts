@@ -198,7 +198,7 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
                 if(variableIndex >=0){
                     itemInfo.variables.splice(variableIndex,1)
                     //need to delete game variable from all game items
-                    editGameItemComponent()
+                    // editGameItemComponent()
                 }
                 break;
 
