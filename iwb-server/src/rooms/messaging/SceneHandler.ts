@@ -161,6 +161,14 @@ export function iwbSceneHandler(room:IWBRoom){
                 scene.pcls.push(parcel)
             })
             room.state.temporaryParcels.clear()
+
+            if(info.direction){
+                scene.direction = info.direction
+            }
+
+            if(info.offsets){
+                scene.offsets = info.offsets
+            }
         }
     })
 

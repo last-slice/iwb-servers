@@ -187,7 +187,8 @@ export enum COMPONENT_TYPES {
     GAME_ROOM_COMPONENT = 'gaming',
     PLAYLIST_COMPONENT ='Playlist',
     PATH_COMPONENT = 'Path',
-    VLM_COMPONENT = 'VLM'
+    VLM_COMPONENT = 'VLM',
+    MULTIPLAYER_COMPONENT = 'Multiplayer'
 }
 
 export enum COLLISION_LAYERS {

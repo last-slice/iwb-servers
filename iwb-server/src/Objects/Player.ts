@@ -69,13 +69,17 @@ export class SelectedAsset extends Schema {
   }
 }
 
+
+
 export class Player extends Schema {
     @type("string") userId:string;
     @type("string") address:string
     @type("string") name:string 
-    @type(SelectedAsset) selectedAsset: SelectedAsset
-    @type("string") gameStatus:string = PLAYER_GAME_STATUSES.NONE
     @type("string") gameId:string = ""
+    @type("string") gameStatus:string = PLAYER_GAME_STATUSES.NONE
+
+    @type(SelectedAsset) selectedAsset: SelectedAsset
+    
 
     gameData:any
 
@@ -388,6 +392,15 @@ export class Player extends Schema {
         // this.playingGame = true
         this.gameData = {...game, ...{level:level}, ...{sceneId:sceneId}}
         this.gameId = sceneId
+
+        let gameVariables:any
+        gameVariables = this.gameVariables.get(game.aid)
+        if(!gameVariables){
+          gameVariables = [{lastPlayed: Math.floor(Date.now()/1000)}]
+          this.gameVariables.set(game.aid, gameVariables)
+        }
+         gameVariables = [{lastPlayed: Math.floor(Date.now()/1000)}]
+        
       }
 
       endGame(room?:IWBRoom){

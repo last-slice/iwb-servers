@@ -49,14 +49,15 @@ export class GameComponent extends Schema{
     @type("string") loadingScreen:string
     @type("string") type:string
     @type("string") currentLevelAid:string
+    @type("string") premiumAccessItem:string
+
     @type("number") startLevel:number
     @type("number") currentLevel:number
+    @type("number") premiumAccessType:number  = -1//0 - has nft, 1 - wearing item, 2 - daily, 3 - weekly, 4 - monthly, 5 - custom time, 6 - has game item?
+
     @type("boolean") disableTeleport:boolean = false
     @type("boolean") disableMap:boolean = false
     @type("boolean") saveProgress:boolean //do we need this?
-    @type("boolean") premiumAccess:boolean //do we need this? ifo
-    @type("boolean") premiumAccessType:boolean //do we need this? ifo
-    @type("boolean") premiumAccessItem:boolean //do we need this? ifo
 
     @type(Vector3) sp:Vector3 = new Vector3({x:0, y:0, z:0})
     @type(Vector3) ss:Vector3 = new Vector3({x:1, y:1, z:1})
@@ -473,6 +474,15 @@ export function attemptGameStart(room:IWBRoom, client:any, info:any){
         if(gameInfo){
             info.aid = gameInfo.aid
 
+            //check game start restrictions
+            if(gameInfo.premiumAccessType >= 0){
+
+                if(!canStartGame(gameInfo, player)){
+                    console.log('cannot start game')
+                    return
+                }
+            }
+
             if(gameInfo.type === "MULTIPLAYER"){
                 joinMultiplayerLobby(room, player ,scene, info, gameInfo)
             }else{
@@ -582,4 +592,13 @@ async function createMultiplayerEntities(room:IWBRoom, client:Client, scene:Scen
             defaultValue:10
         })
     }
+}
+
+function canStartGame(gameInfo:any, player:Player){
+    let playerVariables = player.gameVariables.get(gameInfo.aid)
+    if(!playerVariables){
+        return true
+    }   
+
+    
 }

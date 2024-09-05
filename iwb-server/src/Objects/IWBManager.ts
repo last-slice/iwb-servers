@@ -58,7 +58,8 @@ export class IWBManager{
             firstTime: true,
             nots: true,
             confirms: true,
-            music: false 
+            music: false,
+            loadRadius:10
         }
 
     constructor(){

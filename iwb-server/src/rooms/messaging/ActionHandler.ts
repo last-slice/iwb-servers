@@ -5,6 +5,7 @@ import { ActionComponent, ActionComponentSchema, handleCloneAction } from "../..
 import { Player } from "../../Objects/Player";
 import { handleReward } from "../../Objects/Rewards";
 import { handlePlaylistAction, stopAllPlaylist, stopPlaylist } from "../../Objects/Playlist";
+import { handleGlobalAttachItem, handleGlobalDetachItem } from "../../Objects/Multiplayer";
 
 export function iwbSceneActionHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ACTION, (client:Client, info:any)=>{
@@ -16,6 +17,7 @@ export function iwbSceneActionHandler(room:IWBRoom){
 
         let {sceneId, actionId, aid, message} = info
         let scene = room.state.scenes.get(sceneId)
+        let player = room.state.players.get(client.userData.userId)
 
         switch(info.type){
             case 'ENDALL':
@@ -89,6 +91,15 @@ export function iwbSceneActionHandler(room:IWBRoom){
                         let action = assetActions.actions.find(($:any)=> $.id === actionId)
                         if(action){
                             switch(action.type){
+                                case ACTIONS.DETACH_PLAYER:
+                                    handleGlobalDetachItem(scene, info.aid)
+                                    break;
+
+                                case ACTIONS.ATTACH_PLAYER:
+                                    console.log('attach item to player')
+                                    handleGlobalAttachItem(scene, info.aid, player.address, action)
+                                    break;
+
                                 case ACTIONS.ADD_NUMBER:
                                     // addNumber(scene, info)
                                     break;

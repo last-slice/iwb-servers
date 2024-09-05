@@ -211,3 +211,11 @@ export function rotateZ(vector:any, angle: number): Vector3 {
     z:vector.z}
   );
 }
+
+export function moveArrayItem(arr:any, fromIndex:number, toIndex:number) {
+  return arr.map((item:any, index:number) => {
+      if (index === toIndex) return arr[fromIndex];
+      if (index === fromIndex) return arr[toIndex];
+      return item;
+  });
+}

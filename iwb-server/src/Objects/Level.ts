@@ -31,6 +31,9 @@ export class LevelComponent extends Schema{
 
     //game component can have children components to track "global" variables
     // like time, score, health, death, etc
+
+    loadingTimer:any
+    loadingInterval:any
 }
 
 export function createLevelComponent(scene:Scene, aid:string, data:any){

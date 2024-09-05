@@ -221,7 +221,7 @@ export function iwbItemHandler(room:IWBRoom){
 
                         if(item.duplicate){
                             console.log('need to copy item')
-                            copyItem(room, scene, client, player, info, catalogItem, 1)
+                            copyItem(room, scene, client, player, info, catalogItem, item.duplicate)
 
                             pushPlayfabEvent(
                                 SERVER_MESSAGE_TYPES.SCENE_COPY_ITEM, 
@@ -615,6 +615,8 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
         for(let componentType in catalogItemInfo.components){
             let componentData = {...catalogItemInfo.components[componentType]}
             componentData.aid = item.aid
+
+            console.log('component data to copy is', componentData)
             createComponentFunctions[componentType](room, scene, client, player, item.aid, componentData)
         }
     }
@@ -745,11 +747,11 @@ export function removeAllAssetComponents(room:IWBRoom, player:Player, scene:any,
     scene.pc = 0
 }
 
-async function copyItem(room:IWBRoom, scene:any, client:Client, player:Player, info:any, catalogInfo:any, topLevel?:any){
+async function copyItem(room:IWBRoom, scene:any, client:Client, player:Player, info:any, catalogInfo:any, duplicateAid?:any){
     
     // console.log('copying item', info, catalogInfo)
-    console.log('copying item', info.item.aid, info.item.duplicate, info.item.parent)
-    console.log('aprent index is', scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate))
+    // console.log('copying item', info.item.aid, info.item.duplicate, info.item.parent)
+    // console.log('aprent index is', scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate))
     console.log(scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate) >= 0 && scene[COMPONENT_TYPES.PARENTING_COMPONENT][scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate)].children.length > 0)
     let parent = scene[COMPONENT_TYPES.PARENTING_COMPONENT][scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate)]
     console.log(parent.children.length)
@@ -759,6 +761,30 @@ async function copyItem(room:IWBRoom, scene:any, client:Client, player:Player, i
 
     // if(topLevel < 3){
         await createNewItem(room, client, scene, info.item, catalogInfo)
+
+        let skip:any[] = [
+            COMPONENT_TYPES.TRANSFORM_COMPONENT,
+            COMPONENT_TYPES.IWB_COMPONENT,
+            COMPONENT_TYPES.NAMES_COMPONENT,
+            COMPONENT_TYPES.VISBILITY_COMPONENT,
+            COMPONENT_TYPES.PARENTING_COMPONENT
+        ]
+
+        if(!catalogInfo.hasOwnProperty("components")){
+            catalogInfo.components = {}
+        }
+
+        Object.values(COMPONENT_TYPES).forEach((component:any)=>{
+            if(scene[component] && !skip.includes(component)){
+                let componentData = scene[component].get(duplicateAid)
+                if(componentData){
+                    catalogInfo.components[component] = componentData
+                } 
+            }
+        })
+
+
+        scene
         await addItemComponents(room, client, scene, player, info.item, catalogInfo)
     
         let parentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate)
@@ -793,10 +819,10 @@ async function copyItem(room:IWBRoom, scene:any, client:Client, player:Player, i
                 newItemInfo.item.duplicate = info.item.aid
                 newItemInfo.item.aid = newAid
     
-                topLevel += 1
+                // topLevel += 1
                 newItemInfo.item.parent = 0
                 console.log('item to copy is', newItemInfo, catalogItem)
-                await copyItem(room, scene, client, player, newItemInfo, catalogItem, topLevel)
+                await copyItem(room, scene, client, player, newItemInfo, catalogItem, info.item.aid)
 
                 editParentingComponent(room, client,{action:'edit', aid:newAid, data:parentAid, sp:{...parentTransform.p}, sr:{...parentTransform.r}, pp:{...transform.p}, pr:{...transform.r}, force:true} , scene, player)
             }

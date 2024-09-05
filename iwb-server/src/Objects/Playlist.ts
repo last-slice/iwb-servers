@@ -3,7 +3,7 @@ import { Scene } from "./Scene";
 import { ACTIONS, COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../utils/types";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { Client } from "colyseus";
-import { getRandomIntInclusive } from "../utils/functions";
+import { getRandomIntInclusive, moveArrayItem } from "../utils/functions";
 
 let audiusServers:any[] = []
 let audiusServer:string = ""
@@ -106,13 +106,13 @@ export function editPlaylistComponent(info:any, scene:Scene){
             switch(info.type){
                 case 'up':
                     if(info.data - 1 >= 0){
-                        itemInfo.playlist = movePlaylistItem(itemInfo.playlist, info.data, info.data - 1)
+                        itemInfo.playlist = moveArrayItem(itemInfo.playlist, info.data, info.data - 1)
                     }
                     break;
 
                 case 'down':
                     if(info.data + 1 <= itemInfo.playlist.length){
-                        itemInfo.playlist = movePlaylistItem(itemInfo.playlist, info.data, info.data + 1)
+                        itemInfo.playlist = moveArrayItem(itemInfo.playlist, info.data, info.data + 1)
                     }
                     break;
             }
@@ -122,14 +122,6 @@ export function editPlaylistComponent(info:any, scene:Scene){
             itemInfo.volume = info.data
             break;
     }
-}
-
-function movePlaylistItem(arr:any, fromIndex:number, toIndex:number) {
-    return arr.map((item:any, index:number) => {
-        if (index === toIndex) return arr[fromIndex];
-        if (index === fromIndex) return arr[toIndex];
-        return item;
-    });
 }
 
 export function handlePlaylistAction(room:IWBRoom, client:Client, scene:Scene, info:any){

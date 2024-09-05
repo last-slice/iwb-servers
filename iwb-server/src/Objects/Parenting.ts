@@ -86,7 +86,7 @@ export async function editParentingComponent(room:IWBRoom, client:Client, info:a
             case 'newchild':
                 let currentParentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex($=> $.aid === info.aid)
                 if(currentParentIndex >= 0){
-                    return await addEntity(room, client, scene, player, currentParentIndex)
+                    return await addEntity(room, client, scene, player, currentParentIndex, true)
                 }
                 break;
         }
@@ -184,7 +184,7 @@ export async function removeParenting(room:IWBRoom, player:Player, scene:Scene, 
     // })
 }
 
-export async function addEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, parent?:any){
+export async function addEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, parent?:any, child?:boolean){
     let newAid = generateId(6)
     let catalogItem = itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)
     let item:any = {...catalogItem}
@@ -195,6 +195,10 @@ export async function addEntity(room:IWBRoom, client:Client, scene:Scene, player
     item.position = {x:0, y:0,z:0}
     item.rotation = {x:0, y:0,z:0}
     item.scale = {x:0, y:0,z:0}
+
+    if(child){
+        item.n = "Child-" + item.n
+    }
     await createNewItem(room, client, scene, item, catalogItem)
     await addItemComponents(room, client, scene, player, item, catalogItem)
     return newAid

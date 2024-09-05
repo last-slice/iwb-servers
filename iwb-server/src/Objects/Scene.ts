@@ -37,6 +37,7 @@ import { createDialogComponent, DialogComponent } from "./Dialog";
 import { createPlaylistComponent, PlaylistComponent } from "./Playlist";
 import { createPathComponent, PathComponent } from "./Paths";
 import { createVLMComponent, VLMComponent } from "./VLM";
+import { MultiplayerComponent } from "./Multiplayer";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -71,6 +72,7 @@ export class Scene extends Schema {
     @type("number") pc: number = 0
     @type("number") pcnt: number
     @type("number") direction: number = 0
+    @type(['number']) offsets = new ArraySchema<number>();
 
     @type("boolean") isdl: boolean
     @type("boolean") e: boolean
@@ -79,46 +81,46 @@ export class Scene extends Schema {
     @type("boolean") dpx: boolean = false
     @type("boolean") lim: boolean = true
 
+    @type({map:ActionComponent}) [COMPONENT_TYPES.ACTION_COMPONENT]:MapSchema<ActionComponent> = new MapSchema<ActionComponent>()
+    @type({map:AnimatorComponent}) [COMPONENT_TYPES.ANIMATION_COMPONENT]:MapSchema<AnimatorComponent> = new MapSchema<AnimatorComponent>()
+    @type({map:AvatarShapeComponent}) [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:MapSchema<AvatarShapeComponent> = new MapSchema<AvatarShapeComponent>()
+    @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_COMPONENT]:MapSchema<SoundComponent> = new MapSchema<SoundComponent>()
+    @type({map:BillboardComponent}) [COMPONENT_TYPES.BILLBOARD_COMPONENT]:MapSchema<BillboardComponent> = new MapSchema<BillboardComponent>()
+    @type({map:CounterComponent}) [COMPONENT_TYPES.COUNTER_COMPONENT]:MapSchema<CounterComponent> = new MapSchema<CounterComponent>()
+    @type({map:CounterBarComponent}) counterbars:MapSchema<CounterBarComponent> = new MapSchema<CounterBarComponent>()
+    @type({map:DialogComponent}) [COMPONENT_TYPES.DIALOG_COMPONENT]:MapSchema<DialogComponent> = new MapSchema<DialogComponent>()
+    @type({map:GameComponent}) [COMPONENT_TYPES.GAME_COMPONENT]:MapSchema<GameComponent> = new MapSchema<GameComponent>()
+    @type({map:GameItemComponent}) [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:MapSchema<GameItemComponent> = new MapSchema<GameItemComponent>()
+    @type({map:GltfComponent}) [COMPONENT_TYPES.GLTF_COMPONENT]:MapSchema<GltfComponent> = new MapSchema<GltfComponent>()
+    @type({map:IWBComponent}) [COMPONENT_TYPES.IWB_COMPONENT]:MapSchema<IWBComponent> = new MapSchema<IWBComponent>()
+    @type({map:LevelComponent}) [COMPONENT_TYPES.LEVEL_COMPONENT]:MapSchema<LevelComponent> = new MapSchema<LevelComponent>()
+    @type({map:LiveShowComponent}) [COMPONENT_TYPES.LIVE_COMPONENT]:MapSchema<LiveShowComponent> = new MapSchema<LiveShowComponent>()
+    @type({map:MaterialComponent}) [COMPONENT_TYPES.MATERIAL_COMPONENT]:MapSchema<MaterialComponent> = new MapSchema<MaterialComponent>()
+    @type({map:MeshColliderComponent}) [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:MapSchema<MeshColliderComponent> = new MapSchema<MeshColliderComponent>()
+    @type({map:MeshRendererComponent}) [COMPONENT_TYPES.MESH_RENDER_COMPONENT]:MapSchema<MeshRendererComponent> = new MapSchema<MeshRendererComponent>()
+    @type({map:MultiplayerComponent}) [COMPONENT_TYPES.MULTIPLAYER_COMPONENT]:MapSchema<MultiplayerComponent> = new MapSchema<MultiplayerComponent>()
+    @type({map:NameComponent}) [COMPONENT_TYPES.NAMES_COMPONENT]:MapSchema<NameComponent> = new MapSchema<NameComponent>()
+    @type({map:NftShapeComponent}) [COMPONENT_TYPES.NFT_COMPONENT]:MapSchema<NftShapeComponent> = new MapSchema<NftShapeComponent>()
+    @type({map:PathComponent}) [COMPONENT_TYPES.PATH_COMPONENT]:MapSchema<PathComponent> = new MapSchema<PathComponent>()
+    @type({map:PlaylistComponent}) [COMPONENT_TYPES.PLAYLIST_COMPONENT]:MapSchema<PlaylistComponent> = new MapSchema<PlaylistComponent>()
+    @type({map:PointerComponent}) [COMPONENT_TYPES.POINTER_COMPONENT]:MapSchema<PointerComponent> = new MapSchema<PointerComponent>()
+    @type({map:RewardComponent}) [COMPONENT_TYPES.REWARD_COMPONENT]:MapSchema<RewardComponent> = new MapSchema<RewardComponent>()
+    @type({map:StateComponent}) [COMPONENT_TYPES.STATE_COMPONENT]:MapSchema<StateComponent> = new MapSchema<StateComponent>()
+    @type({map:TextShapeComponent}) [COMPONENT_TYPES.TEXT_COMPONENT]:MapSchema<TextShapeComponent> = new MapSchema<TextShapeComponent>()
+    @type({map:TextureComponent}) [COMPONENT_TYPES.TEXTURE_COMPONENT]:MapSchema<TextureComponent> = new MapSchema<TextureComponent>()
+    @type({map:TransformComponent}) [COMPONENT_TYPES.TRANSFORM_COMPONENT]:MapSchema<TransformComponent> = new MapSchema<TransformComponent>()
+    @type({map:TriggerComponent}) [COMPONENT_TYPES.TRIGGER_COMPONENT]:MapSchema<TriggerComponent> = new MapSchema<TriggerComponent>()
+    @type({map:UITextComponent}) [COMPONENT_TYPES.UI_TEXT_COMPONENT]:MapSchema<UITextComponent> = new MapSchema<UITextComponent>()
+    @type({map:UIImageComponent}) [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:MapSchema<UIImageComponent> = new MapSchema<UIImageComponent>()
+    @type({map:VideoComponent}) [COMPONENT_TYPES.VIDEO_COMPONENT]:MapSchema<VideoComponent> = new MapSchema<VideoComponent>()
+    @type({map:VLMComponent}) [COMPONENT_TYPES.VLM_COMPONENT]:MapSchema<VLMComponent> = new MapSchema<VLMComponent>()
+    @type({map:VisibilityComponent}) [COMPONENT_TYPES.VISBILITY_COMPONENT]:MapSchema<VisibilityComponent> = new MapSchema<VisibilityComponent>()
 
-    @type({map:TransformComponent}) [COMPONENT_TYPES.TRANSFORM_COMPONENT]:MapSchema<TransformComponent>
-    @type({map:GltfComponent}) [COMPONENT_TYPES.GLTF_COMPONENT]:MapSchema<GltfComponent>
-    @type({map:MeshRendererComponent}) [COMPONENT_TYPES.MESH_RENDER_COMPONENT]:MapSchema<MeshRendererComponent>
-    @type({map:MeshColliderComponent}) [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:MapSchema<MeshColliderComponent>
-    @type({map:TextureComponent}) [COMPONENT_TYPES.TEXTURE_COMPONENT]:MapSchema<TextureComponent>
-    @type({map:MaterialComponent}) [COMPONENT_TYPES.MATERIAL_COMPONENT]:MapSchema<MaterialComponent>
-    @type({map:NameComponent}) [COMPONENT_TYPES.NAMES_COMPONENT]:MapSchema<NameComponent>
-    @type({map:VisibilityComponent}) [COMPONENT_TYPES.VISBILITY_COMPONENT]:MapSchema<VisibilityComponent>
-    @type({map:ActionComponent}) [COMPONENT_TYPES.ACTION_COMPONENT]:MapSchema<ActionComponent>
-    @type({map:CounterComponent}) [COMPONENT_TYPES.COUNTER_COMPONENT]:MapSchema<CounterComponent>
-    @type({map:CounterBarComponent}) counterbars:MapSchema<CounterBarComponent>
-    @type({map:StateComponent}) [COMPONENT_TYPES.STATE_COMPONENT]:MapSchema<StateComponent>
-    @type({map:TriggerComponent}) [COMPONENT_TYPES.TRIGGER_COMPONENT]:MapSchema<TriggerComponent>
-    @type({map:TextShapeComponent}) [COMPONENT_TYPES.TEXT_COMPONENT]:MapSchema<TextShapeComponent>
-    @type({map:NftShapeComponent}) [COMPONENT_TYPES.NFT_COMPONENT]:MapSchema<NftShapeComponent>
-    @type({map:AnimatorComponent}) [COMPONENT_TYPES.ANIMATION_COMPONENT]:MapSchema<AnimatorComponent>
-    @type({map:PointerComponent}) [COMPONENT_TYPES.POINTER_COMPONENT]:MapSchema<PointerComponent>
-    // @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:MapSchema<SoundComponent>
+    @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent> = new ArraySchema<ParentingComponent>()
+
+        // @type({map:TeamComponent}) [COMPONENT_TYPES.TEAM_COMPONENT]:MapSchema<TeamComponent>
+        // @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:MapSchema<SoundComponent>
     // @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_STREAM_COMPONENT]:MapSchema<SoundComponent>
-    @type({map:AvatarShapeComponent}) [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:MapSchema<AvatarShapeComponent>
-    @type({map:VideoComponent}) [COMPONENT_TYPES.VIDEO_COMPONENT]:MapSchema<VideoComponent>
-    @type({map:IWBComponent}) [COMPONENT_TYPES.IWB_COMPONENT]:MapSchema<IWBComponent>
-    @type({map:UITextComponent}) [COMPONENT_TYPES.UI_TEXT_COMPONENT]:MapSchema<UITextComponent>
-    @type({map:UIImageComponent}) [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:MapSchema<UIImageComponent>
-    @type({map:GameComponent}) [COMPONENT_TYPES.GAME_COMPONENT]:MapSchema<GameComponent>
-    @type({map:LevelComponent}) [COMPONENT_TYPES.LEVEL_COMPONENT]:MapSchema<LevelComponent>
-    @type({map:BillboardComponent}) [COMPONENT_TYPES.BILLBOARD_COMPONENT]:MapSchema<BillboardComponent>
-    @type({map:LiveShowComponent}) [COMPONENT_TYPES.LIVE_COMPONENT]:MapSchema<LiveShowComponent>
-    // @type({map:TeamComponent}) [COMPONENT_TYPES.TEAM_COMPONENT]:MapSchema<TeamComponent>
-    @type({map:GameItemComponent}) [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:MapSchema<GameItemComponent>
-    @type({map:DialogComponent}) [COMPONENT_TYPES.DIALOG_COMPONENT]:MapSchema<DialogComponent>
-    @type({map:RewardComponent}) [COMPONENT_TYPES.REWARD_COMPONENT]:MapSchema<RewardComponent>
-    @type({map:PlaylistComponent}) [COMPONENT_TYPES.PLAYLIST_COMPONENT]:MapSchema<PlaylistComponent>
-    @type({map:PathComponent}) [COMPONENT_TYPES.PATH_COMPONENT]:MapSchema<PathComponent>
-    @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_COMPONENT]:MapSchema<SoundComponent>
-    @type({map:VLMComponent}) [COMPONENT_TYPES.VLM_COMPONENT]:MapSchema<VLMComponent>
-
-
-    @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent>
 
     // @type({map:"string"}) [COMPONENT_TYPES.CLICK_AREA_COMPONENT]:MapSchema<string>
 
@@ -150,48 +152,49 @@ export class Scene extends Schema {
             this.sp = data.sp[0].split(",").length === 2 ? [data.sp[0].split(",")[0] + ",0," + data.sp[0].split(",")[1]] : data.sp
             this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"]
             data.hasOwnProperty("direction") ? this.direction = data.direction : this.direction = 0
+            this.offsets = data.hasOwnProperty("offsets") ? data.offsets : [0,0]
 
             this.setComponents(data, room)
         }
     }
     
     setComponents(data:any, room:IWBRoom){
-        this[COMPONENT_TYPES.IWB_COMPONENT] = new MapSchema<IWBComponent>()
-        this[COMPONENT_TYPES.NAMES_COMPONENT] = new MapSchema<NameComponent>()
-        this[COMPONENT_TYPES.VISBILITY_COMPONENT] = new MapSchema<VisibilityComponent>()
-        this[COMPONENT_TYPES.PARENTING_COMPONENT] = new ArraySchema<ParentingComponent>()
-        this[COMPONENT_TYPES.TRANSFORM_COMPONENT] = new MapSchema<TransformComponent>()
-        this[COMPONENT_TYPES.POINTER_COMPONENT] = new MapSchema<PointerComponent>()
-        this[COMPONENT_TYPES.TEXT_COMPONENT] = new MapSchema<TextShapeComponent>()
-        this[COMPONENT_TYPES.COUNTER_COMPONENT] = new MapSchema<CounterComponent>()
-        this[COMPONENT_TYPES.TRIGGER_COMPONENT] = new MapSchema<TriggerComponent>()
-        this[COMPONENT_TYPES.ACTION_COMPONENT] = new MapSchema<ActionComponent>()
-        this[COMPONENT_TYPES.GLTF_COMPONENT] = new MapSchema<GltfComponent>()
-        this[COMPONENT_TYPES.MESH_RENDER_COMPONENT] = new MapSchema<MeshRendererComponent>()
-        this[COMPONENT_TYPES.MESH_COLLIDER_COMPONENT] = new MapSchema<MeshColliderComponent>()
-        this[COMPONENT_TYPES.TEXTURE_COMPONENT] = new MapSchema<TextureComponent>()
-        this[COMPONENT_TYPES.MATERIAL_COMPONENT] = new MapSchema<MaterialComponent>()
-        this[COMPONENT_TYPES.STATE_COMPONENT] = new MapSchema<StateComponent>()
-        // this[COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT] = new MapSchema<SoundComponent>()
-        // this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT] = new MapSchema<SoundComponent>()
-        this[COMPONENT_TYPES.VIDEO_COMPONENT] = new MapSchema<VideoComponent>()
-        this[COMPONENT_TYPES.ANIMATION_COMPONENT] = new MapSchema<AnimatorComponent>()
-        this[COMPONENT_TYPES.NFT_COMPONENT] = new MapSchema<NftShapeComponent>()
-        this[COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT] = new MapSchema<AvatarShapeComponent>()
-        this[COMPONENT_TYPES.UI_TEXT_COMPONENT] = new MapSchema<UITextComponent>()
-        this[COMPONENT_TYPES.UI_IMAGE_COMPONENT] = new MapSchema<UIImageComponent>()
-        this[COMPONENT_TYPES.GAME_COMPONENT] = new MapSchema<GameComponent>()
-        this[COMPONENT_TYPES.BILLBOARD_COMPONENT] = new MapSchema<BillboardComponent>()
-        this[COMPONENT_TYPES.LEVEL_COMPONENT] = new MapSchema<LevelComponent>()
-        this[COMPONENT_TYPES.LIVE_COMPONENT] = new MapSchema<LiveShowComponent>()
-        // this[COMPONENT_TYPES.TEAM_COMPONENT] = new MapSchema<TeamComponent>()
-        this[COMPONENT_TYPES.GAME_ITEM_COMPONENT] = new MapSchema<GameItemComponent>()
-        this[COMPONENT_TYPES.DIALOG_COMPONENT] = new MapSchema<DialogComponent>()
-        this[COMPONENT_TYPES.REWARD_COMPONENT] = new MapSchema<RewardComponent>()
-        this[COMPONENT_TYPES.PLAYLIST_COMPONENT] = new MapSchema<PlaylistComponent>()
-        this[COMPONENT_TYPES.PATH_COMPONENT] = new MapSchema<PathComponent>()
-        this[COMPONENT_TYPES.AUDIO_COMPONENT] = new MapSchema<SoundComponent>()
-        this[COMPONENT_TYPES.VLM_COMPONENT] = new MapSchema<VLMComponent>()
+        // this[COMPONENT_TYPES.IWB_COMPONENT] = new MapSchema<IWBComponent>()
+        // this[COMPONENT_TYPES.NAMES_COMPONENT] = new MapSchema<NameComponent>()
+        // this[COMPONENT_TYPES.VISBILITY_COMPONENT] = new MapSchema<VisibilityComponent>()
+        // this[COMPONENT_TYPES.PARENTING_COMPONENT] = new ArraySchema<ParentingComponent>()
+        // this[COMPONENT_TYPES.TRANSFORM_COMPONENT] = new MapSchema<TransformComponent>()
+        // this[COMPONENT_TYPES.POINTER_COMPONENT] = new MapSchema<PointerComponent>()
+        // this[COMPONENT_TYPES.TEXT_COMPONENT] = new MapSchema<TextShapeComponent>()
+        // this[COMPONENT_TYPES.COUNTER_COMPONENT] = new MapSchema<CounterComponent>()
+        // this[COMPONENT_TYPES.TRIGGER_COMPONENT] = new MapSchema<TriggerComponent>()
+        // this[COMPONENT_TYPES.ACTION_COMPONENT] = new MapSchema<ActionComponent>()
+        // this[COMPONENT_TYPES.GLTF_COMPONENT] = new MapSchema<GltfComponent>()
+        // this[COMPONENT_TYPES.MESH_RENDER_COMPONENT] = new MapSchema<MeshRendererComponent>()
+        // this[COMPONENT_TYPES.MESH_COLLIDER_COMPONENT] = new MapSchema<MeshColliderComponent>()
+        // this[COMPONENT_TYPES.TEXTURE_COMPONENT] = new MapSchema<TextureComponent>()
+        // this[COMPONENT_TYPES.MATERIAL_COMPONENT] = new MapSchema<MaterialComponent>()
+        // this[COMPONENT_TYPES.STATE_COMPONENT] = new MapSchema<StateComponent>()
+        // // this[COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT] = new MapSchema<SoundComponent>()
+        // // this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT] = new MapSchema<SoundComponent>()
+        // this[COMPONENT_TYPES.VIDEO_COMPONENT] = new MapSchema<VideoComponent>()
+        // this[COMPONENT_TYPES.ANIMATION_COMPONENT] = new MapSchema<AnimatorComponent>()
+        // this[COMPONENT_TYPES.NFT_COMPONENT] = new MapSchema<NftShapeComponent>()
+        // this[COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT] = new MapSchema<AvatarShapeComponent>()
+        // this[COMPONENT_TYPES.UI_TEXT_COMPONENT] = new MapSchema<UITextComponent>()
+        // this[COMPONENT_TYPES.UI_IMAGE_COMPONENT] = new MapSchema<UIImageComponent>()
+        // this[COMPONENT_TYPES.GAME_COMPONENT] = new MapSchema<GameComponent>()
+        // this[COMPONENT_TYPES.BILLBOARD_COMPONENT] = new MapSchema<BillboardComponent>()
+        // this[COMPONENT_TYPES.LEVEL_COMPONENT] = new MapSchema<LevelComponent>()
+        // this[COMPONENT_TYPES.LIVE_COMPONENT] = new MapSchema<LiveShowComponent>()
+        // // this[COMPONENT_TYPES.TEAM_COMPONENT] = new MapSchema<TeamComponent>()
+        // this[COMPONENT_TYPES.GAME_ITEM_COMPONENT] = new MapSchema<GameItemComponent>()
+        // this[COMPONENT_TYPES.DIALOG_COMPONENT] = new MapSchema<DialogComponent>()
+        // this[COMPONENT_TYPES.REWARD_COMPONENT] = new MapSchema<RewardComponent>()
+        // this[COMPONENT_TYPES.PLAYLIST_COMPONENT] = new MapSchema<PlaylistComponent>()
+        // this[COMPONENT_TYPES.PATH_COMPONENT] = new MapSchema<PathComponent>()
+        // this[COMPONENT_TYPES.AUDIO_COMPONENT] = new MapSchema<SoundComponent>()
+        // this[COMPONENT_TYPES.VLM_COMPONENT] = new MapSchema<VLMComponent>()
 
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
