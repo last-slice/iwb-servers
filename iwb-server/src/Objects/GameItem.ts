@@ -3,7 +3,7 @@ import { Scene } from "./Scene";
 import { COMPONENT_TYPES } from "../utils/types";
 
 export class GameItemComponent extends Schema{
-    @type("number") type:number //0 - gun, 1 - 
+    @type("number") type:number //0 - gun, 1 - variable, 2 - 
     @type("number") magSize:number
     @type("number") ammo:number
     @type("number") maxAmmo:number

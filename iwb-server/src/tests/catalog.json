@@ -97652,6 +97652,58 @@
         }
     },
     {
+        "id": "fe71ba21-8a22-47e8-be61-a5763c2b09fd",
+        "m": "",
+        "n": "Leaderboard Component",
+        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
+        "d": "Add a leaderboard component to your scene",
+        "cat": "Gallery/Venue",
+        "on": "IWB Builder",
+        "o": "IWB Team",
+        "isdl": true,
+        "ty": "SM",
+        "pc": 0,
+        "si": 0,
+        "tag": [],
+        "v": 20,
+        "bb": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "sty": "Smart Items",
+        "components": {
+            "Leaderboard":{},
+            "Material": {
+                "type": 0,
+                "onPlay": false,
+                "albedoColor": {
+                    "r": 0.7,
+                    "g": 0.35,
+                    "b": 0.25,
+                    "a": 0.5
+                },
+                "textureType":"COLOR"
+            },
+            "Text": {
+                "text": "Leaderboard",
+                "onPlay": false,
+                "isText": false
+            },
+            "Mesh_Collider": {
+                "shape": 1,
+                "layer": 1
+            },
+            "Mesh_Renderer": {
+                "shape": 1,
+                "layer": 2
+            },
+            "Actions": {
+                "actions": []
+            }
+        }
+    },
+    {
         "id": "f7294f39-a7f4-47af-82fe-9912a445df58",
         "m": "",
         "n": "Plane Shape",

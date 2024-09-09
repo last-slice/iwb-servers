@@ -7,7 +7,7 @@ import { itemManager, iwbManager } from "../app.config";
 import axios from "axios";
 import { Scene } from "./Scene";
 import { IWBComponent } from "./IWB";
-import { removeStalePlayer } from "./Game";
+import { removeStalePlayer, updatePlayerGameTime } from "./Game";
 import { Vector3 } from "./Transform";
 import { garbageCollectPlaylist } from "./Playlist";
 
@@ -139,7 +139,7 @@ export class Player extends Schema {
     inCooldown:boolean
     weapon:any
     hitBox:any
-    gameVariables:Map<string, any> = new Map()
+    gameVariables:any = {}
 
 
     //quest objects
@@ -163,7 +163,7 @@ export class Player extends Schema {
         this.startTime = Math.floor(Date.now()/1000)
 
         this.setSettings(this.playFabData.InfoResultPayload.UserData)
-        this.loadGameVariables()
+        // this.loadGameVariables()
       }
 
       addSelectedAsset(info:any){
@@ -223,39 +223,32 @@ export class Player extends Schema {
       }
 
       async saveGameData(){
-        let gameData:any[] = []
+      //   try{
+      //     // if(this.gameVariables.length > 0){
+      //       console.log('player game variables exists', this.gameVariables)
+      //       let initres = await initializeUploadPlayerFiles(this.playFabData.EntityToken.EntityToken,{
+      //                   Entity: {Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type},
+      //                   FileNames:['gamedata.json']
+      //                 })
 
-        try{
-          this.gameVariables.forEach((gameInfo:any)=>{
-            gameData.push(gameInfo)
-          })
-
-          console.log("game data is", gameData)
-
-          if(gameData.length > 0){
-            let initres = await initializeUploadPlayerFiles(this.playFabData.EntityToken.EntityToken,{
-                        Entity: {Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type},
-                        FileNames:['gamedata.json']
-                      })
-
-            await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(gameData))
-            await finalizeUploadFiles(this.playFabData.EntityToken.EntityToken,
-                {
-                    Entity: {Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type},
-                    FileNames:['gamedata.json'],
-                    ProfileVersion:initres.ProfileVersion,
-            })
-          }
-        }
-        catch(e:any){
-            console.log('backup file error', e.message)
-            if(gameData.length > 0){
-              await abortFileUploads(this.playFabData.EntityToken.EntityToken,{
-                Entity: {Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type},
-                FileNames:['gamedata.json'],
-              })
-            }
-        }
+      //       await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(this.gameVariables))
+      //       await finalizeUploadFiles(this.playFabData.EntityToken.EntityToken,
+      //           {
+      //               Entity: {Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type},
+      //               FileNames:['gamedata.json'],
+      //               ProfileVersion:initres.ProfileVersion,
+      //       })
+      //     // }
+      //   }
+      //   catch(e:any){
+      //       console.log('backup file error', e.message)
+      //       // if(this.gameVariables.length > 0){
+      //         await abortFileUploads(this.playFabData.EntityToken.EntityToken,{
+      //           Entity: {Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type},
+      //           FileNames:['gamedata.json'],
+      //         })
+      //       // }
+      //   }
       }
 
       async recordPlayerTime(){
@@ -390,23 +383,26 @@ export class Player extends Schema {
       startGame(sceneId:any, game:any, status:PLAYER_GAME_STATUSES, level?:any){
         this.gameStatus = status
         // this.playingGame = true
-        this.gameData = {...game, ...{level:level}, ...{sceneId:sceneId}}
-        this.gameId = sceneId
+        // this.gameData = {...game, ...{level:level}, ...{sceneId:sceneId}}
+        this.gameId = game.aid
 
-        let gameVariables:any
-        gameVariables = this.gameVariables.get(game.aid)
-        if(!gameVariables){
-          gameVariables = [{lastPlayed: Math.floor(Date.now()/1000)}]
-          this.gameVariables.set(game.aid, gameVariables)
-        }
-         gameVariables = [{lastPlayed: Math.floor(Date.now()/1000)}]
-        
+        // if(!this.gameVariables.hasOwnProperty(game.aid)){
+        //   this.gameVariables[game.aid] = {
+        //     lastPlayed:Math.floor(Date.now()/1000)
+        //   }
+        // }else{
+        //   this.gameVariables[game.aid].lastPlayed = Math.floor(Date.now()/1000)
+        // }
+
+        console.log('player game variables are ', this.gameVariables)
       }
 
-      endGame(room?:IWBRoom){
+      endGame(room:IWBRoom){
         this.gameStatus = PLAYER_GAME_STATUSES.NONE
         // this.playingGame = false
         // console.log('player game data', this.gameData)
+
+        updatePlayerGameTime(room, this)
 
         if(this.gameData.type === "MULTIPLAYER"){
           removeStalePlayer(room, this)
@@ -434,18 +430,18 @@ export class Player extends Schema {
         return false
       }
 
-      async loadGameVariables(){
-        try{
-          let metadata = await fetchUserMetaData(this.playFabData)
-          let gamedata = await fetchPlayfabFile(metadata, "gamedata.json")
-          if(gamedata && gamedata.length > 0){
-            gamedata.forEach((game:any)=>{
-              this.gameData.set(game.id, game)
-            })
-          }
-        }
-        catch(e){
-          console.log('error getting load game variables', e)
-        }
-      }
+      // async loadGameVariables(){
+      //   try{
+      //     let metadata = await fetchUserMetaData(this.playFabData)
+      //     let data = await fetchPlayfabFile(metadata, "gamedata.json", true)
+      //     console.log('saved game data is', data)
+      //     if(data || data !== undefined){
+      //       console.log('we have game data to store in cache')
+      //       this.gameVariables = data
+      //     }
+      //   }
+      //   catch(e){
+      //     console.log('error getting load game variables', e)
+      //   }
+      // }
 }

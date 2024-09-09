@@ -415,7 +415,7 @@ export function getDownloadURL(metadata:any, fileKey:string){
   return url
 }
 
-export async function fetchPlayfabFile(metadata:any, fileKey:string){
+export async function fetchPlayfabFile(metadata:any, fileKey:string, returnNull?:boolean){
   if(metadata.code === 200){
       let version = metadata.data.ProfileVersion
       if(version > 0){
@@ -433,18 +433,18 @@ export async function fetchPlayfabFile(metadata:any, fileKey:string){
               let json = await res.json()
               return json
             }else{
-              return []
+              return returnNull ? undefined : []
             }
 
           }else{
-              return []
+            return returnNull ? undefined : []
           }
           
       }else{
         console.log('no profile')
-          return []
+        return returnNull ? undefined : []
       }
   }else{
-    return []
+    return returnNull ? undefined : []
   }
 }

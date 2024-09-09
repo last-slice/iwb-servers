@@ -109,6 +109,7 @@ export enum SERVER_MESSAGE_TYPES {
     GAME_FINISHED_EARLY = 'game_finished_early',
     WIN_GAME = 'win_game',
     GAME_TIED = 'game_tied',
+    LEADERBOARD_UPDATE = 'leaderboard_update',
 
     HIT_OBJECT = 'hit_object',
     SHOOT = 'shoot',
@@ -188,7 +189,8 @@ export enum COMPONENT_TYPES {
     PLAYLIST_COMPONENT ='Playlist',
     PATH_COMPONENT = 'Path',
     VLM_COMPONENT = 'VLM',
-    MULTIPLAYER_COMPONENT = 'Multiplayer'
+    MULTIPLAYER_COMPONENT = 'Multiplayer',
+    LEADERBOARD_COMPONENT = 'Leaderboard'
 }
 
 export enum COLLISION_LAYERS {

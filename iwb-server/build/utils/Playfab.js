@@ -394,7 +394,7 @@ function getDownloadURL(metadata, fileKey) {
     return url;
 }
 exports.getDownloadURL = getDownloadURL;
-async function fetchPlayfabFile(metadata, fileKey) {
+async function fetchPlayfabFile(metadata, fileKey, returnNull) {
     if (metadata.code === 200) {
         let version = metadata.data.ProfileVersion;
         if (version > 0) {
@@ -412,20 +412,20 @@ async function fetchPlayfabFile(metadata, fileKey) {
                     return json;
                 }
                 else {
-                    return [];
+                    return returnNull ? undefined : [];
                 }
             }
             else {
-                return [];
+                return returnNull ? undefined : [];
             }
         }
         else {
             console.log('no profile');
-            return [];
+            return returnNull ? undefined : [];
         }
     }
     else {
-        return [];
+        return returnNull ? undefined : [];
     }
 }
 exports.fetchPlayfabFile = fetchPlayfabFile;

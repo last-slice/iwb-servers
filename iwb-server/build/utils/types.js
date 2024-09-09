@@ -185,6 +185,8 @@ var COMPONENT_TYPES;
     COMPONENT_TYPES["PLAYLIST_COMPONENT"] = "Playlist";
     COMPONENT_TYPES["PATH_COMPONENT"] = "Path";
     COMPONENT_TYPES["VLM_COMPONENT"] = "VLM";
+    COMPONENT_TYPES["MULTIPLAYER_COMPONENT"] = "Multiplayer";
+    COMPONENT_TYPES["LEADERBOARD_COMPONENT"] = "Leaderboard";
 })(COMPONENT_TYPES || (exports.COMPONENT_TYPES = COMPONENT_TYPES = {}));
 var COLLISION_LAYERS;
 (function (COLLISION_LAYERS) {
@@ -318,6 +320,7 @@ var Triggers;
     Triggers["ON_LEVEL_COMPLETE"] = "on_level_complete";
     Triggers["ON_LEVEL_END"] = "on_level_end";
     Triggers["ON_JOIN_LOBBY"] = "on_join_lobby";
+    Triggers["ON_CLOCK_TICK"] = "on_scene_tick";
 })(Triggers || (exports.Triggers = Triggers = {}));
 var TriggerConditionOperation;
 (function (TriggerConditionOperation) {

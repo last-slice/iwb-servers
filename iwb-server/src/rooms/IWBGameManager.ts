@@ -3,7 +3,7 @@ import { GameComponent, TeamComponent } from "../Objects/Game"
 import { Player } from "../Objects/Player"
 import { Scene } from "../Objects/Scene"
 import { getRandomIntInclusive } from "../utils/functions"
-import { pushPlayfabEvent, PLAYFAB_DATA_ACCOUNT } from "../utils/Playfab"
+import { pushPlayfabEvent, PLAYFAB_DATA_ACCOUNT, abortFileUploads, finalizeUploadFiles, initializeUploadPlayerFiles, uploadPlayerFiles } from "../utils/Playfab"
 import { COMPONENT_TYPES, PLAYER_GAME_STATUSES, SERVER_MESSAGE_TYPES } from "../utils/types"
 import { IWBRoom } from "./IWBRoom"
 
@@ -13,6 +13,7 @@ export class GameManager {
     aid:string
     room:IWBRoom
 
+    debounceTimer:any
     countdownTimer:any
     countdownInterval:any
     countdownBase:number = 10
@@ -20,8 +21,9 @@ export class GameManager {
 
     gameTimeBase:number = 60
     gameResetTimeBase:number = 12
-
+    
     haveMinPlayers:boolean = false
+    debounce = false
 
     constructor(scene:Scene, aid:string){
         this.scene = scene
@@ -32,6 +34,58 @@ export class GameManager {
     garbageCollect(){
         console.log('garbage collecting game manager')
         this.clearCountdown()
+        // this.backupGameData()
+    }
+
+    async backupGameData(){
+        if(this.debounce){
+            this.debounceTimer = setTimeout(() => {
+                clearTimeout(this.debounceTimer)
+                this.backupGameData()
+            }, 1000);
+        }else{
+            let filename:string = this.room.state.world + "-" + this.aid + "-data.json"
+            try{
+                let data = this.scene[COMPONENT_TYPES.GAME_COMPONENT].get(this.aid)
+                console.log('saving game file for game ', filename, this.aid, data.gameData)
+
+                let initres = await initializeUploadPlayerFiles(this.room.state.realmToken,{
+                    Entity: {Id: this.room.state.realmId, Type: this.room.state.realmTokenType},
+                    FileNames:[filename]
+                })
+
+                console.log('init res is', initres)
+        
+                let uploadres = await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(data.gameData))
+
+                console.log('upload res is', uploadres)
+
+                if(!uploadres || uploadres === undefined){
+                    throw new Error("error uploading game file")
+                }
+        
+                let finalres = await finalizeUploadFiles(this.room.state.realmToken,
+                    {
+                        Entity: {Id: this.room.state.realmId, Type: this.room.state.realmTokenType},
+                        FileNames:[filename],
+                        ProfileVersion:initres.ProfileVersion,
+                })
+
+                console.log('final res is', finalres)
+                if(!finalres || finalres === undefined){
+                    throw new Error("error finalizaing game file")
+                }
+
+               
+            }
+            catch(e:any){
+                console.log('saving game file error', e.message)
+                await abortFileUploads(this.room.state.realmToken,{
+                    Entity: {Id: this.room.state.realmId, Type: this.room.state.realmTokenType},
+                    FileNames:[filename]
+                  })
+            }
+        }
     }
 
     removePlayer(player:Player){

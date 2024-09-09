@@ -39,6 +39,7 @@ import { createPlaylistComponent, editPlaylistComponent } from "../../Objects/Pl
 import { createAvatarShapeComponent, editAvatarShapeComponent } from "../../Objects/AvatarShape";
 import { createPathComponent, editPathComponent } from "../../Objects/Paths";
 import { createVLMComponent, editVLMComponent } from "../../Objects/VLM";
+import { createLeaderboardComponent, editLeaderboardComponent } from "../../Objects/Leaderboard";
 
 
 export let updateComponentFunctions:any = {
@@ -77,6 +78,7 @@ export let updateComponentFunctions:any = {
     [COMPONENT_TYPES.AUDIO_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editAudioComponent(info, scene)}, 
     [COMPONENT_TYPES.VLM_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editVLMComponent(info, scene)}, 
     [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editGameItemComponent(info, scene)}, 
+    [COMPONENT_TYPES.LEADERBOARD_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editLeaderboardComponent(info, scene)}, 
 }
 
 let createComponentFunctions:any = {
@@ -109,6 +111,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.AUDIO_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createAudioComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.VLM_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createVLMComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createGameItemComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.LEADERBOARD_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createLeaderboardComponent(scene, aid, info)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){

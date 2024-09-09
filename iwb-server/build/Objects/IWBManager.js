@@ -48,7 +48,8 @@ class IWBManager {
             firstTime: true,
             nots: true,
             confirms: true,
-            music: false
+            music: false,
+            loadRadius: 10
         };
         this.getServerConfigurations(true);
         this.backupInterval = setInterval(async () => {

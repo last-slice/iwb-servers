@@ -5,7 +5,7 @@ import { createNewItem, addItemComponents } from "../rooms/messaging/ItemHandler
 import { COMPONENT_TYPES, CATALOG_IDS, ACTIONS, PLAYER_GAME_STATUSES, SERVER_MESSAGE_TYPES } from "../utils/types"
 import { createActionComponent } from "./Actions"
 import { createCounterComponent } from "./Counter"
-import { GameComponent } from "./Game"
+import { GameComponent, GameVariableComponent, setInitialPlayerData } from "./Game"
 import { createGameItemComponent } from "./GameItem"
 import { Player } from "./Player"
 import { Scene } from "./Scene"
@@ -15,6 +15,7 @@ import { LevelComponent } from "./Level"
 export async function createSoloEntities(room:IWBRoom, client:Client, scene:Scene, player:Player, aid:string, gameInfo:any){
     await createSoloStartLevelEntity(room, client, scene, player, aid, gameInfo)
     await createSoloCurrentLevelEntity(room, client, scene, player, aid, gameInfo)
+    await addPlayerVariableItem(room, scene, client, player, aid, gameInfo, {id:"total time", value:0, save:true})
 }
 
 async function createSoloStartLevelEntity(room:IWBRoom, client:Client, scene:Scene, player:Player, aid:string, gameInfo:GameComponent){
@@ -77,8 +78,17 @@ export function startSoloGame(client:Client, player:Player, scene:Scene, info:an
             canStartLevel = true
             info.canStart = true
             info.level = aid
+            
+            if(!gameInfo.gameData.hasOwnProperty(player.address)){
+                console.log('player doent have game data, has never played before')
+                setInitialPlayerData(gameInfo, player)
+            }
 
-            player.startGame(scene.id, gameInfo, PLAYER_GAME_STATUSES.PLAYING, aid)
+            gameInfo.gameData[player.address].lastPlayed = Math.floor(Date.now()/1000)
+            player.gameStatus = PLAYER_GAME_STATUSES.PLAYING
+            player.gameId = gameInfo.aid
+
+            // player.startGame(scene.id, gameInfo, PLAYER_GAME_STATUSES.PLAYING, aid)
             client.send(SERVER_MESSAGE_TYPES.START_GAME, info)
         }
     })
@@ -89,28 +99,29 @@ export function startSoloGame(client:Client, player:Player, scene:Scene, info:an
     }
 }
 
-export function addPlayerVariableItem(room:IWBRoom, scene:Scene, client:Client, player:Player, gameItem:GameComponent, variable:any){
-    gameItem.pvariables.set(variable.id, parseFloat(variable.value))
-    // let emptyCatalogItem = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
-    // if(emptyCatalogItem){
-    //     emptyCatalogItem.n = "Player Var - " + variable.id
-    //     let item:any = {
-    //         aid:generateId(5),
-    //         sceneId:scene.id,
-    //         id:CATALOG_IDS.EMPTY_ENTITY,
-    //         position:{x:0, y:0, z:0},
-    //         rotation:{x:0, y:0, z:0},
-    //         scale:{x:0, y:0, z:0},
-    //         parent:1
-    //     }
+export async function addPlayerVariableItem(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, gameItem:GameComponent, variable:any){
+    gameItem.pvariables.set(variable.id, new GameVariableComponent(variable))
 
-    //     emptyCatalogItem.components = {
-    //         Counters: {
-    //             defaultValue: parseFloat(variable.value),
-    //         }
-    //     }
+    let parentTransform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(aid)
 
-    //     createNewItem(room, client, scene, item, emptyCatalogItem)
-    //     addItemComponents(room, client, scene, player, item, emptyCatalogItem)
-    // }
+    let newEntityPosition = new Vector3({x:parentTransform.p.x, y:parentTransform.p.y + (gameItem.pvariables.size * 4.5), z:parentTransform.p.z})
+
+    let newEntity = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
+    let newEntityAid = generateId(6)
+
+    newEntity.n = variable.id + "-PlayerVariable"
+    newEntity.aid = newEntityAid
+    newEntity.pending = false
+    newEntity.ugc = false
+    newEntity.position = newEntityPosition
+    newEntity.rotation = new Quaternion({x:0,y:0,z:0})
+    newEntity.scale = new Vector3({x:1,y:1,z:1})
+
+    await createNewItem(room, client, scene, newEntity, newEntity) 
+    await addItemComponents(room, client, scene, player, newEntity, newEntity)
+
+    await createGameItemComponent(scene, newEntityAid, {type:1})
+    await createCounterComponent(scene, newEntityAid, {
+        defaultValue:variable.value
+    })
 }

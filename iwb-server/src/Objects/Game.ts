@@ -18,6 +18,7 @@ import { editNameComponent } from "./Names";
 import { itemManager } from "../app.config";
 import { addItemComponents, createNewItem } from "../rooms/messaging/ItemHandler";
 import { addPlayerVariableItem, createSoloEntities, startSoloGame } from "./SoloGame";
+import { initializeUploadPlayerFiles, uploadPlayerFiles, finalizeUploadFiles, abortFileUploads, fetchPlayfabFile, fetchUserMetaData } from "../utils/Playfab";
 
 let noBackup:any[] = [
     "gameCountdown",
@@ -38,6 +39,20 @@ export class TeamComponent extends Schema {
     @type(Vector3) sc:Vector3 = new Vector3({x:0, y:0, z:0})
     @type(["string"]) mates:ArraySchema<string> = new ArraySchema()
 }
+
+export class GameVariableComponent extends Schema {
+    @type("number") value:number = 0 
+    @type("boolean") save:boolean = false
+    
+    constructor(data?:any){
+        super()
+        if(data){
+            this.value = data.value
+            this.save = data.save
+        }
+    }
+}
+
 
 export class GameComponent extends Schema{
     //configurations
@@ -65,7 +80,7 @@ export class GameComponent extends Schema{
     @type("number") minTeams:number
     @type("boolean") playerTimers:boolean
     @type(["string"]) variables:ArraySchema<string> = new ArraySchema()
-    @type({map:"number"}) pvariables:MapSchema<number> = new MapSchema()
+    @type({map:GameVariableComponent}) pvariables:MapSchema<GameVariableComponent> = new MapSchema()
     @type({map: TeamComponent}) teams:MapSchema<TeamComponent>
 
 
@@ -80,8 +95,9 @@ export class GameComponent extends Schema{
     @type("string") winner:string
     @type("string") winnerId:string
 
-    @type({map:"string"}) leaderboard:MapSchema<number>
     gameManager: GameManager
+    gameData:any = {}
+    
 }
 
 export function createGameComponent(room:IWBRoom, scene:Scene, aid:string, data?:any, fromScene?:boolean){
@@ -92,7 +108,7 @@ export function createGameComponent(room:IWBRoom, scene:Scene, aid:string, data?
         if(key === "teams"){
             component.teams = new MapSchema()
             for(let id in data[key]){
-                // console.log('create game component team', data[key])//
+                // console.log('create game component team', data[key])
                 let team = data[key][id]
                 let teamComponent = new TeamComponent()
                 teamComponent.id = id
@@ -108,8 +124,10 @@ export function createGameComponent(room:IWBRoom, scene:Scene, aid:string, data?
             component[key] = new Vector3(data[key])
         }
         else if(key === "pvariables"){
+            console.log('pvariables are', data[key])
             for(let id in data[key]){
-                component.pvariables.set(id, data[key][id])
+                console.log("variable is", data[key][id])
+                component.pvariables.set(id, new GameVariableComponent(data[key][id]))
             }
         }
         else if(noBackup.includes(key)){}
@@ -121,10 +139,75 @@ export function createGameComponent(room:IWBRoom, scene:Scene, aid:string, data?
     scene[COMPONENT_TYPES.GAME_COMPONENT].set(aid, component)
     component.gameManager = new GameManager(scene, aid)
 
+    // if(fromScene){
+    //     createGameFile(room, aid)
+    // }else{
+    //     loadGameFile(room, aid, component)
+    // }
+
+    console.log('game data is', component.gameData)
+
     // editParentingComponent()
     //do we add children entities for the game variables and track them locally as well?
     // ie, add state & counter to represent game state and countdown, then scene can listen for these changes
     //could someone hack these and change the state of the game elsewhere in the scene? we would have to prevent this
+}
+
+async function createGameFile(room:IWBRoom, aid:string){
+    let filename:string = room.state.world + "-" + aid + "-data.json"
+    try{
+        console.log('creating game file for game ', aid)
+        let initres = await initializeUploadPlayerFiles(room.state.realmToken,{
+            Entity: {Id: room.state.realmId, Type: room.state.realmTokenType},
+            FileNames:[filename]
+        })
+
+        let uploadres = await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify({}))
+        if(!uploadres || uploadres === undefined){
+            throw new Error("error uploading game file")
+        }
+
+        let finalres = await finalizeUploadFiles(room.state.realmToken,
+            {
+                Entity: {Id: room.state.realmId, Type: room.state.realmTokenType},
+                FileNames:[filename],
+                ProfileVersion:initres.ProfileVersion,
+        })
+
+        if(!finalres || finalres === undefined){
+            throw new Error("error finalizaing game file")
+        }
+    }
+    catch(e:any){
+        console.log('error creating game file on playfab', e.message)
+        await abortFileUploads(room.state.realmToken,{
+            Entity: {Id: room.state.realmId, Type: room.state.realmTokenType},
+            FileNames:[filename]
+          })
+    }
+}
+
+async function loadGameFile(room:IWBRoom, aid:string, component:GameComponent){
+  try{
+    let metadata = await fetchUserMetaData({
+        EntityToken:{
+            Entity:{
+                Type:room.state.realmTokenType,
+                Id:room.state.realmId
+            },
+            EntityToken:room.state.realmToken
+        }
+    })
+    let data = await fetchPlayfabFile(metadata, room.state.world + "-" + aid + "-data.json", true)
+    console.log('saved game data is', data)
+    if(data || data !== undefined){
+      console.log('we have game data to store in cache')
+      component.gameData = data
+    }
+  }
+  catch(e){
+    console.log('error getting load game variables', e)
+  }
 }
 
 export function deleteGameComponent(room:IWBRoom, scene:Scene, player:Player, aid:string){
@@ -203,6 +286,13 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
                 }
                 break;
 
+            case 'pvariable-save':
+                console.log('updating player variable save value')
+                let variable = itemInfo.pvariables.get(info.variable)
+                console.log('variable is',variable.toJSON())
+                variable.save = info.value
+                break;
+
             case 'edit':
                 for(let key in info){
                     if(itemInfo.hasOwnProperty(key)){
@@ -219,7 +309,7 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
                         }
                         else if(key === "pvariables"){
                             if(!isNaN(parseFloat(info[key].value))){
-                                addPlayerVariableItem(room, scene, client, player, itemInfo, info[key])
+                                addPlayerVariableItem(room, scene, client, player, info.aid, itemInfo, info[key])
                             }else{
                                 console.log('player variable not a number')
                             }
@@ -502,7 +592,7 @@ export function attemptGameEnd(room:IWBRoom, client:any, info:any){
     let player = room.state.players.get(client.userData.userId)
     // let scene = room.state.scenes.get(info.sceneId)//
     if(player){
-        player.endGame()
+        player.endGame(room)
         if(player.gameData){
             client.send(SERVER_MESSAGE_TYPES.END_GAME, {sceneId:player.gameData.sceneId, gameId:player.gameData.aid})
         }
@@ -530,7 +620,7 @@ export function removeStalePlayer(room:IWBRoom, player:Player){
     let gaming = scene[COMPONENT_TYPES.GAME_COMPONENT].get(player.gameData.aid)
     if(!gaming){
         return
-    }
+    }//
 
     gaming.gameManager.removeStalePlayer(player)
 }
@@ -595,10 +685,106 @@ async function createMultiplayerEntities(room:IWBRoom, client:Client, scene:Scen
 }
 
 function canStartGame(gameInfo:any, player:Player){
-    let playerVariables = player.gameVariables.get(gameInfo.aid)
-    if(!playerVariables){
+    let playerData = gameInfo.gameData[player.address]
+    if(!playerData){
         return true
-    }   
+    }
 
+    //check game restrictions
+    if(gameInfo.premiumAccessType >= 0){
+        switch(gameInfo.premiumAccessType){
+            case 0:
+                break;
+
+            case 1:
+                break;
+
+            case 2:
+                console.log('checking last play time')
+                // if(!playerGameVariables.hasOwnProperty("lastPlayed")){
+                //     return true
+                // }
+
+                const currentTime = new Date();
+                console.log('current time is', currentTime.getTime() / 1000)
+                const timeDifference = (currentTime.getTime() / 1000) - playerData.lastPlayed;
+                const twentyFourHoursInSeconds = 24 * 60 * 60;
+
+                console.log('time difference is', timeDifference)
+
+                if(timeDifference >= twentyFourHoursInSeconds){
+                    console.log('its been a day, they can playe')
+                    return true
+                }else{
+                    console.log('has not been a day, cant player')
+                    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"Please wait 24 hours before attempting game play"})
+                    return false
+                }
+
+            case 3:
+                break;
+
+            case 4:
+                break;
+
+            case 5:
+                break;
+
+            case 5:
+                break;
+        }
+    }
+
+    return true
+}
+
+export async function checkGameCache(scene:Scene, aid:string, jsonScene:any){
+    let itemInfo = scene[COMPONENT_TYPES.GAME_COMPONENT].get(aid)
+    if(itemInfo){
+        let itemJSON:any = itemInfo.toJSON()
+        itemJSON.gameData = itemInfo.gameData
+        jsonScene[COMPONENT_TYPES.GAME_COMPONENT][aid] = itemJSON
+    }
+    return jsonScene
+}
+
+export function setInitialPlayerData(gameInfo:GameComponent, player:Player){
+    gameInfo.gameData[player.address] = {
+        name: player.name
+    }
+
+    gameInfo.pvariables.forEach((data:GameVariableComponent, variable:string)=>{
+        gameInfo.gameData[player.address][variable] = data.value
+    })
+    console.log('setting inital player game data to', gameInfo.gameData)
+}
+
+export async function updatePlayerGameTime(room:IWBRoom, player:Player){
+    let scene:Scene
+    let gameInfo:GameComponent
+    room.state.scenes.forEach((serverScene:Scene, aid:string)=>{
+        console.log('looping here')
+        if(!scene && !gameInfo){
+            gameInfo = serverScene[COMPONENT_TYPES.GAME_COMPONENT].get(player.gameId)
+            if(gameInfo){
+                scene = serverScene
+            }
+        }
+    })
+
+    console.log('here we are')
     
+    if(gameInfo){
+        gameInfo.gameManager.debounce = true
+        let playerData = gameInfo.gameData[player.address]
+        console.log("player dat is", playerData)
+        if(playerData && playerData.hasOwnProperty("total time")){
+            console.log((Math.floor(Date.now()/1000) - playerData.lastPlayed))
+            playerData['total time'] += (Math.floor(Date.now()/1000) - playerData.lastPlayed)
+        }
+
+        gameInfo.gameManager.debounce = false
+        console.log('player game data is now', gameInfo.gameData)
+    }
+
 }

@@ -9,8 +9,12 @@ import { iwbRewardHandler } from "./messaging/RewardHandler";
 import { addPlayerToWorld, iwbPlayerHandler, removePlayer, savePlayerCache } from "./messaging/PlayerHandler";
 import { itemManager, iwbManager } from "../app.config";
 import { playerLogin, PLAYFAB_DATA_ACCOUNT, pushPlayfabEvent, updatePlayerDisplayName, updatePlayerInternalData } from "../utils/Playfab";
+import { refreshLeaderboards } from "../Objects/Leaderboard";
 
 export class IWBRoom extends Room<IWBRoomState> {
+
+    public leaderboardRefreshInterval:any
+    public leaderboardRefreshTime:number = 10
 
     async onAuth(client: Client, options: any, req: any) {
         try{
@@ -34,6 +38,12 @@ export class IWBRoom extends Room<IWBRoomState> {
             this.state.cv = worldConfig.cv
             this.state.owner = worldConfig.owner
         }
+
+        this.clock.start()
+        this.leaderboardRefreshInterval = this.clock.setInterval(() => {
+            console.log('checking world leaderboards')
+            refreshLeaderboards(this)
+        }, 1000 * this.leaderboardRefreshTime);
     }
  
     onJoin(client: Client, options: any) {
@@ -76,6 +86,8 @@ export class IWBRoom extends Room<IWBRoomState> {
 
     async onDispose() {
         console.log("room", this.roomId, "disposing...");
+        this.clock.clear()
+
        if(iwbManager.rooms.find(($:any)=> $.roomId === this.roomId)){
         console.log('room is online, clean up', this.state.world)
         if(!this.state.gcWorld){

@@ -26,7 +26,7 @@ import { MeshColliderComponent } from "./MeshColliders";
 import { TextureComponent } from "./Textures";
 import { AvatarShapeComponent, createAvatarShapeComponent } from "./AvatarShape";
 import { UITextComponent, createUITextComponent } from "./UIText";
-import { GameComponent, createGameComponent } from "./Game";
+import { GameComponent, checkGameCache, createGameComponent } from "./Game";
 import { UIImageComponent, createUIImageComponent } from "./UIImage";
 import { BillboardComponent, createBillboardComponent } from "./Billboard";
 import { LevelComponent, createLevelComponent } from "./Level";
@@ -38,6 +38,7 @@ import { createPlaylistComponent, PlaylistComponent } from "./Playlist";
 import { createPathComponent, PathComponent } from "./Paths";
 import { createVLMComponent, VLMComponent } from "./VLM";
 import { MultiplayerComponent } from "./Multiplayer";
+import { createLeaderboardComponent, LeaderboardComponent } from "./Leaderboard";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -87,12 +88,13 @@ export class Scene extends Schema {
     @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_COMPONENT]:MapSchema<SoundComponent> = new MapSchema<SoundComponent>()
     @type({map:BillboardComponent}) [COMPONENT_TYPES.BILLBOARD_COMPONENT]:MapSchema<BillboardComponent> = new MapSchema<BillboardComponent>()
     @type({map:CounterComponent}) [COMPONENT_TYPES.COUNTER_COMPONENT]:MapSchema<CounterComponent> = new MapSchema<CounterComponent>()
-    @type({map:CounterBarComponent}) counterbars:MapSchema<CounterBarComponent> = new MapSchema<CounterBarComponent>()
+    // @type({map:CounterBarComponent}) counterbars:MapSchema<CounterBarComponent> = new MapSchema<CounterBarComponent>()
     @type({map:DialogComponent}) [COMPONENT_TYPES.DIALOG_COMPONENT]:MapSchema<DialogComponent> = new MapSchema<DialogComponent>()
     @type({map:GameComponent}) [COMPONENT_TYPES.GAME_COMPONENT]:MapSchema<GameComponent> = new MapSchema<GameComponent>()
     @type({map:GameItemComponent}) [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:MapSchema<GameItemComponent> = new MapSchema<GameItemComponent>()
     @type({map:GltfComponent}) [COMPONENT_TYPES.GLTF_COMPONENT]:MapSchema<GltfComponent> = new MapSchema<GltfComponent>()
     @type({map:IWBComponent}) [COMPONENT_TYPES.IWB_COMPONENT]:MapSchema<IWBComponent> = new MapSchema<IWBComponent>()
+    @type({map:LeaderboardComponent}) [COMPONENT_TYPES.LEADERBOARD_COMPONENT]:MapSchema<LeaderboardComponent> = new MapSchema<LeaderboardComponent>()
     @type({map:LevelComponent}) [COMPONENT_TYPES.LEVEL_COMPONENT]:MapSchema<LevelComponent> = new MapSchema<LevelComponent>()
     @type({map:LiveShowComponent}) [COMPONENT_TYPES.LIVE_COMPONENT]:MapSchema<LiveShowComponent> = new MapSchema<LiveShowComponent>()
     @type({map:MaterialComponent}) [COMPONENT_TYPES.MATERIAL_COMPONENT]:MapSchema<MaterialComponent> = new MapSchema<MaterialComponent>()
@@ -199,6 +201,12 @@ export class Scene extends Schema {
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
+                    case COMPONENT_TYPES.LEADERBOARD_COMPONENT:
+                        for (const aid in data[component]) {
+                            createLeaderboardComponent(this, aid,  data[component][aid])
+                        }
+                        break;
+
                     case COMPONENT_TYPES.VLM_COMPONENT:
                         for (const aid in data[component]) {
                             createVLMComponent(this, aid,  data[component][aid])
@@ -573,7 +581,9 @@ export async function saveRealm(room:IWBRoom){
     }
 
     if(fileNames.length > 0){
+        console.log('we have files to back up')
         let world = iwbManager.worlds.find((w)=>w.ens === room.state.world)
+        // console.log('world to save is', world)
         if(world){
             world.builds = scenes.length
             world.updated = Math.floor(Date.now()/1000)
@@ -583,6 +593,8 @@ export async function saveRealm(room:IWBRoom){
             }
             iwbManager.worldsModified = true
         }
+
+        // console.log('files are ', fileNames, data)
 
         iwbManager.addWorldPendingSave(room.state.world, room.roomId, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
         // iwbManager.backupFiles(room.state.world, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
@@ -613,6 +625,7 @@ export async function checkAssetCacheStates(scene:Scene, jsonScene:any){
     scene[COMPONENT_TYPES.IWB_COMPONENT].forEach(async (iwbComponent:IWBComponent, aid:string)=>{
         jsonScene = await checkIWBCache(scene, aid, jsonScene) 
         jsonScene = await checkRewardCache(scene, aid, jsonScene)
+        jsonScene = await checkGameCache(scene, aid, jsonScene)
     })
     return jsonScene
 }

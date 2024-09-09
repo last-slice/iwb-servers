@@ -93,8 +93,8 @@ __decorate([
 class Player extends schema_1.Schema {
     constructor(room, client) {
         super();
-        this.gameStatus = types_1.PLAYER_GAME_STATUSES.NONE;
         this.gameId = "";
+        this.gameStatus = types_1.PLAYER_GAME_STATUSES.NONE;
         this.world = "main";
         this.playtime = 0;
         this.modified = false;
@@ -114,7 +114,7 @@ class Player extends schema_1.Schema {
         this.uploads = [];
         this.landsAvailable = [];
         this.worldsAvailable = [];
-        this.gameVariables = new Map();
+        this.gameVariables = {};
         this.room = room;
         this.client = client;
         this.userId = client.userData.userId;
@@ -126,7 +126,7 @@ class Player extends schema_1.Schema {
         this.mode = types_1.SCENE_MODES.PLAYMODE;
         this.startTime = Math.floor(Date.now() / 1000);
         this.setSettings(this.playFabData.InfoResultPayload.UserData);
-        this.loadGameVariables();
+        // this.loadGameVariables()
     }
     addSelectedAsset(info) {
         console.log('player selected asset', info);
@@ -172,34 +172,31 @@ class Player extends schema_1.Schema {
         await this.saveGameData();
     }
     async saveGameData() {
-        let gameData = [];
-        try {
-            this.gameVariables.forEach((gameInfo) => {
-                gameData.push(gameInfo);
-            });
-            console.log("game data is", gameData);
-            if (gameData.length > 0) {
-                let initres = await (0, Playfab_1.initializeUploadPlayerFiles)(this.playFabData.EntityToken.EntityToken, {
-                    Entity: { Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type },
-                    FileNames: ['gamedata.json']
-                });
-                await (0, Playfab_1.uploadPlayerFiles)(initres.UploadDetails[0].UploadUrl, JSON.stringify(gameData));
-                await (0, Playfab_1.finalizeUploadFiles)(this.playFabData.EntityToken.EntityToken, {
-                    Entity: { Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type },
-                    FileNames: ['gamedata.json'],
-                    ProfileVersion: initres.ProfileVersion,
-                });
-            }
-        }
-        catch (e) {
-            console.log('backup file error', e.message);
-            if (gameData.length > 0) {
-                await (0, Playfab_1.abortFileUploads)(this.playFabData.EntityToken.EntityToken, {
-                    Entity: { Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type },
-                    FileNames: ['gamedata.json'],
-                });
-            }
-        }
+        //   try{
+        //     // if(this.gameVariables.length > 0){
+        //       console.log('player game variables exists', this.gameVariables)
+        //       let initres = await initializeUploadPlayerFiles(this.playFabData.EntityToken.EntityToken,{
+        //                   Entity: {Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type},
+        //                   FileNames:['gamedata.json']
+        //                 })
+        //       await uploadPlayerFiles(initres.UploadDetails[0].UploadUrl, JSON.stringify(this.gameVariables))
+        //       await finalizeUploadFiles(this.playFabData.EntityToken.EntityToken,
+        //           {
+        //               Entity: {Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type},
+        //               FileNames:['gamedata.json'],
+        //               ProfileVersion:initres.ProfileVersion,
+        //       })
+        //     // }
+        //   }
+        //   catch(e:any){
+        //       console.log('backup file error', e.message)
+        //       // if(this.gameVariables.length > 0){
+        //         await abortFileUploads(this.playFabData.EntityToken.EntityToken,{
+        //           Entity: {Id: this.playFabData.EntityToken.Entity.Id, Type: this.playFabData.EntityToken.Entity.Type},
+        //           FileNames:['gamedata.json'],
+        //         })
+        //       // }
+        //   }
     }
     async recordPlayerTime() {
         let now = Math.floor(Date.now() / 1000);
@@ -303,13 +300,22 @@ class Player extends schema_1.Schema {
     startGame(sceneId, game, status, level) {
         this.gameStatus = status;
         // this.playingGame = true
-        this.gameData = { ...game, ...{ level: level }, ...{ sceneId: sceneId } };
-        this.gameId = sceneId;
+        // this.gameData = {...game, ...{level:level}, ...{sceneId:sceneId}}
+        this.gameId = game.aid;
+        // if(!this.gameVariables.hasOwnProperty(game.aid)){
+        //   this.gameVariables[game.aid] = {
+        //     lastPlayed:Math.floor(Date.now()/1000)
+        //   }
+        // }else{
+        //   this.gameVariables[game.aid].lastPlayed = Math.floor(Date.now()/1000)
+        // }
+        console.log('player game variables are ', this.gameVariables);
     }
     endGame(room) {
         this.gameStatus = types_1.PLAYER_GAME_STATUSES.NONE;
         // this.playingGame = false
         // console.log('player game data', this.gameData)
+        (0, Game_1.updatePlayerGameTime)(room, this);
         if (this.gameData.type === "MULTIPLAYER") {
             (0, Game_1.removeStalePlayer)(room, this);
         }
@@ -332,20 +338,6 @@ class Player extends schema_1.Schema {
         }
         return false;
     }
-    async loadGameVariables() {
-        try {
-            let metadata = await (0, Playfab_1.fetchUserMetaData)(this.playFabData);
-            let gamedata = await (0, Playfab_1.fetchPlayfabFile)(metadata, "gamedata.json");
-            if (gamedata && gamedata.length > 0) {
-                gamedata.forEach((game) => {
-                    this.gameData.set(game.id, game);
-                });
-            }
-        }
-        catch (e) {
-            console.log('error getting load game variables', e);
-        }
-    }
 }
 exports.Player = Player;
 __decorate([
@@ -358,11 +350,11 @@ __decorate([
     (0, schema_1.type)("string")
 ], Player.prototype, "name", void 0);
 __decorate([
-    (0, schema_1.type)(SelectedAsset)
-], Player.prototype, "selectedAsset", void 0);
+    (0, schema_1.type)("string")
+], Player.prototype, "gameId", void 0);
 __decorate([
     (0, schema_1.type)("string")
 ], Player.prototype, "gameStatus", void 0);
 __decorate([
-    (0, schema_1.type)("string")
-], Player.prototype, "gameId", void 0);
+    (0, schema_1.type)(SelectedAsset)
+], Player.prototype, "selectedAsset", void 0);

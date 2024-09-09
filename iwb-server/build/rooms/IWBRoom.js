@@ -9,7 +9,12 @@ const types_1 = require("../utils/types");
 const PlayerHandler_1 = require("./messaging/PlayerHandler");
 const app_config_1 = require("../app.config");
 const Playfab_1 = require("../utils/Playfab");
+const Leaderboard_1 = require("../Objects/Leaderboard");
 class IWBRoom extends core_1.Room {
+    constructor() {
+        super(...arguments);
+        this.leaderboardRefreshTime = 60;
+    }
     async onAuth(client, options, req) {
         try {
             return await this.doLogin(client, options, req);
@@ -30,6 +35,11 @@ class IWBRoom extends core_1.Room {
             this.state.cv = worldConfig.cv;
             this.state.owner = worldConfig.owner;
         }
+        this.clock.start();
+        this.leaderboardRefreshInterval = this.clock.setInterval(() => {
+            console.log('checking world leaderboards');
+            (0, Leaderboard_1.refreshLeaderboards)(this);
+        }, 1000 * this.leaderboardRefreshTime);
     }
     onJoin(client, options) {
         try {
@@ -63,6 +73,7 @@ class IWBRoom extends core_1.Room {
     }
     async onDispose() {
         console.log("room", this.roomId, "disposing...");
+        this.clock.clear();
         if (app_config_1.iwbManager.rooms.find(($) => $.roomId === this.roomId)) {
             console.log('room is online, clean up', this.state.world);
             if (!this.state.gcWorld) {

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.rotateZ = exports.rotateX = exports.rotateY = exports.getStartOfDayUTC = exports.deepCopyMap = exports.isJSON = exports.distanceObjects = exports.distance = exports.generateRandomId = exports.getRandomIntWithDecimals = exports.getRandomIntInclusive = exports.initDeployServerDeploy = exports.initIWBDeploy = void 0;
+exports.moveArrayItem = exports.rotateZ = exports.rotateX = exports.rotateY = exports.getStartOfDayUTC = exports.deepCopyMap = exports.isJSON = exports.distanceObjects = exports.distance = exports.generateRandomId = exports.getRandomIntWithDecimals = exports.getRandomIntInclusive = exports.initDeployServerDeploy = exports.initIWBDeploy = void 0;
 const { exec } = require('child_process');
 const axios_1 = __importDefault(require("axios"));
 const Transform_1 = require("../Objects/Transform");
@@ -182,3 +182,13 @@ function rotateZ(vector, angle) {
         z: vector.z });
 }
 exports.rotateZ = rotateZ;
+function moveArrayItem(arr, fromIndex, toIndex) {
+    return arr.map((item, index) => {
+        if (index === toIndex)
+            return arr[fromIndex];
+        if (index === fromIndex)
+            return arr[toIndex];
+        return item;
+    });
+}
+exports.moveArrayItem = moveArrayItem;
