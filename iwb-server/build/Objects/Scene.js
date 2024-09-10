@@ -5,9 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkAssetCacheStates = exports.saveRealmAssets = exports.getRealmData = exports.saveRealm = exports.loadRealmScenes = exports.initServerAssets = exports.initServerScenes = exports.Scene = exports.TempScene = void 0;
+exports.checkAssetCacheStates = exports.saveRealmAssets = exports.getRealmData = exports.saveRealm = exports.loadRealmScenes = exports.initServerAssets = exports.initServerScenes = exports.Scene = exports.SceneMetaDataComponent = exports.TempScene = void 0;
 const schema_1 = require("@colyseus/schema");
 const types_1 = require("../utils/types");
 const Actions_1 = require("./Actions");
@@ -45,7 +45,6 @@ const GameItem_1 = require("./GameItem");
 const Dialog_1 = require("./Dialog");
 const Playlist_1 = require("./Playlist");
 const Paths_1 = require("./Paths");
-const VLM_1 = require("./VLM");
 const Multiplayer_1 = require("./Multiplayer");
 const Leaderboard_1 = require("./Leaderboard");
 class TempScene extends schema_1.Schema {
@@ -70,10 +69,41 @@ __decorate([
 __decorate([
     (0, schema_1.type)(['string'])
 ], TempScene.prototype, "pcls", void 0);
+class SceneMetaDataComponent extends schema_1.Schema {
+    constructor() {
+        super(...arguments);
+        this.n = "";
+        this.d = "";
+        this.o = "";
+        this.ona = "";
+        this.cat = "";
+        this.im = "";
+    }
+}
+exports.SceneMetaDataComponent = SceneMetaDataComponent;
+__decorate([
+    (0, schema_1.type)("string")
+], SceneMetaDataComponent.prototype, "n", void 0);
+__decorate([
+    (0, schema_1.type)("string")
+], SceneMetaDataComponent.prototype, "d", void 0);
+__decorate([
+    (0, schema_1.type)("string")
+], SceneMetaDataComponent.prototype, "o", void 0);
+__decorate([
+    (0, schema_1.type)("string")
+], SceneMetaDataComponent.prototype, "ona", void 0);
+__decorate([
+    (0, schema_1.type)("string")
+], SceneMetaDataComponent.prototype, "cat", void 0);
+__decorate([
+    (0, schema_1.type)("string")
+], SceneMetaDataComponent.prototype, "im", void 0);
 class Scene extends schema_1.Schema {
-    static { _a = types_1.COMPONENT_TYPES.ACTION_COMPONENT, _b = types_1.COMPONENT_TYPES.ANIMATION_COMPONENT, _c = types_1.COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT, _d = types_1.COMPONENT_TYPES.AUDIO_COMPONENT, _e = types_1.COMPONENT_TYPES.BILLBOARD_COMPONENT, _f = types_1.COMPONENT_TYPES.COUNTER_COMPONENT, _g = types_1.COMPONENT_TYPES.DIALOG_COMPONENT, _h = types_1.COMPONENT_TYPES.GAME_COMPONENT, _j = types_1.COMPONENT_TYPES.GAME_ITEM_COMPONENT, _k = types_1.COMPONENT_TYPES.GLTF_COMPONENT, _l = types_1.COMPONENT_TYPES.IWB_COMPONENT, _m = types_1.COMPONENT_TYPES.LEADERBOARD_COMPONENT, _o = types_1.COMPONENT_TYPES.LEVEL_COMPONENT, _p = types_1.COMPONENT_TYPES.LIVE_COMPONENT, _q = types_1.COMPONENT_TYPES.MATERIAL_COMPONENT, _r = types_1.COMPONENT_TYPES.MESH_COLLIDER_COMPONENT, _s = types_1.COMPONENT_TYPES.MESH_RENDER_COMPONENT, _t = types_1.COMPONENT_TYPES.MULTIPLAYER_COMPONENT, _u = types_1.COMPONENT_TYPES.NAMES_COMPONENT, _v = types_1.COMPONENT_TYPES.NFT_COMPONENT, _w = types_1.COMPONENT_TYPES.PATH_COMPONENT, _x = types_1.COMPONENT_TYPES.PLAYLIST_COMPONENT, _y = types_1.COMPONENT_TYPES.POINTER_COMPONENT, _z = types_1.COMPONENT_TYPES.REWARD_COMPONENT, _0 = types_1.COMPONENT_TYPES.STATE_COMPONENT, _1 = types_1.COMPONENT_TYPES.TEXT_COMPONENT, _2 = types_1.COMPONENT_TYPES.TEXTURE_COMPONENT, _3 = types_1.COMPONENT_TYPES.TRANSFORM_COMPONENT, _4 = types_1.COMPONENT_TYPES.TRIGGER_COMPONENT, _5 = types_1.COMPONENT_TYPES.UI_TEXT_COMPONENT, _6 = types_1.COMPONENT_TYPES.UI_IMAGE_COMPONENT, _7 = types_1.COMPONENT_TYPES.VIDEO_COMPONENT, _8 = types_1.COMPONENT_TYPES.VLM_COMPONENT, _9 = types_1.COMPONENT_TYPES.VISBILITY_COMPONENT, _10 = types_1.COMPONENT_TYPES.PARENTING_COMPONENT; }
+    static { _a = types_1.COMPONENT_TYPES.ACTION_COMPONENT, _b = types_1.COMPONENT_TYPES.ANIMATION_COMPONENT, _c = types_1.COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT, _d = types_1.COMPONENT_TYPES.AUDIO_COMPONENT, _e = types_1.COMPONENT_TYPES.BILLBOARD_COMPONENT, _f = types_1.COMPONENT_TYPES.COUNTER_COMPONENT, _g = types_1.COMPONENT_TYPES.DIALOG_COMPONENT, _h = types_1.COMPONENT_TYPES.GAME_COMPONENT, _j = types_1.COMPONENT_TYPES.GAME_ITEM_COMPONENT, _k = types_1.COMPONENT_TYPES.GLTF_COMPONENT, _l = types_1.COMPONENT_TYPES.IWB_COMPONENT, _m = types_1.COMPONENT_TYPES.LEADERBOARD_COMPONENT, _o = types_1.COMPONENT_TYPES.LEVEL_COMPONENT, _p = types_1.COMPONENT_TYPES.LIVE_COMPONENT, _q = types_1.COMPONENT_TYPES.MATERIAL_COMPONENT, _r = types_1.COMPONENT_TYPES.MESH_COLLIDER_COMPONENT, _s = types_1.COMPONENT_TYPES.MESH_RENDER_COMPONENT, _t = types_1.COMPONENT_TYPES.MULTIPLAYER_COMPONENT, _u = types_1.COMPONENT_TYPES.NAMES_COMPONENT, _v = types_1.COMPONENT_TYPES.NFT_COMPONENT, _w = types_1.COMPONENT_TYPES.PATH_COMPONENT, _x = types_1.COMPONENT_TYPES.PLAYLIST_COMPONENT, _y = types_1.COMPONENT_TYPES.POINTER_COMPONENT, _z = types_1.COMPONENT_TYPES.REWARD_COMPONENT, _0 = types_1.COMPONENT_TYPES.STATE_COMPONENT, _1 = types_1.COMPONENT_TYPES.TEXT_COMPONENT, _2 = types_1.COMPONENT_TYPES.TEXTURE_COMPONENT, _3 = types_1.COMPONENT_TYPES.TRANSFORM_COMPONENT, _4 = types_1.COMPONENT_TYPES.TRIGGER_COMPONENT, _5 = types_1.COMPONENT_TYPES.UI_TEXT_COMPONENT, _6 = types_1.COMPONENT_TYPES.UI_IMAGE_COMPONENT, _7 = types_1.COMPONENT_TYPES.VIDEO_COMPONENT, _8 = types_1.COMPONENT_TYPES.VISBILITY_COMPONENT, _9 = types_1.COMPONENT_TYPES.PARENTING_COMPONENT; }
     constructor(room, data) {
         super(data);
+        // @type("string") im: string
         this.bps = new schema_1.ArraySchema();
         // @type(['string']) rat = new ArraySchema<string>();
         // @type(['string']) rev = new ArraySchema<string>();
@@ -85,6 +115,7 @@ class Scene extends schema_1.Schema {
         this.pc = 0;
         this.direction = 0;
         this.offsets = new schema_1.ArraySchema();
+        this.metadata = new SceneMetaDataComponent();
         this.dv = false;
         this.dpx = false;
         this.lim = true;
@@ -121,14 +152,22 @@ class Scene extends schema_1.Schema {
         this[_5] = new schema_1.MapSchema();
         this[_6] = new schema_1.MapSchema();
         this[_7] = new schema_1.MapSchema();
+        // @type({map:VLMComponent}) [COMPONENT_TYPES.VLM_COMPONENT]:MapSchema<VLMComponent> = new MapSchema<VLMComponent>()
         this[_8] = new schema_1.MapSchema();
-        this[_9] = new schema_1.MapSchema();
-        this[_10] = new schema_1.ArraySchema();
+        this[_9] = new schema_1.ArraySchema();
         this.entities = [];
         if (room) {
             this.roomId = room.roomId;
         }
         if (data) {
+            if (!data.hasOwnProperty("metadata")) {
+                this.metadata.n = data.n;
+                this.metadata.d = data.d;
+                this.metadata.o = data.o;
+                this.metadata.ona = data.ona;
+                this.metadata.cat = data.cat;
+                this.metadata.im = data.im;
+            }
             this.bps = data.bps;
             this.pcls = data.pcls;
             this.pcnt = data.pcls.length;
@@ -141,42 +180,6 @@ class Scene extends schema_1.Schema {
         }
     }
     setComponents(data, room) {
-        // this[COMPONENT_TYPES.IWB_COMPONENT] = new MapSchema<IWBComponent>()
-        // this[COMPONENT_TYPES.NAMES_COMPONENT] = new MapSchema<NameComponent>()
-        // this[COMPONENT_TYPES.VISBILITY_COMPONENT] = new MapSchema<VisibilityComponent>()
-        // this[COMPONENT_TYPES.PARENTING_COMPONENT] = new ArraySchema<ParentingComponent>()
-        // this[COMPONENT_TYPES.TRANSFORM_COMPONENT] = new MapSchema<TransformComponent>()
-        // this[COMPONENT_TYPES.POINTER_COMPONENT] = new MapSchema<PointerComponent>()
-        // this[COMPONENT_TYPES.TEXT_COMPONENT] = new MapSchema<TextShapeComponent>()
-        // this[COMPONENT_TYPES.COUNTER_COMPONENT] = new MapSchema<CounterComponent>()
-        // this[COMPONENT_TYPES.TRIGGER_COMPONENT] = new MapSchema<TriggerComponent>()
-        // this[COMPONENT_TYPES.ACTION_COMPONENT] = new MapSchema<ActionComponent>()
-        // this[COMPONENT_TYPES.GLTF_COMPONENT] = new MapSchema<GltfComponent>()
-        // this[COMPONENT_TYPES.MESH_RENDER_COMPONENT] = new MapSchema<MeshRendererComponent>()
-        // this[COMPONENT_TYPES.MESH_COLLIDER_COMPONENT] = new MapSchema<MeshColliderComponent>()
-        // this[COMPONENT_TYPES.TEXTURE_COMPONENT] = new MapSchema<TextureComponent>()
-        // this[COMPONENT_TYPES.MATERIAL_COMPONENT] = new MapSchema<MaterialComponent>()
-        // this[COMPONENT_TYPES.STATE_COMPONENT] = new MapSchema<StateComponent>()
-        // // this[COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT] = new MapSchema<SoundComponent>()
-        // // this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT] = new MapSchema<SoundComponent>()
-        // this[COMPONENT_TYPES.VIDEO_COMPONENT] = new MapSchema<VideoComponent>()
-        // this[COMPONENT_TYPES.ANIMATION_COMPONENT] = new MapSchema<AnimatorComponent>()
-        // this[COMPONENT_TYPES.NFT_COMPONENT] = new MapSchema<NftShapeComponent>()
-        // this[COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT] = new MapSchema<AvatarShapeComponent>()
-        // this[COMPONENT_TYPES.UI_TEXT_COMPONENT] = new MapSchema<UITextComponent>()
-        // this[COMPONENT_TYPES.UI_IMAGE_COMPONENT] = new MapSchema<UIImageComponent>()
-        // this[COMPONENT_TYPES.GAME_COMPONENT] = new MapSchema<GameComponent>()
-        // this[COMPONENT_TYPES.BILLBOARD_COMPONENT] = new MapSchema<BillboardComponent>()
-        // this[COMPONENT_TYPES.LEVEL_COMPONENT] = new MapSchema<LevelComponent>()
-        // this[COMPONENT_TYPES.LIVE_COMPONENT] = new MapSchema<LiveShowComponent>()
-        // // this[COMPONENT_TYPES.TEAM_COMPONENT] = new MapSchema<TeamComponent>()
-        // this[COMPONENT_TYPES.GAME_ITEM_COMPONENT] = new MapSchema<GameItemComponent>()
-        // this[COMPONENT_TYPES.DIALOG_COMPONENT] = new MapSchema<DialogComponent>()
-        // this[COMPONENT_TYPES.REWARD_COMPONENT] = new MapSchema<RewardComponent>()
-        // this[COMPONENT_TYPES.PLAYLIST_COMPONENT] = new MapSchema<PlaylistComponent>()
-        // this[COMPONENT_TYPES.PATH_COMPONENT] = new MapSchema<PathComponent>()
-        // this[COMPONENT_TYPES.AUDIO_COMPONENT] = new MapSchema<SoundComponent>()
-        // this[COMPONENT_TYPES.VLM_COMPONENT] = new MapSchema<VLMComponent>()
         Object.values(types_1.COMPONENT_TYPES).forEach((component) => {
             if (data[component]) {
                 switch (component) {
@@ -185,11 +188,11 @@ class Scene extends schema_1.Schema {
                             (0, Leaderboard_1.createLeaderboardComponent)(this, aid, data[component][aid]);
                         }
                         break;
-                    case types_1.COMPONENT_TYPES.VLM_COMPONENT:
-                        for (const aid in data[component]) {
-                            (0, VLM_1.createVLMComponent)(this, aid, data[component][aid]);
-                        }
-                        break;
+                    // case COMPONENT_TYPES.VLM_COMPONENT:
+                    //     for (const aid in data[component]) {
+                    //         createVLMComponent(this, aid,  data[component][aid])
+                    //     }
+                    //     break;
                     case types_1.COMPONENT_TYPES.PATH_COMPONENT:
                         for (const aid in data[component]) {
                             (0, Paths_1.createPathComponent)(this, aid, data[component][aid]);
@@ -399,28 +402,10 @@ __decorate([
 ], Scene.prototype, "id", void 0);
 __decorate([
     (0, schema_1.type)("string")
-], Scene.prototype, "n", void 0);
-__decorate([
-    (0, schema_1.type)("string")
-], Scene.prototype, "d", void 0);
-__decorate([
-    (0, schema_1.type)("string")
-], Scene.prototype, "o", void 0);
-__decorate([
-    (0, schema_1.type)("string")
-], Scene.prototype, "ona", void 0);
-__decorate([
-    (0, schema_1.type)("string")
-], Scene.prototype, "cat", void 0);
-__decorate([
-    (0, schema_1.type)("string")
 ], Scene.prototype, "bpcl", void 0);
 __decorate([
     (0, schema_1.type)("string")
 ], Scene.prototype, "w", void 0);
-__decorate([
-    (0, schema_1.type)("string")
-], Scene.prototype, "im", void 0);
 __decorate([
     (0, schema_1.type)(['string'])
 ], Scene.prototype, "bps", void 0);
@@ -454,6 +439,9 @@ __decorate([
 __decorate([
     (0, schema_1.type)(['number'])
 ], Scene.prototype, "offsets", void 0);
+__decorate([
+    (0, schema_1.type)(SceneMetaDataComponent)
+], Scene.prototype, "metadata", void 0);
 __decorate([
     (0, schema_1.type)("boolean")
 ], Scene.prototype, "isdl", void 0);
@@ -569,14 +557,11 @@ __decorate([
     (0, schema_1.type)({ map: Video_1.VideoComponent })
 ], Scene.prototype, _7, void 0);
 __decorate([
-    (0, schema_1.type)({ map: VLM_1.VLMComponent })
+    (0, schema_1.type)({ map: Visibility_1.VisibilityComponent })
 ], Scene.prototype, _8, void 0);
 __decorate([
-    (0, schema_1.type)({ map: Visibility_1.VisibilityComponent })
-], Scene.prototype, _9, void 0);
-__decorate([
     (0, schema_1.type)([Parenting_1.ParentingComponent])
-], Scene.prototype, _10, void 0);
+], Scene.prototype, _9, void 0);
 function initServerScenes(room, options) {
     if (app_config_1.iwbManager.pendingSaves.includes((room.state.world))) {
         let timeout = setTimeout(() => {

@@ -110,6 +110,7 @@ export enum SERVER_MESSAGE_TYPES {
     WIN_GAME = 'win_game',
     GAME_TIED = 'game_tied',
     LEADERBOARD_UPDATE = 'leaderboard_update',
+    GAME_ACTION = 'game_action',
 
     HIT_OBJECT = 'hit_object',
     SHOOT = 'shoot',

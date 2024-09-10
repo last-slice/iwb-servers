@@ -48,16 +48,25 @@ export class TempScene extends Schema {
     @type(['string']) pcls = new ArraySchema<string>();
 }
 
+export class SceneMetaDataComponent extends Schema{
+    @type("string") n: string = ""
+    @type("string") d: string = ""
+    @type("string") o: string = ""
+    @type("string") ona: string = ""
+    @type("string") cat: string = ""
+    @type("string") im: string = ""
+}
+
 export class Scene extends Schema {
     @type("string") id: string
-    @type("string") n: string
-    @type("string") d: string
-    @type("string") o: string
-    @type("string") ona: string
-    @type("string") cat: string
+    // @type("string") n: string
+    // @type("string") d: string
+    // @type("string") o: string
+    // @type("string") ona: string
+    // @type("string") cat: string
     @type("string") bpcl: string
     @type("string") w: string
-    @type("string") im: string
+    // @type("string") im: string
 
     @type(['string']) bps = new ArraySchema<string>();
     // @type(['string']) rat = new ArraySchema<string>();
@@ -74,6 +83,8 @@ export class Scene extends Schema {
     @type("number") pcnt: number
     @type("number") direction: number = 0
     @type(['number']) offsets = new ArraySchema<number>();
+
+    @type(SceneMetaDataComponent) metadata = new SceneMetaDataComponent()
 
     @type("boolean") isdl: boolean
     @type("boolean") e: boolean
@@ -115,7 +126,7 @@ export class Scene extends Schema {
     @type({map:UITextComponent}) [COMPONENT_TYPES.UI_TEXT_COMPONENT]:MapSchema<UITextComponent> = new MapSchema<UITextComponent>()
     @type({map:UIImageComponent}) [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:MapSchema<UIImageComponent> = new MapSchema<UIImageComponent>()
     @type({map:VideoComponent}) [COMPONENT_TYPES.VIDEO_COMPONENT]:MapSchema<VideoComponent> = new MapSchema<VideoComponent>()
-    @type({map:VLMComponent}) [COMPONENT_TYPES.VLM_COMPONENT]:MapSchema<VLMComponent> = new MapSchema<VLMComponent>()
+    // @type({map:VLMComponent}) [COMPONENT_TYPES.VLM_COMPONENT]:MapSchema<VLMComponent> = new MapSchema<VLMComponent>()
     @type({map:VisibilityComponent}) [COMPONENT_TYPES.VISBILITY_COMPONENT]:MapSchema<VisibilityComponent> = new MapSchema<VisibilityComponent>()
 
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent> = new ArraySchema<ParentingComponent>()
@@ -147,6 +158,16 @@ export class Scene extends Schema {
         }
 
         if (data){
+
+            if(!data.hasOwnProperty("metadata")){
+                this.metadata.n = data.n
+                this.metadata.d = data.d
+                this.metadata.o = data.o
+                this.metadata.ona = data.ona
+                this.metadata.cat = data.cat
+                this.metadata.im = data.im
+            }
+
             this.bps = data.bps
             this.pcls = data.pcls
             this.pcnt = data.pcls.length
@@ -161,43 +182,6 @@ export class Scene extends Schema {
     }
     
     setComponents(data:any, room:IWBRoom){
-        // this[COMPONENT_TYPES.IWB_COMPONENT] = new MapSchema<IWBComponent>()
-        // this[COMPONENT_TYPES.NAMES_COMPONENT] = new MapSchema<NameComponent>()
-        // this[COMPONENT_TYPES.VISBILITY_COMPONENT] = new MapSchema<VisibilityComponent>()
-        // this[COMPONENT_TYPES.PARENTING_COMPONENT] = new ArraySchema<ParentingComponent>()
-        // this[COMPONENT_TYPES.TRANSFORM_COMPONENT] = new MapSchema<TransformComponent>()
-        // this[COMPONENT_TYPES.POINTER_COMPONENT] = new MapSchema<PointerComponent>()
-        // this[COMPONENT_TYPES.TEXT_COMPONENT] = new MapSchema<TextShapeComponent>()
-        // this[COMPONENT_TYPES.COUNTER_COMPONENT] = new MapSchema<CounterComponent>()
-        // this[COMPONENT_TYPES.TRIGGER_COMPONENT] = new MapSchema<TriggerComponent>()
-        // this[COMPONENT_TYPES.ACTION_COMPONENT] = new MapSchema<ActionComponent>()
-        // this[COMPONENT_TYPES.GLTF_COMPONENT] = new MapSchema<GltfComponent>()
-        // this[COMPONENT_TYPES.MESH_RENDER_COMPONENT] = new MapSchema<MeshRendererComponent>()
-        // this[COMPONENT_TYPES.MESH_COLLIDER_COMPONENT] = new MapSchema<MeshColliderComponent>()
-        // this[COMPONENT_TYPES.TEXTURE_COMPONENT] = new MapSchema<TextureComponent>()
-        // this[COMPONENT_TYPES.MATERIAL_COMPONENT] = new MapSchema<MaterialComponent>()
-        // this[COMPONENT_TYPES.STATE_COMPONENT] = new MapSchema<StateComponent>()
-        // // this[COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT] = new MapSchema<SoundComponent>()
-        // // this[COMPONENT_TYPES.AUDIO_STREAM_COMPONENT] = new MapSchema<SoundComponent>()
-        // this[COMPONENT_TYPES.VIDEO_COMPONENT] = new MapSchema<VideoComponent>()
-        // this[COMPONENT_TYPES.ANIMATION_COMPONENT] = new MapSchema<AnimatorComponent>()
-        // this[COMPONENT_TYPES.NFT_COMPONENT] = new MapSchema<NftShapeComponent>()
-        // this[COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT] = new MapSchema<AvatarShapeComponent>()
-        // this[COMPONENT_TYPES.UI_TEXT_COMPONENT] = new MapSchema<UITextComponent>()
-        // this[COMPONENT_TYPES.UI_IMAGE_COMPONENT] = new MapSchema<UIImageComponent>()
-        // this[COMPONENT_TYPES.GAME_COMPONENT] = new MapSchema<GameComponent>()
-        // this[COMPONENT_TYPES.BILLBOARD_COMPONENT] = new MapSchema<BillboardComponent>()
-        // this[COMPONENT_TYPES.LEVEL_COMPONENT] = new MapSchema<LevelComponent>()
-        // this[COMPONENT_TYPES.LIVE_COMPONENT] = new MapSchema<LiveShowComponent>()
-        // // this[COMPONENT_TYPES.TEAM_COMPONENT] = new MapSchema<TeamComponent>()
-        // this[COMPONENT_TYPES.GAME_ITEM_COMPONENT] = new MapSchema<GameItemComponent>()
-        // this[COMPONENT_TYPES.DIALOG_COMPONENT] = new MapSchema<DialogComponent>()
-        // this[COMPONENT_TYPES.REWARD_COMPONENT] = new MapSchema<RewardComponent>()
-        // this[COMPONENT_TYPES.PLAYLIST_COMPONENT] = new MapSchema<PlaylistComponent>()
-        // this[COMPONENT_TYPES.PATH_COMPONENT] = new MapSchema<PathComponent>()
-        // this[COMPONENT_TYPES.AUDIO_COMPONENT] = new MapSchema<SoundComponent>()
-        // this[COMPONENT_TYPES.VLM_COMPONENT] = new MapSchema<VLMComponent>()
-
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
@@ -207,11 +191,11 @@ export class Scene extends Schema {
                         }
                         break;
 
-                    case COMPONENT_TYPES.VLM_COMPONENT:
-                        for (const aid in data[component]) {
-                            createVLMComponent(this, aid,  data[component][aid])
-                        }
-                        break;
+                    // case COMPONENT_TYPES.VLM_COMPONENT:
+                    //     for (const aid in data[component]) {
+                    //         createVLMComponent(this, aid,  data[component][aid])
+                    //     }
+                    //     break;
 
                     case COMPONENT_TYPES.PATH_COMPONENT:
                         for (const aid in data[component]) {

@@ -67,7 +67,7 @@ export function refreshLeaderboards(room:IWBRoom){
                 switch(leaderboard.variableType){
                     case 0:
                         console.log('refresh game variable leaderboard')
-                        leaderboardData = getTopPlayersByDataPoint(gameInfo.gameData, "total time", leaderboard.topAmount, leaderboard.order)
+                        leaderboardData = getTopPlayersByDataPoint(gameInfo.gameData, leaderboard.variable, leaderboard.topAmount, leaderboard.order)
                         console.log('leaderboard data is', leaderboardData)
                         room.broadcast(SERVER_MESSAGE_TYPES.LEADERBOARD_UPDATE, {sceneId:scene.id, aid:aid, data:leaderboardData})
                         break;

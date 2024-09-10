@@ -115,6 +115,8 @@ var SERVER_MESSAGE_TYPES;
     SERVER_MESSAGE_TYPES["GAME_FINISHED_EARLY"] = "game_finished_early";
     SERVER_MESSAGE_TYPES["WIN_GAME"] = "win_game";
     SERVER_MESSAGE_TYPES["GAME_TIED"] = "game_tied";
+    SERVER_MESSAGE_TYPES["LEADERBOARD_UPDATE"] = "leaderboard_update";
+    SERVER_MESSAGE_TYPES["GAME_ACTION"] = "game_action";
     SERVER_MESSAGE_TYPES["HIT_OBJECT"] = "hit_object";
     SERVER_MESSAGE_TYPES["SHOOT"] = "shoot";
     //QUESTING

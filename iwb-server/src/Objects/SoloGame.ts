@@ -5,7 +5,7 @@ import { createNewItem, addItemComponents } from "../rooms/messaging/ItemHandler
 import { COMPONENT_TYPES, CATALOG_IDS, ACTIONS, PLAYER_GAME_STATUSES, SERVER_MESSAGE_TYPES } from "../utils/types"
 import { createActionComponent } from "./Actions"
 import { createCounterComponent } from "./Counter"
-import { GameComponent, GameVariableComponent, setInitialPlayerData } from "./Game"
+import { GameComponent, GameVariableComponent, resetSessionVariables, setInitialPlayerData } from "./Game"
 import { createGameItemComponent } from "./GameItem"
 import { Player } from "./Player"
 import { Scene } from "./Scene"
@@ -84,9 +84,13 @@ export function startSoloGame(client:Client, player:Player, scene:Scene, info:an
                 setInitialPlayerData(gameInfo, player)
             }
 
+            resetSessionVariables(gameInfo, player)
+
             gameInfo.gameData[player.address].lastPlayed = Math.floor(Date.now()/1000)
             player.gameStatus = PLAYER_GAME_STATUSES.PLAYING
             player.gameId = gameInfo.aid
+
+            info.savedData = gameInfo.gameData[player.address]
 
             // player.startGame(scene.id, gameInfo, PLAYER_GAME_STATUSES.PLAYING, aid)
             client.send(SERVER_MESSAGE_TYPES.START_GAME, info)
@@ -100,14 +104,17 @@ export function startSoloGame(client:Client, player:Player, scene:Scene, info:an
 }
 
 export async function addPlayerVariableItem(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, gameItem:GameComponent, variable:any){
+    let newEntityAid = generateId(6)
+    variable.aid = newEntityAid
+
     gameItem.pvariables.set(variable.id, new GameVariableComponent(variable))
 
     let parentTransform = scene[COMPONENT_TYPES.TRANSFORM_COMPONENT].get(aid)
 
-    let newEntityPosition = new Vector3({x:parentTransform.p.x, y:parentTransform.p.y + (gameItem.pvariables.size * 4.5), z:parentTransform.p.z})
+    let newEntityPosition = new Vector3({x:parentTransform.p.x, y:parentTransform.p.y + (3.5 + (gameItem.pvariables.size * 1.5)), z:parentTransform.p.z})
 
     let newEntity = {...itemManager.items.get(CATALOG_IDS.EMPTY_ENTITY)}
-    let newEntityAid = generateId(6)
+    
 
     newEntity.n = variable.id + "-PlayerVariable"
     newEntity.aid = newEntityAid

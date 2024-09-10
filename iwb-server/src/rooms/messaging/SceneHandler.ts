@@ -199,12 +199,12 @@ export function iwbSceneHandler(room:IWBRoom){
 
                 player.updatePlayMode(SCENE_MODES.BUILD_MODE)
                 client.send(SERVER_MESSAGE_TYPES.PLAY_MODE_CHANGED, {mode:SCENE_MODES.BUILD_MODE})
-                room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ADDED_NEW, {name:player.name, sceneName:scene.n})
+                room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ADDED_NEW, {name:player.name, sceneName:scene.metadata.n})
 
                 pushPlayfabEvent(
                     SERVER_MESSAGE_TYPES.SCENE_ADDED_NEW, 
                     player, 
-                    [{scene: scene.n, world:world.ens}]
+                    [{scene: scene.metadata.n, world:world.ens}]
                 )
             }
         }else{
@@ -273,7 +273,7 @@ export function iwbSceneHandler(room:IWBRoom){
             if(scene){
                 if(!scene.bps.includes(info.user)){
                     scene.bps.push(info.user)
-                    info.sceneName = scene.n
+                    info.sceneName = scene.metadata.n
 
                     client.send(SERVER_MESSAGE_TYPES.SCENE_ADD_BP, info)
                     let otherPlayer = room.state.players.get(info.user)
@@ -283,7 +283,7 @@ export function iwbSceneHandler(room:IWBRoom){
                     pushPlayfabEvent(
                         SERVER_MESSAGE_TYPES.SCENE_ADD_BP, 
                         player, 
-                        [{scene: scene.n, world:scene.w, permissions: info.user, owner:client.userData.userId}]
+                        [{scene: scene.metadata.n, world:scene.w, permissions: info.user, owner:client.userData.userId}]
                     )
                 }
             }
@@ -301,7 +301,7 @@ export function iwbSceneHandler(room:IWBRoom){
                     let userIndex = scene.bps.findIndex((us)=> us === info.user)
                     if(userIndex >= 0){
                         scene.bps.splice(userIndex, 1)
-                        info.sceneName = scene.n
+                        info.sceneName = scene.metadata.n
                         
                         client.send(SERVER_MESSAGE_TYPES.SCENE_DELETE_BP, info)
                         let otherPlayer = room.state.players.get(info.user)
@@ -311,7 +311,7 @@ export function iwbSceneHandler(room:IWBRoom){
                         pushPlayfabEvent(
                             SERVER_MESSAGE_TYPES.SCENE_DELETE_BP, 
                             player, 
-                            [{scene: scene.n, world:scene.w, permissions: info.user, owner:client.userData.userId}]
+                            [{scene: scene.metadata.n, world:scene.w, permissions: info.user, owner:client.userData.userId}]
                         )
                     }
                 }
@@ -346,7 +346,7 @@ export function iwbSceneHandler(room:IWBRoom){
                     pushPlayfabEvent(
                         SERVER_MESSAGE_TYPES.SCENE_DELETE, 
                         player, 
-                        [{scene: scene.n, world:scene.w}]
+                        [{scene: scene.metadata.n, world:scene.w}]
                     )
                 }
             }
@@ -368,7 +368,7 @@ export function iwbSceneHandler(room:IWBRoom){
                     pushPlayfabEvent(
                         SERVER_MESSAGE_TYPES.SCENE_CLEAR_ASSETS, 
                         player, 
-                        [{scene: scene.n, world:scene.w}]
+                        [{scene: scene.metadata.n, world:scene.w}]
                     )
 
                     player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"Your scene assets were removed!"})
@@ -390,9 +390,9 @@ export function iwbSceneHandler(room:IWBRoom){
             if(scene){
                 if(canBuild(room, player.address, info.sceneId)){
 
-                    scene.n = info.name
-                    scene.d = info.desc
-                    scene.im = info.image
+                    scene.metadata.n = info.name
+                    scene.metadata.d = info.desc
+                    scene.metadata.im = info.image
                     info.direction ? scene.direction += info.direction : null
 
                     let enabledView = (scene.e === info.enabled ? false : true)
@@ -444,10 +444,10 @@ export function iwbSceneHandler(room:IWBRoom){
                         body: JSON.stringify({
                             // scene:scene,
                             metadata:{
-                                title: scene.n,
-                                description: scene.d,
-                                owner: scene.ona,
-                                image: scene.im
+                                title: scene.metadata.n,
+                                description: scene.metadata.d,
+                                owner: scene.metadata.ona,
+                                image: scene.metadata.im
                             },
                             assetIds:assetIds,
                             spawns:scene.sp,
@@ -484,14 +484,14 @@ export function iwbSceneHandler(room:IWBRoom){
         console.log(SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN + " message", info)
         let player:Player = room.state.players.get(client.userData.userId)
         let scene: Scene = room.state.scenes.get(info.sceneId)
-        if(player && scene && scene.o === player.address){
+        if(player && scene && scene.metadata.o === player.address){
             scene.sp.push("" + info.sp.x.toFixed(0) + "," + info.sp.y.toFixed(0) + "," + info.sp.z.toFixed(0))
             scene.cp.push("" + info.cp.x.toFixed(0) + "," + info.cp.y.toFixed(0) + "," + info.cp.z.toFixed(0))
 
             pushPlayfabEvent(
                 SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN, 
                 player, 
-                [{scene: scene.n, world:scene.w}]
+                [{scene: scene.metadata.n, world:scene.w}]
             )
         }
     })
@@ -500,14 +500,14 @@ export function iwbSceneHandler(room:IWBRoom){
         console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_SPAWN + " message", info)
         let player:Player = room.state.players.get(client.userData.userId)
         let scene: Scene = room.state.scenes.get(info.sceneId)
-        if(player && scene && scene.o === player.address){
+        if(player && scene && scene.metadata.o === player.address){
             scene.sp.splice(info.index, 1)
             scene.cp.splice(info.index, 1)
 
             pushPlayfabEvent(
                 SERVER_MESSAGE_TYPES.SCENE_DELETE_SPAWN, 
                 player, 
-                [{scene: scene.n, world:scene.w}]
+                [{scene: scene.metadata.n, world:scene.w}]
             )
         }
     })

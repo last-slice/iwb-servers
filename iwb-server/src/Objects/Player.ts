@@ -81,7 +81,7 @@ export class Player extends Schema {
     @type(SelectedAsset) selectedAsset: SelectedAsset
     
 
-    gameData:any
+    // gameData:any
 
     playFabData:any
     ip:string
@@ -404,9 +404,9 @@ export class Player extends Schema {
 
         updatePlayerGameTime(room, this)
 
-        if(this.gameData.type === "MULTIPLAYER"){
+        // if(this.gameData.type === "MULTIPLAYER"){
           removeStalePlayer(room, this)
-        }
+        // }
       }
 
       endGames(room?:IWBRoom){

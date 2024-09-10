@@ -13,7 +13,7 @@ const Leaderboard_1 = require("../Objects/Leaderboard");
 class IWBRoom extends core_1.Room {
     constructor() {
         super(...arguments);
-        this.leaderboardRefreshTime = 60;
+        this.leaderboardRefreshTime = 25;
     }
     async onAuth(client, options, req) {
         try {

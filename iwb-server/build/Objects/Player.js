@@ -316,9 +316,9 @@ class Player extends schema_1.Schema {
         // this.playingGame = false
         // console.log('player game data', this.gameData)
         (0, Game_1.updatePlayerGameTime)(room, this);
-        if (this.gameData.type === "MULTIPLAYER") {
-            (0, Game_1.removeStalePlayer)(room, this);
-        }
+        // if(this.gameData.type === "MULTIPLAYER"){
+        (0, Game_1.removeStalePlayer)(room, this);
+        // }
     }
     endGames(room) {
         // if(this.playingGame){

@@ -16,7 +16,7 @@ import { createStateComponent, editStateComponent } from "./State";
 import { createCounterComponent } from "./Counter";
 import { editNameComponent } from "./Names";
 import { itemManager } from "../app.config";
-import { addItemComponents, createNewItem } from "../rooms/messaging/ItemHandler";
+import { addItemComponents, createNewItem, deleteSceneItem } from "../rooms/messaging/ItemHandler";
 import { addPlayerVariableItem, createSoloEntities, startSoloGame } from "./SoloGame";
 import { initializeUploadPlayerFiles, uploadPlayerFiles, finalizeUploadFiles, abortFileUploads, fetchPlayfabFile, fetchUserMetaData } from "../utils/Playfab";
 
@@ -43,12 +43,14 @@ export class TeamComponent extends Schema {
 export class GameVariableComponent extends Schema {
     @type("number") value:number = 0 
     @type("boolean") save:boolean = false
+    @type("string") aid:string
     
     constructor(data?:any){
         super()
         if(data){
             this.value = data.value
             this.save = data.save
+            this.aid = data.aid
         }
     }
 }
@@ -103,7 +105,7 @@ export class GameComponent extends Schema{
 export function createGameComponent(room:IWBRoom, scene:Scene, aid:string, data?:any, fromScene?:boolean){
     let component:any = new GameComponent()
     component.id = scene.id
-    component.name = scene.n + " Game"
+    component.name = scene.metadata.n + " Game"
     for(let key in data){
         if(key === "teams"){
             component.teams = new MapSchema()
@@ -274,6 +276,12 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
                 break;
 
              case 'delete-pvariable':
+                let toDelete = itemInfo.pvariables.get(info.variables)
+                deleteSceneItem(room, player, {
+                    assetId: toDelete.aid,
+                    childDelete:true,
+                    sceneId:scene.id
+                })
                 itemInfo.pvariables.delete(info.variables)
                 break;
 
@@ -593,9 +601,10 @@ export function attemptGameEnd(room:IWBRoom, client:any, info:any){
     // let scene = room.state.scenes.get(info.sceneId)//
     if(player){
         player.endGame(room)
-        if(player.gameData){
-            client.send(SERVER_MESSAGE_TYPES.END_GAME, {sceneId:player.gameData.sceneId, gameId:player.gameData.aid})
-        }
+        // if(player.gameData){
+        //     client.send(SERVER_MESSAGE_TYPES.END_GAME, {sceneId:player.gameData.sceneId, gameId:player.gameData.aid})
+        // }
+        client.send(SERVER_MESSAGE_TYPES.END_GAME, {sceneId:info.sceneId, gameId:player.gameId})
     }
 }
 
@@ -609,20 +618,15 @@ export function joinMultiplayerLobby(room:IWBRoom, player:Player, scene:Scene, i
 }
 
 export function removeStalePlayer(room:IWBRoom, player:Player){
-    let scene = room.state.scenes.get(player.gameData.id)
-    if(!scene){
-        return
-    }
-
-    console.log('found scene to delete multiplayer')
-
-
-    let gaming = scene[COMPONENT_TYPES.GAME_COMPONENT].get(player.gameData.aid)
-    if(!gaming){
-        return
-    }//
-
-    gaming.gameManager.removeStalePlayer(player)
+    room.state.scenes.forEach((scene:Scene)=>{
+        scene[COMPONENT_TYPES.GAME_COMPONENT].forEach((gameComponent:GameComponent, aid:string)=>{
+            if(player.gameId === aid && gameComponent.type !== 'SOLO'){
+                console.log("found game to remove stale player")
+                gameComponent.gameManager.removeStalePlayer(player)
+                return
+            }
+        })
+    })
 }
 
 export function garbageCollectRealmGames(room:IWBRoom){
@@ -757,6 +761,15 @@ export function setInitialPlayerData(gameInfo:GameComponent, player:Player){
         gameInfo.gameData[player.address][variable] = data.value
     })
     console.log('setting inital player game data to', gameInfo.gameData)
+}
+
+export function resetSessionVariables(gameInfo:GameComponent, player:Player){
+    gameInfo.pvariables.forEach((data:GameVariableComponent, variable:string)=>{
+        if(!data.save){
+            gameInfo.gameData[player.address][variable] = data.value
+        }
+    })
+    console.log('player game data is now', gameInfo.gameData)
 }
 
 export async function updatePlayerGameTime(room:IWBRoom, player:Player){

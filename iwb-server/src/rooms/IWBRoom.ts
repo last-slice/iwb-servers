@@ -14,7 +14,7 @@ import { refreshLeaderboards } from "../Objects/Leaderboard";
 export class IWBRoom extends Room<IWBRoomState> {
 
     public leaderboardRefreshInterval:any
-    public leaderboardRefreshTime:number = 10
+    public leaderboardRefreshTime:number = 25
 
     async onAuth(client: Client, options: any, req: any) {
         try{

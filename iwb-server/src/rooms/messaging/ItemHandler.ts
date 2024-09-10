@@ -702,7 +702,7 @@ export async function removeItem(room:IWBRoom, player:Player, scene:Scene, info:
             itemManager.items.get(itemInfo.id)
 
         if(edit){
-            console.log('player editing asset, dont remove from selectecd tree')
+            console.log('player editing asset, dont remove from selectecd tree')//
         }
         else{
             if(info.childDelete){}
