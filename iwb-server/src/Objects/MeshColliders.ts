@@ -3,7 +3,7 @@ import { Scene } from "./Scene";
 import { COMPONENT_TYPES } from "../utils/types";
 
 export class MeshColliderComponent extends Schema{
-    @type("number") shape:number //0 - plane, 1 - box
+    @type("number") shape:number //0 - plane, 1 - box, 2 - sphere
     @type("number") layer:number
     @type("boolean") onPlay:boolean
 }

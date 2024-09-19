@@ -40,6 +40,8 @@ import { createAvatarShapeComponent, editAvatarShapeComponent } from "../../Obje
 import { createPathComponent, editPathComponent } from "../../Objects/Paths";
 import { createVLMComponent, editVLMComponent } from "../../Objects/VLM";
 import { createLeaderboardComponent, editLeaderboardComponent } from "../../Objects/Leaderboard";
+import { createVehicleComponent } from "../../Objects/Vehicle";
+import { createPhysicsComponent, editPhysicsComponent } from "../../Objects/Physics";
 
 
 export let updateComponentFunctions:any = {
@@ -79,6 +81,7 @@ export let updateComponentFunctions:any = {
     [COMPONENT_TYPES.VLM_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editVLMComponent(info, scene)}, 
     [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editGameItemComponent(info, scene)}, 
     [COMPONENT_TYPES.LEADERBOARD_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editLeaderboardComponent(info, scene)}, 
+    [COMPONENT_TYPES.PHYSICS_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editPhysicsComponent(info, scene)}, 
 }
 
 let createComponentFunctions:any = {
@@ -112,6 +115,8 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.VLM_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createVLMComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createGameItemComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.LEADERBOARD_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createLeaderboardComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.VEHICLE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createVehicleComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.PHYSICS_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPhysicsComponent(scene, aid, info)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){
@@ -430,6 +435,23 @@ async function deleteComponent(room:IWBRoom, scene:any, player:Player, item:any)
 
 function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
     switch(item.type){
+        case COMPONENT_TYPES.PHYSICS_COMPONENT:
+        if(!scene[COMPONENT_TYPES.PHYSICS_COMPONENT].has(item.aid)){
+            createPhysicsComponent(scene, item.aid, {
+                // type:1,
+                // shape:2,
+                // linearDamping:0.4,
+                // angularDamping:0.4
+            })
+        }
+        break;
+
+        case COMPONENT_TYPES.VEHICLE_COMPONENT:
+        if(!scene[COMPONENT_TYPES.VEHICLE_COMPONENT].has(item.aid)){
+            createVehicleComponent(scene, item.aid)
+        }
+        break;
+
         case COMPONENT_TYPES.DIALOG_COMPONENT:
             if(!scene[COMPONENT_TYPES.DIALOG_COMPONENT].has(item.aid)){
                 createDialogComponent(scene, item.aid)

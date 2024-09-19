@@ -39,6 +39,8 @@ import { createPathComponent, PathComponent } from "./Paths";
 import { createVLMComponent, VLMComponent } from "./VLM";
 import { MultiplayerComponent } from "./Multiplayer";
 import { createLeaderboardComponent, LeaderboardComponent } from "./Leaderboard";
+import { createVehicleComponent, VehicleComponent } from "./Vehicle";
+import { createPhysicsComponent, PhysicsComponent } from "./Physics";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -59,6 +61,7 @@ export class SceneMetaDataComponent extends Schema{
 
 export class Scene extends Schema {
     @type("string") id: string
+    @type(SceneMetaDataComponent) metadata = new SceneMetaDataComponent()
     // @type("string") n: string
     // @type("string") d: string
     // @type("string") o: string
@@ -83,8 +86,6 @@ export class Scene extends Schema {
     @type("number") pcnt: number
     @type("number") direction: number = 0
     @type(['number']) offsets = new ArraySchema<number>();
-
-    @type(SceneMetaDataComponent) metadata = new SceneMetaDataComponent()
 
     @type("boolean") isdl: boolean
     @type("boolean") e: boolean
@@ -115,6 +116,7 @@ export class Scene extends Schema {
     @type({map:NameComponent}) [COMPONENT_TYPES.NAMES_COMPONENT]:MapSchema<NameComponent> = new MapSchema<NameComponent>()
     @type({map:NftShapeComponent}) [COMPONENT_TYPES.NFT_COMPONENT]:MapSchema<NftShapeComponent> = new MapSchema<NftShapeComponent>()
     @type({map:PathComponent}) [COMPONENT_TYPES.PATH_COMPONENT]:MapSchema<PathComponent> = new MapSchema<PathComponent>()
+    @type({map:PhysicsComponent}) [COMPONENT_TYPES.PHYSICS_COMPONENT]:MapSchema<PhysicsComponent> = new MapSchema<PhysicsComponent>()
     @type({map:PlaylistComponent}) [COMPONENT_TYPES.PLAYLIST_COMPONENT]:MapSchema<PlaylistComponent> = new MapSchema<PlaylistComponent>()
     @type({map:PointerComponent}) [COMPONENT_TYPES.POINTER_COMPONENT]:MapSchema<PointerComponent> = new MapSchema<PointerComponent>()
     @type({map:RewardComponent}) [COMPONENT_TYPES.REWARD_COMPONENT]:MapSchema<RewardComponent> = new MapSchema<RewardComponent>()
@@ -125,9 +127,10 @@ export class Scene extends Schema {
     @type({map:TriggerComponent}) [COMPONENT_TYPES.TRIGGER_COMPONENT]:MapSchema<TriggerComponent> = new MapSchema<TriggerComponent>()
     @type({map:UITextComponent}) [COMPONENT_TYPES.UI_TEXT_COMPONENT]:MapSchema<UITextComponent> = new MapSchema<UITextComponent>()
     @type({map:UIImageComponent}) [COMPONENT_TYPES.UI_IMAGE_COMPONENT]:MapSchema<UIImageComponent> = new MapSchema<UIImageComponent>()
+    @type({map:VisibilityComponent}) [COMPONENT_TYPES.VISBILITY_COMPONENT]:MapSchema<VisibilityComponent> = new MapSchema<VisibilityComponent>()
     @type({map:VideoComponent}) [COMPONENT_TYPES.VIDEO_COMPONENT]:MapSchema<VideoComponent> = new MapSchema<VideoComponent>()
     // @type({map:VLMComponent}) [COMPONENT_TYPES.VLM_COMPONENT]:MapSchema<VLMComponent> = new MapSchema<VLMComponent>()
-    @type({map:VisibilityComponent}) [COMPONENT_TYPES.VISBILITY_COMPONENT]:MapSchema<VisibilityComponent> = new MapSchema<VisibilityComponent>()
+    @type({map:VehicleComponent}) [COMPONENT_TYPES.VEHICLE_COMPONENT]:MapSchema<VehicleComponent> = new MapSchema<VehicleComponent>()
 
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent> = new ArraySchema<ParentingComponent>()
 
@@ -158,7 +161,7 @@ export class Scene extends Schema {
         }
 
         if (data){
-
+            // console.log('data is', data)
             if(!data.hasOwnProperty("metadata")){
                 this.metadata.n = data.n
                 this.metadata.d = data.d
@@ -166,6 +169,13 @@ export class Scene extends Schema {
                 this.metadata.ona = data.ona
                 this.metadata.cat = data.cat
                 this.metadata.im = data.im
+            }else{
+                this.metadata.n = data.metadata.n
+                this.metadata.d = data.metadata.d
+                this.metadata.o = data.metadata.o
+                this.metadata.ona = data.metadata.ona
+                this.metadata.cat = data.metadata.cat
+                this.metadata.im = data.metadata.im
             }
 
             this.bps = data.bps
@@ -185,6 +195,18 @@ export class Scene extends Schema {
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
+                    case COMPONENT_TYPES.PHYSICS_COMPONENT:
+                        for (const aid in data[component]) {
+                            createPhysicsComponent(this, aid,  data[component][aid])
+                        }
+                        break;
+
+                    case COMPONENT_TYPES.VEHICLE_COMPONENT:
+                        for (const aid in data[component]) {
+                            createVehicleComponent(this, aid,  data[component][aid])
+                        }
+                        break;
+
                     case COMPONENT_TYPES.LEADERBOARD_COMPONENT:
                         for (const aid in data[component]) {
                             createLeaderboardComponent(this, aid,  data[component][aid])

@@ -1,5 +1,5 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
-import { COMPONENT_TYPES, PLAYER_GAME_STATUSES, SCENE_MODES, SERVER_MESSAGE_TYPES, VIEW_MODES } from "../utils/types";
+import { ACTIONS, COMPONENT_TYPES, PLAYER_GAME_STATUSES, PlayerQuest, Quest, SCENE_MODES, SERVER_MESSAGE_TYPES, VIEW_MODES } from "../utils/types";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { Client } from "colyseus";
 import { abortFileUploads, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, initializeUploadPlayerFiles, pushPlayfabEvent, updatePlayerData, uploadPlayerFiles } from "../utils/Playfab";
@@ -131,7 +131,7 @@ export class Player extends Schema {
     parent:any
     parentEntity:any
     canTeleport:any
-
+    cannonBody:any
 
     //game objects
     canAttack:boolean
@@ -143,7 +143,11 @@ export class Player extends Schema {
 
 
     //quest objects
-    questClients:any
+    // questClients:any
+    questData:any[] = []
+    // questData: PlayerQuest[] = [];  // Array to store player's quest data
+
+
 
     constructor(room:IWBRoom, client:Client){
         super()
@@ -164,6 +168,8 @@ export class Player extends Schema {
 
         this.setSettings(this.playFabData.InfoResultPayload.UserData)
         // this.loadGameVariables()
+
+        this.loadQuestData()
       }
 
       addSelectedAsset(info:any){
@@ -444,4 +450,75 @@ export class Player extends Schema {
       //     console.log('error getting load game variables', e)
       //   }
       // }
+
+      async loadQuestData(){
+        try{
+          let playerQuestData = await fetchPlayfabFile(this.playFabData, "quests.json")
+          console.log('playerQuestData is', playerQuestData)
+          this.questData = playerQuestData
+
+
+          //load player progress
+        }
+        catch(e){
+          console.log('there was an error saving the uploaded asset', e) 
+        }
+      }
+
+
+      // Check if the player has already started the quest
+      hasStartedQuest(questId: string): boolean {
+        return this.questData.find(quest => quest.id === questId)
+      }
+
+      // Start a new quest and add it to the player's quest data
+      startQuest(quest: Quest): void {
+        const firstStepId = quest.steps[0].id;
+    
+        const newQuest: PlayerQuest = {
+          id: quest.id,
+          started:true,
+          status: 'in-progress',
+          startedAt: Math.floor(Date.now()/1000),
+          completedSteps: [],
+          currentStep: firstStepId,  // Dynamically set the first step
+          currentRepeats:0
+        };
+
+        // Add the new quest to the player's questData array
+        this.questData.push(newQuest);
+        console.log(`Player ${newQuest.id} started quest ${newQuest.id}`);
+        this.sendPlayerMessage(SERVER_MESSAGE_TYPES.QUEST_ACTION, {action:ACTIONS.QUEST_START, quest:newQuest})
+      }
+
+       // Mark a quest step as completed
+      completeQuestStep(questId: string, stepId: string): void {
+        const quest = this.getQuest(questId);
+        if (quest && !quest.completedSteps.includes(stepId)) {
+          quest.completedSteps.push(stepId);
+          console.log(`Player ${this.name} completed step ${stepId} in quest ${questId}`);
+          this.sendPlayerMessage(SERVER_MESSAGE_TYPES.QUEST_ACTION, {action:ACTIONS.QUEST_ACTION, quest:quest})
+        }
+      }
+
+       // Check if a quest step is completed
+      hasCompletedStep(questId: string, stepId: string): boolean {
+        const quest = this.getQuest(questId);
+        return quest !== undefined && quest.completedSteps.includes(stepId);
+      }
+
+      // Complete a quest and mark it as 'completed'
+      completeQuest(questId: string): void {
+        const quest = this.getQuest(questId);
+        if (quest) {
+          quest.status = 'completed';
+          console.log(`Player ${this.name} has completed quest ${questId}`);
+          this.sendPlayerMessage(SERVER_MESSAGE_TYPES.QUEST_ACTION, {action:'COMPLETE', quest:quest})
+        }
+      }
+
+       // Get a player's progress on a specific quest
+      getQuest(questId: string): PlayerQuest | undefined {
+        return this.questData.find(quest => quest.id === questId);
+      }
 }

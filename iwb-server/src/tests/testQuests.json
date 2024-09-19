@@ -1,0 +1,59 @@
+{
+    "prerequisites": [
+        {
+          "id": "repeatable_check",
+          "type": "repeatable",
+          "questId": "quest_001",
+          "value": true,
+          "maxRepeats": 3,
+          "description": "This quest can be repeated up to 3 times.",
+          "world":"Lastraum.dcl.eth"
+        },
+        {
+          "id": "prerequisite_003",
+          "type": "step_completion",
+          "questId": "quest_001",
+          "value": "step_1",
+          "world":"Lastraum.dcl.eth"
+        },
+        {
+          "id": "prerequisite_004",
+          "type": "step_completion",
+          "questId": "quest_001",
+          "value": "step_1",
+          "world":"BuilderWorld.dcl.eth"
+        }
+      ],
+       "quests": [
+            {
+            "id": "quest_001",
+            "world": "Lastraum.dcl.eth",
+            "name": "Epic Adventure",
+            "scene":"k8Kr3",
+            "description": "A quest with multiple steps, both linear and branching and a really long description.",
+            "prerequisites": [],
+            "steps": [
+                {
+                "id": "step_1",
+                "description": "Talk to the village elder",
+                "type": "interaction",
+                "prerequisites": []
+                },
+
+                {
+                "id": "step_3",
+                "description": "Return to the village elder",
+                "type": "interaction",
+                "prerequisites": [
+                    { "id": "prerequisite_004" }
+                ]
+                }
+            ],
+            "rewards": {
+                "xp": 1500,
+                "items": ["healing_potion", "magic_sword"]
+            }
+            }
+  ]
+}  
+  

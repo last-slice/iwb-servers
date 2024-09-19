@@ -75,6 +75,8 @@ export enum SERVER_MESSAGE_TYPES {
     SCENE_DEPLOY_FINISHED = 'scene_deploy_finished',
     SCENE_ACTION = 'scene_action',
     SCENE_DELETE_GRABBED_ITEM = 'scene_delete_grabbed_item',
+    SCENE_CREATE_QUEST = 'scene_create_quest',
+    SCENE_DELETE_QUEST = 'scene_delete_quest',
 
     //World
     INIT_WORLD = "init_world",
@@ -118,7 +120,8 @@ export enum SERVER_MESSAGE_TYPES {
 
     //QUESTING
     GET_QUEST_DEFINITIONS = 'get_quest_definitions',
-    QUEST_EDIT = 'edit_quest'
+    QUEST_EDIT = 'edit_quest',
+    QUEST_ACTION = 'quest_action'
 }
 
 export enum SCENE_MODES {
@@ -191,7 +194,9 @@ export enum COMPONENT_TYPES {
     PATH_COMPONENT = 'Path',
     VLM_COMPONENT = 'VLM',
     MULTIPLAYER_COMPONENT = 'Multiplayer',
-    LEADERBOARD_COMPONENT = 'Leaderboard'
+    LEADERBOARD_COMPONENT = 'Leaderboard',
+    VEHICLE_COMPONENT = 'Vehicle',
+    PHYSICS_COMPONENT = 'Physics'
 }
 
 export enum COLLISION_LAYERS {
@@ -298,7 +303,9 @@ export enum ACTIONS {
     STOP_PLAYLIST = 'playlist_stop',
     POPUP_SHOW = 'popup_show',
     POPUP_HIDE = 'popup_hide',
-    RANDOM_NUMBER ='random_number'
+    RANDOM_NUMBER ='random_number',
+    QUEST_ACTION = 'quest_action',
+    QUEST_START = 'quest_start',
 }
 
 export enum Triggers {
@@ -376,3 +383,129 @@ export enum PLAYER_GAME_STATUSES {
     WAITING = 'waiting',
     ELIMINATED = 'eliminated'
 }
+
+export interface PlayerQuest {
+    id: string;                // Quest ID
+    started:boolean,
+    status: 'in-progress' | 'completed' | 'failed';  // Quest status
+    startedAt?: number;        // Optional: Timestamp when the quest was started
+    completedSteps: string[];  // Array of step IDs the player has completed
+    currentStep: string;       // The current step the player is working on
+    currentRepeats:number
+  }
+
+
+// Enum for prerequisite types
+export enum PrerequisiteType {
+    Level = 'level',
+    Time = 'time',
+    Item = 'item',
+    QuestCompletion = 'quest_completion',
+    StepCompletion = 'step_completion',
+    Cooldown = 'cooldown',
+    Repeatable = 'repeatable'
+  }
+  
+  // Base type for all prerequisites
+  export type BasePrerequisite = {
+    id: string;            // Unique identifier for the prerequisite
+    description: string;   // Human-readable description of the prerequisite
+    world:string
+  };
+  
+  // Level prerequisite
+  export interface LevelPrerequisite extends BasePrerequisite {
+    type: PrerequisiteType;
+    value: number;  // Minimum level required
+    world:string
+  }
+  
+  // Time-based prerequisite
+  export interface TimePrerequisite extends BasePrerequisite {
+    type: PrerequisiteType
+    value: string;  // ISO timestamp or duration string
+    world:string
+  }
+  
+  // Item possession prerequisite
+  export interface ItemPrerequisite extends BasePrerequisite {
+    type: PrerequisiteType
+    value: string;  // Item ID or name required
+    world:string
+  }
+  
+  // Quest completion prerequisite
+  export interface QuestCompletionPrerequisite extends BasePrerequisite {
+    type: PrerequisiteType
+    value: string;  // Quest ID that must be completed
+    world:string
+  }
+  
+  // Step completion prerequisite
+  export interface StepCompletionPrerequisite extends BasePrerequisite {
+    type: PrerequisiteType
+    questId: string;
+    value: string;  // Step ID that must be completed
+    world:string
+  }
+  
+  // Cooldown prerequisite (time until the quest can be repeated)
+  export interface CooldownPrerequisite extends BasePrerequisite {
+    type: PrerequisiteType
+    value: number;  // Cooldown in seconds
+    lastCompleted: number;  // ISO timestamp of when the quest was last completed
+    world:string
+  }
+  
+  // Repeatable quest prerequisite with a maximum number of repetitions
+  export interface RepeatablePrerequisite extends BasePrerequisite {
+    type: PrerequisiteType
+    value: string,
+    questId: string;        // Whether the quest is repeatable
+    maxRepeats: number;   // Maximum number of times the quest can be repeated
+    world:string
+  }
+  
+  
+  // Union type for all prerequisite types
+  export type QUEST_PREREQUISITES =
+    | LevelPrerequisite
+    | TimePrerequisite
+    | ItemPrerequisite
+    | QuestCompletionPrerequisite
+    | StepCompletionPrerequisite
+    | CooldownPrerequisite
+    | RepeatablePrerequisite
+  
+  
+  // Quest step type definition
+  export interface QuestStep {
+    id: string;
+    description: string;
+    type: 'interaction' | 'collection' | 'combat' | 'exploration' | 'branching';
+    prerequisites: QUEST_PREREQUISITES[];  // Prerequisites for each step
+    options?: QuestStep[];  // Used for branching quests
+    target?: string;  // Target for combat or collection steps
+    quantity?: number;  // Used for collection steps
+    order?: boolean
+  }
+  
+  // Quest rewards type
+  export interface QuestRewards {
+    xp: number;
+    items: string[];
+  }
+  
+  // Main Quest interface
+  export interface Quest {
+    id: string;
+    name: string;
+    scene: string,
+    description: string;
+    world:string
+    prerequisites: QUEST_PREREQUISITES[];  // Quest-level prerequisites
+    steps: QuestStep[];  // Array of quest steps
+    rewards: QuestRewards;
+  }
+  
+  

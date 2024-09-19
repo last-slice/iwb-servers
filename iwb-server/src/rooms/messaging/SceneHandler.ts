@@ -558,7 +558,45 @@ export function iwbSceneHandler(room:IWBRoom){
             return
         }
         
-        questManager.createQuest(scene, info.quest)
+        // questManager.createQuest(scene, info.quest)
+    })
+
+    room.onMessage(SERVER_MESSAGE_TYPES.SCENE_CREATE_QUEST, async(client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.SCENE_CREATE_QUEST + " message", info)
+
+        if(!info){
+            return
+        }
+
+        let player:Player = room.state.players.get(client.userData.userId)
+        if(hasWorldPermissions(room, player.address)){
+            try{
+                await questManager.loadQuestDefinitions(info)
+                room.broadcast(SERVER_MESSAGE_TYPES.SCENE_CREATE_QUEST, {quest:questManager.quests.find(q=> q.id === info[0].id), creator:client.userData.userId})
+            }
+            catch(e){
+                console.log('error loading quest into server', e)
+            }
+        }
+    })
+
+    room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DELETE_QUEST, async(client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.SCENE_DELETE_QUEST + " message", info)
+
+        if(!info){
+            return
+        }
+
+        let player:Player = room.state.players.get(client.userData.userId)
+        if(hasWorldPermissions(room, player.address)){
+            try{
+                await questManager.deleteQuest(info)
+                room.broadcast(SERVER_MESSAGE_TYPES.SCENE_DELETE_QUEST, {id:info, creator:client.userData.userId})
+            }
+            catch(e){
+                console.log('error deleting quest from server', e)
+            }
+        }
     })
 
     // room.onMessage(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET, async(client, info)=>{
@@ -654,16 +692,18 @@ export function checkAssetsForEditByPlayer(room:IWBRoom, user:string){
 }
 
 export function createScene(player:Player, room:IWBRoom, info:any, parcels:string[]){
-    console.log('creating scene')
+    // console.log('creating scene', info)
     let sceneData:any = {
+     metadata:{
+        im: info.image ? info.image : "",
+        n: info.name,
+        d: info.description,
+        o: info.worldOwner,
+        ona: player.dclData.name,
+        cat: info.cat,
+     },
       w: room.state.world,
       id: "" + generateId(5),
-      im: info.image ? info.image : "",
-      n: info.name,
-      d: info.description,
-      o: info.worldOwner,
-      ona: player.dclData.name,
-      cat: info.cat,
       rating: info.rat,
       dpx: info.dPx,
       dv: info.dV,

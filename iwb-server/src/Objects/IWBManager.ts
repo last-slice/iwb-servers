@@ -15,6 +15,7 @@ import { iwbPlayerHandler } from "../rooms/messaging/PlayerHandler"
 import { iwbSceneHandler } from "../rooms/messaging/SceneHandler"
 import { garbageCollectRealmGames } from "./Game"
 import { garbageCollectPlaylist } from "./Playlist"
+import { iwbQuestHandler } from "../rooms/messaging/QuestHandler"
 
 const fs = require('fs');
 
@@ -113,6 +114,7 @@ export class IWBManager{
             await iwbSceneGameHandler(room)
             await iwbPlayerHandler(room)
             await iwbSceneHandler(room)
+            await iwbQuestHandler(room)
 
             await initServerScenes(room, room.state.options.island !== "world" ? room.state.options : undefined)
             // loadRealmScenes(this, data)
@@ -145,7 +147,9 @@ export class IWBManager{
         // console.log('asset count ', room.state.realmAssets.size)
         // console.log('quests are ', questManager.quests.values())
         player.sendPlayerMessage(SERVER_MESSAGE_TYPES.INIT,{
-            quests: questManager.quests.filter(quest => quest.owner === room.state.owner).map(({ definition, ...rest }) => rest),
+            prerequisites: questManager.prerequisites.filter(condition => condition.world === room.state.world),
+            quests: questManager.quests.filter(quest => quest.world === room.state.world),
+            // quests: questManager.quests.filter(quest => quest.owner === room.state.owner).map(({ definition, ...rest }) => rest),
             realmAssets: room.state.realmAssets,
             realmAssetSize:room.state.realmAssets.size,
             styles: iwbManager.styles,

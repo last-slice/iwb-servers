@@ -97652,6 +97652,106 @@
         }
     },
     {
+        "id": "c50a69f9-50e6-4d90-882d-9d36aebdffa3",
+        "m": "",
+        "n": "Basic Sphere",
+        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
+        "d": "Add a basic sphere shape to your scene",
+        "cat": "Gallery/Venue",
+        "on": "IWB Builder",
+        "o": "IWB Team",
+        "isdl": true,
+        "ty": "SM",
+        "pc": 512,
+        "si": 0,
+        "tag": [],
+        "v": 20,
+        "bb": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "sty": "Smart Items",
+        "components": {
+            "Material": {
+                "type": 0,
+                "onPlay": true,
+                "albedoColor": {
+                    "r": 0.3,
+                    "g": 0.75,
+                    "b": 0.75,
+                    "a": 0.5
+                },
+                "textureType":"COLOR"
+            },
+            "Text": {
+                "text": "Basic Sphere",
+                "onPlay": false,
+                "isText": false
+            },
+            "Mesh_Collider": {
+                "shape": 2,
+                "layer": 1,
+                "onPlay": true
+            },
+            "Mesh_Renderer": {
+                "shape": 2,
+                "layer": 2,
+                "onPlay":true
+            }
+        }
+    },
+    {
+        "id": "0a57bbc6-523a-427c-aed3-3f2da69efd16",
+        "m": "",
+        "n": "Basic Plane",
+        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
+        "d": "Add a basic plane shape to your scene",
+        "cat": "Gallery/Venue",
+        "on": "IWB Builder",
+        "o": "IWB Team",
+        "isdl": true,
+        "ty": "SM",
+        "pc": 512,
+        "si": 0,
+        "tag": [],
+        "v": 20,
+        "bb": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "sty": "Smart Items",
+        "components": {
+            "Material": {
+                "type": 0,
+                "onPlay": true,
+                "albedoColor": {
+                    "r": 0.3,
+                    "g": 0.75,
+                    "b": 0.75,
+                    "a": 0.5
+                },
+                "textureType":"COLOR"
+            },
+            "Text": {
+                "text": "Basic Plane",
+                "onPlay": false,
+                "isText": false
+            },
+            "Mesh_Collider": {
+                "shape": 0,
+                "layer": 1,
+                "onPlay": true
+            },
+            "Mesh_Renderer": {
+                "shape": 0,
+                "layer": 2,
+                "onPlay":true
+            }
+        }
+    },
+    {
         "id": "fe71ba21-8a22-47e8-be61-a5763c2b09fd",
         "m": "",
         "n": "Leaderboard Component",
@@ -97700,44 +97800,6 @@
             },
             "Actions": {
                 "actions": []
-            }
-        }
-    },
-    {
-        "id": "f7294f39-a7f4-47af-82fe-9912a445df58",
-        "m": "",
-        "n": "Plane Shape",
-        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
-        "d": "Add a blank plane shape to your scene",
-        "cat": "Gallery/Venue",
-        "on": "IWB Builder",
-        "o": "IWB Team",
-        "isdl": true,
-        "ty": "SM",
-        "pc": 0,
-        "si": 0,
-        "tag": [],
-        "v": 20,
-        "bb": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-        },
-        "sty": "Smart Items",
-        "components": {
-            "Material": {
-                "type": 0,
-                "onPlay": true,
-                "textureType":"COLOR"
-            },
-            "Mesh_Collider": {
-                "shape": 0,
-                "layer": 1
-            },
-            "Mesh_Renderer": {
-                "shape": 0,
-                "layer": 2,
-                "onPlay": true
             }
         }
     },

@@ -4,8 +4,15 @@ import { AttachedItem } from "./AttachedItem";
 import { COMPONENT_TYPES } from "../utils/types";
 import { Scene } from "./Scene";
 
+export class ActionSyncComponent extends Schema{
+  @type("string") actionId:string
+  @type("string") aid:string
+  @type("string") userId:string
+}
+
 export class MultiplayerComponent extends Schema{
     @type(AttachedItem) attachedItem:AttachedItem = new AttachedItem()
+    @type([ActionSyncComponent]) actionsToSync:ArraySchema<ActionSyncComponent> = new ArraySchema()
 }
 
 export function handleGlobalDetachItem(scene:Scene, aid:string){
@@ -21,7 +28,7 @@ export function handleGlobalDetachItem(scene:Scene, aid:string){
 export function handleGlobalAttachItem(scene:Scene, aid:string, userId:string, actionInfo:any){
     let iwbInfo = scene[COMPONENT_TYPES.IWB_COMPONENT].get(aid)
     if(!iwbInfo){
-      console.log('no iwb infor for that item to attach')
+      console.log('no iwb info for that item to attach')
       return
     }
 
@@ -42,4 +49,25 @@ export function handleGlobalAttachItem(scene:Scene, aid:string, userId:string, a
     attachedItem.enabled = true
 
     multiplayerInfo.attachedItem = attachedItem
+}
+
+export function handleGlobalActionSync(scene:Scene, aid:string, userId:string, actionInfo:any){
+  console.log("handling global action sync", actionInfo)
+  let iwbInfo = scene[COMPONENT_TYPES.IWB_COMPONENT].get(aid)
+    if(!iwbInfo){
+      console.log('no iwb info for that action item')
+      return
+    }
+
+    let multiplayerInfo:MultiplayerComponent
+    multiplayerInfo = scene[COMPONENT_TYPES.MULTIPLAYER_COMPONENT].get(aid)
+    if(!multiplayerInfo){
+        multiplayerInfo = new MultiplayerComponent()
+        scene[COMPONENT_TYPES.MULTIPLAYER_COMPONENT].set(aid, multiplayerInfo)
+    }
+
+    let newActionToSync = new ActionSyncComponent()
+    newActionToSync.userId = userId
+    newActionToSync.actionId = actionInfo.id
+    multiplayerInfo.actionsToSync.push(newActionToSync)
 }

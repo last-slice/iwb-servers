@@ -5,7 +5,7 @@ import { ActionComponent, ActionComponentSchema, handleCloneAction } from "../..
 import { Player } from "../../Objects/Player";
 import { handleReward } from "../../Objects/Rewards";
 import { handlePlaylistAction, stopAllPlaylist, stopPlaylist } from "../../Objects/Playlist";
-import { handleGlobalAttachItem, handleGlobalDetachItem } from "../../Objects/Multiplayer";
+import { handleGlobalActionSync, handleGlobalAttachItem, handleGlobalDetachItem } from "../../Objects/Multiplayer";
 
 export function iwbSceneActionHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ACTION, (client:Client, info:any)=>{
@@ -100,12 +100,17 @@ export function iwbSceneActionHandler(room:IWBRoom){
                                     handleGlobalAttachItem(scene, info.aid, player.address, action)
                                     break;
 
-                                case ACTIONS.ADD_NUMBER:
-                                    // addNumber(scene, info)
-                                    break;
+                                // case ACTIONS.ADD_NUMBER:
+                                //     // addNumber(scene, info)
+                                //     break;
                 
                                 case ACTIONS.CLONE:
                                     handleCloneAction(room, client, scene, aid, action)
+                                    break;
+
+                                default:
+                                    handleGlobalActionSync(scene, aid, player.address, action)
+                                    room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ACTION, {type:'live-action', aid:info.aid, sceneId:sceneId, actionId:actionId, forceScene:info.forceScene})
                                     break;
                             }
                         }
