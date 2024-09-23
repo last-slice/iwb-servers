@@ -290,6 +290,12 @@ export class IWBManager{
         }
     }
 
+    async updateSpecificWorlds(worlds:any[]){
+        for(let i = 0; i < worlds.length; i++){
+            await this.deployWorld(worlds[i])
+        }
+    }
+
     async adminDeploy(user:string, world:string){
         let metadata = await fetchPlayfabMetadata(user)
         let url = getDownloadURL(metadata, "catalogs.json")

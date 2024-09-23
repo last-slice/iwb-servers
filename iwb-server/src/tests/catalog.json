@@ -112730,6 +112730,18 @@
         },
         "sty": "Smart Items",
         "components":{
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Audius Song",
+                        "type": "audius_track_play"
+                    },
+                    {
+                        "name": "Stop Audius Song",
+                        "type": "audius_track_stop"
+                    }
+                ]
+            },
             "Audio":{
                 "type":2,
                 "url":"",
