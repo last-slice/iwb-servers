@@ -196,7 +196,8 @@ export enum COMPONENT_TYPES {
     MULTIPLAYER_COMPONENT = 'Multiplayer',
     LEADERBOARD_COMPONENT = 'Leaderboard',
     VEHICLE_COMPONENT = 'Vehicle',
-    PHYSICS_COMPONENT = 'Physics'
+    PHYSICS_COMPONENT = 'Physics',
+    QUEST_COMPONENT = 'Quest'
 }
 
 export enum COLLISION_LAYERS {

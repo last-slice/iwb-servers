@@ -40,8 +40,9 @@ import { createAvatarShapeComponent, editAvatarShapeComponent } from "../../Obje
 import { createPathComponent, editPathComponent } from "../../Objects/Paths";
 import { createVLMComponent, editVLMComponent } from "../../Objects/VLM";
 import { createLeaderboardComponent, editLeaderboardComponent } from "../../Objects/Leaderboard";
-import { createVehicleComponent } from "../../Objects/Vehicle";
+import { createVehicleComponent, editVehicleComponent } from "../../Objects/Vehicle";
 import { createPhysicsComponent, editPhysicsComponent } from "../../Objects/Physics";
+import { createQuestComponent, editQuestComponent } from "../../Objects/Quest";
 
 
 export let updateComponentFunctions:any = {
@@ -82,6 +83,8 @@ export let updateComponentFunctions:any = {
     [COMPONENT_TYPES.GAME_ITEM_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editGameItemComponent(info, scene)}, 
     [COMPONENT_TYPES.LEADERBOARD_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editLeaderboardComponent(info, scene)}, 
     [COMPONENT_TYPES.PHYSICS_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editPhysicsComponent(info, scene)}, 
+    [COMPONENT_TYPES.VEHICLE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editVehicleComponent(room, info, scene)}, 
+    [COMPONENT_TYPES.QUEST_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editQuestComponent(player, info, scene)}, 
 }
 
 let createComponentFunctions:any = {
@@ -117,6 +120,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.LEADERBOARD_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createLeaderboardComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.VEHICLE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createVehicleComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.PHYSICS_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPhysicsComponent(scene, aid, info)}, 
+    [COMPONENT_TYPES.QUEST_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createQuestComponent(scene, aid)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){

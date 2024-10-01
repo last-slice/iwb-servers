@@ -77,6 +77,7 @@ export class Player extends Schema {
     @type("string") name:string 
     @type("string") gameId:string = ""
     @type("string") gameStatus:string = PLAYER_GAME_STATUSES.NONE
+    @type("string") vehicle:string = "'"
 
     @type(SelectedAsset) selectedAsset: SelectedAsset
     
@@ -121,6 +122,7 @@ export class Player extends Schema {
     homeWorld:boolean = false
     worldPermissions:boolean = false
     objects:any[]
+    loadRadiusEntity:any
     selectedEntity:any
     cameraParent:any
     uploads:any[] = []

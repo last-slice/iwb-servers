@@ -41,6 +41,7 @@ import { MultiplayerComponent } from "./Multiplayer";
 import { createLeaderboardComponent, LeaderboardComponent } from "./Leaderboard";
 import { createVehicleComponent, VehicleComponent } from "./Vehicle";
 import { createPhysicsComponent, PhysicsComponent } from "./Physics";
+import { checkQuestCache, createQuestComponent, QuestComponent } from "./Quest";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -131,7 +132,7 @@ export class Scene extends Schema {
     @type({map:VideoComponent}) [COMPONENT_TYPES.VIDEO_COMPONENT]:MapSchema<VideoComponent> = new MapSchema<VideoComponent>()
     // @type({map:VLMComponent}) [COMPONENT_TYPES.VLM_COMPONENT]:MapSchema<VLMComponent> = new MapSchema<VLMComponent>()
     @type({map:VehicleComponent}) [COMPONENT_TYPES.VEHICLE_COMPONENT]:MapSchema<VehicleComponent> = new MapSchema<VehicleComponent>()
-
+    @type({map:QuestComponent}) [COMPONENT_TYPES.QUEST_COMPONENT]:MapSchema<QuestComponent> = new MapSchema<QuestComponent>()
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent> = new ArraySchema<ParentingComponent>()
 
         // @type({map:TeamComponent}) [COMPONENT_TYPES.TEAM_COMPONENT]:MapSchema<TeamComponent>
@@ -195,6 +196,12 @@ export class Scene extends Schema {
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
+                    case COMPONENT_TYPES.QUEST_COMPONENT:
+                        for (const aid in data[component]) {
+                            createQuestComponent(this, aid,  data[component][aid])
+                        }
+                        break;
+
                     case COMPONENT_TYPES.PHYSICS_COMPONENT:
                         for (const aid in data[component]) {
                             createPhysicsComponent(this, aid,  data[component][aid])
@@ -632,6 +639,7 @@ export async function checkAssetCacheStates(scene:Scene, jsonScene:any){
         jsonScene = await checkIWBCache(scene, aid, jsonScene) 
         jsonScene = await checkRewardCache(scene, aid, jsonScene)
         jsonScene = await checkGameCache(scene, aid, jsonScene)
+        jsonScene = await checkQuestCache(scene, aid, jsonScene)
     })
     return jsonScene
 }
