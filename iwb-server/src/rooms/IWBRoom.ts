@@ -1,4 +1,4 @@
-import {Client, Room} from "@colyseus/core";
+import {Client, Room, ServerError} from "@colyseus/core";
 import {IWBRoomState} from "./IWBRoomState";
 import { Scene, initServerAssets, initServerScenes, loadRealmScenes, saveRealm } from "../Objects/Scene";
 import { testData } from "../tests/data";
@@ -17,6 +17,11 @@ export class IWBRoom extends Room<IWBRoomState> {
     public leaderboardRefreshTime:number = 25
 
     async onAuth(client: Client, options: any, req: any) {
+        if(this.isBanned(options.userData.userId)){
+            console.log('user is banned')
+            throw new ServerError(400, "user is banned");
+        }
+
         try{
             return await this.doLogin(client, options, req) 
         }
@@ -98,6 +103,10 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         iwbManager.garbageCollectRoom(this)
        }
+    }
+
+    isBanned(user:string){
+        return iwbManager.worlds.find($=> $.ens === this.state.world && $.bans.includes(user.toLowerCase()))
     }
 
     async getPlayerInfo(client: Client, options: any) {

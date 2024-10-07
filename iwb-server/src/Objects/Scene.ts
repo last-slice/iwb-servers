@@ -41,7 +41,8 @@ import { MultiplayerComponent } from "./Multiplayer";
 import { createLeaderboardComponent, LeaderboardComponent } from "./Leaderboard";
 import { createVehicleComponent, VehicleComponent } from "./Vehicle";
 import { createPhysicsComponent, PhysicsComponent } from "./Physics";
-import { checkQuestCache, createQuestComponent, QuestComponent } from "./Quest";
+import { checkQuestCache, createQuestComponent, getQuestsPlayerData, QuestComponent } from "./Quest";
+import { QuestManager } from "./QuestManager";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -198,7 +199,7 @@ export class Scene extends Schema {
                 switch(component){
                     case COMPONENT_TYPES.QUEST_COMPONENT:
                         for (const aid in data[component]) {
-                            createQuestComponent(this, aid,  data[component][aid])
+                            createQuestComponent(room, this, aid,  data[component][aid])
                         }
                         break;
 
@@ -481,15 +482,19 @@ export function initServerScenes(room:IWBRoom, options?:any){
                     room.state.realmToken = realmData.EntityToken.EntityToken
                     room.state.realmId = realmData.EntityToken.Entity.Id
                     room.state.realmTokenType = realmData.EntityToken.Entity.Type
-    
-                    iwbManager.fetchRealmData(realmData)
-                    .then((realmData)=>{
-                        iwbManager.fetchRealmScenes(room.state.world, realmData)
-                        .then(async (sceneData)=>{
-                            await loadRealmScenes(room, sceneData, options)
-                            iwbManager.initUsers(room)
-                        })
-                    })   
+
+                    QuestManager.create(room).then((questManager)=>{
+                        room.state.questManager = questManager
+
+                        iwbManager.fetchRealmData(realmData)
+                        .then((realmData)=>{
+                            iwbManager.fetchRealmScenes(room.state.world, realmData)
+                            .then(async (sceneData)=>{
+                                await loadRealmScenes(room, sceneData, options)
+                                iwbManager.initUsers(room)
+                            })
+                        }) 
+                    })  
                 })
                 .catch((error)=>{
                     console.log('error initating realm', error)
@@ -569,11 +574,13 @@ export async function saveRealm(room:IWBRoom){
     let data:any[] = []
 
     let scenes:any[] = await getRealmData(room)
+    fileNames.push("" + room.state.world + "-scenes.json")
+    data.push(scenes)
 
-    // if(scenes && scenes.length > 0){
-        fileNames.push("" + room.state.world + "-scenes.json")
-        data.push(scenes)
-    // }
+    // let playerQuestData:any = await getQuestsPlayerData(room)
+    // fileNames.push("" + room.state.world + "-quests-data-.json")
+    // data.push(playerQuestData)
+
 
     if(room.state.realmAssetsChanged){
         console.log('back up catalog assets')

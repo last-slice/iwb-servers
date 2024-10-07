@@ -97649,6 +97649,19 @@
             "Mesh_Renderer": {
                 "shape": 1,
                 "layer": 2
+            },
+            "Triggers": {
+                "isArea": true,
+                "triggers": [
+                    {
+                        "type": "on_quest_complete",
+                        "decisions":[]
+                    },
+                    {
+                        "type": "on_quest_start",
+                        "decisions":[]
+                    }
+                ]
             }
         }
     },

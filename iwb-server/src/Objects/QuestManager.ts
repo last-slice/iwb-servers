@@ -1,34 +1,81 @@
+import { Client } from 'colyseus'
+import { IWBRoom } from '../rooms/IWBRoom'
 import data from '../tests/testQuests.json'
-import { QUEST_PREREQUISITES, PrerequisiteType, LevelPrerequisite, TimePrerequisite, ItemPrerequisite, QuestCompletionPrerequisite, StepCompletionPrerequisite, CooldownPrerequisite, RepeatablePrerequisite, Quest, QuestStep, SERVER_MESSAGE_TYPES } from '../utils/types'
+import { fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData } from '../utils/Playfab'
+import { QUEST_PREREQUISITES, PrerequisiteType, LevelPrerequisite, TimePrerequisite, ItemPrerequisite, QuestCompletionPrerequisite, StepCompletionPrerequisite, CooldownPrerequisite, RepeatablePrerequisite, Quest, QuestStep, SERVER_MESSAGE_TYPES, COMPONENT_TYPES } from '../utils/types'
 import { Player } from './Player'
+import { Scene } from './Scene'
 
 export class QuestManager {
+  room:IWBRoom
   quests:any[] = []
   prerequisites:QUEST_PREREQUISITES[] = []
 
+
+  data:any = {}
+
   constructor(){
-      this.fetchQuests()
   }
 
-  async fetchQuests(){
+  public static async create(room:IWBRoom){
+    const instance = new QuestManager()
+    await instance.initialize(room)
+    return instance
+  }
+
+  async initialize(room:IWBRoom){
+    this.room = room
+    await this.fetchQuests(room)
+  }
+
+  async fetchQuests(room:IWBRoom){
       try{
-          // let metadata = await fetchPlayfabMetadata(PLAYFAB_DATA_ACCOUNT)
-          // let questData = await fetchPlayfabFile(metadata, "quests.json")
-          // console.log('server quest da is', questData)
-          // this.quests = questData
+          let metadata = await fetchUserMetaData({
+            EntityToken:{
+              Entity:{
+                Id:this.room.state.realmId,
+                Type:this.room.state.realmTokenType, 
+              },
+              EntityToken:this.room.state.realmToken
+            }
+          })
 
-          let serverData = data
-          // console.log('servdata is', serverData)
-
-          await this.loadPrerequisiteDefinitions(serverData.prerequisites)
-          this.loadQuestDefinitions(serverData.quests)
-
-          // console.log(this.prerequisites)
-          // console.log(this.quests)
+          let questData = await fetchPlayfabFile(metadata, "" + room.state.world + "-quests-data-.json", true)
+          console.log('quest data is', questData)
+          if(questData || questData !== undefined){
+            console.log('we have quest file, load it', questData)
+            this.data = questData
+            // this.loadQuestDefinitions(questData.quests)
+            // console.log('this realm quests are a', this.quests)
+          }else{
+            console.log('no quest file, dont do anything')
+          }
       }
       catch(e){
           console.log('error getting quests', e)
       }
+  }
+
+  getPlayerData(client:Client, info:any){
+    let scene = this.room.state.scenes.get(info.sceneId)
+    if(!scene){
+      console.log('invalid scene to get player quest data')
+      return
+    }
+
+    let questInfo = scene[COMPONENT_TYPES.QUEST_COMPONENT].get(info.aid)
+    if(!questInfo){
+      console.log('invalid quest ifo to get player quest data')
+      return
+    }
+
+    // if(!questInfo.playerData[client.userData.userId]){
+    //   console.log('no player quest data')
+    //   client.send(SERVER_MESSAGE_TYPES.QUEST_PLAYER_DATA, {aid:info.aid, data:{}})
+    //   return
+    // }
+
+    client.send(SERVER_MESSAGE_TYPES.QUEST_PLAYER_DATA, {aid:info.aid, playerData:questInfo.playerData[client.userData.userId]})
   }
 
   loadPrerequisiteDefinitions(json:any){
@@ -262,7 +309,7 @@ export class QuestManager {
     return true
   }
 
-  handleQuestStep(player: Player, questInfo:any){
+  handleQuestStep(scene:Scene, player: Player, questInfo:any){
     const quest = this.quests.find(q => q.id === questInfo.id);
     const playerQuestData = player.getQuest(questInfo.id)
 

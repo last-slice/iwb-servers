@@ -90,6 +90,8 @@ export enum SERVER_MESSAGE_TYPES {
     PLAYTIME = 'playtime',
     WORLD_ADD_BP = 'world_add_build_permissions',
     WORLD_DELETE_BP = 'world_delete_build_permissions',
+    WORLD_ADD_BAN = 'world_add_ban',
+    WORLD_DELETE_BAN = 'world_delete_ban',
     GET_MARKETPLACE = 'get_marketplace',
     FORCE_BACKUP = 'force_backup',
 
@@ -121,7 +123,9 @@ export enum SERVER_MESSAGE_TYPES {
     //QUESTING
     GET_QUEST_DEFINITIONS = 'get_quest_definitions',
     QUEST_EDIT = 'edit_quest',
-    QUEST_ACTION = 'quest_action'
+    QUEST_ACTION = 'quest_action',
+    QUEST_PLAYER_DATA = 'quest_player_data',
+    QUEST_STEP_DATA = 'quest_step_data'
 }
 
 export enum SCENE_MODES {

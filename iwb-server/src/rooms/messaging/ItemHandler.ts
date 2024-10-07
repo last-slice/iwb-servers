@@ -120,7 +120,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.LEADERBOARD_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createLeaderboardComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.VEHICLE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createVehicleComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.PHYSICS_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPhysicsComponent(scene, aid, info)}, 
-    [COMPONENT_TYPES.QUEST_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createQuestComponent(scene, aid)}, 
+    [COMPONENT_TYPES.QUEST_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createQuestComponent(room, scene, aid)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){

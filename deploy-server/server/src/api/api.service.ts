@@ -246,45 +246,59 @@ export function authenticateToken(req:any, res:any, next:any) {
 }
 
 export function validateSceneToken(req:any, res:any){
+  if(req.body.admin){
+    if(req.body.admin === process.env.UPLOAD_AUTH){
+      let folderSize = getFolderSize(
+        path.join(status.DEBUG ? process.env.DEV_DOWNLOAD_UGC_DIRECTORY : process.env.PROD_DOWNLOAD_UGC_DIRECTORY, req.body.user))
+      console.log('user folder size is', folderSize)
+      res.status(200).send({valid: true, 
+        token: 'admin-key', 
+        size:folderSize})
+      }else{
+          res.status(200).send({valid: false})
+      }
+  }
+  else{
     if(req.body.user && req.header('Authorization')){
-        const sceneToken = req.header('Authorization').replace('Bearer ', '').trim();
-        if (!sceneToken) {
-            return res.status(200).json({valid:false, message: 'Unauthorized' });
-        }
-    
-        jwt.verify(sceneToken, process.env.SERVER_SECRET, async(err:any, user:any) => {
-            if (err) {
-                console.log('error validating scene upload token for user', req.body.user)
-                return res.status(200).json({valid:false, message: 'Invalid token' });
-            }
+      const sceneToken = req.header('Authorization').replace('Bearer ', '').trim();
+      if (!sceneToken) {
+          return res.status(200).json({valid:false, message: 'Unauthorized' });
+      }
+  
+      jwt.verify(sceneToken, process.env.SERVER_SECRET, async(err:any, user:any) => {
+          if (err) {
+              console.log('error validating scene upload token for user', req.body.user)
+              return res.status(200).json({valid:false, message: 'Invalid token' });
+          }
 
-            try{
-                const result = await Axios.post(process.env.IWB_UPLOAD_AUTH_PATH, { user:req.body.user},
-                {headers: {                      
-                    'Authorization': `Bearer ${sceneToken}`,
-                    'AssetAuth': `Bearer ${process.env.IWB_UPLOAD_AUTH_KEY}`,
-                }},
-                );
-                console.log('result is', result.data)
-                if(result.data.valid){
-                    res.status(200).send({valid: true, 
-                      token: result.data.token, 
-                      size:getFolderSize(
-                        path.join(status.DEBUG ? process.env.DEV_DOWNLOAD_UGC_DIRECTORY : process.env.PROD_DOWNLOAD_UGC_DIRECTORY, req.body.user))
-                      })
-                }else{
-                    res.status(200).send({valid: false})
-                }
-            }
-            catch(e:any){
-                console.log('error posting to iwb server', e.message)
-            }
+          try{
+              const result = await Axios.post(process.env.IWB_UPLOAD_AUTH_PATH, { user:req.body.user},
+              {headers: {                      
+                  'Authorization': `Bearer ${sceneToken}`,
+                  'AssetAuth': `Bearer ${process.env.IWB_UPLOAD_AUTH_KEY}`,
+              }},
+              );
+              console.log('result is', result.data)
+              if(result.data.valid){
+                  res.status(200).send({valid: true, 
+                    token: result.data.token, 
+                    size:getFolderSize(
+                      path.join(status.DEBUG ? process.env.DEV_DOWNLOAD_UGC_DIRECTORY : process.env.PROD_DOWNLOAD_UGC_DIRECTORY, req.body.user))
+                    })
+              }else{
+                  res.status(200).send({valid: false})
+              }
+          }
+          catch(e:any){
+              console.log('error posting to iwb server', e.message)
+          }
 
-        });
-    }else{
-        console.log("Invalid Authorization for asset uploader")
-        res.status(200).send({valid: false, token: false})
-    }
+      });
+  }else{
+      console.log("Invalid Authorization for asset uploader")
+      res.status(200).send({valid: false, token: false})
+  }
+  }
 }
 
 export async function postNewAssetData(req:any, res:any){

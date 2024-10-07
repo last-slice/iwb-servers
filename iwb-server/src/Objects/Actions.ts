@@ -20,9 +20,6 @@ export class ActionComponentSchema extends Schema{
     // @type("string") startDId:string
     // @type("string") dialID:string
 
-
-
-
     @type("string") id:string
     @type("string") aid:string
     @type("string") name:string
@@ -43,7 +40,6 @@ export class ActionComponentSchema extends Schema{
     @type("string") playlistAid:string
     @type("string") pathAid:string
     @type("string") anim:string
-    @type("string") questId:string
     @type("string") actionId:string
    
     @type("number") entity:number

@@ -8,7 +8,7 @@ import { startTransition } from 'react';
 import logo from './img/logo.png'
 import axios from 'axios'
 
-export const DEBUG = true
+export const DEBUG = false
 
 function App() {
   const [selectedAssetType, setSelectedAssetType] = useState(null);
@@ -18,6 +18,8 @@ function App() {
 
   const [user, setUser] = useState('');
   const [sceneKey, setKey] = useState('');
+  const [connected, setConnected] = useState(false)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     // Get the full URL
@@ -39,18 +41,26 @@ function App() {
       console.log(value1, value2)
 
       async function validateSceneToken(){
-        const result = await axios.post((DEBUG ? "http://localhost:3525" : 'https://deployment.dcl-iwb.co') + '/scene/verify', { user:value1},
-        {headers: {
-          'Authorization': `Bearer ${value2}`,
-        }},
-        );
-        
-        if(result.data.valid){
-          console.log('we ahv valid token', result.data)
-          setUploadToken(result.data.token)
-          setTotalUGCSize((result.data.size / (1024 ** 2)).toFixed(2))
-        }else{
-          console.log('error getting upload token')
+        try{
+          const result = await axios.post((DEBUG ? "http://localhost:3525" : 'https://deployment.dcl-iwb.co') + '/scene/verify', { user:value1, admin:DEBUG ? "014cc3aa-abe4-404d-bc3c-fe6e56859efb" : undefined},
+          {headers: {
+            'Authorization': `Bearer ${value2}`,
+          }},
+          );
+          
+          if(result.data.valid){
+            console.log('we ahv valid token', result.data)
+            setUploadToken(result.data.token)
+            setTotalUGCSize((result.data.size / (1024 ** 2)).toFixed(2))
+            setConnected(true)
+          }else{
+            console.log('error getting upload token')
+            setError(true)
+          }
+        }
+        catch(e){
+          console.log('error reacyhing server', error)
+          setError(true)
         }
       }
 
@@ -102,16 +112,34 @@ function App() {
             <img src={logo} width={300} onClick={resetLoader}></img>
         </div>
 
+        {
+          !connected &&
+          error &&
+          <div className="ui dcl center" style={{backgroundColor:'black', color:'white', top:"4em"}}>Connection Error. Please close this tab and try again.
+            </div>
+        }
 
-      {selectedAssetType === null &&  <AssetType onClick={handleAssetOptionClick}/>}
+        {
+          !connected &&
+          !error &&
+          <div className="ui dcl center" style={{backgroundColor:'black', color:'white', top:"4em"}}>LOADING...
+            </div>
+        }
+
+
+      {selectedAssetType === null && 
+      connected &&
+       <AssetType onClick={handleAssetOptionClick}/>}
 
 
       {selectedAssetType === '3D' && 
+      connected &&
       <ThreeDAssets sceneKey={sceneKey} size={totalUGCSize} token={assetUploadToken} handleFileSelect={handleFileSelect} glbFile={selectedFile} resetLoader={resetLoader}/>
       }
 
       {selectedAssetType === 'Audio' && 
-      <AudioAssets sceneKey={sceneKey} token={assetUploadToken} handleFileSelect={handleFileSelect} audioFile={selectedFile} resetLoader={resetLoader}/>
+      connected &&
+      <AudioAssets sceneKey={sceneKey} size={totalUGCSize} token={assetUploadToken} handleFileSelect={handleFileSelect} audioFile={selectedFile} resetLoader={resetLoader}/>
       }
 
     </div>

@@ -257,12 +257,72 @@ export function iwbSceneHandler(room:IWBRoom){
                     pushPlayfabEvent(
                        SERVER_MESSAGE_TYPES.WORLD_DELETE_BP, 
                        player, 
-                       [{world:room.state.world, permissions: info.newBuilder, owner:client.userData.userId}]
+                       [{world:room.state.world, permissions: info.user, owner:client.userData.userId}]
                    )
                 }
             }
          }
      })
+
+     room.onMessage(SERVER_MESSAGE_TYPES.WORLD_ADD_BAN, async(client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.WORLD_ADD_BAN + " message", info)
+
+        let player:Player = room.state.players.get(client.userData.userId)
+        if(player){
+            let world = iwbManager.worlds.find(($=> $.ens === room.state.world))
+            if(world && world.owner === player.address){
+                if(world.bans.includes(info.user.toLowerCase())){
+                    console.log('already added to ban list')
+                    return
+                }
+
+                world.bans.push(info.user.toLowerCase())
+
+                client.send(SERVER_MESSAGE_TYPES.WORLD_ADD_BAN, info)
+                let otherPlayer = room.state.players.get(info.user)
+                if(otherPlayer){
+                    otherPlayer.sendPlayerMessage(SERVER_MESSAGE_TYPES.WORLD_ADD_BAN, info)
+                    otherPlayer.client.leave(4010)
+                }
+
+                iwbManager.worldsModified = true
+
+                pushPlayfabEvent(
+                    SERVER_MESSAGE_TYPES.WORLD_ADD_BAN, 
+                    player, 
+                    [{world:room.state.world, banned: info.user, owner:client.userData.userId}]
+                )
+            }
+        }
+    })
+
+    room.onMessage(SERVER_MESSAGE_TYPES.WORLD_DELETE_BAN, async(client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.WORLD_DELETE_BAN + " message", info)
+        let player:Player = room.state.players.get(client.userData.userId)
+        if(player){
+           let world = iwbManager.worlds.find(($=> $.ens === room.state.world))
+           if(world && world.bans.includes(info.user)){
+               let userIndex = world.bans.findIndex(($:any)=> $ === info.user)
+               if(userIndex >= 0){
+                   world.bans.splice(userIndex, 1)
+                   client.send(SERVER_MESSAGE_TYPES.WORLD_DELETE_BAN, info)
+
+                   let otherPlayer = room.state.players.get(info.user)
+                   if(otherPlayer){
+                       otherPlayer.sendPlayerMessage(SERVER_MESSAGE_TYPES.WORLD_DELETE_BAN, info)
+                   }
+
+                   iwbManager.worldsModified = true
+
+                   pushPlayfabEvent(
+                      SERVER_MESSAGE_TYPES.WORLD_DELETE_BAN, 
+                      player, 
+                      [{world:room.state.world, unbanned: info.user, owner:client.userData.userId}]
+                  )
+               }
+           }
+        }
+    })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADD_BP, async(client, info)=>{
         // console.log(SERVER_MESSAGE_TYPES.SCENE_ADD_BP + " message", info)
@@ -599,40 +659,40 @@ export function iwbSceneHandler(room:IWBRoom){
         }
     })
 
-    // room.onMessage(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET, async(client, info)=>{
-    //      console.log(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET + " message", info)
+    room.onMessage(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET, async(client, info)=>{
+         console.log(SERVER_MESSAGE_TYPES.DELETE_UGC_ASSET + " message", info)
 
-    //     let player:Player = room.state.players.get(client.userData.userId)
-    //     if(player && iwbManager.isOwner(player.address, room.state.world)){
-    //         if(info){
-    //             info.forEach((id:any, i:number)=>{
-    //                 let ugcAsset = room.state.realmAssets.get(id)
-    //                 if(ugcAsset){
-    //                     iwbManager.deleteUGCAsset(player, ugcAsset, room)
-    //                     // room.state.realmAssets.delete(id)
-    //                     // room.state.realmAssetsChanged = true
-    //                     room.broadcast(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, room.state.realmAssets)
-    //                 }
-    //             })
-    //         }
-    //     }else{
-    //         console.log('not owner')
-    //     }
+        let player:Player = room.state.players.get(client.userData.userId)
+        if(player && iwbManager.isOwner(player.address, room.state.world)){
+            if(info){
+                info.forEach((id:any, i:number)=>{
+                    let ugcAsset = room.state.realmAssets.get(id)
+                    if(ugcAsset){
+                        iwbManager.deleteUGCAsset(player, ugcAsset, room)
+                        room.state.realmAssets.delete(id)
+                        room.state.realmAssetsChanged = true
+                    }
+                })
+                room.broadcast(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, room.state.realmAssets)
+            }
+        }else{
+            console.log('not owner')
+        }
 
-    //     if(player && player.inHomeWorld(room.state.world)){
-    //         if(info){
-    //             info.forEach((id:any, i:number)=>{
-    //                 if(room.state.realmAssets.get(id)){
-    //                     room.state.realmAssets.delete(id)
-    //                     room.state.realmAssetsChanged = true
-    //                     room.broadcast(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, room.state.realmAssets)
-    //                 }
-    //             })
-    //         }
-    //     }else{
-    //         console.log('player not in home world, spamming?')
-    //     }
-    // }) 
+        // if(player && player.inHomeWorld(room.state.world)){
+        //     if(info){
+        //         info.forEach((id:any, i:number)=>{
+        //             if(room.state.realmAssets.get(id)){
+        //                 room.state.realmAssets.delete(id)
+        //                 room.state.realmAssetsChanged = true
+        //                 room.broadcast(SERVER_MESSAGE_TYPES.DELETE_WORLD_ASSETS, room.state.realmAssets)
+        //             }
+        //         })
+        //     }
+        // }else{
+        //     console.log('player not in home world, spamming?')
+        // }
+    }) 
 
     room.onMessage(SERVER_MESSAGE_TYPES.FORCE_BACKUP, async(client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.FORCE_BACKUP + " message", info)

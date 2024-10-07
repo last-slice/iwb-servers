@@ -38,7 +38,7 @@ const styles = [
   "Food"
 ]
 
-function AudioAssets({handleFileSelect, audioFile, resetLoader,token, sceneKey}) {
+function AudioAssets({handleFileSelect, audioFile, resetLoader,token, sceneKey,size}) {
     let file = null
 
     if(audioFile && file === null){
@@ -236,7 +236,19 @@ const checkModelSize = ()=>{
 
       <div className="dcl page">
 
-        <div className="ui container">
+        <div className="ui container text-center align-items-center">
+        <Row>
+            <Col>
+            <h1 style={{color:"#ffffff"}}>Custom Assets</h1></Col>
+          </Row>
+
+            <Row>
+            <Col>
+            <h3 style={{color:"#ffffff"}}>Space Used: {((size/100) * 100).toFixed(2)}%</h3>
+            <h3 style={{color:"#ffffff"}}>{size} MB out of 100MB</h3>
+            </Col>
+          </Row>
+
       <Row>
 
 <Col md={8} className="d-flex text-center align-items-center">

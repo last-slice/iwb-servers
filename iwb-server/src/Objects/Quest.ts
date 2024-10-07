@@ -1,5 +1,5 @@
 import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
-import { COMPONENT_TYPES, CooldownPrerequisite, ItemPrerequisite, LevelPrerequisite, PrerequisiteType, Quest, QUEST_PREREQUISITES, QuestCompletionPrerequisite, QuestStep, RepeatablePrerequisite, REWARD_TYPES, SERVER_MESSAGE_TYPES, StepCompletionPrerequisite, TimePrerequisite } from "../utils/types";
+import { ACTIONS, COMPONENT_TYPES, CooldownPrerequisite, ItemPrerequisite, LevelPrerequisite, PrerequisiteType, Quest, QUEST_PREREQUISITES, QuestCompletionPrerequisite, QuestStep, RepeatablePrerequisite, REWARD_TYPES, SERVER_MESSAGE_TYPES, StepCompletionPrerequisite, TimePrerequisite } from "../utils/types";
 import { Scene } from "./Scene";
 import { IWBRoom } from "../rooms/IWBRoom";
 import { Client, generateId } from "colyseus";
@@ -12,9 +12,11 @@ export class QuestComponent extends Schema {
 
     steps:QuestStep[] = []
     prerequisites:QUEST_PREREQUISITES[] = []
+
+    playerData:any = {}
 }
 
-export async function createQuestComponent(scene:Scene, aid:string, data?:any){
+export async function createQuestComponent(room:IWBRoom, scene:Scene, aid:string, data?:any){
     console.log('creating quest component',data)
     let component:any = new QuestComponent()
     if(data){
@@ -25,6 +27,11 @@ export async function createQuestComponent(scene:Scene, aid:string, data?:any){
         }
         if(data.hasOwnProperty("steps") || data.hasOwnProperty("prerequisites")){
             await loadQuestDefinition(component, data)
+        }
+
+        if(room.state.questManager.data[aid]){
+            component.playerData = room.state.questManager.data[aid].playerData
+            console.log('queset player data is', component.playerData)
         }
     }
     scene[COMPONENT_TYPES.QUEST_COMPONENT].set(aid, component)
@@ -62,21 +69,6 @@ export async function editQuestComponent(player:Player, info:any, scene:Scene){
         case 'add-prereq':
             break;
         default:
-            break;
-    }
-}
-
-export function editRewardComponent(info:any, scene:Scene){
-    let rewardInfo:any = scene[COMPONENT_TYPES.REWARD_COMPONENT].get(info.aid)
-    if(!rewardInfo){
-        return
-    }
-
-    switch(info.action){
-        case 'edit':
-            if(info.type !== "claims"){
-                rewardInfo[info.type] = info.value
-            }
             break;
     }
 }
@@ -158,6 +150,131 @@ function validateNewStep(component:QuestComponent, newStep:any){
     component.steps.push(step)
     console.log('quest steps are ', component.steps)
 }
+
+export function startQuest(scene:Scene, player: Player, questId: string): boolean {
+    let quest = scene[COMPONENT_TYPES.QUEST_COMPONENT].get(questId)
+    if(!quest || !quest.enabled){
+        console.log('quest does not exist or is not enabled')
+        return
+    }
+
+    if(quest.playerData[player.address]){
+        console.log('player has already started this quest')
+        return
+    }
+
+    console.log('player data does not exist for this quest')
+    quest.playerData[player.address] = {
+        id: questId,
+        started:true,
+        status: 'in-progress',
+        startedAt: Math.floor(Date.now()/1000),
+        completedSteps: [],
+        currentStep: quest.steps[0].id,  // Dynamically set the first step
+        currentRepeats:0
+      };
+    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.QUEST_ACTION, {action:ACTIONS.QUEST_START, quest:quest})
+}
+
+export function handleQuestStep(scene:Scene, player: Player, questInfo:any): boolean {
+    let quest = scene[COMPONENT_TYPES.QUEST_COMPONENT].get(questInfo.id)
+    if(!quest || !quest.enabled){
+        console.log('quest does not exist or is not enabled')
+        return
+    }
+
+    if(!quest.playerData[player.address]){
+        console.log('player has not started this quest')
+        return
+    }
+
+    if(quest.playerData[player.address].completed){
+        console.log('player has already completed this quest')
+        return
+    }
+
+    const step:QuestStep = quest.steps.find((step:any) => step.id === questInfo.stepId)
+    if(!step){
+      console.log("that step does not exist for this quest")
+      return 
+    }
+
+    if(hasPlayerCompletedStep(quest.playerData[player.address], questInfo.stepId)){
+        console.log('player has already completed the step')
+        return
+      }
+
+    // if(step.prerequisites.length > 0 && !this.meetsPrerequisites(player, step.prerequisites)){
+    //   console.log('player has not completed all prerequisite steps')
+    //   return
+    // }
+
+    if (step.type === "branching") {
+        // // Player chooses one of the options in the branching step
+        // if (player.choice === "option_1") {
+        //   completeStep(player, step.options[0]);  // Collect herbs
+        // } else if (player.choice === "option_2") {
+        //   completeStep(player, step.options[1]);  // Defeat the wild beast
+        // }
+      } else {
+        // Linear step completion
+        if (!quest.playerData[player.address].completedSteps.includes(questInfo.stepId)) {
+            quest.playerData[player.address].completedSteps.push(questInfo.stepId);
+            console.log(`Player ${player.name} completed step ${questInfo.stepId} in quest ${questInfo.id}`);
+            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.QUEST_ACTION, {action:ACTIONS.QUEST_ACTION, quest:quest, sceneId:scene.id})
+          }
+      }
+
+
+      // Check if the quest is now complete
+        if (isQuestComplete(quest.playerData[player.address], quest.steps)) {
+            // Mark quest as completed for the player
+            quest.playerData[player.address].status = 'completed';
+            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.QUEST_ACTION, {action:'COMPLETE', questId:questInfo.id, quest:quest, sceneId:scene.id})
+            console.log(`Player ${player.name} has completed the quest ${questInfo.id}`);
+        }
+}
+
+function isQuestComplete(playerData:any, steps:QuestStep[]): boolean {
+    // Check if all steps in the quest are completed by the player
+    const allStepsCompleted = steps.every(step => hasPlayerCompletedStep(playerData, step.id));
+    return allStepsCompleted;
+  }
+
+function hasPlayerCompletedStep(playerData:any, stepId:string){
+    return playerData.completedSteps.includes(stepId);
+}
+
+export function getQuestStepData(room:IWBRoom, client:Client, info:any){
+    let scene = room.state.scenes.get(info.sceneId)
+    if(!scene){
+        console.log('no scene to get quest step data')
+        return
+    }
+
+    let quest = scene[COMPONENT_TYPES.QUEST_COMPONENT].get(info.aid)
+    if(!quest){
+        console.log('no quest to get steps')
+        return
+    }
+
+    client.send(SERVER_MESSAGE_TYPES.QUEST_STEP_DATA, {sceneId:info.sceneId, aid:info.aid, steps:quest.steps})
+}
+
+export async function getQuestsPlayerData(room:IWBRoom){
+    let questData:any = {}
+    room.state.scenes.forEach((scene:Scene, aid:string)=>{
+        scene[COMPONENT_TYPES.QUEST_COMPONENT].forEach((quest:QuestComponent, aid:string)=>{
+            questData[aid] = {
+                playerData:quest.playerData
+            }
+        })
+    })
+    console.log('quest player data is', questData)
+    return questData
+}
+
+
 
 function loadPrerequisiteDefinitions(json:any){
     const typedPrerequisites: QUEST_PREREQUISITES[] = json.map((prereq: any) => {
@@ -242,7 +359,6 @@ export async function checkQuestCache(scene:Scene, aid:string, jsonScene:any){
         itemJSON.steps = itemInfo.steps
         itemJSON.prerequisites = itemInfo.prerequisites
         jsonScene[COMPONENT_TYPES.QUEST_COMPONENT][aid] = itemJSON
-        console.log('quest edata is', itemJSON)
     }
     return jsonScene
 }

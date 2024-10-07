@@ -16,6 +16,7 @@ import { iwbSceneHandler } from "../rooms/messaging/SceneHandler"
 import { garbageCollectRealmGames } from "./Game"
 import { garbageCollectPlaylist } from "./Playlist"
 import { iwbQuestHandler } from "../rooms/messaging/QuestHandler"
+import { QuestManager } from "./QuestManager"
 
 const fs = require('fs');
 
@@ -221,6 +222,17 @@ export class IWBManager{
             let worlds = JSON.parse(response.Data['Worlds'])
             this.worlds = worlds
 
+            // let refresh = false
+            // this.worlds.forEach((world:any)=>{
+            //     if(!world.hasOwnProperty("bans")){
+            //         world.bans = []
+            //         refresh = true
+            //     }
+            // })
+
+            // console.log('world refresh', refresh)
+            // refresh ? this.worldsModified = true : null
+
             init ? await itemManager.initServerItems() : null
 
             let custom = JSON.parse(response.Data['CUSTOM'])
@@ -379,6 +391,7 @@ export class IWBManager{
         world.updated = Math.floor(Date.now()/1000)
         world.builds = 0
         world.bps = []
+        world.bans = []
         world.v = this.version
         world.cv = 0
         world.worldName = world.ens.split(".")[0]

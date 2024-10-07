@@ -1,6 +1,7 @@
 import { Schema, MapSchema,ArraySchema, type } from "@colyseus/schema";
 import { Scene, TempScene } from "../Objects/Scene";
 import { Player } from "../Objects/Player";
+import { QuestManager } from "../Objects/QuestManager";
 
 export class IWBRoomState extends Schema {
 
@@ -37,6 +38,8 @@ export class IWBRoomState extends Schema {
   realmId:string
   realmTokenType:string
   options:any
+
+  questManager:QuestManager
 
 
 }
