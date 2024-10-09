@@ -741,7 +741,7 @@ export class IWBManager{
         // console.log('iwb rooms are ', iwbManager.rooms)
 
         let room:IWBRoom = iwbManager.rooms.find((w:any)=> w.state.world === body.data.worldName)
-        if(room.state.players.get(body.user)){
+        if(room && room.state.players.get(body.user)){
             player = room.state.players.get(body.user)
         }
 

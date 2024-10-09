@@ -267,7 +267,7 @@ export class IWBRoom extends Room<IWBRoomState> {
 }
 
 function optionsValidated(options:any){
-    // console.log("validation options", options)
+    console.log("validation options", options)
     if(!options || 
         !options.world ||
         !options.userData || 

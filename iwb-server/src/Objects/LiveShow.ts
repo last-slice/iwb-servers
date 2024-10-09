@@ -38,6 +38,17 @@ export function editLiveComponent(info:any, scene:Scene){
     let itemInfo:LiveShowComponent = scene[COMPONENT_TYPES.LIVE_COMPONENT].get(info.aid)
     if(itemInfo){
         switch(info.action){
+            case 'addadmin':
+                itemInfo.admins.push(info.data.toLowerCase())
+                break;
+
+            case 'deleteadmin':
+                let adminIndex = itemInfo.admins.findIndex($=> $ === info.data.toLowerCase())
+                if(adminIndex >=0){
+                    itemInfo.admins.splice(adminIndex, 1)
+                }
+                break;
+
             case 'addBounce':
                 itemInfo.n.push(info.data.n)
                 itemInfo.p.push(new Vector3(info.data.p))

@@ -469,7 +469,7 @@ function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
             break;
         case COMPONENT_TYPES.LIVE_COMPONENT:
             if(!scene[COMPONENT_TYPES.LIVE_COMPONENT].has(item.aid)){
-                createLiveComponent(scene, item.aid, {})
+                createLiveComponent(scene, item.aid, {admins:[client.userData.userId.toLowerCase()]})
             }
             break;
 
@@ -550,6 +550,7 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
 
         case 'Text':
             catalogItemInfo.onPlay = true
+            catalogItemInfo.isText = true
             createTextComponent(scene, item.aid, catalogItemInfo)
         break;
 
@@ -600,8 +601,13 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
     }
 
     if(catalogItemInfo.sty === "Smart Items"){
-        console.log('popuplating smart item')
+        console.log('popuplating smart item', catalogItemInfo.components)
         if(catalogItemInfo.components){
+            if(catalogItemInfo.components.Live){
+                await createLiveComponent(scene, item.aid, {admins:[room.state.owner.toLowerCase()]})
+                delete catalogItemInfo.components.Live
+            }
+
             if(catalogItemInfo.components.Actions){
                 await createActionComponent(scene, item.aid, catalogItemInfo.components.Actions)
                 delete catalogItemInfo.components.Actions

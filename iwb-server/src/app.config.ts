@@ -1,5 +1,7 @@
 import {monitor} from "@colyseus/monitor";
 import config from "@colyseus/tools";
+import { WebSocketTransport } from "@colyseus/ws-transport"
+
 import {IWBRoom} from "./rooms/IWBRoom";
 import cors from 'cors'
 import bodyParser from "body-parser";
@@ -29,6 +31,14 @@ export default config({
         gameServer.define('iwb-world', IWBRoom)
         .filterBy(['world','island'])
     },
+    initializeTransport: function(opts) {
+        return new WebSocketTransport({
+          ...opts,
+          pingInterval: 6000,
+          pingMaxRetries: 4,
+          maxPayload: 1024 * 1024 * 10, // 10MB Max Payload
+        });
+      },
 
     initializeExpress: (app) => { 
         app.use(cors({origin: true}))

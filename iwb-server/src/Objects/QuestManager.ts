@@ -40,7 +40,7 @@ export class QuestManager {
             }
           })
 
-          let questData = await fetchPlayfabFile(metadata, "" + room.state.world + "-quests-data-.json", true)
+          let questData = await fetchPlayfabFile(metadata, "" + room.state.world + "-quests-data.json", true)
           console.log('quest data is', questData)
           if(questData || questData !== undefined){
             console.log('we have quest file, load it', questData)

@@ -310,6 +310,7 @@ export async function editGameComponent(room:IWBRoom, client:Client, info:any, s
                         else if(key === "playerTimers"){
                             itemInfo[key] = info[key]
                             if(info[key]){
+                                // itemInfo.pvariables.set(new)
                                 itemInfo.pvariables.set("timer", 0)
                             }else{
                                 itemInfo.pvariables.delete("timer")

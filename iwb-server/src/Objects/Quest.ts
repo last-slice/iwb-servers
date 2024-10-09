@@ -173,7 +173,8 @@ export function startQuest(scene:Scene, player: Player, questId: string): boolea
         currentStep: quest.steps[0].id,  // Dynamically set the first step
         currentRepeats:0
       };
-    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.QUEST_ACTION, {action:ACTIONS.QUEST_START, quest:quest})
+    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.QUEST_ACTION, {action:ACTIONS.QUEST_START, quest:{...quest.toJSON(), id:questId}})
+    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.QUEST_PLAYER_DATA, {aid:questId, playerData:quest.playerData[player.address]})
 }
 
 export function handleQuestStep(scene:Scene, player: Player, questInfo:any): boolean {

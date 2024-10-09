@@ -10,6 +10,7 @@ export class TextShapeComponent extends Schema{
     @type("number") font:number = 2
     @type("number") fontSize:number = 3
     @type("number") textAlign:number = 4
+    @type("number") dataType:number = 0 //0 - text, 1 - state, 2 - counter
     @type("number") paddingTop:number
     @type("number") paddingRight:number
     @type("number") paddingBottom:number

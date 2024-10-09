@@ -577,9 +577,9 @@ export async function saveRealm(room:IWBRoom){
     fileNames.push("" + room.state.world + "-scenes.json")
     data.push(scenes)
 
-    // let playerQuestData:any = await getQuestsPlayerData(room)
-    // fileNames.push("" + room.state.world + "-quests-data-.json")
-    // data.push(playerQuestData)
+    let playerQuestData:any = await getQuestsPlayerData(room)
+    fileNames.push("" + room.state.world + "-quests-data.json")
+    data.push(playerQuestData)
 
 
     if(room.state.realmAssetsChanged){
