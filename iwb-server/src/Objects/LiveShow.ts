@@ -11,6 +11,7 @@ export class LiveShowComponent extends Schema{
 }
 
 export function createLiveComponent(scene:Scene, aid:string, data:any){
+    console.log('create live component function', data)
     let component:any = new LiveShowComponent()
     for(let key in data){
         if(key === "admins"){

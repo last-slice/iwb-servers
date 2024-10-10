@@ -16,6 +16,10 @@ class IWBRoom extends core_1.Room {
         this.leaderboardRefreshTime = 25;
     }
     async onAuth(client, options, req) {
+        if (this.isBanned(options.userData.userId)) {
+            console.log('user is banned');
+            throw new core_1.ServerError(400, "user is banned");
+        }
         try {
             return await this.doLogin(client, options, req);
         }
@@ -82,6 +86,9 @@ class IWBRoom extends core_1.Room {
             app_config_1.iwbManager.removeRoom(this);
             app_config_1.iwbManager.garbageCollectRoom(this);
         }
+    }
+    isBanned(user) {
+        return app_config_1.iwbManager.worlds.find($ => $.ens === this.state.world && $.bans.includes(user.toLowerCase()));
     }
     async getPlayerInfo(client, options) {
         let player = new Player_1.Player(this, client);
@@ -209,7 +216,7 @@ class IWBRoom extends core_1.Room {
 }
 exports.IWBRoom = IWBRoom;
 function optionsValidated(options) {
-    // console.log("validation options", options)
+    console.log("validation options", options);
     if (!options ||
         !options.world ||
         !options.userData ||

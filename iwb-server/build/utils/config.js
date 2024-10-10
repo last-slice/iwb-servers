@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateMintcontract = exports.updateMintsEnabled = exports.updateAirdropServer = exports.updateDiscordEnabled = exports.updateAirdropsEnabled = exports.mintContract = exports.discordEnabled = exports.mintsEnabled = exports.airdropsEnabled = exports.giveawayAuth = exports.giveawayServer = exports.airdropAuth = exports.airdropServer = exports.DEBUG = void 0;
-exports.DEBUG = true;
+exports.DEBUG = false;
 exports.airdropServer = "";
 exports.airdropAuth = "";
 exports.giveawayServer = "";

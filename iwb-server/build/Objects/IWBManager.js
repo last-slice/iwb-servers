@@ -18,6 +18,7 @@ const PlayerHandler_1 = require("../rooms/messaging/PlayerHandler");
 const SceneHandler_1 = require("../rooms/messaging/SceneHandler");
 const Game_1 = require("./Game");
 const Playlist_1 = require("./Playlist");
+const QuestHandler_1 = require("../rooms/messaging/QuestHandler");
 const fs = require('fs');
 class IWBManager {
     constructor() {
@@ -91,6 +92,7 @@ class IWBManager {
             await (0, GameHandler_1.iwbSceneGameHandler)(room);
             await (0, PlayerHandler_1.iwbPlayerHandler)(room);
             await (0, SceneHandler_1.iwbSceneHandler)(room);
+            await (0, QuestHandler_1.iwbQuestHandler)(room);
             await (0, Scene_1.initServerScenes)(room, room.state.options.island !== "world" ? room.state.options : undefined);
             // loadRealmScenes(this, data)
             await (0, Scene_1.initServerAssets)(room);
@@ -119,7 +121,9 @@ class IWBManager {
         // console.log('asset count ', room.state.realmAssets.size)
         // console.log('quests are ', questManager.quests.values())
         player.sendPlayerMessage(types_1.SERVER_MESSAGE_TYPES.INIT, {
-            quests: app_config_1.questManager.quests.filter(quest => quest.owner === room.state.owner).map(({ definition, ...rest }) => rest),
+            prerequisites: app_config_1.questManager.prerequisites.filter(condition => condition.world === room.state.world),
+            quests: app_config_1.questManager.quests.filter(quest => quest.world === room.state.world),
+            // quests: questManager.quests.filter(quest => quest.owner === room.state.owner).map(({ definition, ...rest }) => rest),
             realmAssets: room.state.realmAssets,
             realmAssetSize: room.state.realmAssets.size,
             styles: app_config_1.iwbManager.styles,
@@ -180,6 +184,15 @@ class IWBManager {
             // console.log('config is', config)
             let worlds = JSON.parse(response.Data['Worlds']);
             this.worlds = worlds;
+            // let refresh = false
+            // this.worlds.forEach((world:any)=>{
+            //     if(!world.hasOwnProperty("bans")){
+            //         world.bans = []
+            //         refresh = true
+            //     }
+            // })
+            // console.log('world refresh', refresh)
+            // refresh ? this.worldsModified = true : null
             init ? await app_config_1.itemManager.initServerItems() : null;
             let custom = JSON.parse(response.Data['CUSTOM']);
             let res = await (0, Playfab_1.getTitleData)({ Keys: custom });
@@ -240,6 +253,11 @@ class IWBManager {
     async updateAllWorlds() {
         for (let i = 0; i < this.worlds.length; i++) {
             await this.deployWorld(this.worlds[i]);
+        }
+    }
+    async updateSpecificWorlds(worlds) {
+        for (let i = 0; i < worlds.length; i++) {
+            await this.deployWorld(worlds[i]);
         }
     }
     async adminDeploy(user, world) {
@@ -316,6 +334,7 @@ class IWBManager {
         world.updated = Math.floor(Date.now() / 1000);
         world.builds = 0;
         world.bps = [];
+        world.bans = [];
         world.v = this.version;
         world.cv = 0;
         world.worldName = world.ens.split(".")[0];
@@ -622,7 +641,7 @@ class IWBManager {
         let player;
         // console.log('iwb rooms are ', iwbManager.rooms)
         let room = app_config_1.iwbManager.rooms.find((w) => w.state.world === body.data.worldName);
-        if (room.state.players.get(body.user)) {
+        if (room && room.state.players.get(body.user)) {
             player = room.state.players.get(body.user);
         }
         // player = room.state.players.get(body.user)

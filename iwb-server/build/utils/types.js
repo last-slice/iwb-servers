@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PLAYER_GAME_STATUSES = exports.GAME_TYPES = exports.CATALOG_IDS = exports.TRIGGER_TYPES = exports.ACCESS_FILTERS = exports.ACCESS_CATEGORIES = exports.ACCESS_TYPES = exports.REWARD_TYPES = exports.TriggerConditionOperation = exports.Triggers = exports.ACTIONS = exports.BLOCKCHAINS = exports.COLLISION_LAYERS = exports.COMPONENT_TYPES = exports.EDIT_MODIFIERS = exports.EDIT_MODES = exports.VIEW_MODES = exports.SCENE_MODES = exports.SERVER_MESSAGE_TYPES = exports.Color4 = void 0;
+exports.PrerequisiteType = exports.PLAYER_GAME_STATUSES = exports.GAME_TYPES = exports.CATALOG_IDS = exports.TRIGGER_TYPES = exports.ACCESS_FILTERS = exports.ACCESS_CATEGORIES = exports.ACCESS_TYPES = exports.REWARD_TYPES = exports.TriggerConditionOperation = exports.Triggers = exports.ACTIONS = exports.BLOCKCHAINS = exports.COLLISION_LAYERS = exports.COMPONENT_TYPES = exports.EDIT_MODIFIERS = exports.EDIT_MODES = exports.VIEW_MODES = exports.SCENE_MODES = exports.SERVER_MESSAGE_TYPES = exports.Color4 = void 0;
 const schema_1 = require("@colyseus/schema");
 class Color4 extends schema_1.Schema {
 }
@@ -87,6 +87,8 @@ var SERVER_MESSAGE_TYPES;
     SERVER_MESSAGE_TYPES["SCENE_DEPLOY_FINISHED"] = "scene_deploy_finished";
     SERVER_MESSAGE_TYPES["SCENE_ACTION"] = "scene_action";
     SERVER_MESSAGE_TYPES["SCENE_DELETE_GRABBED_ITEM"] = "scene_delete_grabbed_item";
+    SERVER_MESSAGE_TYPES["SCENE_CREATE_QUEST"] = "scene_create_quest";
+    SERVER_MESSAGE_TYPES["SCENE_DELETE_QUEST"] = "scene_delete_quest";
     //World
     SERVER_MESSAGE_TYPES["INIT_WORLD"] = "init_world";
     SERVER_MESSAGE_TYPES["NEW_WORLD_CREATED"] = "new_world_created";
@@ -99,6 +101,8 @@ var SERVER_MESSAGE_TYPES;
     SERVER_MESSAGE_TYPES["PLAYTIME"] = "playtime";
     SERVER_MESSAGE_TYPES["WORLD_ADD_BP"] = "world_add_build_permissions";
     SERVER_MESSAGE_TYPES["WORLD_DELETE_BP"] = "world_delete_build_permissions";
+    SERVER_MESSAGE_TYPES["WORLD_ADD_BAN"] = "world_add_ban";
+    SERVER_MESSAGE_TYPES["WORLD_DELETE_BAN"] = "world_delete_ban";
     SERVER_MESSAGE_TYPES["GET_MARKETPLACE"] = "get_marketplace";
     SERVER_MESSAGE_TYPES["FORCE_BACKUP"] = "force_backup";
     SERVER_MESSAGE_TYPES["CUSTOM"] = "custom";
@@ -122,6 +126,9 @@ var SERVER_MESSAGE_TYPES;
     //QUESTING
     SERVER_MESSAGE_TYPES["GET_QUEST_DEFINITIONS"] = "get_quest_definitions";
     SERVER_MESSAGE_TYPES["QUEST_EDIT"] = "edit_quest";
+    SERVER_MESSAGE_TYPES["QUEST_ACTION"] = "quest_action";
+    SERVER_MESSAGE_TYPES["QUEST_PLAYER_DATA"] = "quest_player_data";
+    SERVER_MESSAGE_TYPES["QUEST_STEP_DATA"] = "quest_step_data";
 })(SERVER_MESSAGE_TYPES || (exports.SERVER_MESSAGE_TYPES = SERVER_MESSAGE_TYPES = {}));
 var SCENE_MODES;
 (function (SCENE_MODES) {
@@ -189,6 +196,9 @@ var COMPONENT_TYPES;
     COMPONENT_TYPES["VLM_COMPONENT"] = "VLM";
     COMPONENT_TYPES["MULTIPLAYER_COMPONENT"] = "Multiplayer";
     COMPONENT_TYPES["LEADERBOARD_COMPONENT"] = "Leaderboard";
+    COMPONENT_TYPES["VEHICLE_COMPONENT"] = "Vehicle";
+    COMPONENT_TYPES["PHYSICS_COMPONENT"] = "Physics";
+    COMPONENT_TYPES["QUEST_COMPONENT"] = "Quest";
 })(COMPONENT_TYPES || (exports.COMPONENT_TYPES = COMPONENT_TYPES = {}));
 var COLLISION_LAYERS;
 (function (COLLISION_LAYERS) {
@@ -295,6 +305,8 @@ var ACTIONS;
     ACTIONS["POPUP_SHOW"] = "popup_show";
     ACTIONS["POPUP_HIDE"] = "popup_hide";
     ACTIONS["RANDOM_NUMBER"] = "random_number";
+    ACTIONS["QUEST_ACTION"] = "quest_action";
+    ACTIONS["QUEST_START"] = "quest_start";
 })(ACTIONS || (exports.ACTIONS = ACTIONS = {}));
 var Triggers;
 (function (Triggers) {
@@ -369,3 +381,14 @@ var PLAYER_GAME_STATUSES;
     PLAYER_GAME_STATUSES["WAITING"] = "waiting";
     PLAYER_GAME_STATUSES["ELIMINATED"] = "eliminated";
 })(PLAYER_GAME_STATUSES || (exports.PLAYER_GAME_STATUSES = PLAYER_GAME_STATUSES = {}));
+// Enum for prerequisite types
+var PrerequisiteType;
+(function (PrerequisiteType) {
+    PrerequisiteType["Level"] = "level";
+    PrerequisiteType["Time"] = "time";
+    PrerequisiteType["Item"] = "item";
+    PrerequisiteType["QuestCompletion"] = "quest_completion";
+    PrerequisiteType["StepCompletion"] = "step_completion";
+    PrerequisiteType["Cooldown"] = "cooldown";
+    PrerequisiteType["Repeatable"] = "repeatable";
+})(PrerequisiteType || (exports.PrerequisiteType = PrerequisiteType = {}));

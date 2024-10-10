@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDeploymentFinished = exports.handleSceneDeploymentReady = exports.handleAdminDeployRequest = exports.handlBulkWorldsDeployments = exports.handleWorldDeployment = exports.updateCatalogAssets = exports.updateIWBVersion = exports.authenticateToken = exports.handleNewAssetData = exports.handleAssetUploaderSigning = void 0;
+exports.handleDeploymentFinished = exports.handleSceneDeploymentReady = exports.handleAdminDeployRequest = exports.handleSpecificWorldsDeployments = exports.handlBulkWorldsDeployments = exports.handleWorldDeployment = exports.updateCatalogAssets = exports.updateIWBVersion = exports.authenticateToken = exports.handleNewAssetData = exports.handleAssetUploaderSigning = void 0;
 const jwt = __importStar(require("jsonwebtoken"));
 const app_config_1 = require("../app.config");
 const config_1 = require("../utils/config");
@@ -170,6 +170,17 @@ function handlBulkWorldsDeployments(req, res) {
     }
 }
 exports.handlBulkWorldsDeployments = handlBulkWorldsDeployments;
+function handleSpecificWorldsDeployments(req, res) {
+    if (req.params.auth !== process.env.IWB_UPLOAD_AUTH_KEY) {
+        console.log('invalid asset auth key');
+        return res.status(200).json({ valid: false, message: 'Unauthorized' });
+    }
+    else {
+        res.status(200).send({ valid: true });
+        app_config_1.iwbManager.updateSpecificWorlds(req.body);
+    }
+}
+exports.handleSpecificWorldsDeployments = handleSpecificWorldsDeployments;
 async function handleAdminDeployRequest(req, res) {
     if (req.params.auth !== process.env.IWB_DEPLOYMENT_AUTH) {
         console.log('invalid asset auth key');

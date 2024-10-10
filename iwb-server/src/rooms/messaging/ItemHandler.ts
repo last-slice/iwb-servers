@@ -468,9 +468,9 @@ function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
             }
             break;
         case COMPONENT_TYPES.LIVE_COMPONENT:
-            if(!scene[COMPONENT_TYPES.LIVE_COMPONENT].has(item.aid)){
+            // if(scene[COMPONENT_TYPES.LIVE_COMPONENT].has(item.aid)){
                 createLiveComponent(scene, item.aid, {admins:[client.userData.userId.toLowerCase()]})
-            }
+            // }
             break;
 
         case COMPONENT_TYPES.BILLBOARD_COMPONENT:
@@ -604,6 +604,7 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
         console.log('popuplating smart item', catalogItemInfo.components)
         if(catalogItemInfo.components){
             if(catalogItemInfo.components.Live){
+                console.log('creating live component', catalogItemInfo.components.Live)
                 await createLiveComponent(scene, item.aid, {admins:[room.state.owner.toLowerCase()]})
                 delete catalogItemInfo.components.Live
             }

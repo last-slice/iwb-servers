@@ -91,10 +91,12 @@ __decorate([
     (0, schema_1.type)({ map: Transform_1.Vector3 })
 ], SelectedAsset.prototype, "childTransform", void 0);
 class Player extends schema_1.Schema {
+    // questData: PlayerQuest[] = [];  // Array to store player's quest data
     constructor(room, client) {
         super();
         this.gameId = "";
         this.gameStatus = types_1.PLAYER_GAME_STATUSES.NONE;
+        this.vehicle = "'";
         this.world = "main";
         this.playtime = 0;
         this.modified = false;
@@ -115,6 +117,9 @@ class Player extends schema_1.Schema {
         this.landsAvailable = [];
         this.worldsAvailable = [];
         this.gameVariables = {};
+        //quest objects
+        // questClients:any
+        this.questData = [];
         this.room = room;
         this.client = client;
         this.userId = client.userData.userId;
@@ -127,6 +132,7 @@ class Player extends schema_1.Schema {
         this.startTime = Math.floor(Date.now() / 1000);
         this.setSettings(this.playFabData.InfoResultPayload.UserData);
         // this.loadGameVariables()
+        this.loadQuestData();
     }
     addSelectedAsset(info) {
         console.log('player selected asset', info);
@@ -338,6 +344,79 @@ class Player extends schema_1.Schema {
         }
         return false;
     }
+    // async loadGameVariables(){
+    //   try{
+    //     let metadata = await fetchUserMetaData(this.playFabData)
+    //     let data = await fetchPlayfabFile(metadata, "gamedata.json", true)
+    //     console.log('saved game data is', data)
+    //     if(data || data !== undefined){
+    //       console.log('we have game data to store in cache')
+    //       this.gameVariables = data
+    //     }
+    //   }
+    //   catch(e){
+    //     console.log('error getting load game variables', e)
+    //   }
+    // }
+    async loadQuestData() {
+        try {
+            let playerQuestData = await (0, Playfab_1.fetchPlayfabFile)(this.playFabData, "quests.json");
+            console.log('playerQuestData is', playerQuestData);
+            this.questData = playerQuestData;
+            //load player progress
+        }
+        catch (e) {
+            console.log('there was an error saving the uploaded asset', e);
+        }
+    }
+    // Check if the player has already started the quest
+    hasStartedQuest(questId) {
+        return this.questData.find(quest => quest.id === questId);
+    }
+    // Start a new quest and add it to the player's quest data
+    startQuest(quest) {
+        const firstStepId = quest.steps[0].id;
+        const newQuest = {
+            id: quest.id,
+            started: true,
+            status: 'in-progress',
+            startedAt: Math.floor(Date.now() / 1000),
+            completedSteps: [],
+            currentStep: firstStepId,
+            currentRepeats: 0
+        };
+        // Add the new quest to the player's questData array
+        this.questData.push(newQuest);
+        console.log(`Player ${newQuest.id} started quest ${newQuest.id}`);
+        this.sendPlayerMessage(types_1.SERVER_MESSAGE_TYPES.QUEST_ACTION, { action: types_1.ACTIONS.QUEST_START, quest: newQuest });
+    }
+    // Mark a quest step as completed
+    completeQuestStep(questId, stepId) {
+        const quest = this.getQuest(questId);
+        if (quest && !quest.completedSteps.includes(stepId)) {
+            quest.completedSteps.push(stepId);
+            console.log(`Player ${this.name} completed step ${stepId} in quest ${questId}`);
+            this.sendPlayerMessage(types_1.SERVER_MESSAGE_TYPES.QUEST_ACTION, { action: types_1.ACTIONS.QUEST_ACTION, quest: quest });
+        }
+    }
+    // Check if a quest step is completed
+    hasCompletedStep(questId, stepId) {
+        const quest = this.getQuest(questId);
+        return quest !== undefined && quest.completedSteps.includes(stepId);
+    }
+    // Complete a quest and mark it as 'completed'
+    completeQuest(questId) {
+        const quest = this.getQuest(questId);
+        if (quest) {
+            quest.status = 'completed';
+            console.log(`Player ${this.name} has completed quest ${questId}`);
+            this.sendPlayerMessage(types_1.SERVER_MESSAGE_TYPES.QUEST_ACTION, { action: 'COMPLETE', quest: quest });
+        }
+    }
+    // Get a player's progress on a specific quest
+    getQuest(questId) {
+        return this.questData.find(quest => quest.id === questId);
+    }
 }
 exports.Player = Player;
 __decorate([
@@ -355,6 +434,9 @@ __decorate([
 __decorate([
     (0, schema_1.type)("string")
 ], Player.prototype, "gameStatus", void 0);
+__decorate([
+    (0, schema_1.type)("string")
+], Player.prototype, "vehicle", void 0);
 __decorate([
     (0, schema_1.type)(SelectedAsset)
 ], Player.prototype, "selectedAsset", void 0);

@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkAssetCacheStates = exports.saveRealmAssets = exports.getRealmData = exports.saveRealm = exports.loadRealmScenes = exports.initServerAssets = exports.initServerScenes = exports.Scene = exports.SceneMetaDataComponent = exports.TempScene = void 0;
 const schema_1 = require("@colyseus/schema");
@@ -47,6 +47,10 @@ const Playlist_1 = require("./Playlist");
 const Paths_1 = require("./Paths");
 const Multiplayer_1 = require("./Multiplayer");
 const Leaderboard_1 = require("./Leaderboard");
+const Vehicle_1 = require("./Vehicle");
+const Physics_1 = require("./Physics");
+const Quest_1 = require("./Quest");
+const QuestManager_1 = require("./QuestManager");
 class TempScene extends schema_1.Schema {
     constructor() {
         super(...arguments);
@@ -100,9 +104,10 @@ __decorate([
     (0, schema_1.type)("string")
 ], SceneMetaDataComponent.prototype, "im", void 0);
 class Scene extends schema_1.Schema {
-    static { _a = types_1.COMPONENT_TYPES.ACTION_COMPONENT, _b = types_1.COMPONENT_TYPES.ANIMATION_COMPONENT, _c = types_1.COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT, _d = types_1.COMPONENT_TYPES.AUDIO_COMPONENT, _e = types_1.COMPONENT_TYPES.BILLBOARD_COMPONENT, _f = types_1.COMPONENT_TYPES.COUNTER_COMPONENT, _g = types_1.COMPONENT_TYPES.DIALOG_COMPONENT, _h = types_1.COMPONENT_TYPES.GAME_COMPONENT, _j = types_1.COMPONENT_TYPES.GAME_ITEM_COMPONENT, _k = types_1.COMPONENT_TYPES.GLTF_COMPONENT, _l = types_1.COMPONENT_TYPES.IWB_COMPONENT, _m = types_1.COMPONENT_TYPES.LEADERBOARD_COMPONENT, _o = types_1.COMPONENT_TYPES.LEVEL_COMPONENT, _p = types_1.COMPONENT_TYPES.LIVE_COMPONENT, _q = types_1.COMPONENT_TYPES.MATERIAL_COMPONENT, _r = types_1.COMPONENT_TYPES.MESH_COLLIDER_COMPONENT, _s = types_1.COMPONENT_TYPES.MESH_RENDER_COMPONENT, _t = types_1.COMPONENT_TYPES.MULTIPLAYER_COMPONENT, _u = types_1.COMPONENT_TYPES.NAMES_COMPONENT, _v = types_1.COMPONENT_TYPES.NFT_COMPONENT, _w = types_1.COMPONENT_TYPES.PATH_COMPONENT, _x = types_1.COMPONENT_TYPES.PLAYLIST_COMPONENT, _y = types_1.COMPONENT_TYPES.POINTER_COMPONENT, _z = types_1.COMPONENT_TYPES.REWARD_COMPONENT, _0 = types_1.COMPONENT_TYPES.STATE_COMPONENT, _1 = types_1.COMPONENT_TYPES.TEXT_COMPONENT, _2 = types_1.COMPONENT_TYPES.TEXTURE_COMPONENT, _3 = types_1.COMPONENT_TYPES.TRANSFORM_COMPONENT, _4 = types_1.COMPONENT_TYPES.TRIGGER_COMPONENT, _5 = types_1.COMPONENT_TYPES.UI_TEXT_COMPONENT, _6 = types_1.COMPONENT_TYPES.UI_IMAGE_COMPONENT, _7 = types_1.COMPONENT_TYPES.VIDEO_COMPONENT, _8 = types_1.COMPONENT_TYPES.VISBILITY_COMPONENT, _9 = types_1.COMPONENT_TYPES.PARENTING_COMPONENT; }
+    static { _a = types_1.COMPONENT_TYPES.ACTION_COMPONENT, _b = types_1.COMPONENT_TYPES.ANIMATION_COMPONENT, _c = types_1.COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT, _d = types_1.COMPONENT_TYPES.AUDIO_COMPONENT, _e = types_1.COMPONENT_TYPES.BILLBOARD_COMPONENT, _f = types_1.COMPONENT_TYPES.COUNTER_COMPONENT, _g = types_1.COMPONENT_TYPES.DIALOG_COMPONENT, _h = types_1.COMPONENT_TYPES.GAME_COMPONENT, _j = types_1.COMPONENT_TYPES.GAME_ITEM_COMPONENT, _k = types_1.COMPONENT_TYPES.GLTF_COMPONENT, _l = types_1.COMPONENT_TYPES.IWB_COMPONENT, _m = types_1.COMPONENT_TYPES.LEADERBOARD_COMPONENT, _o = types_1.COMPONENT_TYPES.LEVEL_COMPONENT, _p = types_1.COMPONENT_TYPES.LIVE_COMPONENT, _q = types_1.COMPONENT_TYPES.MATERIAL_COMPONENT, _r = types_1.COMPONENT_TYPES.MESH_COLLIDER_COMPONENT, _s = types_1.COMPONENT_TYPES.MESH_RENDER_COMPONENT, _t = types_1.COMPONENT_TYPES.MULTIPLAYER_COMPONENT, _u = types_1.COMPONENT_TYPES.NAMES_COMPONENT, _v = types_1.COMPONENT_TYPES.NFT_COMPONENT, _w = types_1.COMPONENT_TYPES.PATH_COMPONENT, _x = types_1.COMPONENT_TYPES.PHYSICS_COMPONENT, _y = types_1.COMPONENT_TYPES.PLAYLIST_COMPONENT, _z = types_1.COMPONENT_TYPES.POINTER_COMPONENT, _0 = types_1.COMPONENT_TYPES.REWARD_COMPONENT, _1 = types_1.COMPONENT_TYPES.STATE_COMPONENT, _2 = types_1.COMPONENT_TYPES.TEXT_COMPONENT, _3 = types_1.COMPONENT_TYPES.TEXTURE_COMPONENT, _4 = types_1.COMPONENT_TYPES.TRANSFORM_COMPONENT, _5 = types_1.COMPONENT_TYPES.TRIGGER_COMPONENT, _6 = types_1.COMPONENT_TYPES.UI_TEXT_COMPONENT, _7 = types_1.COMPONENT_TYPES.UI_IMAGE_COMPONENT, _8 = types_1.COMPONENT_TYPES.VISBILITY_COMPONENT, _9 = types_1.COMPONENT_TYPES.VIDEO_COMPONENT, _10 = types_1.COMPONENT_TYPES.VEHICLE_COMPONENT, _11 = types_1.COMPONENT_TYPES.QUEST_COMPONENT, _12 = types_1.COMPONENT_TYPES.PARENTING_COMPONENT; }
     constructor(room, data) {
         super(data);
+        this.metadata = new SceneMetaDataComponent();
         // @type("string") im: string
         this.bps = new schema_1.ArraySchema();
         // @type(['string']) rat = new ArraySchema<string>();
@@ -115,7 +120,6 @@ class Scene extends schema_1.Schema {
         this.pc = 0;
         this.direction = 0;
         this.offsets = new schema_1.ArraySchema();
-        this.metadata = new SceneMetaDataComponent();
         this.dv = false;
         this.dpx = false;
         this.lim = true;
@@ -152,14 +156,18 @@ class Scene extends schema_1.Schema {
         this[_5] = new schema_1.MapSchema();
         this[_6] = new schema_1.MapSchema();
         this[_7] = new schema_1.MapSchema();
-        // @type({map:VLMComponent}) [COMPONENT_TYPES.VLM_COMPONENT]:MapSchema<VLMComponent> = new MapSchema<VLMComponent>()
         this[_8] = new schema_1.MapSchema();
-        this[_9] = new schema_1.ArraySchema();
+        this[_9] = new schema_1.MapSchema();
+        // @type({map:VLMComponent}) [COMPONENT_TYPES.VLM_COMPONENT]:MapSchema<VLMComponent> = new MapSchema<VLMComponent>()
+        this[_10] = new schema_1.MapSchema();
+        this[_11] = new schema_1.MapSchema();
+        this[_12] = new schema_1.ArraySchema();
         this.entities = [];
         if (room) {
             this.roomId = room.roomId;
         }
         if (data) {
+            // console.log('data is', data)
             if (!data.hasOwnProperty("metadata")) {
                 this.metadata.n = data.n;
                 this.metadata.d = data.d;
@@ -167,6 +175,14 @@ class Scene extends schema_1.Schema {
                 this.metadata.ona = data.ona;
                 this.metadata.cat = data.cat;
                 this.metadata.im = data.im;
+            }
+            else {
+                this.metadata.n = data.metadata.n;
+                this.metadata.d = data.metadata.d;
+                this.metadata.o = data.metadata.o;
+                this.metadata.ona = data.metadata.ona;
+                this.metadata.cat = data.metadata.cat;
+                this.metadata.im = data.metadata.im;
             }
             this.bps = data.bps;
             this.pcls = data.pcls;
@@ -183,6 +199,21 @@ class Scene extends schema_1.Schema {
         Object.values(types_1.COMPONENT_TYPES).forEach((component) => {
             if (data[component]) {
                 switch (component) {
+                    case types_1.COMPONENT_TYPES.QUEST_COMPONENT:
+                        for (const aid in data[component]) {
+                            (0, Quest_1.createQuestComponent)(room, this, aid, data[component][aid]);
+                        }
+                        break;
+                    case types_1.COMPONENT_TYPES.PHYSICS_COMPONENT:
+                        for (const aid in data[component]) {
+                            (0, Physics_1.createPhysicsComponent)(this, aid, data[component][aid]);
+                        }
+                        break;
+                    case types_1.COMPONENT_TYPES.VEHICLE_COMPONENT:
+                        for (const aid in data[component]) {
+                            (0, Vehicle_1.createVehicleComponent)(this, aid, data[component][aid]);
+                        }
+                        break;
                     case types_1.COMPONENT_TYPES.LEADERBOARD_COMPONENT:
                         for (const aid in data[component]) {
                             (0, Leaderboard_1.createLeaderboardComponent)(this, aid, data[component][aid]);
@@ -401,6 +432,9 @@ __decorate([
     (0, schema_1.type)("string")
 ], Scene.prototype, "id", void 0);
 __decorate([
+    (0, schema_1.type)(SceneMetaDataComponent)
+], Scene.prototype, "metadata", void 0);
+__decorate([
     (0, schema_1.type)("string")
 ], Scene.prototype, "bpcl", void 0);
 __decorate([
@@ -439,9 +473,6 @@ __decorate([
 __decorate([
     (0, schema_1.type)(['number'])
 ], Scene.prototype, "offsets", void 0);
-__decorate([
-    (0, schema_1.type)(SceneMetaDataComponent)
-], Scene.prototype, "metadata", void 0);
 __decorate([
     (0, schema_1.type)("boolean")
 ], Scene.prototype, "isdl", void 0);
@@ -524,44 +555,53 @@ __decorate([
     (0, schema_1.type)({ map: Paths_1.PathComponent })
 ], Scene.prototype, _w, void 0);
 __decorate([
-    (0, schema_1.type)({ map: Playlist_1.PlaylistComponent })
+    (0, schema_1.type)({ map: Physics_1.PhysicsComponent })
 ], Scene.prototype, _x, void 0);
 __decorate([
-    (0, schema_1.type)({ map: Pointers_1.PointerComponent })
+    (0, schema_1.type)({ map: Playlist_1.PlaylistComponent })
 ], Scene.prototype, _y, void 0);
 __decorate([
-    (0, schema_1.type)({ map: Rewards_1.RewardComponent })
+    (0, schema_1.type)({ map: Pointers_1.PointerComponent })
 ], Scene.prototype, _z, void 0);
 __decorate([
-    (0, schema_1.type)({ map: State_1.StateComponent })
+    (0, schema_1.type)({ map: Rewards_1.RewardComponent })
 ], Scene.prototype, _0, void 0);
 __decorate([
-    (0, schema_1.type)({ map: TextShape_1.TextShapeComponent })
+    (0, schema_1.type)({ map: State_1.StateComponent })
 ], Scene.prototype, _1, void 0);
 __decorate([
-    (0, schema_1.type)({ map: Textures_1.TextureComponent })
+    (0, schema_1.type)({ map: TextShape_1.TextShapeComponent })
 ], Scene.prototype, _2, void 0);
 __decorate([
-    (0, schema_1.type)({ map: Transform_1.TransformComponent })
+    (0, schema_1.type)({ map: Textures_1.TextureComponent })
 ], Scene.prototype, _3, void 0);
 __decorate([
-    (0, schema_1.type)({ map: Trigger_1.TriggerComponent })
+    (0, schema_1.type)({ map: Transform_1.TransformComponent })
 ], Scene.prototype, _4, void 0);
 __decorate([
-    (0, schema_1.type)({ map: UIText_1.UITextComponent })
+    (0, schema_1.type)({ map: Trigger_1.TriggerComponent })
 ], Scene.prototype, _5, void 0);
 __decorate([
-    (0, schema_1.type)({ map: UIImage_1.UIImageComponent })
+    (0, schema_1.type)({ map: UIText_1.UITextComponent })
 ], Scene.prototype, _6, void 0);
 __decorate([
-    (0, schema_1.type)({ map: Video_1.VideoComponent })
+    (0, schema_1.type)({ map: UIImage_1.UIImageComponent })
 ], Scene.prototype, _7, void 0);
 __decorate([
     (0, schema_1.type)({ map: Visibility_1.VisibilityComponent })
 ], Scene.prototype, _8, void 0);
 __decorate([
-    (0, schema_1.type)([Parenting_1.ParentingComponent])
+    (0, schema_1.type)({ map: Video_1.VideoComponent })
 ], Scene.prototype, _9, void 0);
+__decorate([
+    (0, schema_1.type)({ map: Vehicle_1.VehicleComponent })
+], Scene.prototype, _10, void 0);
+__decorate([
+    (0, schema_1.type)({ map: Quest_1.QuestComponent })
+], Scene.prototype, _11, void 0);
+__decorate([
+    (0, schema_1.type)([Parenting_1.ParentingComponent])
+], Scene.prototype, _12, void 0);
 function initServerScenes(room, options) {
     if (app_config_1.iwbManager.pendingSaves.includes((room.state.world))) {
         let timeout = setTimeout(() => {
@@ -578,12 +618,15 @@ function initServerScenes(room, options) {
                     room.state.realmToken = realmData.EntityToken.EntityToken;
                     room.state.realmId = realmData.EntityToken.Entity.Id;
                     room.state.realmTokenType = realmData.EntityToken.Entity.Type;
-                    app_config_1.iwbManager.fetchRealmData(realmData)
-                        .then((realmData) => {
-                        app_config_1.iwbManager.fetchRealmScenes(room.state.world, realmData)
-                            .then(async (sceneData) => {
-                            await loadRealmScenes(room, sceneData, options);
-                            app_config_1.iwbManager.initUsers(room);
+                    QuestManager_1.QuestManager.create(room).then((questManager) => {
+                        room.state.questManager = questManager;
+                        app_config_1.iwbManager.fetchRealmData(realmData)
+                            .then((realmData) => {
+                            app_config_1.iwbManager.fetchRealmScenes(room.state.world, realmData)
+                                .then(async (sceneData) => {
+                                await loadRealmScenes(room, sceneData, options);
+                                app_config_1.iwbManager.initUsers(room);
+                            });
                         });
                     });
                 })
@@ -662,10 +705,11 @@ async function saveRealm(room) {
     let fileNames = [];
     let data = [];
     let scenes = await getRealmData(room);
-    // if(scenes && scenes.length > 0){
     fileNames.push("" + room.state.world + "-scenes.json");
     data.push(scenes);
-    // }
+    let playerQuestData = await (0, Quest_1.getQuestsPlayerData)(room);
+    fileNames.push("" + room.state.world + "-quests-data.json");
+    data.push(playerQuestData);
     if (room.state.realmAssetsChanged) {
         console.log('back up catalog assets');
         let json = {
@@ -725,6 +769,7 @@ async function checkAssetCacheStates(scene, jsonScene) {
         jsonScene = await (0, IWB_1.checkIWBCache)(scene, aid, jsonScene);
         jsonScene = await (0, Rewards_1.checkRewardCache)(scene, aid, jsonScene);
         jsonScene = await (0, Game_1.checkGameCache)(scene, aid, jsonScene);
+        jsonScene = await (0, Quest_1.checkQuestCache)(scene, aid, jsonScene);
     });
     return jsonScene;
 }

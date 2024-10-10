@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.questManager = exports.iwbManager = exports.itemManager = void 0;
 const monitor_1 = require("@colyseus/monitor");
 const tools_1 = __importDefault(require("@colyseus/tools"));
+const ws_transport_1 = require("@colyseus/ws-transport");
 const IWBRoom_1 = require("./rooms/IWBRoom");
 const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser"));
@@ -26,6 +27,14 @@ exports.default = (0, tools_1.default)({
         exports.iwbManager = new IWBManager_1.IWBManager();
         gameServer.define('iwb-world', IWBRoom_1.IWBRoom)
             .filterBy(['world', 'island']);
+    },
+    initializeTransport: function (opts) {
+        return new ws_transport_1.WebSocketTransport({
+            ...opts,
+            pingInterval: 6000,
+            pingMaxRetries: 4,
+            maxPayload: 1024 * 1024 * 10, // 10MB Max Payload
+        });
     },
     initializeExpress: (app) => {
         app.use((0, cors_1.default)({ origin: true }));
