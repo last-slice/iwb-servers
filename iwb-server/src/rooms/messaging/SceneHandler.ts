@@ -527,7 +527,7 @@ export function iwbSceneHandler(room:IWBRoom){
                     pushPlayfabEvent(
                         SERVER_MESSAGE_TYPES.SCENE_DEPLOY, 
                         player, 
-                        [{scene:scene, world: scene.w}]
+                        [{scene:scene.metadata.n, world: scene.w}]
                     )
                 }
                 catch(e){
