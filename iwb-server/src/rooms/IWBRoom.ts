@@ -219,7 +219,7 @@ export class IWBRoom extends Room<IWBRoomState> {
         //set new user display name
         try{
             const result = await updatePlayerDisplayName({
-                DisplayName: options.userData.name === "Guest" ? 
+                DisplayName: options.userData.name === "Guest" || options.userData.name === "" ? 
                 options.userData.name + options.userData.userId.substring(options.userData.userId.length - 5) : 
                 options.userData.name,
                 
@@ -271,8 +271,8 @@ function optionsValidated(options:any){
     if(!options || 
         !options.world ||
         !options.userData || 
-        !options.userData.userId || 
-        !options.userData.name //|| 
+        !options.userData.userId //|| 
+        // !options.userData.name //|| 
         // options.userData.name === ""
     ){
         return false
