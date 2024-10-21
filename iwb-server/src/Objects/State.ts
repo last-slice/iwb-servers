@@ -7,6 +7,7 @@ export class StateComponent extends Schema{
     @type("string") defaultValue:string
     @type("string") currentValue:string
     @type("string") previousValue:string
+    @type("boolean") synced:boolean
 }
 
 export function createStateComponent(scene:Scene, aid:string, data?:any){
@@ -54,6 +55,10 @@ export function editStateComponent(data:any, scene:Scene){
 
         case 'default':
             states.defaultValue = data.data.default
+            break;
+
+        case 'sync':
+            states.synced = data.data
             break;
     }
 }

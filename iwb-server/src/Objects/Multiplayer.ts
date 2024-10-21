@@ -10,9 +10,17 @@ export class ActionSyncComponent extends Schema{
   @type("string") userId:string
 }
 
+export class SyncDataComponent extends Schema{
+  @type("string") aid:string
+
+  //states
+  @type("string") state:string
+}
+
 export class MultiplayerComponent extends Schema{
     @type(AttachedItem) attachedItem:AttachedItem = new AttachedItem()
     @type([ActionSyncComponent]) actionsToSync:ArraySchema<ActionSyncComponent> = new ArraySchema()
+    // @type({map:SyncDataComponent}) syncedComponents = new MapSchema()
 }
 
 export function handleGlobalDetachItem(scene:Scene, aid:string){
@@ -52,7 +60,7 @@ export function handleGlobalAttachItem(scene:Scene, aid:string, userId:string, a
 }
 
 export function handleGlobalActionSync(scene:Scene, aid:string, userId:string, actionInfo:any){
-  console.log("handling global action sync", actionInfo)
+  console.log("handling global action sync")
   let iwbInfo = scene[COMPONENT_TYPES.IWB_COMPONENT].get(aid)
     if(!iwbInfo){
       console.log('no iwb info for that action item')

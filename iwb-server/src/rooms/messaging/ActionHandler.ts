@@ -20,6 +20,12 @@ export function iwbSceneActionHandler(room:IWBRoom){
         let player = room.state.players.get(client.userData.userId)
 
         switch(info.type){
+            case ACTIONS.PLAYER_EQUIP_WEAPON:
+                console.log('handling single player equip weapon')
+                player.equipWeapon(room, info)
+                break;
+
+
             case 'ENDALL':
                 stopAllPlaylist(scene)
                 break;
@@ -106,6 +112,10 @@ export function iwbSceneActionHandler(room:IWBRoom){
                 
                                 case ACTIONS.CLONE:
                                     handleCloneAction(room, client, scene, aid, action)
+                                    break;
+
+                                case ACTIONS.PLAYER_EQUIP_WEAPON:
+                                    console.log('handling global player equip weapon')
                                     break;
 
                                 default:

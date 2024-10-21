@@ -43,6 +43,7 @@ import { createVehicleComponent, VehicleComponent } from "./Vehicle";
 import { createPhysicsComponent, PhysicsComponent } from "./Physics";
 import { checkQuestCache, createQuestComponent, getQuestsPlayerData, QuestComponent } from "./Quest";
 import { QuestManager } from "./QuestManager";
+import { createWeaponComponent, WeaponComponent } from "./Weapon";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -114,7 +115,6 @@ export class Scene extends Schema {
     @type({map:MaterialComponent}) [COMPONENT_TYPES.MATERIAL_COMPONENT]:MapSchema<MaterialComponent> = new MapSchema<MaterialComponent>()
     @type({map:MeshColliderComponent}) [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:MapSchema<MeshColliderComponent> = new MapSchema<MeshColliderComponent>()
     @type({map:MeshRendererComponent}) [COMPONENT_TYPES.MESH_RENDER_COMPONENT]:MapSchema<MeshRendererComponent> = new MapSchema<MeshRendererComponent>()
-    @type({map:MultiplayerComponent}) [COMPONENT_TYPES.MULTIPLAYER_COMPONENT]:MapSchema<MultiplayerComponent> = new MapSchema<MultiplayerComponent>()
     @type({map:NameComponent}) [COMPONENT_TYPES.NAMES_COMPONENT]:MapSchema<NameComponent> = new MapSchema<NameComponent>()
     @type({map:NftShapeComponent}) [COMPONENT_TYPES.NFT_COMPONENT]:MapSchema<NftShapeComponent> = new MapSchema<NftShapeComponent>()
     @type({map:PathComponent}) [COMPONENT_TYPES.PATH_COMPONENT]:MapSchema<PathComponent> = new MapSchema<PathComponent>()
@@ -133,8 +133,10 @@ export class Scene extends Schema {
     @type({map:VideoComponent}) [COMPONENT_TYPES.VIDEO_COMPONENT]:MapSchema<VideoComponent> = new MapSchema<VideoComponent>()
     // @type({map:VLMComponent}) [COMPONENT_TYPES.VLM_COMPONENT]:MapSchema<VLMComponent> = new MapSchema<VLMComponent>()
     @type({map:VehicleComponent}) [COMPONENT_TYPES.VEHICLE_COMPONENT]:MapSchema<VehicleComponent> = new MapSchema<VehicleComponent>()
+    @type({map:WeaponComponent}) [COMPONENT_TYPES.WEAPON_COMPONENT]:MapSchema<WeaponComponent> = new MapSchema<WeaponComponent>()
     @type({map:QuestComponent}) [COMPONENT_TYPES.QUEST_COMPONENT]:MapSchema<QuestComponent> = new MapSchema<QuestComponent>()
     @type([ParentingComponent]) [COMPONENT_TYPES.PARENTING_COMPONENT]:ArraySchema<ParentingComponent> = new ArraySchema<ParentingComponent>()
+    @type({map:MultiplayerComponent}) [COMPONENT_TYPES.MULTIPLAYER_COMPONENT]:MapSchema<MultiplayerComponent> = new MapSchema<MultiplayerComponent>()
 
         // @type({map:TeamComponent}) [COMPONENT_TYPES.TEAM_COMPONENT]:MapSchema<TeamComponent>
         // @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_SOURCE_COMPONENT]:MapSchema<SoundComponent>
@@ -197,6 +199,17 @@ export class Scene extends Schema {
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
+                    case COMPONENT_TYPES.WEAPON_COMPONENT:
+                        for (const aid in data[component]) {
+                            createWeaponComponent(room, this, aid,  data[component][aid])
+                        }
+                        break;
+                    // case COMPONENT_TYPES.MULTIPLAYER_COMPONENT:
+                    //     for (const aid in data[component]) {
+                    //         createQuestComponent(room, this, aid,  data[component][aid])
+                    //     }
+                    //     break;
+
                     case COMPONENT_TYPES.QUEST_COMPONENT:
                         for (const aid in data[component]) {
                             createQuestComponent(room, this, aid,  data[component][aid])

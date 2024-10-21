@@ -225,8 +225,10 @@ export function editTriggerComponent(data:any, scene:Scene){
                 console.log('trying to add an action')
                 trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
                 if(trigger){
+                    console.log('trigger found', trigger)
                     let decision = trigger.decisions.find(($:any)=> $.id === triggerData.did)
                     if(decision){
+                        console.log('decision found', decision)
                         decision.actions.push(triggerData.id)
                         trigger.tick++
                     }

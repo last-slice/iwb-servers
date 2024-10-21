@@ -67,4 +67,12 @@ export function iwbPlayerHandler(room:IWBRoom){
              player.settings[info.key] = info.value
          }
      })
+
+     room.onMessage(SERVER_MESSAGE_TYPES.REMOVE_WEAPONS_BUILD_MODE, async(client, info)=>{
+        // console.log(SERVER_MESSAGE_TYPES.REMOVE_WEAPONS_BUILD_MODE + " message", info)
+        let player:Player = room.state.players.get(client.userData.userId)
+        if(player){
+            player.weapon = undefined
+        }
+    })
 }

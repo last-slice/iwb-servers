@@ -43,6 +43,7 @@ import { createLeaderboardComponent, editLeaderboardComponent } from "../../Obje
 import { createVehicleComponent, editVehicleComponent } from "../../Objects/Vehicle";
 import { createPhysicsComponent, editPhysicsComponent } from "../../Objects/Physics";
 import { createQuestComponent, editQuestComponent } from "../../Objects/Quest";
+import { createWeaponComponent, editWeaponComponent } from "../../Objects/Weapon";
 
 
 export let updateComponentFunctions:any = {
@@ -85,6 +86,7 @@ export let updateComponentFunctions:any = {
     [COMPONENT_TYPES.PHYSICS_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editPhysicsComponent(info, scene)}, 
     [COMPONENT_TYPES.VEHICLE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editVehicleComponent(room, info, scene)}, 
     [COMPONENT_TYPES.QUEST_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editQuestComponent(player, info, scene)}, 
+    [COMPONENT_TYPES.WEAPON_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editWeaponComponent(room, info, scene)}, 
 }
 
 let createComponentFunctions:any = {
@@ -121,6 +123,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.VEHICLE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createVehicleComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.PHYSICS_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPhysicsComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.QUEST_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createQuestComponent(room, scene, aid)}, 
+    [COMPONENT_TYPES.WEAPON_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createWeaponComponent(room, scene, aid)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){
@@ -439,6 +442,12 @@ async function deleteComponent(room:IWBRoom, scene:any, player:Player, item:any)
 
 function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
     switch(item.type){
+        case COMPONENT_TYPES.WEAPON_COMPONENT:
+        if(!scene[COMPONENT_TYPES.WEAPON_COMPONENT].has(item.aid)){
+            createWeaponComponent(room, scene, item.aid)
+        }
+        break;
+
         case COMPONENT_TYPES.PHYSICS_COMPONENT:
         if(!scene[COMPONENT_TYPES.PHYSICS_COMPONENT].has(item.aid)){
             createPhysicsComponent(scene, item.aid, {

@@ -10,6 +10,7 @@ import { IWBComponent } from "./IWB";
 import { removeStalePlayer, updatePlayerGameTime } from "./Game";
 import { Vector3 } from "./Transform";
 import { garbageCollectPlaylist } from "./Playlist";
+import { WeaponComponent } from "./Weapon";
 
 export class PlayerManager {
     
@@ -80,6 +81,7 @@ export class Player extends Schema {
     @type("string") vehicle:string = "'"
 
     @type(SelectedAsset) selectedAsset: SelectedAsset
+    @type(WeaponComponent) weapon: WeaponComponent
     
 
     // gameData:any
@@ -139,7 +141,6 @@ export class Player extends Schema {
     canAttack:boolean
     hasWeaponEquipped:boolean
     inCooldown:boolean
-    weapon:any
     hitBox:any
     gameVariables:any = {}
 
@@ -522,5 +523,19 @@ export class Player extends Schema {
        // Get a player's progress on a specific quest
       getQuest(questId: string): PlayerQuest | undefined {
         return this.questData.find(quest => quest.id === questId);
+      }
+
+      equipWeapon(room:IWBRoom, info:any){
+        let scene = room.state.scenes.get(info.sceneId)
+        if(!scene){
+          return
+        }
+
+        let weapon = scene[COMPONENT_TYPES.WEAPON_COMPONENT].get(info.aid)
+        if(!weapon){
+          return
+        }
+
+        this.weapon = weapon
       }
 }
