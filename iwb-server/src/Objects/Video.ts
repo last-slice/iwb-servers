@@ -9,6 +9,7 @@ export class VideoComponent extends Schema {
     @type("number") volume:number
     @type("boolean") autostart:boolean = false
     @type("boolean") loop:boolean = false
+    @type("boolean") synced:boolean = false
 }
 
 export function createVideoComponent(scene:Scene, aid:string, data?:any){
