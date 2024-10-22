@@ -1,14 +1,17 @@
-import { DeploymentData, REQUIRED_ASSETS } from "../utils/types";
+import { DeploymentData, DeploymentDestinations, REQUIRED_ASSETS } from "../utils/types";
 import { iwbBuckets } from "./buckets";
 import { updateSceneMetadata } from "./sceneData";
-import { buildTypescript } from "./helpers";
+import { EntityType, getSceneFile } from "./helpers";
 import { status } from "../config/config";
 import { updateWorldMetadata } from "../download/scripts/metadata"
+import { findPointers, getFiles, handleDCLWorldDeployment, IFile } from "./gc-deployment";
+import { DeploymentBuilder } from "dcl-catalyst-client";
 
 const fs = require('fs-extra');
 const ncp = require('ncp').ncp;
 const path = require('path');
 const { exec } = require('child_process');
+const { v4: uuidv4 } = require('uuid');
 
 const command = status.DEBUG ? '/Users/lastraum/desktop/programming/decentraland/lastslice/sdk7/iwb/servers/deploy-server/deploy.sh' : '/root/iwb-deployment/server/deploy.sh';
 
@@ -32,13 +35,23 @@ export async function checkDeploymentQueue(){
                 try{
                     await buildBucket(key, bucket, tempData)
                     await modifyScene(key, tempData)
-                    await deploy(key, tempData)
+
+                    switch(tempData.destination){
+                        case DeploymentDestinations.DCL_NAME:
+                            await handleDCLWorldDeployment(key, tempData)
+                            break;
+
+                        case DeploymentDestinations.IWB_WORLD:
+                            await deploy(key, tempData)
+                            break;
+                    }
                 }
                 catch(e){
                     console.log("bucket for each error", e)
                     failBucket(key)
-                    resetBucket(key)
+                    resetIWBBucket(key)
                 }
+
                 break outerLoop;
             }
             else{
@@ -74,8 +87,8 @@ async function deploy(key:string, data:DeploymentData){
     
           successIWBServer(key, data)
           .then(()=>{
-            resetBucket(key)
-        })
+            resetIWBBucket(key)
+            })
     }
     catch(e){
         console.log('iwb world deployment error', e);
@@ -124,7 +137,7 @@ async function deployBucket(key:string){
     })
 }
 
-export async function resetBucket(key:string){
+export async function resetIWBBucket(key:string){
     console.log('resetting iwb world bucket', key)
 
     let b = iwbBuckets.get(key)
@@ -197,7 +210,7 @@ async function modifyScene(key:string, data:DeploymentData){
     }
 }
 
-async function buildBucket(key:string, bucket:any, data:any){
+async function buildBucket(key:string, bucket:any, data:DeploymentData){
     console.log("building temp deploy bucket", data.owner, key)
     try {
         bucket.status = "Creating"
@@ -205,32 +218,84 @@ async function buildBucket(key:string, bucket:any, data:any){
         const bucketPath = path.join(worldBucketDirectory, key)
 
         let assets:any
-        if(data.url){
-            let res = await fetch(data.url)
-            let json = await res.json()
-            assets = json.hasOwnProperty("items") ? json.items : json
-            // console.log('assets are ', assets)
+        if(data.destination === DeploymentDestinations.DCL_NAME){
+            let countedAssets:any[] = []
+            if(data.url){
+                assets = []
+                let res = await fetch(data.url)
+                let scenes = await res.json()
+                scenes.forEach((scene:any)=>{
+                    let iwbNode = scene["IWB"]
+                    for(let aid in iwbNode){
+                        if(!countedAssets.find(($:any)=> $.id === iwbNode[aid].id)){
+                            assets.push(iwbNode[aid])
+                            countedAssets.push(iwbNode[aid])
+                        }
+                    }
+                })
+            }
+        }else{
+            if(data.url){
+                let res = await fetch(data.url)
+                let json = await res.json()
+                assets = json.hasOwnProperty("items") ? json.items : json
+                // console.log('assets are ', assets)
+            }
         }
+
 
         // const dep1FolderPath = path.join(worldBucketDirectory, key); // Path to the "dep1" folder inside "buckets"
         // const templateFolderPath = path.join(projectRoot, 'iwb-template'); // Path to the "template" folder
     
         // await fs.mkdir(dep1FolderPath, {recursive: true});
-        await copyFiles(assetDirectory, path.join(bucketPath, "assets"), assets);
+        
 
         try {
             //write scene.json with world name
             await updateWorldMetadata(path.join(bucketPath, "scene.json"), data)
 
             let ugcPath = path.join(ugcDirectory, 'ugc-assets', data.owner)
-            console.log('ugc path is', ugcPath)
+            // console.log('ugc path is', ugcPath)
 
-            await fs.access(ugcPath, fs.constants.F_OK);
-            console.log('World contains UGC content')
+            switch(data.destination){
+                case DeploymentDestinations.DCL_NAME:
+                    let iwbAssets = [...assets.filter(($:any)=> !$.ugc)]
+                    let ugcAssets = [...assets.filter(($:any)=> $.ugc)]
 
-            await copyFiles(ugcPath, path.join(bucketPath, "assets"), undefined, true)
+                    console.log('iwb assets are ', iwbAssets)
+                    console.log('ugcAssets assets are ', ugcAssets)
+
+                    await copyFiles(assetDirectory, path.join(bucketPath, "assets"), iwbAssets);
+
+                    if(ugcAssets.length === 0){
+                        return
+                    }
+
+                    try{
+                        await fs.access(ugcPath, fs.constants.F_OK);
+                        console.log('World contains UGC content')
+                        await copyFiles(ugcPath, path.join(bucketPath, "assets"), ugcAssets, undefined, true);
+                    }
+                    catch(e){
+                        console.log('World does not contain UGC content')
+                    }       
+                    break;
+
+                case DeploymentDestinations.IWB_WORLD:
+                    await copyFiles(assetDirectory, path.join(bucketPath, "assets"), assets);
+                    try{
+                        await fs.access(ugcPath, fs.constants.F_OK);
+                        console.log('World contains UGC content')
+                        await copyFiles(ugcPath, path.join(bucketPath, "assets"), undefined, true)
+                    }
+                    catch(e){
+                        console.log('World does not contain UGC content')
+                    }                    
+                    break;
+            }
+            
         } catch (err) {
-            console.log('World does not contain UGC content')
+         
         }
 
     } catch (error:any) {
@@ -239,10 +304,10 @@ async function buildBucket(key:string, bucket:any, data:any){
       }
 }
 
-async function copyFiles(sourceFolder:string, destinationFolder:string, assets?:any[], ugc?:boolean) {
+async function copyFiles(sourceFolder:string, destinationFolder:string, assets?:any[], ugc?:boolean, skipRequired?:boolean) {
     try{
         const files = await fs.readdir(sourceFolder);
-        if(ugc){
+        if(ugc){ 
             for (const file of files) {
                 const sourceFilePath = path.join(sourceFolder, file);
                 try{
@@ -255,13 +320,16 @@ async function copyFiles(sourceFolder:string, destinationFolder:string, assets?:
         }
         else{
             try {
-                for(let i = 0; i < Object.values(REQUIRED_ASSETS).length; i++){
-                    let file = Object.values(REQUIRED_ASSETS)[i]
-                    try{
-                        await fs.copy(path.join(sourceFolder, file), path.join(destinationFolder, file))
-                    }
-                    catch(e){
-                        console.log('file copy error', e)
+                if(skipRequired){}
+                else{
+                    for(let i = 0; i < Object.values(REQUIRED_ASSETS).length; i++){
+                        let file = Object.values(REQUIRED_ASSETS)[i]
+                        try{
+                            await fs.copy(path.join(sourceFolder, file), path.join(destinationFolder, file))
+                        }
+                        catch(e){
+                            console.log('file copy error', e)
+                        }
                     }
                 }
     
@@ -293,7 +361,6 @@ async function copyFiles(sourceFolder:string, destinationFolder:string, assets?:
         console.error(`Error reading folder: ${e}`);
     }
 }
-
 
 function failBucket(key:any){
     let bucket = iwbBuckets.get(key)

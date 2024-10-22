@@ -14,10 +14,10 @@ export class IWBComponent extends Schema{
     category:string
     type:string
     style:string
-    ugc:boolean
     pending:boolean
     components:any
     entity:any
+    @type("boolean") ugc:boolean
     @type("boolean") locked:boolean
     @type("boolean") buildVis:boolean
     @type("boolean") editing:boolean
@@ -32,10 +32,10 @@ export function createIWBComponent(room:IWBRoom, scene:Scene, data:any){
     component.id = data.scene.id
     component.n = data.scene.n
     component.type = data.item.ty
-    component.ugc = data.item.hasOwnProperty("ugc") ? data.item.ugc : false
-    component.pending = data.item.hasOwnProperty("pending") ? data.item.pending : false
+    component.ugc = data.item.ugc !== undefined ? data.item.ugc : false
+    component.pending = data.item.pending !== undefined ? data.item.pending : false
     component.style = data.item.sty
-    component.buildVis = data.scene.hasOwnProperty("buildVis") ? data.scene.buildVis : true
+    component.buildVis = data.scene.buildVis !== undefined ? data.scene.buildVis : true
     component.locked = false
     component.editing = false
     component.priv = false

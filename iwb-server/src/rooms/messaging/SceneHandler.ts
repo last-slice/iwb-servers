@@ -540,6 +540,28 @@ export function iwbSceneHandler(room:IWBRoom){
         // }
     })
 
+    room.onMessage(SERVER_MESSAGE_TYPES.EXPORT_WORLD, async(client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.EXPORT_WORLD + " message", info)
+
+        if(!info || !info.name){
+            console.log("invalid deployment parameters received")
+            return
+        }
+
+        let player:Player = room.state.players.get(client.userData.userId)
+        if(player){
+            let world = iwbManager.worlds.find((w)=> w.ens === room.state.world)
+            if(world && world.owner === player.address){
+                iwbManager.deployWorldToDCLName(world)
+            }else{
+                client.send(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, {valid:false})
+            }
+        }
+        else{
+            client.send(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, {valid:false})
+        }
+    })
+
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN, async(client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.SCENE_ADDED_SPAWN + " message", info)
         let player:Player = room.state.players.get(client.userData.userId)

@@ -3,7 +3,7 @@ import path from 'path';
 
 import Axios from "axios";
 import { deployIWB, newAssetsReady } from "../deploy/iwb-deployment";
-import { addDeployment, iwbDeploymentQueue, resetBucket } from "../deploy/scene-deployment";
+import { addDeployment, iwbDeploymentQueue, resetIWBBucket } from "../deploy/scene-deployment";
 import { status } from "../config/config";
 import { deployBuckets, iwbBuckets } from "../deploy/buckets";
 import { dclDeploymentQueue } from '../deploy';
@@ -46,7 +46,7 @@ export function handleBucketReset(req:any, res:any){
             if(req.params.type === "gc"){
               resetDeployment(req.params.bucket)
             }else{
-              resetBucket(req.params.bucket)
+              resetIWBBucket(req.params.bucket)
             }
             
             res.status(200).json({result: "success"})
@@ -81,6 +81,31 @@ export function handleWorldDeploy(req:any, res:any){
   
     addDeployment(req.body.world)
     res.status(200).json({result: "success", msg:"deployment added to queue"})
+}
+
+export function handleDCLWorldDeploy(req:any, res:any){
+  console.log("deploy dcl world api received")
+  if(!req.body){
+      res.status(200).json({result: "failure", msg:"invalid api call"})
+      return
+  }
+
+  if(!req.body.auth){
+      res.status(200).json({result: "failure", msg:"invalid auth"})
+      return
+  }
+
+  //more error checking for scene data
+
+  console.log("")
+  console.log("/////////////////////////////////////////////////////////////////////")
+  console.log("new deployment pending")
+  console.log(JSON.stringify(req.body))
+  console.log("/////////////////////////////////////////////////////////////////////")
+  console.log("")
+
+  addDeployment(req.body.world)
+  res.status(200).json({result: "success", msg:"deployment added to queue"})
 }
 
 

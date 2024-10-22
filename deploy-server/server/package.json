@@ -13,6 +13,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@dcl/crypto": "^3.4.5",
+    "@dcl/schemas": "^15.0.0",
     "@types/archiver": "^6.0.2",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.10.5",

@@ -1,4 +1,8 @@
 
+export enum DeploymentDestinations {
+    DCL_NAME = 'dclname',
+    IWB_WORLD = 'iwbworld'
+}
 
 export type DeploymentData = {
     worldName:string,
@@ -6,6 +10,8 @@ export type DeploymentData = {
     ens:string
     init:boolean
     url?:string   
+    destination:DeploymentDestinations
+    currentWorld?:string
 }
 
 export type DCLDeploymentData = {

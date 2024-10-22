@@ -117,7 +117,18 @@ export class IWBManager{
             await iwbSceneHandler(room)
             await iwbQuestHandler(room)
 
-            await initServerScenes(room, room.state.options.island !== "world" ? room.state.options : undefined)
+            let options:any
+            if(room.state.options.island === "client"){
+                if(!room.state.options.world){
+                    options = room.state.options
+                }
+            }else{
+                if(room.state.options.island !== "world"){
+                    options =room.state.options
+                }
+            }
+
+            await initServerScenes(room, options)
             // loadRealmScenes(this, data)
             await initServerAssets(room)
 
@@ -325,7 +336,8 @@ export class IWBManager{
                     worldName: world.name,
                     owner: world.owner,
                     init: world.hasOwnProperty("init") ? true : false,
-                    url:url
+                    url:url,
+                    destination:'iwbworld'
                 },
                 
             })
@@ -354,7 +366,34 @@ export class IWBManager{
         catch(e){
             console.log('error posting deployment request', e)
         }
+    }
 
+    async deployWorldToDCLName(world:any){
+        let metadata = await fetchPlayfabMetadata(world.owner)
+        let url = getDownloadURL(metadata, world.ens + "-scenes.json")
+
+        try{
+            let res = await fetch((DEBUG ? process.env.DEPLOYMENT_SERVER_DEV : process.env.DEPLOYMENT_SERVER_PROD ) + process.env.DEPLOYMENT_DCL_WORLD_ENDPOINT,{
+                headers:{"content-type":"application/json"},
+                method:"POST",
+                body:JSON.stringify({
+                    auth: process.env.DEPLOYMENT_AUTH,
+                    world:{
+                        ens:world.ens,
+                        worldName: world.worldName,
+                        owner: world.owner,
+                        url:url,
+                        destination:'dclname'
+                    },
+                    
+                })
+            })
+            let json = await res.json()
+            console.log('world deployment api response is', json, world)
+        }
+        catch(e){
+            console.log('error pinging deploy server', e)
+        }
     }
 
     async backupWorld(room:IWBRoom, client:Client, info:any){
@@ -740,14 +779,20 @@ export class IWBManager{
         let player:Player
         // console.log('iwb rooms are ', iwbManager.rooms)
 
-        let room:IWBRoom = iwbManager.rooms.find((w:any)=> w.state.world === body.data.worldName)
-        if(room && room.state.players.get(body.user)){
-            player = room.state.players.get(body.user)
-        }
+        iwbManager.rooms.forEach((room:IWBRoom)=>{
+            if(room.state.players.has(body.user)){
+                player = room.state.players.get(body.user)
+            }
+        })
+
+        // let room:IWBRoom = iwbManager.rooms.find((w:any)=> w.state.world === (body.dest === "dclname" ? body.dta.currentWorld : body.data.worldName + ".dcl.eth"))
+        // if(room && room.state.players.get(body.user)){
+        //     player = room.state.players.get(body.user)
+        // }
 
         // player = room.state.players.get(body.user)
 
-        if(!player && !room){
+        if(!player){
             console.log('user not online anymore, delete deployment and free up bucket')
         }else{
             console.log('found user, notify them of their deployment', body)
@@ -759,6 +804,7 @@ export class IWBManager{
             // }else{
             //     link += body.bucket + "/" + body.data.name +"/" + body.data.worldName
             // }
+            
 
             let link = (DEBUG ? "http://localhost:3000/" : "https://dcl-iwb.co/") + "toolset/qa/" + body.user + "/" + body.data.dest + "/"
             if(body.data.dest === "gc"){

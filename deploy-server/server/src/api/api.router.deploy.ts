@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { forceCopyAssets, handleIWBDeploy, handleWorldDeploy } from "./api.service";
+import { forceCopyAssets, handleDCLWorldDeploy, handleIWBDeploy, handleWorldDeploy } from "./api.service";
 import { pingCatalyst } from "../deploy/gc-deployment";
 import { cancelPendingDeployment, handleDeploymentRequest, validateDeployment } from "../deploy/index"
 
@@ -13,6 +13,7 @@ export function deployRouter(router:any){
   })
 
   router.post("/scene/deployment/signature", async function(req: express.Request, res: express.Response) {
+    console.log("ping catalyst body is", req.body)
     pingCatalyst(req,res)
   })
 
@@ -22,6 +23,10 @@ export function deployRouter(router:any){
 
     router.post("/world-deploy", async function(req: express.Request, res: express.Response) {
         handleWorldDeploy(req,res)
+      })
+
+      router.post("/dcl-world-deploy", async function(req: express.Request, res: express.Response) {
+        handleDCLWorldDeploy(req,res)
       })
       
       router.post("/iwb-deploy/:force", async function(req: express.Request, res: express.Response) {

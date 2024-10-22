@@ -1,16 +1,17 @@
 import ignore from 'ignore'
 
 import { buildTypescript, getSceneFile } from "./helpers"
-import { ContentClient, DeploymentBuilder, createCatalystClient, createContentClient } from 'dcl-catalyst-client'
-import { ChainId, EntityType, getChainName } from '@dcl/schemas'
+import { ContentClient, DeploymentBuilder, createCatalystClient, createContentClient, } from 'dcl-catalyst-client'
+import { ChainId, getChainName, EntityType } from '@dcl/schemas'
 import { Authenticator } from '@dcl/crypto'
 import { getCatalystServersFromCache } from 'dcl-catalyst-client/dist/contracts-snapshots'
 import { createFetchComponent } from '@well-known-components/fetch-component'
-import { deployBuckets } from './buckets'
+import { deployBuckets, iwbBuckets } from './buckets'
 import { resetBucket } from '.'
 import { buildScene } from '../download/scripts'
 import { status } from "../config/config";
-import { SERVER_MESSAGE_TYPES } from '../utils/types'
+import { DeploymentData, SERVER_MESSAGE_TYPES } from '../utils/types'
+import { resetIWBBucket } from './scene-deployment'
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -24,7 +25,124 @@ export interface IFile {
     path: string
     content: Buffer
     size: number
-  }
+}
+
+
+export async function handleDCLWorldDeployment(key:string, data:DeploymentData){
+  try{
+    let bucketData = iwbBuckets.get(key)
+    bucketData.status = "Building"
+    bucketData.owner = data.ens
+    bucketData.address = data.owner
+
+    console.log('directory is', bucketData.directory)
+
+    try{
+        if(pendingDeployments[data.owner]){
+          console.log('already have a deployment request')
+        }else{
+          pendingDeployments[data.owner] = {
+            status:"building",
+            data: data,
+            owner:data.owner,
+            dest: data.destination,
+            worldName: data.worldName,
+          }
+
+          //   // Obtain list of files to deploy//
+            const originalFilesToIgnore = await fs.readFile(
+                bucketData.directory + '/.dclignore',
+                'utf8'
+              )
+  
+            const files: IFile[] = await getFiles({
+            ignoreFiles: originalFilesToIgnore,
+            skipFileSizeCheck: false,
+            }, bucketData.directory)
+
+            const contentFiles = new Map(files.map((file) => [file.path, file.content]))
+  
+            const sceneJson = await getSceneFile(bucketData.directory)
+            pendingDeployments[data.owner].sceneJSON = sceneJson
+  
+            const { entityId, files: entityFiles } = await DeploymentBuilder.buildEntity({
+                type: EntityType.SCENE,
+                pointers:findPointers(sceneJson),
+                files: contentFiles,
+                metadata: sceneJson
+            })
+  
+            pendingDeployments[data.owner].entityFiles = entityFiles
+            pendingDeployments[data.owner].entityId = entityId
+            pendingDeployments[data.owner].auth = uuidv4()
+
+            // pendingDeployments[req.body.user].timer = setTimeout(()=>{
+            //   clearTimeout(pendingDeployments[req.body.user].timer)
+            //   delete pendingDeployments[req.body.user]
+            // }, 1000 * 60)
+  
+            console.log('pending deployments', pendingDeployments)
+  
+            try{
+              console.log('senging message', {
+                user:data.owner, 
+                auth:pendingDeployments[data.owner].auth, 
+                entityId:pendingDeployments[data.owner].entityId, 
+                // data:pendingDeployments[data.user].data,
+                bucket: key
+              })
+              const result = await fetch((status.DEBUG ? process.env.IWB_DEV_PATH : process.env.IWB_PROD_PATH) + "scene/deployment/ready",
+              {headers: {                      
+                  'Authorization': `${process.env.IWB_DEPLOYMENT_AUTH}`,
+                  "content-type":"application/json"
+              },
+              method:"POST",
+              body: JSON.stringify({
+                user:data.owner, 
+                auth:pendingDeployments[data.owner].auth, 
+                entityId:pendingDeployments[data.owner].entityId, 
+                data:{
+                  worldName:pendingDeployments[data.owner].worldName,
+                  name:pendingDeployments[data.owner].name,
+                  dest:pendingDeployments[data.owner].dest,
+                  tokenId: pendingDeployments[data.owner].tokenId,
+                  sceneId: pendingDeployments[data.owner].sceneId
+                },
+                dest:data.destination,
+                bucket: key
+              })
+            });
+            let res = await result.json()
+              console.log('result is', res)
+  
+              if(res.valid){
+                console.log('valid ping, now wait for user to accept link')
+                pendingDeployments[data.owner].status = "signature"
+                bucketData.status = "awaiting signature"
+              }else{
+                delete pendingDeployments[bucketData.owner]
+                resetIWBBucket(key)
+              }
+          }
+          catch(e:any){
+              console.log('error posting to iwb server', e)
+              delete pendingDeployments[bucketData.owner]
+              resetIWBBucket(key)
+          }
+        }
+    }
+    catch(e){
+        console.log('error building gc deployment', e)
+        delete pendingDeployments[bucketData.owner]
+        resetIWBBucket(key)
+        return
+    }
+}
+catch(e){
+    console.log('iwb world deployment error', e);
+    throw new Error("DCL Deployment Error")
+}
+}
 
 export async function handleGenesisCityDeployment(key:string, data:any){
   let bucket = deployBuckets.get(key)
@@ -200,7 +318,7 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
   //     url = 'peer.decentraland.zone'
   //   } else {
 
-  if(req.body.dest === "worlds"){
+  if(req.body.dest === "worlds" || req.body.dest === "dclname"){
       catalyst = createContentClient({
         url: target,
         fetcher: createFetchComponent()
@@ -262,21 +380,39 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
           console.log(response.message)
         }
         pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, dest:pendingDeployments[req.body.user].dest, user:req.body.user, name:pendingDeployments[req.body.user].name, world:pendingDeployments[req.body.user].worldName, valid:true})
-        resetDeployment(req.body.key)
+
+        if(req.body.dest === "worlds" || req.body.dest === "dclname"){
+          delete pendingDeployments[req.body.user]
+          resetIWBBucket(req.body.key)
+        }else{
+          resetDeployment(req.body.key)
+        }
+        
       } catch (error: any) {
         // debug('\n' + error.stack)
         console.log('Could not upload content', error)
 
         res.status(200).json({valid: false, msg:"invalid api call"})
         pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, user:req.body.user, valid:false})
-        resetDeployment(req.body.key)
+        if(req.body.dest === "worlds" || req.body.dest === "dclname"){
+          delete pendingDeployments[req.body.user]
+          resetIWBBucket(req.body.key)
+        }else{
+          resetDeployment(req.body.key)
+        }
       }
     }else{
       console.log('cannot validate message from signature request')
 
       res.status(200).json({valid:false})
       pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, user:req.body.user, valid:false})
-      resetDeployment(req.body.key)
+      
+      if(req.body.dest === "worlds" || req.body.dest === "dclname"){
+        delete pendingDeployments[req.body.user]
+        resetIWBBucket(req.body.key)
+      }else{
+        resetDeployment(req.body.key)
+      }
     }
 }
 
@@ -299,8 +435,8 @@ function validateSignature(req:any){
     req.body.entityId && 
     pendingDeployments[req.body.user.toLowerCase()] &&
     pendingDeployments[req.body.user.toLowerCase()].entityId === req.body.entityId &&
-    deployBuckets.has(req.body.key) &&
-    deployBuckets.get(req.body.key).owner === req.body.user
+    (deployBuckets.has(req.body.key) || iwbBuckets.has(req.body.key)) //&&
+    // (deployBuckets.get(req.body.key).owner || iwbBuckets.get(req.body.key).owner) === req.body.user
     ){
     return true
   }else{
@@ -309,7 +445,7 @@ function validateSignature(req:any){
   }
 }
 
-function findPointers(sceneJson: any): string[] {
+export function findPointers(sceneJson: any): string[] {
     return sceneJson.scene.parcels
   }
 
@@ -319,7 +455,7 @@ function findPointers(sceneJson: any): string[] {
    * Windows directory separators are replaced for POSIX separators.
    * @param ignoreFile The contents of the .dclignore file
    */
-async function getFiles({
+export async function getFiles({
     ignoreFiles = '',
     cache = false,
     skipFileSizeCheck = false,

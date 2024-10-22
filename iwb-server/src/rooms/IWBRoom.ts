@@ -35,7 +35,18 @@ export class IWBRoom extends Room<IWBRoomState> {
         // console.log('on create options are ', options)
         this.setState(new IWBRoomState());
         this.state.world = options.world
-        options.island !== "world" ? this.state.gcWorld = true : null
+
+        if(options.island === "client"){
+            if(!options.world){
+                this.state.gcWorld = true
+            }
+        }else{
+            if(options.island !== "world"){
+                this.state.gcWorld = true
+            }
+        }
+
+        // options.island !== "world" ? this.state.gcWorld = true : null
         this.state.options = options
 
         let worldConfig = iwbManager.worlds.find(($:any) => $.ens === options.world)
