@@ -128,10 +128,9 @@ export class IWBManager{
                 }
             }
 
+            await initServerAssets(room)
             await initServerScenes(room, options)
             // loadRealmScenes(this, data)
-            await initServerAssets(room)
-
             // createCustomObjects(this)     
             this.addRoom(room)       
         }else{
@@ -149,20 +148,21 @@ export class IWBManager{
         while (chunkIndex * chunkSize < totalItems) {
             // Get the current chunk of items
             const chunk = items.slice(chunkIndex * chunkSize, (chunkIndex + 1) * chunkSize);
-            console.log('chunk size', chunk.length)
-            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.CHUNK_SEND_ASSETS, chunk)
+
+            let assets:Map<string,any> = new Map()
+            chunk.forEach((item:any)=>{
+                assets.set(item.id, item)
+            })
+            // console.log('chunk is', chunk.length)
+            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.CHUNK_SEND_ASSETS, assets)
             chunkIndex++;
         }
-    }   
 
-    initPlayer(room:IWBRoom, player:Player){
-        // console.log('asset count ', room.state.realmAssets.size)
-        // console.log('quests are ', questManager.quests.values())
         player.sendPlayerMessage(SERVER_MESSAGE_TYPES.INIT,{
             prerequisites: questManager.prerequisites.filter(condition => condition.world === room.state.world),
             quests: questManager.quests.filter(quest => quest.world === room.state.world),
             // quests: questManager.quests.filter(quest => quest.owner === room.state.owner).map(({ definition, ...rest }) => rest),
-            realmAssets: room.state.realmAssets,
+            // realmAssets: room.state.realmAssets,
             realmAssetSize:room.state.realmAssets.size,
             styles: iwbManager.styles,
             worlds: iwbManager.worlds,
@@ -173,8 +173,28 @@ export class IWBManager{
             },
             settings: player.settings
         })
+    }   
+
+    initPlayer(room:IWBRoom, player:Player){
+        console.log('asset count ', room.state.realmAssets.size)
+        // console.log('quests are ', questManager.quests.values())
+        // player.sendPlayerMessage(SERVER_MESSAGE_TYPES.INIT,{
+        //     prerequisites: questManager.prerequisites.filter(condition => condition.world === room.state.world),
+        //     quests: questManager.quests.filter(quest => quest.world === room.state.world),
+        //     // quests: questManager.quests.filter(quest => quest.owner === room.state.owner).map(({ definition, ...rest }) => rest),
+        //     realmAssets: room.state.realmAssets,
+        //     realmAssetSize:room.state.realmAssets.size,
+        //     styles: iwbManager.styles,
+        //     worlds: iwbManager.worlds,
+        //     iwb: {v: iwbManager.version, updates:iwbManager.versionUpdates},
+        //     tutorials: {
+        //         videos: iwbManager.tutorials,
+        //         cid: iwbManager.tutorialsCID
+        //     },
+        //     settings: player.settings
+        // })
         // setTimeout(()=>{
-        //     this.sendItemsInChunks(room, player)
+            this.sendItemsInChunks(room, player)
         // },200)
     }
 
