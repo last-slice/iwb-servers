@@ -19,7 +19,7 @@ import { fetchPlayfabMetadata, fetchPlayfabFile } from "../utils/Playfab";
 import { checkRewardCache, createRewardComponent, RewardComponent } from "./Rewards";
 import { createMeshRendererComponent, MeshRendererComponent } from "./MeshRenderers";
 import { MaterialComponent, createMaterialComponent } from "./Materials";
-import { VideoComponent } from "./Video";
+import { createVideoComponent, VideoComponent } from "./Video";
 import { checkIWBCache, IWBComponent, setIWBComponent } from "./IWB";
 import { NftShapeComponent, createNftShapeComponent } from "./NftShape";
 import { MeshColliderComponent } from "./MeshColliders";
@@ -44,6 +44,7 @@ import { createPhysicsComponent, PhysicsComponent } from "./Physics";
 import { checkQuestCache, createQuestComponent, getQuestsPlayerData, QuestComponent } from "./Quest";
 import { QuestManager } from "./QuestManager";
 import { createWeaponComponent, WeaponComponent } from "./Weapon";
+import { createVirtualCameraComponent, VirtualCameraComponent } from "./VirtualCamera";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -102,6 +103,7 @@ export class Scene extends Schema {
     @type({map:AvatarShapeComponent}) [COMPONENT_TYPES.AVATAR_SHAPE_COMPONENT]:MapSchema<AvatarShapeComponent> = new MapSchema<AvatarShapeComponent>()
     @type({map:SoundComponent}) [COMPONENT_TYPES.AUDIO_COMPONENT]:MapSchema<SoundComponent> = new MapSchema<SoundComponent>()
     @type({map:BillboardComponent}) [COMPONENT_TYPES.BILLBOARD_COMPONENT]:MapSchema<BillboardComponent> = new MapSchema<BillboardComponent>()
+    @type({map:VirtualCameraComponent}) [COMPONENT_TYPES.VIRTUAL_CAMERA]:MapSchema<VirtualCameraComponent> = new MapSchema<VirtualCameraComponent>()
     @type({map:CounterComponent}) [COMPONENT_TYPES.COUNTER_COMPONENT]:MapSchema<CounterComponent> = new MapSchema<CounterComponent>()
     // @type({map:CounterBarComponent}) counterbars:MapSchema<CounterBarComponent> = new MapSchema<CounterBarComponent>()
     @type({map:DialogComponent}) [COMPONENT_TYPES.DIALOG_COMPONENT]:MapSchema<DialogComponent> = new MapSchema<DialogComponent>()
@@ -199,6 +201,12 @@ export class Scene extends Schema {
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
+                    case COMPONENT_TYPES.VIRTUAL_CAMERA:
+                        for (const aid in data[component]) {
+                            createVirtualCameraComponent(this, aid,  data[component][aid])
+                        }
+                        break;
+
                     case COMPONENT_TYPES.WEAPON_COMPONENT:
                         for (const aid in data[component]) {
                             createWeaponComponent(room, this, aid,  data[component][aid])

@@ -389,7 +389,7 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
         }
         
       } catch (error: any) {
-        // debug('\n' + error.stack)
+        console.log('\n' + error.stack)
         console.log('Could not upload content', error)
 
         res.status(200).json({valid: false, msg:"invalid api call"})

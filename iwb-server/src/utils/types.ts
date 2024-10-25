@@ -204,7 +204,8 @@ export enum COMPONENT_TYPES {
     VEHICLE_COMPONENT = 'Vehicle',
     PHYSICS_COMPONENT = 'Physics',
     QUEST_COMPONENT = 'Quest',
-    WEAPON_COMPONENT = 'Weapon'
+    WEAPON_COMPONENT = 'Weapon',
+    VIRTUAL_CAMERA = 'Camera'
 }
 
 export enum COLLISION_LAYERS {

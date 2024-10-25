@@ -97742,6 +97742,55 @@
         }
     },
     {
+        "id": "5b634203-0f7a-44a1-b0a2-f5c8751d2ee5",
+        "m": "",
+        "n": "Virtual Camera",
+        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
+        "d": "Add a virtual camera to your scene",
+        "cat": "Gallery/Venue",
+        "on": "IWB Builder",
+        "o": "IWB Team",
+        "isdl": true,
+        "ty": "SM",
+        "pc": 0,
+        "si": 0,
+        "tag": [],
+        "v": 20,
+        "bb": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "sty": "Smart Items",
+        "components": {
+            "Camera":{},
+            "Material": {
+                "type": 0,
+                "onPlay": false,
+                "albedoColor": {
+                    "r": 0.776,
+                    "g": 0.93,
+                    "b": 0.686,
+                    "a": 0.5
+                },
+                "textureType": "COLOR"
+            },
+            "Text": {
+                "text": "Virtual Camera",
+                "onPlay": false,
+                "isText": false
+            },
+            "Mesh_Collider": {
+                "shape": 1,
+                "layer": 1
+            },
+            "Mesh_Renderer": {
+                "shape": 1,
+                "layer": 2
+            }
+        }
+    },
+    {
         "id": "c50a69f9-50e6-4d90-882d-9d36aebdffa3",
         "m": "",
         "n": "Basic Sphere",

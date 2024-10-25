@@ -44,6 +44,7 @@ import { createVehicleComponent, editVehicleComponent } from "../../Objects/Vehi
 import { createPhysicsComponent, editPhysicsComponent } from "../../Objects/Physics";
 import { createQuestComponent, editQuestComponent } from "../../Objects/Quest";
 import { createWeaponComponent, editWeaponComponent } from "../../Objects/Weapon";
+import { createVirtualCameraComponent } from "../../Objects/VirtualCamera";
 
 
 export let updateComponentFunctions:any = {
@@ -124,6 +125,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.PHYSICS_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPhysicsComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.QUEST_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createQuestComponent(room, scene, aid)}, 
     [COMPONENT_TYPES.WEAPON_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createWeaponComponent(room, scene, aid)}, 
+    [COMPONENT_TYPES.VIRTUAL_CAMERA]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createVirtualCameraComponent(scene, aid)}, 
 }
 
 export function iwbItemHandler(room:IWBRoom){
@@ -442,6 +444,12 @@ async function deleteComponent(room:IWBRoom, scene:any, player:Player, item:any)
 
 function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
     switch(item.type){
+        case COMPONENT_TYPES.VIRTUAL_CAMERA:
+        if(!scene[COMPONENT_TYPES.VIRTUAL_CAMERA].has(item.aid)){
+            createVirtualCameraComponent(scene, item.aid)
+        }
+        break;
+
         case COMPONENT_TYPES.WEAPON_COMPONENT:
         if(!scene[COMPONENT_TYPES.WEAPON_COMPONENT].has(item.aid)){
             createWeaponComponent(room, scene, item.aid)
