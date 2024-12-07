@@ -60,6 +60,12 @@ export class IWBRoom extends Room<IWBRoomState> {
             console.log('checking world leaderboards')
             refreshLeaderboards(this)
         }, 1000 * this.leaderboardRefreshTime);
+
+        this.state.backupInterval = setInterval(async ()=>{
+            if(!this.state.gcWorld){
+                await saveRealm(this)
+            }
+        }, 1000 * 20)
     }
  
     onJoin(client: Client, options: any) {
@@ -103,6 +109,8 @@ export class IWBRoom extends Room<IWBRoomState> {
     async onDispose() {
         console.log("room", this.roomId, "disposing...");
         this.clock.clear()
+
+        clearInterval(this.state.backupInterval)
 
        if(iwbManager.rooms.find(($:any)=> $.roomId === this.roomId)){
         console.log('room is online, clean up', this.state.world)

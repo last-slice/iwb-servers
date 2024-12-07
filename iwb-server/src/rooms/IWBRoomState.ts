@@ -40,6 +40,6 @@ export class IWBRoomState extends Schema {
   options:any
 
   questManager:QuestManager
-
+  backupInterval:any
 
 }

@@ -809,8 +809,7 @@ async function copyItem(room:IWBRoom, scene:any, client:Client, player:Player, i
     let parent = scene[COMPONENT_TYPES.PARENTING_COMPONENT][scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate)]
     console.log(parent.children.length)
 
-    catalogInfo.n += " Copy"
-    info.item.n = catalogInfo.n
+    info.item.n = {...catalogInfo.n}
 
     // if(topLevel < 3){
         await createNewItem(room, client, scene, info.item, catalogInfo)

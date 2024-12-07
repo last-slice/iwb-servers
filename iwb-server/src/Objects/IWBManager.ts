@@ -16,7 +16,9 @@ import { iwbSceneHandler } from "../rooms/messaging/SceneHandler"
 import { garbageCollectRealmGames } from "./Game"
 import { garbageCollectPlaylist } from "./Playlist"
 import { iwbQuestHandler } from "../rooms/messaging/QuestHandler"
-import { QuestManager } from "./QuestManager"
+import warehouseData from '../../data/warehouse.json'
+import { setWarehouseData, warehouseHandler } from "../rooms/messaging/WarehouseHandler"
+
 
 const fs = require('fs');
 
@@ -116,6 +118,7 @@ export class IWBManager{
             await iwbPlayerHandler(room)
             await iwbSceneHandler(room)
             await iwbQuestHandler(room)
+            await warehouseHandler(room)
 
             let options:any
             if(room.state.options.island === "client"){
@@ -157,6 +160,26 @@ export class IWBManager{
             player.sendPlayerMessage(SERVER_MESSAGE_TYPES.CHUNK_SEND_ASSETS, assets)
             chunkIndex++;
         }
+
+
+        // //warehouse items
+        // chunkSize = 100
+        // chunkIndex = 0;
+    
+        // while (chunkIndex * chunkSize < totalItems) {
+        //     // Get the current chunk of items
+        //     const chunk = warehouseData.slice(chunkIndex * chunkSize, (chunkIndex + 1) * chunkSize);
+
+        //     let assets:Map<string,any> = new Map()
+        //     chunk.forEach((item:any)=>{
+        //         assets.set(item.id, item)
+        //     })
+        //     // console.log('chunk is', chunk.length)
+        //     player.sendPlayerMessage(SERVER_MESSAGE_TYPES.CHUNK_WAREHOUSE_ASSETS, assets)
+        //     chunkIndex++;
+        // }
+        setWarehouseData(warehouseData)
+        player.sendPlayerMessage(SERVER_MESSAGE_TYPES.CHUNK_WAREHOUSE_ASSETS, warehouseData)
 
         player.sendPlayerMessage(SERVER_MESSAGE_TYPES.INIT,{
             prerequisites: questManager.prerequisites.filter(condition => condition.world === room.state.world),

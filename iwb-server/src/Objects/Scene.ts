@@ -45,6 +45,8 @@ import { checkQuestCache, createQuestComponent, getQuestsPlayerData, QuestCompon
 import { QuestManager } from "./QuestManager";
 import { createWeaponComponent, WeaponComponent } from "./Weapon";
 import { createVirtualCameraComponent, VirtualCameraComponent } from "./VirtualCamera";
+import fs from "fs";
+
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -634,8 +636,6 @@ export async function saveRealm(room:IWBRoom){
             }
             iwbManager.worldsModified = true
         }
-
-        // console.log('files are ', fileNames, data)
 
         iwbManager.addWorldPendingSave(room.state.world, room.roomId, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
         // iwbManager.backupFiles(room.state.world, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
