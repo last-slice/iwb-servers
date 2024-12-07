@@ -16,11 +16,9 @@ import { iwbSceneHandler } from "../rooms/messaging/SceneHandler"
 import { garbageCollectRealmGames } from "./Game"
 import { garbageCollectPlaylist } from "./Playlist"
 import { iwbQuestHandler } from "../rooms/messaging/QuestHandler"
-import warehouseData from '../../data/warehouse.json'
 import { setWarehouseData, warehouseHandler } from "../rooms/messaging/WarehouseHandler"
-
-
-const fs = require('fs');
+import path from "path"
+import fs from "fs";
 
 export class IWBManager{
     
@@ -161,6 +159,15 @@ export class IWBManager{
             chunkIndex++;
         }
 
+        let warehouseData:any = []
+        const filePath = path.join(process.env.SERVER_ROOT, "data", 'warehouse.json'); // Adjust the file path accordingly
+        try {
+            // Read the file synchronously
+            const data = fs.readFileSync(filePath, 'utf8');
+            warehouseData = JSON.parse(data)
+          } catch (err) {
+            console.error('Error reading warehouse ile:', err);
+          }
 
         // //warehouse items
         // chunkSize = 100

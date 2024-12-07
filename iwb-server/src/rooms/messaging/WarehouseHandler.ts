@@ -164,7 +164,7 @@ export function warehouseHandler(room:IWBRoom){
                 console.log('item is now', item)
             }
 
-            fs.writeFileSync(path.resolve('./data/warehouse.json'), JSON.stringify(warehouseData, null, 2));
+            fs.writeFileSync(path.resolve(__dirname, "data", 'warehouse.json'), JSON.stringify(warehouseData, null, 2));
             console.log('write file finished')
           } catch (error) {
             console.error(`Error savign warehosue`, error);
