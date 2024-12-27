@@ -46,6 +46,11 @@ export class IWBRoom extends Room<IWBRoomState> {
             }
         }
 
+        if(options.gcScene){
+            console.log('we have a gc scene on create')
+            this.state.gcWorld = true
+        }
+
         // options.island !== "world" ? this.state.gcWorld = true : null
         this.state.options = options
 
@@ -61,11 +66,11 @@ export class IWBRoom extends Room<IWBRoomState> {
             refreshLeaderboards(this)
         }, 1000 * this.leaderboardRefreshTime);
 
-        this.state.backupInterval = setInterval(async ()=>{
-            if(!this.state.gcWorld){
-                await saveRealm(this)
-            }
-        }, 1000 * 20)
+        // this.state.backupInterval = setInterval(async ()=>{
+        //     if(!this.state.gcWorld){
+        //         await saveRealm(this)
+        //     }
+        // }, 1000 * 20)
     }
  
     onJoin(client: Client, options: any) {

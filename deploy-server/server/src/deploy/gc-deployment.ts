@@ -12,6 +12,8 @@ import { buildScene } from '../download/scripts'
 import { status } from "../config/config";
 import { DeploymentData, SERVER_MESSAGE_TYPES } from '../utils/types'
 import { resetIWBBucket } from './scene-deployment'
+import { exec } from "child_process";
+
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -201,6 +203,14 @@ export async function handleGenesisCityDeployment(key:string, data:any){
               files: contentFiles,
               metadata: sceneJson
           })
+
+          if(data.dest && data.dest === "angzaar"){
+            console.log('deploying to angzaar land')
+            await runCommand( "DCL_PRIVATE_KEY=" + process.env.ANGZAAR_DEPLOY_KEY + " " + process.env.ANGZAAR_DEPLOY_CMD, bucketDirectory);
+            resetDeployment(key)
+            pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, dest:data.dest, user:data.user, name:data.name, world:data.worldName, valid:true})
+            return
+          }
 
           pendingDeployments[data.user].entityFiles = entityFiles
           pendingDeployments[data.user].entityId = entityId
@@ -531,3 +541,18 @@ export async function getFiles({
       return []
     }
   }
+
+
+  const runCommand = async (command:any, cwd:any) => {
+    return new Promise((resolve, reject) => {
+      exec(command, { cwd }, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error running command "${command}":`, stderr);
+          reject(error);
+        } else {
+          console.log(`Command output: ${stdout}`);
+          resolve(stdout);
+        }
+      });
+    });
+  };

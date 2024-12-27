@@ -55,7 +55,10 @@ export async function editMaterialComponent(info:any, scene:Scene){
 
             case 'texturetype':
                 materialInfo.textureType = info.data
-                if(info.data !== "PLAYLIST"){
+                if(info.texture){
+                    materialInfo.texture = info.texture
+                }
+                if(info.data === "PLAYLIST"){
                     await editPlaylistComponent({aid:materialInfo.playlist, meshAid:info.aid, action:"deletemesh"}, scene)
                 }
                 break;

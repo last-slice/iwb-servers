@@ -45,8 +45,6 @@ import { checkQuestCache, createQuestComponent, getQuestsPlayerData, QuestCompon
 import { QuestManager } from "./QuestManager";
 import { createWeaponComponent, WeaponComponent } from "./Weapon";
 import { createVirtualCameraComponent, VirtualCameraComponent } from "./VirtualCamera";
-import fs from "fs";
-
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -189,7 +187,7 @@ export class Scene extends Schema {
             this.bps = data.bps
             this.pcls = data.pcls
             this.pcnt = data.pcls.length
-            this.lim = data.hasOwnProperty("lim") ? data.lim : true
+            this.lim = data.lim
             this.sp = data.sp[0].split(",").length === 2 ? [data.sp[0].split(",")[0] + ",0," + data.sp[0].split(",")[1]] : data.sp
             this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"]
             data.hasOwnProperty("direction") ? this.direction = data.direction : this.direction = 0
@@ -471,14 +469,12 @@ export class Scene extends Schema {
                         break;
 
                     case COMPONENT_TYPES.VIDEO_COMPONENT:
-                      
                         for (const aid in data[component]) {
-                            this[COMPONENT_TYPES.VIDEO_COMPONENT].set(aid, new VideoComponent(data[component][aid]))
+                            createVideoComponent(this, aid, data[component][aid])
                         }
                         break;
 
                     case COMPONENT_TYPES.ANIMATION_COMPONENT:
-                      
                         for (const aid in data[component]) {
                             createAnimationComponent(this, aid, data[component][aid])
                         }
@@ -637,6 +633,7 @@ export async function saveRealm(room:IWBRoom){
             iwbManager.worldsModified = true
         }
 
+        console.log('scene count to back up is', scenes.length)
         iwbManager.addWorldPendingSave(room.state.world, room.roomId, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
         // iwbManager.backupFiles(room.state.world, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
     }

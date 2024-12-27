@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { temporaryDirectory } from '.';
+import { status } from '../../config/config'
 
 export async function updateWorldMetadata(location:string, data:any){
     console.log('updating iwb scene.json', data.ens)
@@ -17,7 +18,7 @@ export async function writeSceneMetadata(location:string, data:any, image:string
     let fileData = await fs.promises.readFile(location)
     let metadata = JSON.parse(fileData.toString())
 
-    console.log('image is', image)
+    console.log('data is', data)
 
     let {title, description, owner} = data.metadata
     
@@ -33,11 +34,56 @@ export async function writeSceneMetadata(location:string, data:any, image:string
     metadata.scene.parcels = []
     metadata.scene.base = ""
 
-    data.parcels.forEach((parcel:any)=>{
-        metadata.scene.parcels.push("" + parcel.x + "," + parcel.y)
-    })
+    if(data.dest === "angzaar"){
+        console.log('we need to get angzaar parcels')
+        try{
+            let res = await fetch((status.DEBUG ? "http://localhost:5353" : "https://angzaar-plaza.dcl-iwb.co/ws") + "/api/plaza/locations/" + data.locationId)
+            let locationJson = await res.json()
+            console.log('angzaar plaza location is', locationJson)
 
-    metadata = determineBaseParcel(metadata, data.parcels)
+            if(locationJson.valid && locationJson.location){
+                if(locationJson.location.currentReservation && locationJson.location.currentReservation === data.reservationId){
+                    console.log('we found reservation for user and its current, continue deployment')
+                    metadata.scene.parcels = locationJson.location.parcels
+                    metadata.scene.base = locationJson.location.parcels[0]
+                    console.log('parcels are ', metadata.scene)
+                }else{
+                    console.log('invalid reservation')
+                    throw new Error("Invalid Reservation")
+                }
+
+                // let res = await fetch((status.DEBUG ? "http://localhost:5353" : "https://angzaar-plaza.dcl-iwb.co/ws") + "/api/plaza/reservation/" + data.reservationId)
+                // let json = await res.json()
+                // console.log('angzaar plaza location reservation is', json)
+                // if(json.valid && 
+                //     json.reservation && 
+                //     json.reservation.current &&
+                //     json.reservation.id === data.reservationId &&
+                //     json.reservation.ethAddress === data.user
+                // ){
+                //     console.log('we found reservation for user and its current, continue deployment')
+                //     metadata.scene.parcels = locationJson.location.parcels
+                //     console.log('parcels are ', metadata.scene)
+
+                // }else{
+                //     console.log('invalid reservation')
+                //     throw new Error("Invalid Reservation")
+                // }
+            }else{
+                throw new Error("Invalid Angzaar Location")
+            }
+        }
+        catch(e:any){
+            console.log('error getting location parcels for angzaar plaza deployment')
+            throw new Error("Invalid Angzaar Location")
+        }
+    }else{
+        data.parcels.forEach((parcel:any)=>{
+            metadata.scene.parcels.push("" + parcel.x + "," + parcel.y)
+        })
+    
+        metadata = determineBaseParcel(metadata, data.parcels)
+    }
 
     if(data.dest === "worlds"){
         metadata['worldConfiguration'] = {
@@ -49,7 +95,8 @@ export async function writeSceneMetadata(location:string, data:any, image:string
     }
 
     metadata['iwb'] = {
-        name: data.worldName
+        name: data.worldName,
+        gcScene:true
     }
 
     if(data.sceneId){

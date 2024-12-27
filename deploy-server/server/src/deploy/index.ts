@@ -98,6 +98,7 @@ export async function handleDeploymentRequest(req:any, res:any){
     if(status.DEBUG){
         switch(req.body.dest){
             case 'gc':
+            case 'angzaar':
             case 'worlds':
                 dclDeploymentQueue.push(req.body)
                 checkDCLDeploymentQueue()

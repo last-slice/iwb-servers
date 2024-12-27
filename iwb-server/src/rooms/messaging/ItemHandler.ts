@@ -573,11 +573,20 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
 
         case 'Video':
             createVideoComponent(scene, item.aid, catalogItemInfo)
-            createMeshRendererComponent(scene, {aid:item.aid, shape:0, onPlay:true})
-            createMeshColliderComponent(scene, {aid:item.aid, shape:0, layer:3})
-            // createTextureComponent(scene, {aid:item.aid, type:1})
-            // createEmissiveComponent(scene, item.aid, {type:0})
-            createMaterialComponent(scene, item.aid, {onPlay:true, type:0, textureType:"VIDEO", texture:""})
+            // createMeshRendererComponent(scene, {aid:item.aid, shape:0, onPlay:true})
+            // createMeshColliderComponent(scene, {aid:item.aid, shape:0, layer:3})
+            // createMaterialComponent(scene, item.aid, {onPlay:true, type:0, textureType:"VIDEO", texture:""})
+
+            createMeshRendererComponent(scene, {aid:item.aid, shape:1})
+            createMeshColliderComponent(scene, {aid:item.aid, shape:1, layer:3})
+            createTextComponent(scene, item.aid, {text:"" + catalogItemInfo.n, onPlay:false})
+            createMaterialComponent(scene, item.aid, {onPlay:false, textureType:"COLOR", type:0, "albedoColor": {
+                    "r": 0.78,
+                    "g": 0.72,
+                    "b": .6,
+                    "a": 0.5
+                }})
+            
         break;
 
         case 'Image':
