@@ -4,7 +4,7 @@ import { pushPlayfabEvent } from "../../utils/Playfab";
 import { SERVER_MESSAGE_TYPES, SCENE_MODES, COMPONENT_TYPES } from "../../utils/types";
 import { IWBRoom } from "../IWBRoom";
 import { DEBUG } from "../../utils/config";
-import { Scene } from "../../Objects/Scene";
+import { checkAssetCacheStates, Scene } from "../../Objects/Scene";
 import { generateId } from "colyseus";
 import { canBuild, hasWorldPermissions, removeAllAssetComponents } from "./ItemHandler";
 import { addBasicSceneParenting } from "../../Objects/Parenting";
@@ -63,39 +63,36 @@ export function iwbSceneHandler(room:IWBRoom){
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD, async(client, info)=>{
-        // (SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD + " message", info)
+        (SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD + " message", info)
 
         let player:Player = room.state.players.get(client.userData.userId)
         if(player){//} && (player.mode === SCENE_MODES.BUILD_MODE)){
             let scene = room.state.scenes.get(info.sceneId)
-            if(scene){
+            if(scene && scene.metadata.o === player.userId){
 
-                scene[COMPONENT_TYPES.PARENTING_COMPONENT].forEach((assetItem:any, index:number)=>{
-                    // let iwbAsset = scene.catalogInfo.get(assetItem.aid)
-                    // let itemConfig = itemManager.items.get(assetItem.aid)
-                    // if(itemConfig && itemConfig.n){
-                    //     iwbAsset.n = itemConfig.n
-                    // }
-                })
+                let jsonScene:any = scene.toJSON()
+                jsonScene =  await checkAssetCacheStates(room, scene, jsonScene)
 
-                // try{
-                //     let res = await fetch(deploymentServer + "scene/download", {
-                //         method:"POST",
-                //         headers:{"Content-type": "application/json"},
-                //         body: JSON.stringify({scene:scene})
-                //     })
-                //    //  console.log('deployment ping', await res.json())
+                try{
+                    let res = await fetch(deploymentServer + "scene/download", {
+                        method:"POST",
+                        headers:{"Content-type": "application/json"},
+                        body: JSON.stringify({scene:jsonScene})
+                    })
+                    console.log('deployment ping', await res.json())
 
-                //    pushPlayfabEvent(
-                //     SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD, 
-                //     player, 
-                //     [{scene:scene.n}]
-                //     )
-                // }
-                // catch(e){
-                //     console.log('error pinging download server for zip file', player.address, e)
-                //     player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"There was an error initiating your download. Please try again.", sound:'error_2'})
-                // }
+                   pushPlayfabEvent(
+                    SERVER_MESSAGE_TYPES.SCENE_DOWNLOAD, 
+                    player, 
+                    [{scene:scene.metadata.n}]
+                    )
+                }
+                catch(e){
+                    console.log('error pinging download server for zip file', player.address, e)
+                    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"There was an error initiating your download. Please try again.", sound:'error_2'})
+                }
+            }else{
+                player.sendPlayerMessage(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:"That scene does not exist or you do not have permissions to download this scene.", sound:'error_2'})
             }
         }
     })
@@ -163,11 +160,11 @@ export function iwbSceneHandler(room:IWBRoom){
             room.state.temporaryParcels.clear()
 
             if(info.direction){
-                scene.direction = info.direction
+                scene.metadata.direction = info.direction
             }
 
             if(info.offsets){
-                scene.offsets = info.offsets
+                scene.metadata.offsets = info.offsets
             }
         }
     })
@@ -453,7 +450,7 @@ export function iwbSceneHandler(room:IWBRoom){
                     scene.metadata.n = info.name
                     scene.metadata.d = info.desc
                     scene.metadata.im = info.image
-                    info.direction ? scene.direction += info.direction : null
+                    info.direction ? scene.metadata.direction += info.direction : null
 
                     let enabledView = (scene.e === info.enabled ? false : true)
                     scene.e = info.enabled
@@ -543,70 +540,70 @@ export function iwbSceneHandler(room:IWBRoom){
         // }
     })
 
-    room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_ANGZAAR, async(client, info)=>{
-        console.log(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_ANGZAAR + " message", info)
-        if(!info || !info.sceneId){
-            console.log("invalid deployment parameters received")
-            return
-        }
+    // room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_ANGZAAR, async(client, info)=>{
+    //     console.log(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_ANGZAAR + " message", info)
+    //     if(!info || !info.sceneId){
+    //         console.log("invalid deployment parameters received")
+    //         return
+    //     }
 
-        let player:Player = room.state.players.get(client.userData.userId)
-        // if(player){
-            let scene:Scene = room.state.scenes.get(info.sceneId)
-        //     if(scene && scene.o === player.address){
-        //       //   console.log('owner is requesting deployment')
+    //     let player:Player = room.state.players.get(client.userData.userId)
+    //     // if(player){
+    //         let scene:Scene = room.state.scenes.get(info.sceneId)
+    //     //     if(scene && scene.o === player.address){
+    //     //       //   console.log('owner is requesting deployment')
 
-                try{
-                    let assetIds:any[] = []
-                    scene[COMPONENT_TYPES.IWB_COMPONENT].forEach((iwb:IWBComponent, aid:string)=>{
-                        console.log(iwb.toJSON())
-                        assetIds.push({id:iwb.id, ugc:iwb.ugc, type:iwb.type})
-                    })
+    //             try{
+    //                 let assetIds:any[] = []
+    //                 scene[COMPONENT_TYPES.IWB_COMPONENT].forEach((iwb:IWBComponent, aid:string)=>{
+    //                     console.log(iwb.toJSON())
+    //                     assetIds.push({id:iwb.id, ugc:iwb.ugc, type:iwb.type})
+    //                 })
 
-                    let res = await fetch(deploymentServer + "scene/deploy", {
-                        method:"POST",
-                        headers:{
-                            "Content-type": "application/json",
-                            "Auth": "" + process.env.IWB_DEPLOYMENT_AUTH
-                        },
-                        body: JSON.stringify({
-                            // scene:scene,
-                            metadata:{
-                                title: scene.metadata.n,
-                                description: scene.metadata.d,
-                                owner: scene.metadata.ona,
-                                image: scene.metadata.im
-                            },
-                            assetIds:assetIds,
-                            spawns:scene.sp,
-                            dest:info.dest,
-                            worldName:scene.w,
-                            user: client.userData.userId,// scene.o,
-                            parcels: info.parcels,
-                            tokenId: info.tokenId,
-                            sceneId: info.sceneId,
-                            target: 'interconnected.online'
-                        })
-                    })
-                    let json = await res.json()
-                    console.log('json is', json)
-                    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:json.valid, msg:json.valid ? "Your deployment is pending!...Please wait for a link to sign the deployment. This could take a couple minutes." : "Error with your deployment request. Please try again."})
+    //                 let res = await fetch(deploymentServer + "scene/deploy", {
+    //                     method:"POST",
+    //                     headers:{
+    //                         "Content-type": "application/json",
+    //                         "Auth": "" + process.env.IWB_DEPLOYMENT_AUTH
+    //                     },
+    //                     body: JSON.stringify({
+    //                         // scene:scene,
+    //                         metadata:{
+    //                             title: scene.metadata.n,
+    //                             description: scene.metadata.d,
+    //                             owner: scene.metadata.ona,
+    //                             image: scene.metadata.im
+    //                         },
+    //                         assetIds:assetIds,
+    //                         spawns:scene.sp,
+    //                         dest:info.dest,
+    //                         worldName:scene.w,
+    //                         user: client.userData.userId,// scene.o,
+    //                         parcels: info.parcels,
+    //                         tokenId: info.tokenId,
+    //                         sceneId: info.sceneId,
+    //                         target: 'interconnected.online'
+    //                     })
+    //                 })
+    //                 let json = await res.json()
+    //                 console.log('json is', json)
+    //                 player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:json.valid, msg:json.valid ? "Your deployment is pending!...Please wait for a link to sign the deployment. This could take a couple minutes." : "Error with your deployment request. Please try again."})
 
-                    pushPlayfabEvent(
-                        SERVER_MESSAGE_TYPES.SCENE_DEPLOY, 
-                        player, 
-                        [{scene:scene.metadata.n, world: scene.w}]
-                    )
-                }
-                catch(e){
-                    console.log('error pinging deploy server', player.address, e)
-                    player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:false, msg:"Error pinging the deploy server"})
-                }
-        //     }else{
-        //        //  console.log('someone else requesting deployment access')
-        //     }
-        // }
-    })
+    //                 pushPlayfabEvent(
+    //                     SERVER_MESSAGE_TYPES.SCENE_DEPLOY, 
+    //                     player, 
+    //                     [{scene:scene.metadata.n, world: scene.w}]
+    //                 )
+    //             }
+    //             catch(e){
+    //                 console.log('error pinging deploy server', player.address, e)
+    //                 player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:false, msg:"Error pinging the deploy server"})
+    //             }
+    //     //     }else{
+    //     //        //  console.log('someone else requesting deployment access')
+    //     //     }
+    //     // }
+    // })
 
     room.onMessage(SERVER_MESSAGE_TYPES.EXPORT_WORLD, async(client, info)=>{
         console.log(SERVER_MESSAGE_TYPES.EXPORT_WORLD + " message", info)
@@ -899,3 +896,17 @@ export function createScene(player:Player, room:IWBRoom, info:any, parcels:strin
 
     addBasicSceneParenting(scene)
   }
+
+  export function isWorldOwner(room:IWBRoom, user:string){
+    console.log('is World Owner check')
+    let world = iwbManager.worlds.find((w) => w.ens === room.state.world)
+    if(!world){
+        console.log('no world to build')
+        return false
+    }
+
+    if(world.owner === user){
+        return true
+    }
+    return false
+}

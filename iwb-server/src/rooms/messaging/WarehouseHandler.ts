@@ -139,7 +139,7 @@ export function warehouseHandler(room:IWBRoom){
                 break;
         }
 
-        // console.log('item is', item)
+        console.log('item is now', item.p)
         // console.log('ware  is', warehouseData)
     })
 
@@ -153,7 +153,9 @@ export function warehouseHandler(room:IWBRoom){
             }
 
             if(info.trigger){}
-            else if(info.category){}
+            else if(info.category){
+                console.log('saving category position', category.p)
+            }
             else{
                 let item =  category.items.find((it:any)=> it.id === info.id)
                 if(!item){
@@ -164,7 +166,7 @@ export function warehouseHandler(room:IWBRoom){
                 console.log('item is now', item)
             }
 
-            fs.writeFileSync(path.resolve(process.env.NODE_ENV  === "Development" ? "./" : process.env.SERVER_ROOT, "data", 'warehouse.json'), JSON.stringify(warehouseData, null, 2));
+            fs.writeFileSync(path.resolve(process.env.NODE_ENV  === "Development" ? "./" : process.env.PROD_SERVER_ROOT, "data", 'warehouse.json'), JSON.stringify(warehouseData, null, 2));
             console.log('write file finished')
           } catch (error) {
             console.error(`Error savign warehosue`, error);
@@ -200,7 +202,7 @@ export function warehouseHandler(room:IWBRoom){
                     }
                   },
             )
-            fs.writeFileSync(path.resolve('./data/warehouse.json'), JSON.stringify(warehouseData, null, 2));
+            fs.writeFileSync(path.resolve(process.env.NODE_ENV  === "Development" ? "./" : process.env.PROD_SERVER_ROOT, "data", 'warehouse.json'), JSON.stringify(warehouseData, null, 2));
             console.log('write file finished')
         }
         catch(e){

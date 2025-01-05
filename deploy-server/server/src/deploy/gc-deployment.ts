@@ -173,7 +173,7 @@ export async function handleGenesisCityDeployment(key:string, data:any){
           sceneId: data.sceneId
         }
 
-        await buildScene(data, "deploy", bucketDirectory)
+        await buildScene(data, "deploy", bucketDirectory, pendingDeployments[data.user])
 
           await buildTypescript({
             workingDir: bucketDirectory, 
@@ -389,7 +389,7 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
         if (response.message) {
           console.log(response.message)
         }
-        pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, dest:pendingDeployments[req.body.user].dest, user:req.body.user, name:pendingDeployments[req.body.user].name, world:pendingDeployments[req.body.user].worldName, valid:true})
+        pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, base:pendingDeployments[req.body.user].base, dest:pendingDeployments[req.body.user].dest, user:req.body.user, name:pendingDeployments[req.body.user].name, world:pendingDeployments[req.body.user].worldName, valid:true})
 
         if(req.body.dest === "worlds" || req.body.dest === "dclname"){
           delete pendingDeployments[req.body.user]

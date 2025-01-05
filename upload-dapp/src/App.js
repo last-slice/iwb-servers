@@ -8,7 +8,7 @@ import { startTransition } from 'react';
 import logo from './img/logo.png'
 import axios from 'axios'
 
-export const DEBUG = false
+export const DEBUG = true
 
 function App() {
   const [selectedAssetType, setSelectedAssetType] = useState(null);

@@ -45,6 +45,9 @@ import { checkQuestCache, createQuestComponent, getQuestsPlayerData, QuestCompon
 import { QuestManager } from "./QuestManager";
 import { createWeaponComponent, WeaponComponent } from "./Weapon";
 import { createVirtualCameraComponent, VirtualCameraComponent } from "./VirtualCamera";
+import { getCache } from "../utils/cache";
+import { SCENE_POOL_CACHE_KEY } from "./IWBManager";
+import { createRaycastComponent, RaycastComponent } from "./Raycast";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -61,6 +64,10 @@ export class SceneMetaDataComponent extends Schema{
     @type("string") ona: string = ""
     @type("string") cat: string = ""
     @type("string") im: string = ""
+    @type("number") direction: number = 0
+    @type(['number']) offsets = new ArraySchema<number>();
+    @type("boolean") dv: boolean = false
+    @type("boolean") dpx: boolean = false
 }
 
 export class Scene extends Schema {
@@ -88,14 +95,10 @@ export class Scene extends Schema {
     // @type("number") toc: number
     @type("number") pc: number = 0
     @type("number") pcnt: number
-    @type("number") direction: number = 0
-    @type(['number']) offsets = new ArraySchema<number>();
 
     @type("boolean") isdl: boolean
     @type("boolean") e: boolean
     @type("boolean") priv: boolean
-    @type("boolean") dv: boolean = false
-    @type("boolean") dpx: boolean = false
     @type("boolean") lim: boolean = true
 
     @type({map:ActionComponent}) [COMPONENT_TYPES.ACTION_COMPONENT]:MapSchema<ActionComponent> = new MapSchema<ActionComponent>()
@@ -123,6 +126,7 @@ export class Scene extends Schema {
     @type({map:PhysicsComponent}) [COMPONENT_TYPES.PHYSICS_COMPONENT]:MapSchema<PhysicsComponent> = new MapSchema<PhysicsComponent>()
     @type({map:PlaylistComponent}) [COMPONENT_TYPES.PLAYLIST_COMPONENT]:MapSchema<PlaylistComponent> = new MapSchema<PlaylistComponent>()
     @type({map:PointerComponent}) [COMPONENT_TYPES.POINTER_COMPONENT]:MapSchema<PointerComponent> = new MapSchema<PointerComponent>()
+    @type({map:RaycastComponent}) [COMPONENT_TYPES.RAYCAST_COMPONENT]:MapSchema<RaycastComponent> = new MapSchema<RaycastComponent>()
     @type({map:RewardComponent}) [COMPONENT_TYPES.REWARD_COMPONENT]:MapSchema<RewardComponent> = new MapSchema<RewardComponent>()
     @type({map:StateComponent}) [COMPONENT_TYPES.STATE_COMPONENT]:MapSchema<StateComponent> = new MapSchema<StateComponent>()
     @type({map:TextShapeComponent}) [COMPONENT_TYPES.TEXT_COMPONENT]:MapSchema<TextShapeComponent> = new MapSchema<TextShapeComponent>()
@@ -190,8 +194,8 @@ export class Scene extends Schema {
             this.lim = data.lim
             this.sp = data.sp[0].split(",").length === 2 ? [data.sp[0].split(",")[0] + ",0," + data.sp[0].split(",")[1]] : data.sp
             this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"]
-            data.hasOwnProperty("direction") ? this.direction = data.direction : this.direction = 0
-            this.offsets = data.hasOwnProperty("offsets") ? data.offsets : [0,0]
+            data.hasOwnProperty("direction") ? this.metadata.direction = data.direction : this.metadata.direction = 0
+            this.metadata.offsets = data.hasOwnProperty("offsets") ? data.offsets : [0,0]
 
             this.setComponents(data, room)
         }
@@ -201,6 +205,12 @@ export class Scene extends Schema {
         Object.values(COMPONENT_TYPES).forEach((component:any)=>{
             if(data[component]){
                 switch(component){
+                    case COMPONENT_TYPES.RAYCAST_COMPONENT:
+                        for (const aid in data[component]) {
+                            createRaycastComponent(this, aid,  data[component][aid])
+                        }
+                        break
+
                     case COMPONENT_TYPES.VIRTUAL_CAMERA:
                         for (const aid in data[component]) {
                             createVirtualCameraComponent(this, aid,  data[component][aid])
@@ -479,7 +489,6 @@ export class Scene extends Schema {
                             createAnimationComponent(this, aid, data[component][aid])
                         }
                         break;
-
                 }
             }
         })
@@ -493,31 +502,44 @@ export function initServerScenes(room:IWBRoom, options?:any){
             initServerScenes(room, options)
         }, 1000 * 1)
     }else{
-        setTimeout(()=>{
-            let world = iwbManager.worlds.find((w)=> w.ens === room.state.world)
-            if(world){
-                iwbManager.initiateRealm(world.owner)
-                .then((realmData)=>{
-                    room.state.realmToken = realmData.EntityToken.EntityToken
-                    room.state.realmId = realmData.EntityToken.Entity.Id
-                    room.state.realmTokenType = realmData.EntityToken.Entity.Type
-
-                    QuestManager.create(room).then((questManager)=>{
-                        room.state.questManager = questManager
-
-                        iwbManager.fetchRealmData(realmData)
-                        .then((realmData)=>{
-                            iwbManager.fetchRealmScenes(room.state.world, realmData)
-                            .then(async (sceneData)=>{
-                                await loadRealmScenes(room, sceneData, options)
-                                iwbManager.initUsers(room)
-                            })
-                        }) 
-                    })  
-                })
-                .catch((error)=>{
-                    console.log('error initating realm', error)
-                })
+        setTimeout(async ()=>{
+            if(room.state.options.scenePool){
+                console.log('scene is scenePool', options.localConfig)
+                let scenePool = getCache(SCENE_POOL_CACHE_KEY)
+                let scene = scenePool.find((scene:any)=> scene.id === options.localConfig.sceneId)
+                if(scene){
+                    room.state.world = scene.w + "-" + options.localConfig.sceneId
+                    await loadRealmScenes(room, [scene], options, scene.w)
+                    iwbManager.initUsers(room)
+                }else{
+                    console.log('couldnt find scene in scene pool, dont load room')
+                }
+            }else{
+                let world = iwbManager.worlds.find((w)=> w.ens === room.state.world)
+                if(world){
+                    iwbManager.initiateRealm(world.owner)
+                    .then((realmData)=>{
+                        room.state.realmToken = realmData.EntityToken.EntityToken
+                        room.state.realmId = realmData.EntityToken.Entity.Id
+                        room.state.realmTokenType = realmData.EntityToken.Entity.Type
+    
+                        QuestManager.create(room).then((questManager)=>{
+                            room.state.questManager = questManager
+    
+                            iwbManager.fetchRealmData(realmData)
+                            .then((realmData)=>{
+                                iwbManager.fetchRealmScenes(room.state.world, realmData)
+                                .then(async (sceneData)=>{
+                                    await loadRealmScenes(room, sceneData, options)
+                                    iwbManager.initUsers(room)
+                                })
+                            }) 
+                        })  
+                    })
+                    .catch((error)=>{
+                        console.log('error initating realm', error)
+                    })
+                }
             }
         }, 1000)
     }
@@ -565,13 +587,16 @@ export async function initServerAssets(room:IWBRoom){
     console.log('realm catalog version is', room.state.catalogVersion)
 }
 
-export async function loadRealmScenes(room:IWBRoom, scenes:any[], options?:any){
-    let filter = [...scenes.filter((scene)=> scene.w === room.state.world)]
+export async function loadRealmScenes(room:IWBRoom, scenes:any[], options?:any, scenePool?:string){
+    let filter = [...scenes.filter((scene)=> scene.w === scenePool ? scenePool : room.state.world)]
     room.state.sceneCount = filter.length
 
+    console.log('filtered scenes are ', filter)
+
     if(options){
-        console.log('we have connectoin from gc, only load specfic scene')
-        let scene = filter.find(($:any)=> $.id === options.localConfig.id)
+        console.log('we have connectoin from gc, only load specfic scene', options)
+        let scene = filter.find(($:any)=> $.id === options.localConfig.scene)
+        console.log('gc scene is ', scene)
         if(scene){
             console.log('we found scene to load for gc')
             scene.pcls = translateGCParcels(scene.pcls)
@@ -642,11 +667,15 @@ export async function saveRealm(room:IWBRoom){
 export function getRealmData(room:IWBRoom){
     let scenes:any[] = []
     room.state.scenes.forEach(async (scene:any)=>{
-        let jsonScene:any = scene.toJSON()
-        jsonScene =  await checkAssetCacheStates(scene, jsonScene)
-        scenes.push(jsonScene)
+        scenes.push(await getJSONScene(room, scene))
     })
     return scenes
+}
+
+export async function getJSONScene(room:IWBRoom, scene:any){
+    let jsonScene:any = scene.toJSON()
+    jsonScene =  await checkAssetCacheStates(room, scene, jsonScene)
+    return jsonScene
 }
 
 export function saveRealmAssets(room:IWBRoom){
@@ -659,9 +688,9 @@ export function saveRealmAssets(room:IWBRoom){
     // iwbManager.backupFile(room.state.world, "catalogs.json", room.state.realmToken, room.state.realmTokenType, room.state.realmId, assets)
 }
 
-export async function checkAssetCacheStates(scene:Scene, jsonScene:any){
+export async function checkAssetCacheStates(room:IWBRoom, scene:Scene, jsonScene:any){
     scene[COMPONENT_TYPES.IWB_COMPONENT].forEach(async (iwbComponent:IWBComponent, aid:string)=>{
-        jsonScene = await checkIWBCache(scene, aid, jsonScene) 
+        jsonScene = await checkIWBCache(room, scene, aid, jsonScene) 
         jsonScene = await checkRewardCache(scene, aid, jsonScene)
         jsonScene = await checkGameCache(scene, aid, jsonScene)
         jsonScene = await checkQuestCache(scene, aid, jsonScene)

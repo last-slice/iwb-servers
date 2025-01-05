@@ -3,6 +3,7 @@ import { Scene } from "./Scene";
 import { COMPONENT_TYPES } from "../utils/types";
 
 export class GameItemComponent extends Schema{
+    @type("number") level:number = 1
     @type("number") type:number //0 - gun, 1 - variable, 2 - 
     @type("number") magSize:number
     @type("number") ammo:number
@@ -15,10 +16,16 @@ export class GameItemComponent extends Schema{
 }
 
 export function createGameItemComponent(scene:Scene, aid:string, data?:any){
-    let component = new GameItemComponent()
+    let component:any = new GameItemComponent()
     if(data){
-        for(let key in data.variables){
-            component.variables.set(key, data.variables[key])
+        for(let key in data){
+            if(key === 'variables'){
+                for(let key in data.variables){
+                    component.variables.set(key, data.variables[key])
+                }
+            }else{
+                component[key] = data[key]
+            }
         }
     }else{
         let gameInfo = scene[COMPONENT_TYPES.GAME_COMPONENT].get(scene.id)

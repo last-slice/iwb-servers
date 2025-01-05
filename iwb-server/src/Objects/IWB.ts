@@ -93,12 +93,20 @@ function checkAssetPolyAndSize(room:IWBRoom, scene:Scene, id:string){
    }
 }
 
-export async function checkIWBCache(scene:Scene, aid:string, jsonScene:any){
+export async function checkIWBCache(room:IWBRoom, scene:Scene, aid:string, jsonScene:any){
     let itemInfo = scene[COMPONENT_TYPES.IWB_COMPONENT].get(aid)
     if(itemInfo){
         let itemJSON = itemInfo.toJSON()
         itemJSON.editing = false
         itemJSON.editor = ""
+
+        let item:any
+        if(itemInfo.ugc){
+            item = room.state.realmAssets.get(itemInfo.id)
+        }else{
+            item = itemManager.items.get(itemInfo.id)
+        }
+        itemJSON.type = item.hasOwnProperty("ty") ? item.ty : undefined
         jsonScene[COMPONENT_TYPES.IWB_COMPONENT][aid] = itemJSON
     }
     return jsonScene

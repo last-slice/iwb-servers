@@ -19,6 +19,16 @@ import { iwbQuestHandler } from "../rooms/messaging/QuestHandler"
 import { setWarehouseData, warehouseHandler } from "../rooms/messaging/WarehouseHandler"
 import path from "path"
 import fs from "fs";
+import dotenv from "dotenv";
+import { cacheSyncToFile, getCache, loadCache } from "../utils/cache"
+import { scenePoolHandler } from "../rooms/messaging/ScenePoolHandler"
+
+dotenv.config();
+
+export const DATA_LOCATION = process.env.NODE_ENV === "Development" ? process.env.DEV_DATA_DIR : process.env.PROD_DATA_DIR
+
+export const SCENE_POOL_FILE = path.join(DATA_LOCATION, process.env.SCENE_POOL_FILE )
+export const SCENE_POOL_CACHE_KEY = process.env.SCENE_POOL_CACHE_KEY
 
 export class IWBManager{
     
@@ -66,6 +76,7 @@ export class IWBManager{
 
     constructor(){
         this.getServerConfigurations(true)
+        this.initCache()
 
         this.backupInterval = setInterval(async ()=>{
             if(this.configModified && !this.backingUp){
@@ -94,6 +105,18 @@ export class IWBManager{
         }, 1000 * 5)
     }
 
+    initCache(){
+        // Initialize cache
+        loadCache(SCENE_POOL_FILE, SCENE_POOL_CACHE_KEY);
+    
+        // Save cache to disk periodically
+        setInterval(async () => {
+            const scenes = getCache(SCENE_POOL_CACHE_KEY);
+    
+            await cacheSyncToFile(SCENE_POOL_FILE, SCENE_POOL_CACHE_KEY, scenes);
+        }, Number(process.env.CACHE_REFRESH_INTERVAL_S) * 1000);
+    }
+
     async backup(){
         this.backingUp = true
         await setTitleData({Key:'Config', Value: JSON.stringify({v:this.version, updates:this.versionUpdates, styles:this.styles})})
@@ -117,6 +140,7 @@ export class IWBManager{
             await iwbSceneHandler(room)
             await iwbQuestHandler(room)
             await warehouseHandler(room)
+            await scenePoolHandler(room)
 
             let options:any
             if(room.state.options.island === "client"){
@@ -160,7 +184,7 @@ export class IWBManager{
         }
 
         let warehouseData:any = []
-        const filePath = path.join(process.env.SERVER_ROOT, "data", 'warehouse.json'); // Adjust the file path accordingly
+        const filePath = path.join(process.env.NODE_ENV === "Development" ? process.env.DEV_SERVER_ROOT : process.env.PROD_SERVER_ROOT, "data", 'warehouse.json'); // Adjust the file path accordingly
         try {
             // Read the file synchronously
             const data = fs.readFileSync(filePath, 'utf8');
@@ -329,9 +353,15 @@ export class IWBManager{
         console.log('body to send is', body)
         if(body && body.message){
             this.rooms.forEach((room)=>{
-                room.broadcast(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:body.message, sound:body.sound})
+                room.broadcast(SERVER_MESSAGE_TYPES.PLAYER_RECEIVED_MESSAGE, {message:body.message, sound:body.sound}, {except:body.hasOwnProperty("except") ? body.except : undefined})
             })
         }
+    }
+
+    broadcastAllClients(type:SERVER_MESSAGE_TYPES, data:any, except?:any){
+        this.rooms.forEach((room)=>{
+            room.broadcast(type, data, {except:except ? except : undefined})
+        })
     }
 
     sendUserMessage(user:string, type:SERVER_MESSAGE_TYPES, data:any){
@@ -866,7 +896,7 @@ export class IWBManager{
             link += "/" + body.auth
 
             console.log('link is', link)
-            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_READY, {link:link})
+            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_READY, {link:link, entityId: body.entityId})
         }
     }
 

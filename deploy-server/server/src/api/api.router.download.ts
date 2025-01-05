@@ -55,6 +55,7 @@ export function downloadRouter(router:any){
 
   router.post("/scene/download", (req: any, res: any) => {
     console.log('trying to download scene', req.body)
+    res.status(200).send({valid: true})
     handleSceneDownload(req, res)
   });
 }

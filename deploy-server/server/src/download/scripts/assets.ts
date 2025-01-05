@@ -1,23 +1,40 @@
 import * as fs from 'fs-extra';
 import { assetDirectory, temporaryDirectory, ugcDirectory } from '.';
 
-export async function copyAssets(location:string, data:any){
+export async function copyAssets(location:string, data:any, type:string){
     let alreaadyCopied:string[] = []
+    let assetIds:any[] = []
 
-    for(let i = 0; i < data.assetIds.length; i++){
-        let asset = data.assetIds[i]
+    if(type === "download"){
+        console.log('data is',data)
+        let iwbAssets = data.IWB
+        assetIds.length = 0
+        for(let aid in iwbAssets){
+            assetIds.push(iwbAssets[aid])
+        }
+    }else{
+        assetIds =  data.assetIds
+    }
+
+    for(let i = 0; i < assetIds.length; i++){
+        let asset = assetIds[i]
+        console.log('asset is', asset)
         if(!alreaadyCopied.includes(asset.id)){
             console.log('copying asset', asset)
             let file = asset.id
 
             let catalogDirectory:string = asset.ugc ? (ugcDirectory + data.user + "/") : assetDirectory
+
+            if(type === "download"){
+                catalogDirectory = asset.ugc ? (ugcDirectory + data.metadata.o + "/") : assetDirectory
+            }
             
-            // console.log('copying asset', asset)
+            console.log('copying asset', asset)
             switch(asset.type){
                 case '2D':
                     file += ".png"
                     break;
-    
+
                 case '3D':
                     file += ".glb"
                     break;
@@ -40,6 +57,7 @@ export async function copyAssets(location:string, data:any){
             }
         }
     }
+
 }
 
 export async function copyUITextures(location:string, data:any){

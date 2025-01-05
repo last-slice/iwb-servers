@@ -62,7 +62,7 @@ export class IWBRoom extends Room<IWBRoomState> {
 
         this.clock.start()
         this.leaderboardRefreshInterval = this.clock.setInterval(() => {
-            console.log('checking world leaderboards')
+            // console.log('checking world leaderboards')
             refreshLeaderboards(this)
         }, 1000 * this.leaderboardRefreshTime);
 
@@ -149,7 +149,7 @@ export class IWBRoom extends Room<IWBRoomState> {
     }
 
     async doLogin(client: any, options: any, request: any) {
-        // console.log('login options', options)
+        console.log('login options', options)
         return new Promise((resolve, reject) => {
             setTimeout(async() => {
                 // console.log('Timeout finished!');

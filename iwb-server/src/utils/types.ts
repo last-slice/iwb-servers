@@ -84,6 +84,8 @@ export enum SERVER_MESSAGE_TYPES {
     SCENE_CREATE_QUEST = 'scene_create_quest',
     SCENE_DELETE_QUEST = 'scene_delete_quest',
     SCENE_DEPLOY_ANGZAAR = 'scene_deploy_angzaar',
+    SCENE_POOL_ADD_SCENE = 'scene_pool_add_scene',
+    SCENE_POOL_UPDATED_SCENE = 'scene_pool_updated',
 
     //World
     INIT_WORLD = "init_world",
@@ -211,7 +213,8 @@ export enum COMPONENT_TYPES {
     PHYSICS_COMPONENT = 'Physics',
     QUEST_COMPONENT = 'Quest',
     WEAPON_COMPONENT = 'Weapon',
-    VIRTUAL_CAMERA = 'Camera'
+    VIRTUAL_CAMERA = 'Camera',
+    RAYCAST_COMPONENT = 'Raycast'
 }
 
 export enum COLLISION_LAYERS {

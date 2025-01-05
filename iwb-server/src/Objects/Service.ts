@@ -3,7 +3,11 @@ import { itemManager, iwbManager } from "../app.config";
 import { DEBUG } from "../utils/config";
 import { Player } from "./Player";
 import { IWBRoom } from "../rooms/IWBRoom";
-import { SERVER_MESSAGE_TYPES } from "../utils/types";
+import { COMPONENT_TYPES, SERVER_MESSAGE_TYPES } from "../utils/types";
+import { getCache } from "../utils/cache";
+import { SCENE_POOL_CACHE_KEY } from "./IWBManager";
+import { IWBComponent } from "./IWB";
+import { pushPlayfabEvent } from "../utils/Playfab";
 
 export function handleAssetUploaderSigning(req:any, res:any){
     if(req.body.user && req.header('Authorization') && req.header('AssetAuth')){
@@ -204,9 +208,68 @@ export function handleDeploymentFinished(req:any, res:any){
     let player:Player = iwbManager.findUser(req.body.user)
     if(player){
         if(req.body.valid){
-            player.sendPlayerMessage(req.body.type, {world:req.body.world, name:req.body.name, valid:req.body.valid, dest:req.body.dest})
+            player.sendPlayerMessage(req.body.type, {world:req.body.world, name:req.body.name, valid:req.body.valid, base:req.body.base, dest:req.body.dest})
         }else{
             player.sendPlayerMessage(req.body.type, {valid:req.body.valid})
         }
     }
+}
+
+export async function handleAngzaarScenePoolDeploy(req:any, res:any){
+    let scenePool = getCache(SCENE_POOL_CACHE_KEY)
+    let scene = scenePool.find((scene:any)=> scene.id === req.body.sceneId)
+    if(!scene){
+        console.log('that scene in the pool does not exist to deploy to angzaar')
+        return
+    }
+
+    try{
+        let assetIds:any[] = []
+        scene[COMPONENT_TYPES.IWB_COMPONENT].forEach((iwb:IWBComponent, aid:string)=>{
+            assetIds.push({id:iwb.id, ugc:iwb.ugc, type:iwb.type})
+        })
+        console.log('asset ids are ', assetIds)
+        
+        // let res = await fetch(deploymentServer + "scene/deploy", {
+        //     method:"POST",
+        //     headers:{
+        //         "Content-type": "application/json",
+        //         "Auth": "" + process.env.IWB_DEPLOYMENT_AUTH
+        //     },
+        //     body: JSON.stringify({
+        //         // scene:scene,
+        //         metadata:{
+        //             title: scene.metadata.n,
+        //             description: scene.metadata.d,
+        //             owner: scene.metadata.ona,
+        //             image: scene.metadata.im
+        //         },
+        //         assetIds:assetIds,
+        //         spawns:scene.sp,
+        //         dest:'angzaar',
+        //         worldName:scene.w,
+        //         user: client.userData.userId,// scene.o,
+        //         parcels: info.parcels,
+        //         tokenId: info.tokenId,
+        //         sceneId: info.sceneId,
+        //         target: 'interconnected.online',
+        //         locationId:info.locationId,
+        //         reservationId:info.reservationId
+        //     })
+        // })
+        // let json = await res.json()
+        // console.log('json is', json)
+        // player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY, {valid:json.valid, msg:json.valid ? "Your deployment is pending!...Please wait for a link to sign the deployment. This could take a couple minutes." : "Error with your deployment request. Please try again."})
+
+        // pushPlayfabEvent(
+        //     SERVER_MESSAGE_TYPES.SCENE_DEPLOY, 
+        //     player, 
+        //     [{scene:scene.metadata.n, world: scene.w}]
+        // )
+    }
+    catch(e){
+        console.log('error pinging deploy server for angzaar scene pool deployment', e)
+        res.status(200).send({valid:false, message:"Error pinging deploy server"})
+    }
+                
 }
