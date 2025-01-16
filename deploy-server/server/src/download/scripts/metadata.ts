@@ -124,12 +124,19 @@ export async function writeSceneMetadata(location:string, data:any, image:string
         name: data.worldName,
         gcScene:true,
         online:true,
-        scene: type === "download" ? data : undefined,
-        scenePool: data.angzaarReset ? true : undefined,
-        parcles: data.angzaarReset ? locationJson.location.parcels : undefined,
-        base: data.angzaarReset ?  locationJson.location.parcels[0] : undefined,
-        sceneId: data.angzaarReset ? data.sceneId : undefined
+        scene: type === "download" ? data : undefined
     }
+    if(data.hasOwnProperty("angzaarReset")){
+        metadata['iwb'].scenePool = true
+        metadata['iwb'].parcles = locationJson.location.parcels
+        metadata['iwb'].base = locationJson.location.parcels[0]
+        metadata['iwb'].sceneId = data.sceneId
+    }
+    //     scenePool: data.angzaarReset ? true : undefined,
+    //     parcles: data.angzaarReset ? locationJson.location.parcels : undefined,
+    //     base: data.angzaarReset ?  locationJson.location.parcels[0] : undefined,
+    //     sceneId: data.angzaarReset ? data.sceneId : undefined
+    // }
 
     if(data.sceneId){
         metadata.iwb.scene = data.sceneId
@@ -168,6 +175,7 @@ export async function writeSceneMetadata(location:string, data:any, image:string
         })
     }
     
+    console.log('scene metadata is', metadata['iwb'])
     await fs.promises.writeFile(location, JSON.stringify(metadata,null, 2));
 }
 

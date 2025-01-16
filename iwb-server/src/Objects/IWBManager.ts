@@ -4,7 +4,7 @@ import { IWBRoom } from "../rooms/IWBRoom"
 import { PlayfabId, abortFileUploads, addEvent, fetchPlayfabFile, fetchPlayfabMetadata, fetchUserMetaData, finalizeUploadFiles, getDownloadURL, getTitleData, initializeUploadPlayerFiles, playerLogin, playfabLogin, setTitleData, uploadPlayerFiles } from "../utils/Playfab"
 import { SERVER_MESSAGE_TYPES } from "../utils/types"
 import { Player } from "./Player"
-import { getRealmData, initServerAssets, initServerScenes, Scene } from "./Scene"
+import { getRealmData, initServerAssets, initServerScenes, saveRealm, Scene } from "./Scene"
 import { Client, generateId } from "colyseus"
 import { DEBUG } from "../utils/config"
 import { getRandomIntInclusive } from "../utils/functions"
@@ -440,6 +440,7 @@ export class IWBManager{
             if(DEBUG){
                 this.saveNewWorld(worldToDeploy)
             }else{
+                await saveRealm(room)
                 await this.deploy(worldToDeploy.owner, worldToDeploy, url)    
             }
         }

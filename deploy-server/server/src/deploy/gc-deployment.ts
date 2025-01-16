@@ -220,7 +220,7 @@ export async function handleGenesisCityDeployment(key:string, data:any){
           //   delete pendingDeployments[req.body.user]
           // }, 1000 * 60)
 
-          console.log('pending deployments', pendingDeployments)
+          // console.log('pending deployments', pendingDeployments)
 
           try{
             console.log('senging message', {

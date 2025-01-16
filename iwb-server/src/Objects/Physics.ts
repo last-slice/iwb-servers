@@ -33,6 +33,8 @@ export class PhysicsComponent extends Schema{
     @type(Vector3) offset:Vector3
     @type(Vector3) size:Vector3
     @type("boolean") fixedRotation:boolean
+    @type("boolean") playerReactGravity:boolean
+    @type("number") gravity:number
 
     cannonBody:any
     cannonMaterials:any
@@ -85,6 +87,11 @@ export function editPhysicsComponent(info:any, scene:Scene){
                         physicsInfo.angularDamping = 1
                         physicsInfo.offset = new Vector3({x:0, y:0, z:0})
                         physicsInfo.size = new Vector3({x:0.5, y:0.5, z:0.5})
+                    }
+
+                    if(key === "type" && info[key] === 0){
+                        physicsInfo.gravity = -9.82
+                        physicsInfo.playerReactGravity = false
                     }
                 }
             }

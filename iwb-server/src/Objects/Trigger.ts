@@ -290,6 +290,7 @@ export function editTriggerComponent(data:any, scene:Scene){
 
             case 'addcondition':
                 trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
+                console.log('add trigger condition', trigger)
                 if(trigger){
                     let triggerDecision = trigger.decisions.find(($:any)=> $.id === triggerData.did)
                     if(triggerDecision){

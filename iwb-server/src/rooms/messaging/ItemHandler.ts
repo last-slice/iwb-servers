@@ -11,7 +11,7 @@ import { Scene } from "../../Objects/Scene";
 // import { IWBComponent, createIWBComponent, editIWBComponent } from "../../Objects/IWB";
 import { NameComponent, createNameComponent, editNameComponent } from "../../Objects/Names";
 import { GltfComponent, createGLTFComponent, editGltfComponent } from "../../Objects/Gltf";
-import { ParentingComponent, createParentingComponent, editParentingComponent, removeParenting } from "../../Objects/Parenting";
+import { ParentingComponent, addEntity, createParentingComponent, editParentingComponent, removeParenting } from "../../Objects/Parenting";
 import { AnimatorComponentSchema, createAnimationComponent } from "../../Objects/Animator";
 import { createAudioComponent, editAudioComponent } from "../../Objects/Sound";
 import { createMaterialComponent, editMaterialComponent } from "../../Objects/Materials";
@@ -44,7 +44,7 @@ import { createVehicleComponent, editVehicleComponent } from "../../Objects/Vehi
 import { createPhysicsComponent, editPhysicsComponent } from "../../Objects/Physics";
 import { createQuestComponent, editQuestComponent } from "../../Objects/Quest";
 import { createWeaponComponent, editWeaponComponent } from "../../Objects/Weapon";
-import { createVirtualCameraComponent } from "../../Objects/VirtualCamera";
+import { createVirtualCameraComponent, editVirtualCameraComponent } from "../../Objects/VirtualCamera";
 
 
 export let updateComponentFunctions:any = {
@@ -88,6 +88,7 @@ export let updateComponentFunctions:any = {
     [COMPONENT_TYPES.VEHICLE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editVehicleComponent(room, info, scene)}, 
     [COMPONENT_TYPES.QUEST_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editQuestComponent(player, info, scene)}, 
     [COMPONENT_TYPES.WEAPON_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editWeaponComponent(room, info, scene)}, 
+    [COMPONENT_TYPES.VIRTUAL_CAMERA]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editVirtualCameraComponent(info, scene)}, 
 }
 
 let createComponentFunctions:any = {
@@ -536,7 +537,7 @@ function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
     }
 }
 
-export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene, player:Player, item:any, data:any){
+export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene, player:Player, item:any, data:any, skip?:boolean){
     // if(item.type === "SM"){}
     // else{
 
@@ -572,11 +573,7 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
         break;
 
         case 'Video':
-            createVideoComponent(scene, item.aid, catalogItemInfo)
-            // createMeshRendererComponent(scene, {aid:item.aid, shape:0, onPlay:true})
-            // createMeshColliderComponent(scene, {aid:item.aid, shape:0, layer:3})
-            // createMaterialComponent(scene, item.aid, {onPlay:true, type:0, textureType:"VIDEO", texture:""})
-
+            createVideoComponent(scene, item.aid, {...catalogItemInfo, type:0})
             createMeshRendererComponent(scene, {aid:item.aid, shape:1})
             createMeshColliderComponent(scene, {aid:item.aid, shape:1, layer:3})
             createTextComponent(scene, item.aid, {text:"" + catalogItemInfo.n, onPlay:false})
@@ -586,7 +583,31 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
                     "b": .6,
                     "a": 0.5
                 }})
-            
+
+            let newAid = generateId(6)
+            let videoScreenItem:any = {...catalogItemInfo}
+            videoScreenItem.name = "Video Screen"
+            videoScreenItem.pending = false
+            videoScreenItem.ugc = false
+            videoScreenItem.parent = 0,
+            videoScreenItem.aid = newAid
+            videoScreenItem.position = {x:item.position.x, y:item.position.y + 1, z:item.position.z}
+            videoScreenItem.rotation = item.rotation
+            videoScreenItem.scale = item.scale
+
+            await createNewItem(room, client, scene, videoScreenItem, videoScreenItem)
+
+            createVideoComponent(scene, videoScreenItem.aid, {...videoScreenItem, type:1})
+            createMeshRendererComponent(scene, {aid:videoScreenItem.aid, shape:0})
+            createMeshColliderComponent(scene, {aid:videoScreenItem.aid, shape:0, layer:3})
+            createTextComponent(scene, videoScreenItem.aid, {text:"" + videoScreenItem.n, onPlay:false})
+            createMaterialComponent(scene, videoScreenItem.aid, {onPlay:false, textureType:"COLOR", type:0, "albedoColor": {
+                    "r": 0.78,
+                    "g": 0.72,
+                    "b": .6,
+                    "a": 0.5
+                }})
+                editMaterialComponent({aid:videoScreenItem.aid, type:"texturetype", data:"VIDEO", texture:item.aid}, scene)
         break;
 
         case 'Image':

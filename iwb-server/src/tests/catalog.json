@@ -129,7 +129,21 @@
             "y": 1,
             "z": 1
         },
-        "sty": "Smart Items"
+        "sty": "Smart Items",
+        "components": {
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Play Video",
+                        "type": "video_play"
+                    },
+                    {
+                        "name": "Stop Video",
+                        "type": "video_stop"
+                    }
+                ]
+            }
+        }
     },
     {
         "id": "e6991f31-4b1e-4c17-82c2-2e484f53a124",
@@ -97774,6 +97788,169 @@
             }
         }
     },
+
+   
+    {
+        "id": "943fc8da-407f-4c88-8c25-ed98c8a3e408",
+        "m": "",
+        "n": "Physics Configuration",
+        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
+        "d": "Enable physics in your scene and configure collision materials",
+        "cat": "Gallery/Venue",
+        "on": "IWB Builder",
+        "o": "IWB Team",
+        "isdl": true,
+        "ty": "SM",
+        "pc": 0,
+        "si": 0,
+        "tag": [],
+        "v": 20,
+        "bb": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "sty": "Smart Items",
+        "components": {
+            "Physics":{
+            "type":0  
+            },
+            "Material": {
+                "type": 0,
+                "onPlay": false,
+                "albedoColor": {
+                    "r": 1,
+                    "g": 0.78,
+                    "b": 0.66,
+                    "a": 0.5
+                },
+                "textureType": "COLOR"
+            },
+            "Text": {
+                "text": "Physics Box",
+                "onPlay": false,
+                "isText": false
+            },
+            "Mesh_Collider": {
+                "shape": 1,
+                "layer": 1
+            },
+            "Mesh_Renderer": {
+                "shape": 1,
+                "layer": 2
+            }
+        }
+    },
+    {
+        "id": "621b9c03-5a7d-4c48-ac98-e10d449cd4f7",
+        "m": "",
+        "n": "Physics Box",
+        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
+        "d": "Add a physics box to your scene",
+        "cat": "Gallery/Venue",
+        "on": "IWB Builder",
+        "o": "IWB Team",
+        "isdl": true,
+        "ty": "SM",
+        "pc": 0,
+        "si": 0,
+        "tag": [],
+        "v": 20,
+        "bb": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "sty": "Smart Items",
+        "components": {
+            "Physics":{
+            "type":1,
+             "shape":0,
+             "mass":0,
+             "linearDamping":0,
+             "angularDamping":0  
+            },
+            "Material": {
+                "type": 0,
+                "onPlay": false,
+                "albedoColor": {
+                    "r": 0.9,
+                    "g": 0.9,
+                    "b": 0.9,
+                    "a": 0.5
+                },
+                "textureType": "COLOR"
+            },
+            "Text": {
+                "text": "Physics Box",
+                "onPlay": false,
+                "isText": false
+            },
+            "Mesh_Collider": {
+                "shape": 1,
+                "layer": 1
+            },
+            "Mesh_Renderer": {
+                "shape": 1,
+                "layer": 2
+            }
+        }
+    },
+    {
+        "id": " 86e1eb80-fd1e-4bf1-95e4-0f8e937b04b7",
+        "m": "",
+        "n": "Physics Ball",
+        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
+        "d": "Add a physics ball to your scene",
+        "cat": "Gallery/Venue",
+        "on": "IWB Builder",
+        "o": "IWB Team",
+        "isdl": true,
+        "ty": "SM",
+        "pc": 0,
+        "si": 0,
+        "tag": [],
+        "v": 20,
+        "bb": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "sty": "Smart Items",
+        "components": {
+            "Physics":{
+            "type":1,
+             "shape":2,
+             "mass":0,
+             "linearDamping":0.5,
+             "angularDamping":0.5  
+            },
+            "Material": {
+                "type": 0,
+                "onPlay": false,
+                "albedoColor": {
+                    "r": 0.9,
+                    "g": 0.9,
+                    "b": 0.9,
+                    "a": 0.5
+                },
+                "textureType": "COLOR"
+            },
+            "Text": {
+                "text": "Physics Box",
+                "onPlay": false,
+                "isText": false
+            },
+            "Mesh_Collider": {
+                "shape": 2,
+                "layer": 1
+            },
+            "Mesh_Renderer": {
+                "shape": 2,
+                "layer": 2
+            }
+        }
+    },
     {
         "id": "5b634203-0f7a-44a1-b0a2-f5c8751d2ee5",
         "m": "",
@@ -97820,6 +97997,18 @@
             "Mesh_Renderer": {
                 "shape": 1,
                 "layer": 2
+            },
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Set Camera",
+                        "type": "virtual_camera_set"
+                    },
+                    {
+                        "name": "Remove Camera",
+                        "type": "virtual_camera_remove"
+                    }
+                ]
             }
         }
     },

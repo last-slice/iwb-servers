@@ -614,6 +614,7 @@ export async function loadRealmScenes(room:IWBRoom, scenes:any[], options?:any, 
 }
 
 export async function saveRealm(room:IWBRoom){
+    console.log('room is world, save realm')
     let fileNames:any[] = []
     let data:any[] = []
 
@@ -658,7 +659,7 @@ export async function saveRealm(room:IWBRoom){
             iwbManager.worldsModified = true
         }
 
-        console.log('scene count to back up is', scenes.length)
+        // console.log('scene count to back up is', scenes.length, data)
         iwbManager.addWorldPendingSave(room.state.world, room.roomId, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
         // iwbManager.backupFiles(room.state.world, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
     }

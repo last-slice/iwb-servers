@@ -115,6 +115,8 @@ export enum REQUIRED_ASSETS {
     FLOOR_GRASS = "FloorBaseGrass 01.png",
     FLOOR_GRASS_2 = "FloorBaseGrass 02.png",
     FLOOR_CONCRETE = 'FloorBaseConcrete 01.png',
+    FLOOR_ROCK_01 = 'Floor_Rock_01.jpg',
+    FLOOR_ROCKS_1 = 'Floor_Rock_01.png',
     FLOOR_DESERT = 'FloorBaseDesert 01.png',
     FLOOR_PEBBLES = 'FloorBasePebbles 01.png',
     FLOOR_SAND = 'FloorBaseSand 01.png',
