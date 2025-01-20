@@ -440,7 +440,9 @@ export class IWBManager{
             if(DEBUG){
                 this.saveNewWorld(worldToDeploy)
             }else{
-                await saveRealm(room)
+                if(room){
+                    await saveRealm(room)
+                }
                 await this.deploy(worldToDeploy.owner, worldToDeploy, url)    
             }
         }

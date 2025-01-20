@@ -1,5 +1,5 @@
 import { iwbManager, itemManager } from "../app.config";
-import { updateCatalogAssets, updateIWBVersion } from "../Objects/Service";
+import { updateCatalogAssets, updateIWBVersion, updateLobbyVersion } from "../Objects/Service";
 
 export function catalogRouter(router:any){
     router.post("/update/catalog", async (req: any, res: any) => {
@@ -15,6 +15,11 @@ export function catalogRouter(router:any){
     router.post("/update/version/manual", async (req: any, res: any) => {
         console.log('receive ping to update iwb version')
         updateIWBVersion(req, res, true)
+    });
+
+    router.post("/update/lobbyworld/manual", async (req: any, res: any) => {
+        console.log('receive ping to update iwb lobby version')
+        updateLobbyVersion(req, res)
     });
 
     router.post("/catalog/backup", async (req: any, res: any) => {

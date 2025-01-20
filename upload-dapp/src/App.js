@@ -7,8 +7,10 @@ import AudioAssets from './Components/AudioAssets'
 import { startTransition } from 'react';
 import logo from './img/logo.png'
 import axios from 'axios'
+import LoginPage from './Components/LoginPage';
+import {ethers } from 'ethers'
 
-export const DEBUG = true
+export const DEBUG = false
 
 function App() {
   const [selectedAssetType, setSelectedAssetType] = useState(null);
@@ -20,6 +22,32 @@ function App() {
   const [sceneKey, setKey] = useState('');
   const [connected, setConnected] = useState(false)
   const [error, setError] = useState(false)
+  const [values, setValues] = useState([])
+
+  const connectToMetaMask = async () => {
+    try {
+      if (!window.ethereum) {
+        setError(true)
+        return;
+      }
+
+      const provider = new ethers.BrowserProvider(window.ethereum)
+      const accounts = await provider.send("eth_requestAccounts", []);
+      const userAddress = accounts[0];
+
+      console.log('user address is', userAddress)
+      if(userAddress === values[4]){
+        setConnected(true)
+        setUser(userAddress);
+      }
+     
+
+    } catch (error) {
+      console.error("Error connecting to MetaMask or Colyseus:", error);
+      setError(true)
+    } finally {
+    }
+  };
 
   useEffect(() => {
     // Get the full URL
@@ -35,7 +63,7 @@ function App() {
       const value1 = urlParts[4];
       const value2 = urlParts[5];
 
-      setUser(value1)
+      setValues(urlParts)
       setKey(value2)
 
       console.log(value1, value2)
@@ -64,7 +92,7 @@ function App() {
         }
       }
 
-      validateSceneToken()
+      // validateSceneToken()
 
 
     }else{
@@ -122,7 +150,10 @@ function App() {
         {
           !connected &&
           !error &&
-          <div className="ui dcl center" style={{backgroundColor:'black', color:'white', top:"4em"}}>LOADING...
+          <div className="ui dcl center" style={{backgroundColor:'black', color:'white', top:"4em"}}>
+            <button className='ui dcl button primary' onClick={connectToMetaMask}>
+                    Connect with MetaMask
+                    </button>
             </div>
         }
 
@@ -140,6 +171,12 @@ function App() {
       {selectedAssetType === 'Audio' && 
       connected &&
       <AudioAssets sceneKey={sceneKey} size={totalUGCSize} token={assetUploadToken} handleFileSelect={handleFileSelect} audioFile={selectedFile} resetLoader={resetLoader}/>
+      }
+
+      {
+        !connected &&
+
+        <LoginPage/>
       }
 
     </div>

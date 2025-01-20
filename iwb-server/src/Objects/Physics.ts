@@ -30,15 +30,13 @@ export class PhysicsComponent extends Schema{
     @type("number") mass:number
     @type("number") linearDamping:number
     @type("number") angularDamping:number
-    @type(Vector3) offset:Vector3
-    @type(Vector3) size:Vector3
     @type("boolean") fixedRotation:boolean
     @type("boolean") playerReactGravity:boolean
     @type("number") gravity:number
 
     cannonBody:any
     cannonMaterials:any
-    cannonContactMaterials:any
+    // cannonContactMaterials:any
 }
 
 export function createPhysicsComponent(scene:Scene, aid:string, data?:any){
@@ -133,4 +131,16 @@ export function editPhysicsComponent(info:any, scene:Scene){
         default:
             break;
     }
+}
+
+export async function CheckPhysicsCache(scene:Scene, aid:string, jsonScene:any){
+    let itemInfo = scene[COMPONENT_TYPES.PHYSICS_COMPONENT].get(aid)
+    if(itemInfo){
+        let itemJSON:any = itemInfo.toJSON()
+        if(itemInfo.type === 1){
+            itemJSON.contactMaterials = {}
+        }
+        jsonScene[COMPONENT_TYPES.PHYSICS_COMPONENT][aid] = itemJSON
+    }
+    return jsonScene
 }

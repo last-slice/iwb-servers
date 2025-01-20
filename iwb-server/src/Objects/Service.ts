@@ -96,6 +96,42 @@ export function authenticateToken(req:any, res:any, next:any) {
     });
 }
 
+export function updateLobbyVersion(req:any, res:any){
+    if(req.header('AssetAuth')){
+        const assetAuth = req.header('AssetAuth').replace('Bearer ', '').trim();
+
+        if (!assetAuth) {
+            console.log('no scene or asset token')
+            return res.status(200).json({valid:false, message: 'Unauthorized' });
+        }
+
+        if (assetAuth !== process.env.IWB_UPLOAD_AUTH_KEY) {
+            console.log('invalid asset auth key')
+            return res.status(200).json({valid:false, message: 'Unauthorized' });
+        }
+
+        try{
+            let lobbyWorld = iwbManager.worlds.find((world:any)=> world.ens === "BuilderWorld.dcl.eth")
+            if(!lobbyWorld){
+                res.status(200).send({valid:false, message:'no lobby realm found'})
+                return
+            }
+    
+            lobbyWorld.updated = Math.floor(Date.now()/1000)
+            lobbyWorld.v = iwbManager.version
+            lobbyWorld.cv = iwbManager.version
+            iwbManager.worldsModified = true
+        }
+        catch(e:any){
+            console.log('error updating lobby version', e)
+        }
+
+        res.status(200).send({valid: true})
+    }else{
+        res.status(200).send({valid: false, token: false})
+    }
+}
+
 export function updateIWBVersion(req:any, res:any, manual?:boolean){
     if(req.header('AssetAuth')){
         const assetAuth = req.header('AssetAuth').replace('Bearer ', '').trim();

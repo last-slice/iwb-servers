@@ -97812,8 +97812,17 @@
         },
         "sty": "Smart Items",
         "components": {
+             "Actions": {
+                "actions": [
+                    {
+                        "name": "Reset All Physics",
+                        "type": "physics_position_reset_all"
+                    }
+                ]
+            },
             "Physics":{
-            "type":0  
+            "type":0,
+            "gravity":-9.82
             },
             "Material": {
                 "type": 0,
@@ -97827,7 +97836,7 @@
                 "textureType": "COLOR"
             },
             "Text": {
-                "text": "Physics Box",
+                "text": "Physics Configuration",
                 "onPlay": false,
                 "isText": false
             },
@@ -97839,7 +97848,7 @@
                 "shape": 1,
                 "layer": 2
             }
-        }
+        } 
     },
     {
         "id": "621b9c03-5a7d-4c48-ac98-e10d449cd4f7",
@@ -97863,6 +97872,14 @@
         },
         "sty": "Smart Items",
         "components": {
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Reset Position",
+                        "type": "physics_position_reset"
+                    }
+                ]
+            },
             "Physics":{
             "type":1,
              "shape":0,
@@ -97918,6 +97935,14 @@
         },
         "sty": "Smart Items",
         "components": {
+            "Actions": {
+                "actions": [
+                    {
+                        "name": "Reset Position",
+                        "type": "physics_position_reset"
+                    }
+                ]
+            },
             "Physics":{
             "type":1,
              "shape":2,

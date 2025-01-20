@@ -1,16 +1,16 @@
 [
   {
-    "id": "xnT43",
+    "id": "9c5ZM",
     "metadata": {
-      "n": "Scene Pool 1x1",
+      "n": "Default 2",
       "d": "",
-      "o": "0xaabe0ecfaf9e028d63cf7ea7e772cf52d662691a",
-      "ona": "Lastraum",
+      "o": "0x7bbea9c18cd0541acab8c19da2b11d0c03faef1c",
+      "ona": "BuilderWorld",
       "cat": "art",
       "im": ""
     },
     "bpcl": "0,0",
-    "w": "Lastraum.dcl.eth",
+    "w": "BuilderWorld.dcl.eth",
     "bps": [],
     "pcls": [
       "0,0"
@@ -21,10 +21,10 @@
     "cp": [
       "0,0,0"
     ],
-    "cd": 1735437334,
-    "upd": 1735437334,
-    "si": 45572,
-    "pc": 332,
+    "cd": 1735452298,
+    "upd": 1735452298,
+    "si": 117720,
+    "pc": 478,
     "pcnt": 1,
     "direction": 0,
     "offsets": [
@@ -47,15 +47,15 @@
     "Game": {},
     "GameItem": {},
     "Gltf": {
-      "gePjqI": {
-        "src": "fc7cfc62-c497-4d10-aad4-b61975e603a0",
+      "7MMZTm": {
+        "src": "22b16aef-9055-47d3-a9aa-f04f1c8edf02",
         "visibleCollision": 1,
         "invisibleCollision": 2
       }
     },
     "IWB": {
-      "gePjqI": {
-        "id": "fc7cfc62-c497-4d10-aad4-b61975e603a0",
+      "7MMZTm": {
+        "id": "22b16aef-9055-47d3-a9aa-f04f1c8edf02",
         "ugc": false,
         "locked": false,
         "buildVis": true,
@@ -72,8 +72,8 @@
     "Mesh_Collider": {},
     "Mesh_Renderer": {},
     "Name": {
-      "gePjqI": {
-        "value": "AcousticPanelWall - gePjqI"
+      "7MMZTm": {
+        "value": "Wood Plank Floor 4x4M - 7MMZTm"
       }
     },
     "NFT_Shape": {},
@@ -86,7 +86,1029 @@
     "Text": {},
     "Texture": {},
     "Transform": {
-      "gePjqI": {
+      "7MMZTm": {
+        "p": {
+          "x": 16,
+          "y": 0,
+          "z": 16
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 4,
+          "y": 1,
+          "z": 4
+        },
+        "delta": 0
+      }
+    },
+    "Triggers": {},
+    "UI_Text": {},
+    "UI_Image": {},
+    "Visibility": {
+      "7MMZTm": {
+        "visible": true
+      }
+    },
+    "Video": {},
+    "Vehicle": {},
+    "Weapon": {},
+    "Quest": {},
+    "Parenting": [
+      {
+        "aid": "0",
+        "children": [
+          "7MMZTm"
+        ]
+      },
+      {
+        "aid": "1",
+        "children": []
+      },
+      {
+        "aid": "2",
+        "children": []
+      },
+      {
+        "aid": "7MMZTm",
+        "children": []
+      }
+    ],
+    "Multiplayer": {}
+  },
+  {
+    "id": "yFUqS",
+    "metadata": {
+      "n": "Default 1",
+      "d": "Basic IWB Build",
+      "o": "0x7bbea9c18cd0541acab8c19da2b11d0c03faef1c",
+      "ona": "Roustan",
+      "cat": "art",
+      "im": ""
+    },
+    "bpcl": "0,0",
+    "w": "BuilderWorld.dcl.eth",
+    "bps": [],
+    "pcls": [
+      "0,0"
+    ],
+    "sp": [
+      "0,0,0"
+    ],
+    "cp": [
+      "0,0,0"
+    ],
+    "cd": 1735432945,
+    "upd": 1735432945,
+    "si": 5521980,
+    "pc": 33064,
+    "pcnt": 1,
+    "direction": 0,
+    "offsets": [
+      0,
+      0
+    ],
+    "isdl": false,
+    "e": true,
+    "priv": false,
+    "dv": false,
+    "dpx": false,
+    "Actions": {},
+    "Animator": {},
+    "Avatar_Shape": {},
+    "Audio": {},
+    "Billboard": {},
+    "Camera": {},
+    "Counters": {},
+    "Dialog": {},
+    "Game": {},
+    "GameItem": {},
+    "Gltf": {
+      "iyqugE": {
+        "src": "f490b803-23bb-4003-a1eb-6d7192d7ff7a",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "QToQ0S": {
+        "src": "f225a4bd-f547-4aaa-bee0-b654243676ed",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "PEqqpW": {
+        "src": "f225a4bd-f547-4aaa-bee0-b654243676ed",
+        "visibleCollision": 2,
+        "invisibleCollision": 2
+      },
+      "zRz2ym": {
+        "src": "f225a4bd-f547-4aaa-bee0-b654243676ed",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "9Zibvu": {
+        "src": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "HbZywe": {
+        "src": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "Je9moz": {
+        "src": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "hgn7De": {
+        "src": "d221c174-139d-464d-bc3c-4bbe8df08f6d",
+        "visibleCollision": 2,
+        "invisibleCollision": 0
+      },
+      "lx1myq": {
+        "src": "8fb52d7a-b490-49cc-b55c-e9b43d4080f0",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "1q16Hb": {
+        "src": "8fb52d7a-b490-49cc-b55c-e9b43d4080f0",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "4VnuAg": {
+        "src": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "METp8b": {
+        "src": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "mr5zVx": {
+        "src": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "rdCOZ1": {
+        "src": "36364e07-9c60-436b-b166-c564d33d1f87",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "8ogd1R": {
+        "src": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "sPl3Jg": {
+        "src": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "aoMacQ": {
+        "src": "7ac9075f-1162-495e-b6a0-cf22a56ad5d2",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "3sUKLK": {
+        "src": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "fpWG9v": {
+        "src": "7ac9075f-1162-495e-b6a0-cf22a56ad5d2",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "LOIIrb": {
+        "src": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "CTMRYv": {
+        "src": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "HVEmfv": {
+        "src": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "LR3aC9": {
+        "src": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "sVS6wz": {
+        "src": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "2pE92W": {
+        "src": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "CyYLTS": {
+        "src": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "UPI6SM": {
+        "src": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "vgU5vY": {
+        "src": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "6UTQDH": {
+        "src": "77dc8c1e-c163-44e6-b608-ebc0f8251251",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "XAYJJA": {
+        "src": "77dc8c1e-c163-44e6-b608-ebc0f8251251",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "gWncub": {
+        "src": "7ac9075f-1162-495e-b6a0-cf22a56ad5d2",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "wNaMo1": {
+        "src": "77dc8c1e-c163-44e6-b608-ebc0f8251251",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "aAcovz": {
+        "src": "15b57bc0-50cf-4d4c-98f2-2c42323fd405",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "HUELC0": {
+        "src": "1776616c-aca1-414f-983a-4dd0e53ea95b",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "lyONxT": {
+        "src": "36b1352d-07b4-4483-852f-3443b07f9e6b",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "XsH5IV": {
+        "src": "7c624ccf-b3d1-44e3-b3f7-616832f35224",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "i7Jtnq": {
+        "src": "602a5338-065d-4722-a2de-f8ccd10bbb23",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "R7v0KJ": {
+        "src": "a9c9f8ce-2aff-42d1-b4cf-d03b42c37bc7",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "kRG3sc": {
+        "src": "a9c9f8ce-2aff-42d1-b4cf-d03b42c37bc7",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "hdDJUl": {
+        "src": "df9611ec-f997-4c4c-8337-ffec11157676",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "mBYL4V": {
+        "src": "1b85b4d9-bdac-49e9-8cba-93776934255b",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "3a1RfU": {
+        "src": "1b85b4d9-bdac-49e9-8cba-93776934255b",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "Z93MgY": {
+        "src": "346a24ad-acc1-43d9-b48e-7690e85625bc",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "j4mL48": {
+        "src": "ecea5ecb-cc4f-4e96-b950-bf3421c929aa",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "yaWR17": {
+        "src": "ecea5ecb-cc4f-4e96-b950-bf3421c929aa",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "uMcZ1f": {
+        "src": "7d1edbb5-06b2-491c-9fc1-44df1d2c0841",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "XAH9u7": {
+        "src": "949ee10a-1050-4e19-bd93-3a5889fcc7bb",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "HXT1Gb": {
+        "src": "9e1ca1b5-23f2-4258-9320-0a33b3d9be95",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "jn76vx": {
+        "src": "9e1ca1b5-23f2-4258-9320-0a33b3d9be95",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "pKltS3": {
+        "src": "f4f4f429-ea32-4a82-bae1-9d4de1671ab2",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      }
+    },
+    "IWB": {
+      "iyqugE": {
+        "id": "f490b803-23bb-4003-a1eb-6d7192d7ff7a",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "QToQ0S": {
+        "id": "f225a4bd-f547-4aaa-bee0-b654243676ed",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "PEqqpW": {
+        "id": "f225a4bd-f547-4aaa-bee0-b654243676ed",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "zRz2ym": {
+        "id": "f225a4bd-f547-4aaa-bee0-b654243676ed",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "9Zibvu": {
+        "id": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "HbZywe": {
+        "id": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "Je9moz": {
+        "id": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "hgn7De": {
+        "id": "d221c174-139d-464d-bc3c-4bbe8df08f6d",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "lx1myq": {
+        "id": "8fb52d7a-b490-49cc-b55c-e9b43d4080f0",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "1q16Hb": {
+        "id": "8fb52d7a-b490-49cc-b55c-e9b43d4080f0",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "4VnuAg": {
+        "id": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "METp8b": {
+        "id": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "mr5zVx": {
+        "id": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "rdCOZ1": {
+        "id": "36364e07-9c60-436b-b166-c564d33d1f87",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "8ogd1R": {
+        "id": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "sPl3Jg": {
+        "id": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "aoMacQ": {
+        "id": "7ac9075f-1162-495e-b6a0-cf22a56ad5d2",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "3sUKLK": {
+        "id": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "fpWG9v": {
+        "id": "7ac9075f-1162-495e-b6a0-cf22a56ad5d2",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "LOIIrb": {
+        "id": "d7b110ac-0492-4ec7-8a2b-77e79ae1a64f",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "CTMRYv": {
+        "id": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "HVEmfv": {
+        "id": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "LR3aC9": {
+        "id": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "sVS6wz": {
+        "id": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "2pE92W": {
+        "id": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "CyYLTS": {
+        "id": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "UPI6SM": {
+        "id": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "vgU5vY": {
+        "id": "66b64f59-fbb9-460c-b555-bf90d8c992f0",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "6UTQDH": {
+        "id": "77dc8c1e-c163-44e6-b608-ebc0f8251251",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "XAYJJA": {
+        "id": "77dc8c1e-c163-44e6-b608-ebc0f8251251",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "gWncub": {
+        "id": "7ac9075f-1162-495e-b6a0-cf22a56ad5d2",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "wNaMo1": {
+        "id": "77dc8c1e-c163-44e6-b608-ebc0f8251251",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "aAcovz": {
+        "id": "15b57bc0-50cf-4d4c-98f2-2c42323fd405",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "HUELC0": {
+        "id": "1776616c-aca1-414f-983a-4dd0e53ea95b",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "lyONxT": {
+        "id": "36b1352d-07b4-4483-852f-3443b07f9e6b",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "XsH5IV": {
+        "id": "7c624ccf-b3d1-44e3-b3f7-616832f35224",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "i7Jtnq": {
+        "id": "602a5338-065d-4722-a2de-f8ccd10bbb23",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "R7v0KJ": {
+        "id": "a9c9f8ce-2aff-42d1-b4cf-d03b42c37bc7",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "kRG3sc": {
+        "id": "a9c9f8ce-2aff-42d1-b4cf-d03b42c37bc7",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "hdDJUl": {
+        "id": "df9611ec-f997-4c4c-8337-ffec11157676",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "mBYL4V": {
+        "id": "1b85b4d9-bdac-49e9-8cba-93776934255b",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "3a1RfU": {
+        "id": "1b85b4d9-bdac-49e9-8cba-93776934255b",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "Z93MgY": {
+        "id": "346a24ad-acc1-43d9-b48e-7690e85625bc",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "j4mL48": {
+        "id": "ecea5ecb-cc4f-4e96-b950-bf3421c929aa",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "yaWR17": {
+        "id": "ecea5ecb-cc4f-4e96-b950-bf3421c929aa",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "uMcZ1f": {
+        "id": "7d1edbb5-06b2-491c-9fc1-44df1d2c0841",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "XAH9u7": {
+        "id": "949ee10a-1050-4e19-bd93-3a5889fcc7bb",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "HXT1Gb": {
+        "id": "9e1ca1b5-23f2-4258-9320-0a33b3d9be95",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "jn76vx": {
+        "id": "9e1ca1b5-23f2-4258-9320-0a33b3d9be95",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "pKltS3": {
+        "id": "f4f4f429-ea32-4a82-bae1-9d4de1671ab2",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      }
+    },
+    "Leaderboard": {},
+    "Levels": {},
+    "Live": {},
+    "Material": {},
+    "Mesh_Collider": {},
+    "Mesh_Renderer": {},
+    "Name": {
+      "iyqugE": {
+        "value": "Ash Floor Tile - iyqugE"
+      },
+      "QToQ0S": {
+        "value": "Alabaster Rectangular Windowed Wall 2 - QToQ0S"
+      },
+      "PEqqpW": {
+        "value": "Alabaster Rectangular Windowed Wall 2 - PEqqpW"
+      },
+      "zRz2ym": {
+        "value": "Alabaster Rectangular Windowed Wall 2 - zRz2ym"
+      },
+      "9Zibvu": {
+        "value": "Alabaster Decor Wall - 9Zibvu"
+      },
+      "HbZywe": {
+        "value": "Alabaster Decor Wall - HbZywe"
+      },
+      "Je9moz": {
+        "value": "Alabaster Decor Wall - Je9moz"
+      },
+      "hgn7De": {
+        "value": "Alabaster Flat Patterned Wall - hgn7De"
+      },
+      "lx1myq": {
+        "value": "BlackWindowLarge - lx1myq"
+      },
+      "1q16Hb": {
+        "value": "BlackWindowLarge - 1q16Hb"
+      },
+      "4VnuAg": {
+        "value": "Alabaster Decor Wall - 4VnuAg"
+      },
+      "METp8b": {
+        "value": "Alabaster Decor Wall - METp8b"
+      },
+      "mr5zVx": {
+        "value": "Alabaster Decor Wall - mr5zVx"
+      },
+      "rdCOZ1": {
+        "value": "Alabaster Large Doorway 1 - rdCOZ1"
+      },
+      "8ogd1R": {
+        "value": "Alabaster Decor Wall - 8ogd1R"
+      },
+      "sPl3Jg": {
+        "value": "Alabaster Decor Wall - sPl3Jg"
+      },
+      "aoMacQ": {
+        "value": "Ash Stairs.004 - aoMacQ"
+      },
+      "3sUKLK": {
+        "value": "Alabaster Decor Wall - 3sUKLK"
+      },
+      "fpWG9v": {
+        "value": "Ash Stairs.004 - fpWG9v"
+      },
+      "LOIIrb": {
+        "value": "Alabaster Decor Wall - LOIIrb"
+      },
+      "CTMRYv": {
+        "value": "Skateboard Highrail - CTMRYv"
+      },
+      "HVEmfv": {
+        "value": "Skateboard Highrail - HVEmfv"
+      },
+      "LR3aC9": {
+        "value": "Skateboard Highrail - LR3aC9"
+      },
+      "sVS6wz": {
+        "value": "Skateboard Highrail - sVS6wz"
+      },
+      "2pE92W": {
+        "value": "Skateboard Highrail - 2pE92W"
+      },
+      "CyYLTS": {
+        "value": "Skateboard Highrail - CyYLTS"
+      },
+      "UPI6SM": {
+        "value": "Skateboard Highrail - UPI6SM"
+      },
+      "vgU5vY": {
+        "value": "Skateboard Highrail - vgU5vY"
+      },
+      "6UTQDH": {
+        "value": "Artificial Plant - 6UTQDH"
+      },
+      "XAYJJA": {
+        "value": "Artificial Plant - XAYJJA"
+      },
+      "gWncub": {
+        "value": "Ash Stairs.004 - gWncub"
+      },
+      "wNaMo1": {
+        "value": "Artificial Plant - wNaMo1"
+      },
+      "aAcovz": {
+        "value": "Bar Green - aAcovz"
+      },
+      "HUELC0": {
+        "value": "BarCouch.004 - HUELC0"
+      },
+      "lyONxT": {
+        "value": "Indoor Fireplace - lyONxT"
+      },
+      "XsH5IV": {
+        "value": "Carpet 01 - XsH5IV"
+      },
+      "i7Jtnq": {
+        "value": "Abstract Statue #3 - i7Jtnq"
+      },
+      "R7v0KJ": {
+        "value": "Chair 05 - R7v0KJ"
+      },
+      "kRG3sc": {
+        "value": "Chair 05 - kRG3sc"
+      },
+      "hdDJUl": {
+        "value": "Pool Billiards Table, cyberpunk - hdDJUl"
+      },
+      "mBYL4V": {
+        "value": "Billiards Cue Stick - mBYL4V"
+      },
+      "3a1RfU": {
+        "value": "Billiards Cue Stick - 3a1RfU"
+      },
+      "Z93MgY": {
+        "value": "White Cue Ball, french billiards - Z93MgY"
+      },
+      "j4mL48": {
+        "value": "Monstera Plant - j4mL48"
+      },
+      "yaWR17": {
+        "value": "Monstera Plant - yaWR17"
+      },
+      "uMcZ1f": {
+        "value": "Coffee Table - uMcZ1f"
+      },
+      "XAH9u7": {
+        "value": "Table 04 - XAH9u7"
+      },
+      "HXT1Gb": {
+        "value": "PlantPot 03 - HXT1Gb"
+      },
+      "jn76vx": {
+        "value": "PlantPot 03 - jn76vx"
+      },
+      "pKltS3": {
+        "value": "Telescope - pKltS3"
+      }
+    },
+    "NFT_Shape": {},
+    "Path": {},
+    "Physics": {},
+    "Playlist": {},
+    "Pointers": {},
+    "Reward": {},
+    "States": {},
+    "Text": {},
+    "Texture": {},
+    "Transform": {
+      "iyqugE": {
         "p": {
           "x": 8,
           "y": 0,
@@ -103,13 +1125,1042 @@
           "z": 1
         },
         "delta": 0
+      },
+      "QToQ0S": {
+        "p": {
+          "x": 10.8,
+          "y": 0,
+          "z": 14
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 1.2,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "PEqqpW": {
+        "p": {
+          "x": 5,
+          "y": 0,
+          "z": 14
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 1.2,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "zRz2ym": {
+        "p": {
+          "x": 10.79999999999998,
+          "y": 0,
+          "z": 1.7999999999999998
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 1.2,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "9Zibvu": {
+        "p": {
+          "x": 7.919999999999996,
+          "y": 1.8000000000000005,
+          "z": 1.8000000000000007
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 90
+        },
+        "s": {
+          "x": 1.95,
+          "y": 2,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "HbZywe": {
+        "p": {
+          "x": 1.96,
+          "y": 5.38,
+          "z": 14.2
+        },
+        "r": {
+          "x": 0,
+          "y": 270,
+          "z": 90
+        },
+        "s": {
+          "x": 5.95,
+          "y": 4.3,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "Je9moz": {
+        "p": {
+          "x": 9.457000000000003,
+          "y": 3.710000000000007,
+          "z": 14.2
+        },
+        "r": {
+          "x": 90,
+          "y": 270,
+          "z": 90
+        },
+        "s": {
+          "x": 4.95,
+          "y": 4.3,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "hgn7De": {
+        "p": {
+          "x": 3.539999999999999,
+          "y": 3.649999999999998,
+          "z": 7.179999999999998
+        },
+        "r": {
+          "x": 90,
+          "y": 180,
+          "z": 360
+        },
+        "s": {
+          "x": 1.53,
+          "y": 1.8900000000000001,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "lx1myq": {
+        "p": {
+          "x": 5.0299999999999985,
+          "y": 3.559999999999999,
+          "z": 14.229999999999999
+        },
+        "r": {
+          "x": 0,
+          "y": 359.15,
+          "z": 0
+        },
+        "s": {
+          "x": 1.5000000000000004,
+          "y": 1.7299999999999998,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "1q16Hb": {
+        "p": {
+          "x": 5.03,
+          "y": 3.56,
+          "z": 1.9700000000000015
+        },
+        "r": {
+          "x": 0,
+          "y": 359.15,
+          "z": 0
+        },
+        "s": {
+          "x": 1.5,
+          "y": 1.73,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "4VnuAg": {
+        "p": {
+          "x": 6.5,
+          "y": 3.8000000000000034,
+          "z": 14
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 1.6399999999999997,
+          "y": 2.3000000000000003,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "METp8b": {
+        "p": {
+          "x": 6.5,
+          "y": 3.8,
+          "z": 1.7299999999999998
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 1.6999999999999997,
+          "y": 2.3,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "mr5zVx": {
+        "p": {
+          "x": 5.190000000000003,
+          "y": 10.690000000000001,
+          "z": 14.2
+        },
+        "r": {
+          "x": 90,
+          "y": 180,
+          "z": 0
+        },
+        "s": {
+          "x": 3.5500000000000007,
+          "y": 4.3,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "rdCOZ1": {
+        "p": {
+          "x": 14.01,
+          "y": 0,
+          "z": 8
+        },
+        "r": {
+          "x": 0,
+          "y": 90,
+          "z": 0
+        },
+        "s": {
+          "x": 1.2000000000000002,
+          "y": 1.1,
+          "z": 1.2000000000000002
+        },
+        "delta": 0
+      },
+      "8ogd1R": {
+        "p": {
+          "x": 13.839999999999998,
+          "y": 0.08000000000000002,
+          "z": 12.139999999999995
+        },
+        "r": {
+          "x": 0,
+          "y": 270,
+          "z": 0
+        },
+        "s": {
+          "x": 2.300000000000001,
+          "y": 1.2000000000000002,
+          "z": 1.5000000000000004
+        },
+        "delta": 0
+      },
+      "sPl3Jg": {
+        "p": {
+          "x": 13.84,
+          "y": 0.08,
+          "z": 3.6599999999999997
+        },
+        "r": {
+          "x": 0,
+          "y": 270,
+          "z": 0
+        },
+        "s": {
+          "x": 2.3,
+          "y": 1.2,
+          "z": 1.5
+        },
+        "delta": 0
+      },
+      "aoMacQ": {
+        "p": {
+          "x": 8.070000000000004,
+          "y": 3.7699999999999996,
+          "z": 3.870000000000001
+        },
+        "r": {
+          "x": 0,
+          "y": 270,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1.0299999999999991,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "3sUKLK": {
+        "p": {
+          "x": 11.059999999999995,
+          "y": 7.8100000000000005,
+          "z": 14.2
+        },
+        "r": {
+          "x": 90,
+          "y": 180,
+          "z": 0
+        },
+        "s": {
+          "x": 1.0100000000000002,
+          "y": 4.2,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "fpWG9v": {
+        "p": {
+          "x": 10.030000000000003,
+          "y": 7.98,
+          "z": 11.580000000000002
+        },
+        "r": {
+          "x": 0,
+          "y": 450,
+          "z": 0
+        },
+        "s": {
+          "x": 0.96,
+          "y": 0.6999999999999997,
+          "z": 0.8199999999999998
+        },
+        "delta": 0
+      },
+      "LOIIrb": {
+        "p": {
+          "x": 9.07,
+          "y": 7.81,
+          "z": 14.2
+        },
+        "r": {
+          "x": 90,
+          "y": 180,
+          "z": 0
+        },
+        "s": {
+          "x": 1.2400000000000002,
+          "y": 3.590000000000003,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "CTMRYv": {
+        "p": {
+          "x": 2.369999999999999,
+          "y": 10.790000000000001,
+          "z": 7.829999999999998
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 3
+        },
+        "delta": 0
+      },
+      "HVEmfv": {
+        "p": {
+          "x": 7.969999999999999,
+          "y": 10.79,
+          "z": 6.830000000000004
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 2.4999999999999996
+        },
+        "delta": 0
+      },
+      "LR3aC9": {
+        "p": {
+          "x": 5.169999999999998,
+          "y": 10.79,
+          "z": 2.0300000000000002
+        },
+        "r": {
+          "x": 0,
+          "y": 90,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1.5
+        },
+        "delta": 0
+      },
+      "sVS6wz": {
+        "p": {
+          "x": 5.17,
+          "y": 10.79,
+          "z": 13.63
+        },
+        "r": {
+          "x": 0,
+          "y": 90,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1.5
+        },
+        "delta": 0
+      },
+      "2pE92W": {
+        "p": {
+          "x": 11.87,
+          "y": 7.929999999999998,
+          "z": 7.83
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 3
+        },
+        "delta": 0
+      },
+      "CyYLTS": {
+        "p": {
+          "x": 13.680000000000003,
+          "y": 3.830000000000002,
+          "z": 8.03
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 3.2
+        },
+        "delta": 0
+      },
+      "UPI6SM": {
+        "p": {
+          "x": 10.270000000000007,
+          "y": 3.8300000000000005,
+          "z": 2.03
+        },
+        "r": {
+          "x": 0,
+          "y": 90,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1.8000000000000005
+        },
+        "delta": 0
+      },
+      "vgU5vY": {
+        "p": {
+          "x": 10.97,
+          "y": 3.83,
+          "z": 13.97
+        },
+        "r": {
+          "x": 0,
+          "y": 90,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1.4999999999999998
+        },
+        "delta": 0
+      },
+      "6UTQDH": {
+        "p": {
+          "x": 9.279999999999998,
+          "y": 7.820000000000002,
+          "z": 11.169999999999987
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1.7000000000000006,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "XAYJJA": {
+        "p": {
+          "x": 8.779999999999998,
+          "y": 3.8200000000000003,
+          "z": 4.570000000000002
+        },
+        "r": {
+          "x": 0,
+          "y": 180,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1.7,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "gWncub": {
+        "p": {
+          "x": 3.97,
+          "y": -0.22999999999999998,
+          "z": 9.17
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 0.99,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "wNaMo1": {
+        "p": {
+          "x": 2.7799999999999994,
+          "y": 0.01999999999999988,
+          "z": 12.47
+        },
+        "r": {
+          "x": 0,
+          "y": 90,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1.7,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "aAcovz": {
+        "p": {
+          "x": 4.499999999999998,
+          "y": 0,
+          "z": 2.2
+        },
+        "r": {
+          "x": 0,
+          "y": 90,
+          "z": 0
+        },
+        "s": {
+          "x": 0.6000000000000001,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "HUELC0": {
+        "p": {
+          "x": 8.699999999999998,
+          "y": 0,
+          "z": 8
+        },
+        "r": {
+          "x": 0,
+          "y": -90,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "lyONxT": {
+        "p": {
+          "x": 3.8100000000000023,
+          "y": 0.06000000000000005,
+          "z": 8.245
+        },
+        "r": {
+          "x": 0,
+          "y": 90,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "XsH5IV": {
+        "p": {
+          "x": 6.700000000000005,
+          "y": 0.1,
+          "z": 7.9
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 0.9,
+          "y": 1,
+          "z": 0.9
+        },
+        "delta": 0
+      },
+      "i7Jtnq": {
+        "p": {
+          "x": 3.4,
+          "y": 4.8199999999999985,
+          "z": 3.5800000000000005
+        },
+        "r": {
+          "x": 0,
+          "y": 210.73,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "R7v0KJ": {
+        "p": {
+          "x": 10.48,
+          "y": 3.75,
+          "z": 8.61
+        },
+        "r": {
+          "x": 0,
+          "y": 166.09,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "kRG3sc": {
+        "p": {
+          "x": 10.48,
+          "y": 3.75,
+          "z": 11.61
+        },
+        "r": {
+          "x": 0,
+          "y": 196.09,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "hdDJUl": {
+        "p": {
+          "x": 4.95,
+          "y": 10.70000000000001,
+          "z": 7.609000000000005
+        },
+        "r": {
+          "x": 0,
+          "y": 88.77000000000001,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "mBYL4V": {
+        "p": {
+          "x": 5.400000000000001,
+          "y": 11.590000000000003,
+          "z": 6.889999999999996
+        },
+        "r": {
+          "x": -90,
+          "y": 161.62,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "3a1RfU": {
+        "p": {
+          "x": 4.899999999999999,
+          "y": 11.59,
+          "z": 6.89
+        },
+        "r": {
+          "x": 270,
+          "y": 176.62,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "Z93MgY": {
+        "p": {
+          "x": 5.16,
+          "y": 10.690000000000005,
+          "z": 6.809999999999998
+        },
+        "r": {
+          "x": 0,
+          "y": 202.89,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "j4mL48": {
+        "p": {
+          "x": 12.200000000000003,
+          "y": 0,
+          "z": 3.5000000000000004
+        },
+        "r": {
+          "x": 0,
+          "y": -90,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 2,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "yaWR17": {
+        "p": {
+          "x": 12.2,
+          "y": 0,
+          "z": 12.200000000000001
+        },
+        "r": {
+          "x": 0,
+          "y": 420,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 2,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "uMcZ1f": {
+        "p": {
+          "x": 7.54,
+          "y": 0.14,
+          "z": 7.949999999999999
+        },
+        "r": {
+          "x": 0,
+          "y": 90,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "XAH9u7": {
+        "p": {
+          "x": 10.59,
+          "y": 3.71,
+          "z": 10.12
+        },
+        "r": {
+          "x": 0,
+          "y": 109.18,
+          "z": 0
+        },
+        "s": {
+          "x": 0.7000000000000001,
+          "y": 0.7000000000000001,
+          "z": 0.7000000000000001
+        },
+        "delta": 0
+      },
+      "HXT1Gb": {
+        "p": {
+          "x": 2.97,
+          "y": 10.69,
+          "z": 12.88
+        },
+        "r": {
+          "x": 0,
+          "y": 314.84,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 3,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "jn76vx": {
+        "p": {
+          "x": 2.97,
+          "y": 10.69,
+          "z": 2.5800000000000005
+        },
+        "r": {
+          "x": 0,
+          "y": 314.84,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 3,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "pKltS3": {
+        "p": {
+          "x": 7.200000000000001,
+          "y": 10.7,
+          "z": 2.600000000000002
+        },
+        "r": {
+          "x": 0,
+          "y": -50.59,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
       }
     },
     "Triggers": {},
     "UI_Text": {},
     "UI_Image": {},
     "Visibility": {
-      "gePjqI": {
+      "iyqugE": {
+        "visible": true
+      },
+      "QToQ0S": {
+        "visible": true
+      },
+      "PEqqpW": {
+        "visible": true
+      },
+      "zRz2ym": {
+        "visible": true
+      },
+      "9Zibvu": {
+        "visible": true
+      },
+      "HbZywe": {
+        "visible": true
+      },
+      "Je9moz": {
+        "visible": true
+      },
+      "hgn7De": {
+        "visible": true
+      },
+      "lx1myq": {
+        "visible": true
+      },
+      "1q16Hb": {
+        "visible": true
+      },
+      "4VnuAg": {
+        "visible": true
+      },
+      "METp8b": {
+        "visible": true
+      },
+      "mr5zVx": {
+        "visible": true
+      },
+      "rdCOZ1": {
+        "visible": true
+      },
+      "8ogd1R": {
+        "visible": true
+      },
+      "sPl3Jg": {
+        "visible": true
+      },
+      "aoMacQ": {
+        "visible": true
+      },
+      "3sUKLK": {
+        "visible": true
+      },
+      "fpWG9v": {
+        "visible": true
+      },
+      "LOIIrb": {
+        "visible": true
+      },
+      "CTMRYv": {
+        "visible": true
+      },
+      "HVEmfv": {
+        "visible": true
+      },
+      "LR3aC9": {
+        "visible": true
+      },
+      "sVS6wz": {
+        "visible": true
+      },
+      "2pE92W": {
+        "visible": true
+      },
+      "CyYLTS": {
+        "visible": true
+      },
+      "UPI6SM": {
+        "visible": true
+      },
+      "vgU5vY": {
+        "visible": true
+      },
+      "6UTQDH": {
+        "visible": true
+      },
+      "XAYJJA": {
+        "visible": true
+      },
+      "gWncub": {
+        "visible": true
+      },
+      "wNaMo1": {
+        "visible": true
+      },
+      "aAcovz": {
+        "visible": true
+      },
+      "HUELC0": {
+        "visible": true
+      },
+      "lyONxT": {
+        "visible": true
+      },
+      "XsH5IV": {
+        "visible": true
+      },
+      "i7Jtnq": {
+        "visible": true
+      },
+      "R7v0KJ": {
+        "visible": true
+      },
+      "kRG3sc": {
+        "visible": true
+      },
+      "hdDJUl": {
+        "visible": true
+      },
+      "mBYL4V": {
+        "visible": true
+      },
+      "3a1RfU": {
+        "visible": true
+      },
+      "Z93MgY": {
+        "visible": true
+      },
+      "j4mL48": {
+        "visible": true
+      },
+      "yaWR17": {
+        "visible": true
+      },
+      "uMcZ1f": {
+        "visible": true
+      },
+      "XAH9u7": {
+        "visible": true
+      },
+      "HXT1Gb": {
+        "visible": true
+      },
+      "jn76vx": {
+        "visible": true
+      },
+      "pKltS3": {
         "visible": true
       }
     },
@@ -121,7 +2172,56 @@
       {
         "aid": "0",
         "children": [
-          "gePjqI"
+          "iyqugE",
+          "QToQ0S",
+          "PEqqpW",
+          "zRz2ym",
+          "9Zibvu",
+          "HbZywe",
+          "Je9moz",
+          "hgn7De",
+          "lx1myq",
+          "1q16Hb",
+          "4VnuAg",
+          "METp8b",
+          "mr5zVx",
+          "rdCOZ1",
+          "8ogd1R",
+          "sPl3Jg",
+          "aoMacQ",
+          "3sUKLK",
+          "fpWG9v",
+          "LOIIrb",
+          "CTMRYv",
+          "HVEmfv",
+          "LR3aC9",
+          "sVS6wz",
+          "2pE92W",
+          "CyYLTS",
+          "UPI6SM",
+          "vgU5vY",
+          "6UTQDH",
+          "XAYJJA",
+          "gWncub",
+          "wNaMo1",
+          "aAcovz",
+          "HUELC0",
+          "lyONxT",
+          "XsH5IV",
+          "i7Jtnq",
+          "R7v0KJ",
+          "kRG3sc",
+          "hdDJUl",
+          "mBYL4V",
+          "3a1RfU",
+          "Z93MgY",
+          "j4mL48",
+          "yaWR17",
+          "uMcZ1f",
+          "XAH9u7",
+          "HXT1Gb",
+          "jn76vx",
+          "pKltS3"
         ]
       },
       {
@@ -133,7 +2233,2461 @@
         "children": []
       },
       {
-        "aid": "gePjqI",
+        "aid": "iyqugE",
+        "children": []
+      },
+      {
+        "aid": "QToQ0S",
+        "children": []
+      },
+      {
+        "aid": "PEqqpW",
+        "children": []
+      },
+      {
+        "aid": "zRz2ym",
+        "children": []
+      },
+      {
+        "aid": "9Zibvu",
+        "children": []
+      },
+      {
+        "aid": "HbZywe",
+        "children": []
+      },
+      {
+        "aid": "Je9moz",
+        "children": []
+      },
+      {
+        "aid": "hgn7De",
+        "children": []
+      },
+      {
+        "aid": "lx1myq",
+        "children": []
+      },
+      {
+        "aid": "1q16Hb",
+        "children": []
+      },
+      {
+        "aid": "4VnuAg",
+        "children": []
+      },
+      {
+        "aid": "METp8b",
+        "children": []
+      },
+      {
+        "aid": "mr5zVx",
+        "children": []
+      },
+      {
+        "aid": "rdCOZ1",
+        "children": []
+      },
+      {
+        "aid": "8ogd1R",
+        "children": []
+      },
+      {
+        "aid": "sPl3Jg",
+        "children": []
+      },
+      {
+        "aid": "aoMacQ",
+        "children": []
+      },
+      {
+        "aid": "3sUKLK",
+        "children": []
+      },
+      {
+        "aid": "fpWG9v",
+        "children": []
+      },
+      {
+        "aid": "LOIIrb",
+        "children": []
+      },
+      {
+        "aid": "CTMRYv",
+        "children": []
+      },
+      {
+        "aid": "HVEmfv",
+        "children": []
+      },
+      {
+        "aid": "LR3aC9",
+        "children": []
+      },
+      {
+        "aid": "sVS6wz",
+        "children": []
+      },
+      {
+        "aid": "2pE92W",
+        "children": []
+      },
+      {
+        "aid": "CyYLTS",
+        "children": []
+      },
+      {
+        "aid": "UPI6SM",
+        "children": []
+      },
+      {
+        "aid": "vgU5vY",
+        "children": []
+      },
+      {
+        "aid": "6UTQDH",
+        "children": []
+      },
+      {
+        "aid": "XAYJJA",
+        "children": []
+      },
+      {
+        "aid": "gWncub",
+        "children": []
+      },
+      {
+        "aid": "wNaMo1",
+        "children": []
+      },
+      {
+        "aid": "aAcovz",
+        "children": []
+      },
+      {
+        "aid": "HUELC0",
+        "children": []
+      },
+      {
+        "aid": "lyONxT",
+        "children": []
+      },
+      {
+        "aid": "XsH5IV",
+        "children": []
+      },
+      {
+        "aid": "i7Jtnq",
+        "children": []
+      },
+      {
+        "aid": "R7v0KJ",
+        "children": []
+      },
+      {
+        "aid": "kRG3sc",
+        "children": []
+      },
+      {
+        "aid": "hdDJUl",
+        "children": []
+      },
+      {
+        "aid": "mBYL4V",
+        "children": []
+      },
+      {
+        "aid": "3a1RfU",
+        "children": []
+      },
+      {
+        "aid": "Z93MgY",
+        "children": []
+      },
+      {
+        "aid": "j4mL48",
+        "children": []
+      },
+      {
+        "aid": "yaWR17",
+        "children": []
+      },
+      {
+        "aid": "uMcZ1f",
+        "children": []
+      },
+      {
+        "aid": "XAH9u7",
+        "children": []
+      },
+      {
+        "aid": "HXT1Gb",
+        "children": []
+      },
+      {
+        "aid": "jn76vx",
+        "children": []
+      },
+      {
+        "aid": "pKltS3",
+        "children": []
+      }
+    ],
+    "Multiplayer": {}
+  },
+  {
+    "id": "9eqw1",
+    "metadata": {
+      "n": "Space Crib",
+      "d": "",
+      "o": "0xaabe0ecfaf9e028d63cf7ea7e772cf52d662691a",
+      "ona": "BuilderWorld",
+      "cat": "art",
+      "im": "https://dclstreams.com/media/images/fa3b8ada-d161-422b-9913-3473d84d9fa5.png",
+      "direction": 0,
+      "offsets": [
+        0,
+        0
+      ],
+      "dv": false,
+      "dpx": false
+    },
+    "bpcl": "-4,0",
+    "w": "BuilderWorld.dcl.eth",
+    "bps": [
+      "0x54e93609eb454a1f152edefdf022480794ce2130"
+    ],
+    "pcls": [
+      "-4,0"
+    ],
+    "sp": [
+      "0,0,0"
+    ],
+    "cp": [
+      "0,0,0"
+    ],
+    "cd": 1736637548,
+    "upd": 1736637548,
+    "si": 5897242,
+    "pc": 45498,
+    "pcnt": 1,
+    "isdl": false,
+    "e": true,
+    "priv": false,
+    "Actions": {
+      "TH0gwR": {
+        "actions": [
+          {
+            "id": "VEgnHF",
+            "name": "animation start",
+            "type": "animation_start",
+            "anim": "activate",
+            "speed": 1,
+            "channel": 1,
+            "loop": true
+          }
+        ]
+      },
+      "JAhLRw": {
+        "actions": []
+      },
+      "LOA9hy": {
+        "actions": [
+          {
+            "id": "wphiMy",
+            "name": "player_move",
+            "type": "player_move",
+            "x": 8,
+            "y": 16,
+            "z": 8,
+            "ttype": 0,
+            "channel": 0
+          }
+        ]
+      },
+      "oNPcDu": {
+        "actions": [
+          {
+            "id": "AV4KlW",
+            "name": "animation start",
+            "type": "animation_start",
+            "anim": "activate",
+            "speed": 1,
+            "channel": 1,
+            "loop": true
+          }
+        ]
+      },
+      "aOuBtD": {
+        "actions": [
+          {
+            "id": "meLEwq",
+            "name": "Play Sound",
+            "type": "audio_play"
+          },
+          {
+            "id": "paz4Jy",
+            "name": "Stop Sound",
+            "type": "audio_stop"
+          }
+        ]
+      },
+      "tBkCeu": {
+        "actions": [
+          {
+            "id": "pu5mR3",
+            "name": "start animation",
+            "type": "animation_start",
+            "anim": "idle",
+            "speed": 1,
+            "channel": 0,
+            "loop": true
+          }
+        ]
+      },
+      "GV6OqG": {
+        "actions": [
+          {
+            "id": "YqEJOL",
+            "name": "Play Sound",
+            "type": "audio_play"
+          },
+          {
+            "id": "UhrSaR",
+            "name": "Stop Sound",
+            "type": "audio_stop"
+          }
+        ]
+      },
+      "ZbMtJH": {
+        "actions": [
+          {
+            "id": "TUlMpK",
+            "name": "npc",
+            "type": "audio_play",
+            "channel": 0,
+            "actions": []
+          }
+        ]
+      }
+    },
+    "Animator": {
+      "TH0gwR": {
+        "states": [
+          {
+            "clip": "idle",
+            "loop": false,
+            "playing": false
+          },
+          {
+            "clip": "activate",
+            "loop": false,
+            "playing": false
+          }
+        ]
+      },
+      "a6DZgB": {
+        "states": [
+          {
+            "clip": "play",
+            "loop": false,
+            "playing": false
+          }
+        ]
+      },
+      "oNPcDu": {
+        "states": [
+          {
+            "clip": "idle",
+            "loop": false,
+            "playing": false
+          },
+          {
+            "clip": "activate",
+            "loop": false,
+            "playing": false
+          }
+        ]
+      },
+      "tBkCeu": {
+        "states": [
+          {
+            "clip": "idle",
+            "loop": false,
+            "playing": false
+          },
+          {
+            "clip": "attack",
+            "loop": false,
+            "playing": false
+          },
+          {
+            "clip": "move",
+            "loop": false,
+            "playing": false
+          }
+        ]
+      }
+    },
+    "Avatar_Shape": {},
+    "Audio": {
+      "aOuBtD": {
+        "name": "Scifi Gun 2 Stereo",
+        "url": "assets/d2c4d2e3-fc47-4663-8e8c-fc630d0a4a78.mp3",
+        "type": 0,
+        "volume": 1,
+        "autostart": false,
+        "loop": false,
+        "attach": false
+      },
+      "GV6OqG": {
+        "name": "A Car Whizzing By 1",
+        "url": "assets/c0f0178a-05cf-4efd-a973-1022dbb76bdd.mp3",
+        "type": 0,
+        "volume": 1,
+        "autostart": false,
+        "loop": false,
+        "attach": false
+      }
+    },
+    "Billboard": {},
+    "Camera": {},
+    "Counters": {},
+    "Dialog": {},
+    "Game": {},
+    "GameItem": {},
+    "Gltf": {
+      "y45UHK": {
+        "src": "3c8211ec-d5db-4f6f-b24e-c97b03399c30",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "lYbJsV": {
+        "src": "0177c753-d5bb-4b86-915f-7fd69a8315b3",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "KNw6UA": {
+        "src": "7126c4b7-4afd-45de-94cc-f191babfc44d",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "i2PMOM": {
+        "src": "7126c4b7-4afd-45de-94cc-f191babfc44d",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "jndb9v": {
+        "src": "28779ccc-a9e0-444a-8873-2ff9259ec43b",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "wK2EE8": {
+        "src": "28779ccc-a9e0-444a-8873-2ff9259ec43b",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "ABSvr6": {
+        "src": "ed2c2902-6e10-4758-89d2-5beb11cb1294",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "ZYnqxE": {
+        "src": "ed2c2902-6e10-4758-89d2-5beb11cb1294",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "fZ38zT": {
+        "src": "ed2c2902-6e10-4758-89d2-5beb11cb1294",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "S5OqAA": {
+        "src": "ed2c2902-6e10-4758-89d2-5beb11cb1294",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "TH0gwR": {
+        "src": "8b3db859-a816-462f-a165-5b03d39faab6",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "Q0AC1Z": {
+        "src": "cef474c0-a98f-4bcf-a696-a0565917effb",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "a6DZgB": {
+        "src": "9feb6602-b125-46de-b7bd-aa1022614d16",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "XEETwM": {
+        "src": "9100f792-1c95-4d88-b4d3-10f116ee2cbc",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "oNPcDu": {
+        "src": "8b3db859-a816-462f-a165-5b03d39faab6",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "cutc3Z": {
+        "src": "834f06bf-62e3-4879-9579-eebef5d14aa9",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "pweZdX": {
+        "src": "c7cf142e-3c6c-4672-8004-6a64713ff058",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "TM8g1h": {
+        "src": "c7cf142e-3c6c-4672-8004-6a64713ff058",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "U7ihhi": {
+        "src": "c7cf142e-3c6c-4672-8004-6a64713ff058",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "Vz1dZr": {
+        "src": "c7cf142e-3c6c-4672-8004-6a64713ff058",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "tBkCeu": {
+        "src": "c2a24d87-111b-4651-b7fb-7d1fc261eea9",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "QbDqzM": {
+        "src": "30f82c14-1968-42ee-879a-8b6d3815a283",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "sHsJ29": {
+        "src": "30f82c14-1968-42ee-879a-8b6d3815a283",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      }
+    },
+    "IWB": {
+      "y45UHK": {
+        "id": "3c8211ec-d5db-4f6f-b24e-c97b03399c30",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "lYbJsV": {
+        "id": "0177c753-d5bb-4b86-915f-7fd69a8315b3",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "KNw6UA": {
+        "id": "7126c4b7-4afd-45de-94cc-f191babfc44d",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "i2PMOM": {
+        "id": "7126c4b7-4afd-45de-94cc-f191babfc44d",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "jndb9v": {
+        "id": "28779ccc-a9e0-444a-8873-2ff9259ec43b",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "wK2EE8": {
+        "id": "28779ccc-a9e0-444a-8873-2ff9259ec43b",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "ABSvr6": {
+        "id": "ed2c2902-6e10-4758-89d2-5beb11cb1294",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "ZYnqxE": {
+        "id": "ed2c2902-6e10-4758-89d2-5beb11cb1294",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "fZ38zT": {
+        "id": "ed2c2902-6e10-4758-89d2-5beb11cb1294",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "S5OqAA": {
+        "id": "ed2c2902-6e10-4758-89d2-5beb11cb1294",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "TH0gwR": {
+        "id": "8b3db859-a816-462f-a165-5b03d39faab6",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "JAhLRw": {
+        "id": "4cf3698b-46c1-428a-8fa8-0ac59734b75c",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "SM"
+      },
+      "Q0AC1Z": {
+        "id": "cef474c0-a98f-4bcf-a696-a0565917effb",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "a6DZgB": {
+        "id": "9feb6602-b125-46de-b7bd-aa1022614d16",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "XEETwM": {
+        "id": "9100f792-1c95-4d88-b4d3-10f116ee2cbc",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "LOA9hy": {
+        "id": "b9768002-c662-4b80-97a0-fb0d0b714fab",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "SM"
+      },
+      "oNPcDu": {
+        "id": "8b3db859-a816-462f-a165-5b03d39faab6",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "cutc3Z": {
+        "id": "834f06bf-62e3-4879-9579-eebef5d14aa9",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "pweZdX": {
+        "id": "c7cf142e-3c6c-4672-8004-6a64713ff058",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "TM8g1h": {
+        "id": "c7cf142e-3c6c-4672-8004-6a64713ff058",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "U7ihhi": {
+        "id": "c7cf142e-3c6c-4672-8004-6a64713ff058",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "Vz1dZr": {
+        "id": "c7cf142e-3c6c-4672-8004-6a64713ff058",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "aOuBtD": {
+        "id": "d2c4d2e3-fc47-4663-8e8c-fc630d0a4a78",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "Audio"
+      },
+      "tBkCeu": {
+        "id": "c2a24d87-111b-4651-b7fb-7d1fc261eea9",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "GV6OqG": {
+        "id": "c0f0178a-05cf-4efd-a973-1022dbb76bdd",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "Audio"
+      },
+      "ZbMtJH": {
+        "id": "4cf3698b-46c1-428a-8fa8-0ac59734b75c",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "SM"
+      },
+      "QbDqzM": {
+        "id": "30f82c14-1968-42ee-879a-8b6d3815a283",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "sHsJ29": {
+        "id": "30f82c14-1968-42ee-879a-8b6d3815a283",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      }
+    },
+    "Leaderboard": {},
+    "Levels": {},
+    "Live": {},
+    "Material": {
+      "JAhLRw": {
+        "type": 0,
+        "intensity": 0,
+        "roughness": 1,
+        "metallic": 0,
+        "emissiveIntensity": 0,
+        "textureType": "COLOR",
+        "emissiveType": "NONE",
+        "emissiveTexture": "",
+        "albedoColor": {
+          "r": 0.925,
+          "g": 0.819,
+          "b": 0.0361,
+          "a": 0.5
+        },
+        "emissiveColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "onPlay": false
+      },
+      "LOA9hy": {
+        "type": 0,
+        "intensity": 0,
+        "roughness": 1,
+        "metallic": 0,
+        "emissiveIntensity": 0,
+        "textureType": "COLOR",
+        "emissiveType": "NONE",
+        "emissiveTexture": "",
+        "albedoColor": {
+          "r": 0.7,
+          "g": 0.35,
+          "b": 0.25,
+          "a": 0.5
+        },
+        "emissiveColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "onPlay": false
+      },
+      "aOuBtD": {
+        "type": 0,
+        "intensity": 0,
+        "roughness": 1,
+        "metallic": 0,
+        "emissiveIntensity": 0,
+        "textureType": "COLOR",
+        "emissiveType": "NONE",
+        "emissiveTexture": "",
+        "albedoColor": {
+          "r": 0,
+          "g": 0,
+          "b": 1,
+          "a": 0.5
+        },
+        "emissiveColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "onPlay": false
+      },
+      "GV6OqG": {
+        "type": 0,
+        "intensity": 0,
+        "roughness": 1,
+        "metallic": 0,
+        "emissiveIntensity": 0,
+        "textureType": "COLOR",
+        "emissiveType": "NONE",
+        "emissiveTexture": "",
+        "albedoColor": {
+          "r": 0,
+          "g": 0,
+          "b": 1,
+          "a": 0.5
+        },
+        "emissiveColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "onPlay": false
+      },
+      "ZbMtJH": {
+        "type": 0,
+        "intensity": 0,
+        "roughness": 1,
+        "metallic": 0,
+        "emissiveIntensity": 0,
+        "textureType": "COLOR",
+        "emissiveType": "NONE",
+        "emissiveTexture": "",
+        "albedoColor": {
+          "r": 0.925,
+          "g": 0.819,
+          "b": 0.0361,
+          "a": 0.5
+        },
+        "emissiveColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "onPlay": false
+      }
+    },
+    "Mesh_Collider": {
+      "JAhLRw": {
+        "shape": 1,
+        "layer": 1,
+        "onPlay": false
+      },
+      "LOA9hy": {
+        "shape": 1,
+        "layer": 1,
+        "onPlay": false
+      },
+      "aOuBtD": {
+        "shape": 1,
+        "layer": 3,
+        "onPlay": false
+      },
+      "GV6OqG": {
+        "shape": 1,
+        "layer": 3,
+        "onPlay": false
+      },
+      "ZbMtJH": {
+        "shape": 1,
+        "layer": 1,
+        "onPlay": false
+      }
+    },
+    "Mesh_Renderer": {
+      "JAhLRw": {
+        "shape": 1,
+        "onPlay": false,
+        "aid": "JAhLRw"
+      },
+      "LOA9hy": {
+        "shape": 1,
+        "aid": "LOA9hy"
+      },
+      "aOuBtD": {
+        "shape": 1,
+        "aid": "aOuBtD"
+      },
+      "GV6OqG": {
+        "shape": 1,
+        "aid": "GV6OqG"
+      },
+      "ZbMtJH": {
+        "shape": 1,
+        "onPlay": false,
+        "aid": "ZbMtJH"
+      }
+    },
+    "Name": {
+      "y45UHK": {
+        "value": "Axis Lines - y45UHK"
+      },
+      "lYbJsV": {
+        "value": "FloorModuleSciFi 01 - lYbJsV"
+      },
+      "KNw6UA": {
+        "value": "Landing Anime Module - KNw6UA"
+      },
+      "i2PMOM": {
+        "value": "Landing Anime Module - i2PMOM"
+      },
+      "jndb9v": {
+        "value": "Cyberpunk Ground 6 - jndb9v"
+      },
+      "wK2EE8": {
+        "value": "Cyberpunk Ground 6 - wK2EE8"
+      },
+      "ABSvr6": {
+        "value": "Corner Wall Anime Module - ABSvr6"
+      },
+      "ZYnqxE": {
+        "value": "Corner Wall Anime Module - ZYnqxE"
+      },
+      "fZ38zT": {
+        "value": "Corner Wall Anime Module - fZ38zT"
+      },
+      "S5OqAA": {
+        "value": "Corner Wall Anime Module - S5OqAA"
+      },
+      "TH0gwR": {
+        "value": "Anime Checkpoint Zone - TH0gwR"
+      },
+      "JAhLRw": {
+        "value": "Trigger Area - JAhLRw"
+      },
+      "Q0AC1Z": {
+        "value": "Scifi Big Structure - Q0AC1Z"
+      },
+      "a6DZgB": {
+        "value": "Scifi  Platform Rectangular - a6DZgB"
+      },
+      "XEETwM": {
+        "value": "Scifi Big Wall - XEETwM"
+      },
+      "LOA9hy": {
+        "value": "Empty Entity - LOA9hy"
+      },
+      "oNPcDu": {
+        "value": "Anime Checkpoint Zone - oNPcDu"
+      },
+      "cutc3Z": {
+        "value": "Command Center-like Controls Camera - cutc3Z"
+      },
+      "pweZdX": {
+        "value": "Column 01 - pweZdX"
+      },
+      "TM8g1h": {
+        "value": "Column 01 - TM8g1h"
+      },
+      "U7ihhi": {
+        "value": "Column 01 - U7ihhi"
+      },
+      "Vz1dZr": {
+        "value": "Column 01 - Vz1dZr"
+      },
+      "aOuBtD": {
+        "value": "Scifi Gun 2 Stereo - aOuBtD"
+      },
+      "tBkCeu": {
+        "value": "Scifi Friendly NPC - tBkCeu"
+      },
+      "GV6OqG": {
+        "value": "A Car Whizzing By 1 - GV6OqG"
+      },
+      "ZbMtJH": {
+        "value": "Trigger Area - ZbMtJH"
+      },
+      "QbDqzM": {
+        "value": "Scifi Beam Blue - QbDqzM"
+      },
+      "sHsJ29": {
+        "value": "Scifi Beam Blue - sHsJ29"
+      }
+    },
+    "NFT_Shape": {},
+    "Path": {},
+    "Physics": {},
+    "Playlist": {},
+    "Pointers": {},
+    "Raycast": {},
+    "Reward": {},
+    "States": {},
+    "Text": {
+      "JAhLRw": {
+        "text": "Trigger Area",
+        "font": 2,
+        "fontSize": 3,
+        "textAlign": 4,
+        "dataType": 0,
+        "onPlay": false,
+        "isText": false,
+        "outlineColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        }
+      },
+      "LOA9hy": {
+        "text": "Empty Entity",
+        "font": 2,
+        "fontSize": 3,
+        "textAlign": 4,
+        "dataType": 0,
+        "onPlay": false,
+        "isText": false,
+        "outlineColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        }
+      },
+      "aOuBtD": {
+        "text": "Scifi Gun 2 Stereo",
+        "font": 2,
+        "fontSize": 3,
+        "textAlign": 4,
+        "dataType": 0,
+        "onPlay": false,
+        "isText": false,
+        "outlineColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        }
+      },
+      "GV6OqG": {
+        "text": "A Car Whizzing By 1",
+        "font": 2,
+        "fontSize": 3,
+        "textAlign": 4,
+        "dataType": 0,
+        "onPlay": false,
+        "isText": false,
+        "outlineColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        }
+      },
+      "ZbMtJH": {
+        "text": "Trigger Area",
+        "font": 2,
+        "fontSize": 3,
+        "textAlign": 4,
+        "dataType": 0,
+        "onPlay": false,
+        "isText": false,
+        "outlineColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        }
+      }
+    },
+    "Texture": {},
+    "Transform": {
+      "y45UHK": {
+        "p": {
+          "x": 8,
+          "y": 0.06000000000000002,
+          "z": 8
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "lYbJsV": {
+        "p": {
+          "x": 8,
+          "y": 0,
+          "z": 8
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 8,
+          "y": 1,
+          "z": 8
+        },
+        "delta": 0
+      },
+      "KNw6UA": {
+        "p": {
+          "x": 7.899999999999993,
+          "y": 0,
+          "z": 7.799999999999994
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 1,
+          "z": 1.6999999999999997
+        },
+        "delta": 0
+      },
+      "i2PMOM": {
+        "p": {
+          "x": 12.1,
+          "y": 0,
+          "z": 12.599999999999998
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 1,
+          "z": 1.7
+        },
+        "delta": 0
+      },
+      "jndb9v": {
+        "p": {
+          "x": 5.799999999999997,
+          "y": 0.060000000000000005,
+          "z": 10.399999999999999
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 0.2600000000000001,
+          "y": 1,
+          "z": 0.28000000000000014
+        },
+        "delta": 0
+      },
+      "wK2EE8": {
+        "p": {
+          "x": 10.200000000000003,
+          "y": 0.06,
+          "z": 5.609999999999998
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 0.26,
+          "y": 1,
+          "z": 0.28
+        },
+        "delta": 0
+      },
+      "ABSvr6": {
+        "p": {
+          "x": 15,
+          "y": 0,
+          "z": 15
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 4,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "ZYnqxE": {
+        "p": {
+          "x": 15,
+          "y": 0,
+          "z": 1
+        },
+        "r": {
+          "x": 0,
+          "y": 90,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 4,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "fZ38zT": {
+        "p": {
+          "x": 1,
+          "y": 0,
+          "z": 15
+        },
+        "r": {
+          "x": 0,
+          "y": 270,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 4,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "S5OqAA": {
+        "p": {
+          "x": 1,
+          "y": 0,
+          "z": 1
+        },
+        "r": {
+          "x": 0,
+          "y": 540,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 4,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "TH0gwR": {
+        "p": {
+          "x": 5.899999999999997,
+          "y": 1.6999999999999997,
+          "z": 10.400000000000002
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 0.5000000000000001,
+          "y": 1.7000000000000006,
+          "z": 0.5000000000000001
+        },
+        "delta": 0
+      },
+      "JAhLRw": {
+        "p": {
+          "x": 5.939999999999998,
+          "y": 0.79,
+          "z": 10.39
+        },
+        "r": {
+          "x": 0,
+          "y": 288.72,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 4,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "Q0AC1Z": {
+        "p": {
+          "x": 14.699999999999992,
+          "y": 10.779999999999996,
+          "z": 14.99
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 0.3400000000000001,
+          "y": 1,
+          "z": 0.16900000000000012
+        },
+        "delta": 0
+      },
+      "a6DZgB": {
+        "p": {
+          "x": 8,
+          "y": 11,
+          "z": 8
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 3,
+          "y": 1,
+          "z": 1.4999999999999996
+        },
+        "delta": 0
+      },
+      "XEETwM": {
+        "p": {
+          "x": 1.4000000000000001,
+          "y": 11,
+          "z": 15.500000000000002
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 0.3599999999999992,
+          "y": 1,
+          "z": 0.3540000000000001
+        },
+        "delta": 0
+      },
+      "LOA9hy": {
+        "p": {
+          "x": 8.09,
+          "y": 13.48,
+          "z": 7.95
+        },
+        "r": {
+          "x": 0,
+          "y": 270.89,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "oNPcDu": {
+        "p": {
+          "x": 5.9,
+          "y": 1.5999999999999996,
+          "z": 10.4
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 180
+        },
+        "s": {
+          "x": 0.5,
+          "y": 1.7,
+          "z": 0.5
+        },
+        "delta": 0
+      },
+      "cutc3Z": {
+        "p": {
+          "x": 8,
+          "y": 19.39999999999999,
+          "z": 8
+        },
+        "r": {
+          "x": 0,
+          "y": 90,
+          "z": 180
+        },
+        "s": {
+          "x": 26.000000000000014,
+          "y": 1,
+          "z": 26.000000000000014
+        },
+        "delta": 0
+      },
+      "pweZdX": {
+        "p": {
+          "x": 1.1999999999999993,
+          "y": -1.8000000000000003,
+          "z": 1.1600000000000001
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 2.000000000000001,
+          "y": 7,
+          "z": 2.000000000000001
+        },
+        "delta": 0
+      },
+      "TM8g1h": {
+        "p": {
+          "x": 14.899999999999999,
+          "y": -1.8,
+          "z": 1.2
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 7,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "U7ihhi": {
+        "p": {
+          "x": 1.2000000000000002,
+          "y": -1.8,
+          "z": 14.859999999999998
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 7,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "Vz1dZr": {
+        "p": {
+          "x": 14.809999999999999,
+          "y": -1.8,
+          "z": 14.86
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 7,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "aOuBtD": {
+        "p": {
+          "x": 8,
+          "y": 13,
+          "z": 8
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "tBkCeu": {
+        "p": {
+          "x": 11.400000000000002,
+          "y": -0.8,
+          "z": 4.499999999999998
+        },
+        "r": {
+          "x": 0,
+          "y": -45,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 2,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "GV6OqG": {
+        "p": {
+          "x": 11.22,
+          "y": 1.7,
+          "z": 4.69
+        },
+        "r": {
+          "x": 0,
+          "y": 115.76,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "ZbMtJH": {
+        "p": {
+          "x": 10,
+          "y": 1.5999999999999996,
+          "z": 5
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 6,
+          "y": 3,
+          "z": 6
+        },
+        "delta": 0
+      },
+      "QbDqzM": {
+        "p": {
+          "x": 14,
+          "y": 11.9,
+          "z": 14.200000000000001
+        },
+        "r": {
+          "x": 270,
+          "y": 315,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 3,
+          "z": 44
+        },
+        "delta": 0
+      },
+      "sHsJ29": {
+        "p": {
+          "x": 2.2,
+          "y": 11.9,
+          "z": 13.999999999999998
+        },
+        "r": {
+          "x": 270,
+          "y": 225,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 3,
+          "z": 44
+        },
+        "delta": 0
+      }
+    },
+    "Triggers": {
+      "TH0gwR": {
+        "triggers": [
+          {
+            "id": "XLXJa8",
+            "type": "on_enter_scene",
+            "input": 0,
+            "pointer": 0,
+            "tick": 0,
+            "decisions": [
+              {
+                "id": "eEUS5w",
+                "name": "eEUS5w",
+                "operator": "and",
+                "conditions": [],
+                "actions": [
+                  "VEgnHF"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "JAhLRw": {
+        "isArea": true,
+        "triggers": [
+          {
+            "id": "Bl6bR7",
+            "type": "on_enter",
+            "input": 0,
+            "pointer": 0,
+            "tick": 0,
+            "decisions": [
+              {
+                "id": "P8zO78",
+                "name": "teleport",
+                "operator": "and",
+                "conditions": [],
+                "actions": [
+                  "wphiMy",
+                  "meLEwq"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "K1PNbp",
+            "type": "on_leave",
+            "input": 0,
+            "pointer": 0,
+            "tick": 0,
+            "decisions": []
+          }
+        ]
+      },
+      "oNPcDu": {
+        "triggers": [
+          {
+            "id": "XLXJa8",
+            "type": "on_enter_scene",
+            "input": 0,
+            "pointer": 0,
+            "tick": 0,
+            "decisions": [
+              {
+                "id": "eEUS5w",
+                "name": "eEUS5w",
+                "operator": "and",
+                "conditions": [],
+                "actions": [
+                  "AV4KlW"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "tBkCeu": {
+        "triggers": [
+          {
+            "id": "hxcUf1",
+            "type": "on_enter_scene",
+            "input": 0,
+            "pointer": 0,
+            "tick": 0,
+            "decisions": [
+              {
+                "id": "WWIHxq",
+                "name": "WWIHxq",
+                "operator": "and",
+                "conditions": [],
+                "actions": [
+                  "pu5mR3"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "ZbMtJH": {
+        "isArea": true,
+        "triggers": [
+          {
+            "id": "fN4KMh",
+            "type": "on_enter",
+            "input": 0,
+            "pointer": 0,
+            "tick": 0,
+            "decisions": [
+              {
+                "id": "D5KZTV",
+                "name": "D5KZTV",
+                "operator": "and",
+                "conditions": [],
+                "actions": [
+                  "YqEJOL"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "D0BCAm",
+            "type": "on_leave",
+            "input": 0,
+            "pointer": 0,
+            "tick": 0,
+            "decisions": []
+          }
+        ]
+      }
+    },
+    "UI_Text": {},
+    "UI_Image": {},
+    "Visibility": {
+      "y45UHK": {
+        "visible": true
+      },
+      "lYbJsV": {
+        "visible": true
+      },
+      "KNw6UA": {
+        "visible": true
+      },
+      "i2PMOM": {
+        "visible": true
+      },
+      "jndb9v": {
+        "visible": true
+      },
+      "wK2EE8": {
+        "visible": true
+      },
+      "ABSvr6": {
+        "visible": true
+      },
+      "ZYnqxE": {
+        "visible": true
+      },
+      "fZ38zT": {
+        "visible": true
+      },
+      "S5OqAA": {
+        "visible": true
+      },
+      "TH0gwR": {
+        "visible": true
+      },
+      "JAhLRw": {
+        "visible": true
+      },
+      "Q0AC1Z": {
+        "visible": true
+      },
+      "a6DZgB": {
+        "visible": true
+      },
+      "XEETwM": {
+        "visible": true
+      },
+      "LOA9hy": {
+        "visible": true
+      },
+      "oNPcDu": {
+        "visible": true
+      },
+      "cutc3Z": {
+        "visible": true
+      },
+      "pweZdX": {
+        "visible": true
+      },
+      "TM8g1h": {
+        "visible": true
+      },
+      "U7ihhi": {
+        "visible": true
+      },
+      "Vz1dZr": {
+        "visible": true
+      },
+      "aOuBtD": {
+        "visible": true
+      },
+      "tBkCeu": {
+        "visible": true
+      },
+      "GV6OqG": {
+        "visible": true
+      },
+      "ZbMtJH": {
+        "visible": true
+      },
+      "QbDqzM": {
+        "visible": true
+      },
+      "sHsJ29": {
+        "visible": true
+      }
+    },
+    "Video": {},
+    "Vehicle": {},
+    "Weapon": {},
+    "Quest": {},
+    "Parenting": [
+      {
+        "aid": "0",
+        "children": [
+          "y45UHK",
+          "lYbJsV",
+          "KNw6UA",
+          "i2PMOM",
+          "jndb9v",
+          "wK2EE8",
+          "ABSvr6",
+          "ZYnqxE",
+          "fZ38zT",
+          "S5OqAA",
+          "TH0gwR",
+          "JAhLRw",
+          "Q0AC1Z",
+          "a6DZgB",
+          "XEETwM",
+          "LOA9hy",
+          "oNPcDu",
+          "cutc3Z",
+          "pweZdX",
+          "TM8g1h",
+          "U7ihhi",
+          "Vz1dZr",
+          "aOuBtD",
+          "tBkCeu",
+          "GV6OqG",
+          "ZbMtJH",
+          "QbDqzM",
+          "sHsJ29"
+        ]
+      },
+      {
+        "aid": "1",
+        "children": []
+      },
+      {
+        "aid": "2",
+        "children": []
+      },
+      {
+        "aid": "y45UHK",
+        "children": []
+      },
+      {
+        "aid": "lYbJsV",
+        "children": []
+      },
+      {
+        "aid": "KNw6UA",
+        "children": []
+      },
+      {
+        "aid": "i2PMOM",
+        "children": []
+      },
+      {
+        "aid": "jndb9v",
+        "children": []
+      },
+      {
+        "aid": "wK2EE8",
+        "children": []
+      },
+      {
+        "aid": "ABSvr6",
+        "children": []
+      },
+      {
+        "aid": "ZYnqxE",
+        "children": []
+      },
+      {
+        "aid": "fZ38zT",
+        "children": []
+      },
+      {
+        "aid": "S5OqAA",
+        "children": []
+      },
+      {
+        "aid": "TH0gwR",
+        "children": []
+      },
+      {
+        "aid": "JAhLRw",
+        "children": []
+      },
+      {
+        "aid": "Q0AC1Z",
+        "children": []
+      },
+      {
+        "aid": "a6DZgB",
+        "children": []
+      },
+      {
+        "aid": "XEETwM",
+        "children": []
+      },
+      {
+        "aid": "LOA9hy",
+        "children": []
+      },
+      {
+        "aid": "oNPcDu",
+        "children": []
+      },
+      {
+        "aid": "cutc3Z",
+        "children": []
+      },
+      {
+        "aid": "pweZdX",
+        "children": []
+      },
+      {
+        "aid": "TM8g1h",
+        "children": []
+      },
+      {
+        "aid": "U7ihhi",
+        "children": []
+      },
+      {
+        "aid": "Vz1dZr",
+        "children": []
+      },
+      {
+        "aid": "aOuBtD",
+        "children": []
+      },
+      {
+        "aid": "tBkCeu",
+        "children": []
+      },
+      {
+        "aid": "GV6OqG",
+        "children": []
+      },
+      {
+        "aid": "ZbMtJH",
+        "children": []
+      },
+      {
+        "aid": "QbDqzM",
+        "children": []
+      },
+      {
+        "aid": "sHsJ29",
+        "children": []
+      }
+    ],
+    "Multiplayer": {}
+  },
+  {
+    "id": "65FXP",
+    "metadata": {
+      "n": "Video Example",
+      "d": "",
+      "o": "0x3edfae1ce7aeb54ed6e171c4b13e343ba81669b6",
+      "ona": "BuilderWorld",
+      "cat": "art",
+      "im": "",
+      "direction": 0,
+      "offsets": [
+        0,
+        0
+      ],
+      "dv": false,
+      "dpx": false
+    },
+    "bpcl": "-8,0",
+    "w": "BuilderWorld.dcl.eth",
+    "bps": [],
+    "pcls": [
+      "-8,0"
+    ],
+    "sp": [
+      "0,0,0"
+    ],
+    "cp": [
+      "0,0,0"
+    ],
+    "cd": 1736649561,
+    "upd": 1736649561,
+    "si": 0,
+    "pc": 0,
+    "pcnt": 1,
+    "isdl": false,
+    "e": true,
+    "priv": false,
+    "Actions": {
+      "GMVet2": {
+        "actions": [
+          {
+            "id": "pzusTP",
+            "name": "video_play",
+            "type": "video_play",
+            "channel": 0
+          }
+        ]
+      }
+    },
+    "Animator": {},
+    "Avatar_Shape": {},
+    "Audio": {},
+    "Billboard": {},
+    "Camera": {},
+    "Counters": {},
+    "Dialog": {},
+    "Game": {},
+    "GameItem": {},
+    "Gltf": {
+      "d3VQbJ": {
+        "src": "73f8a7b8-9446-494c-bb3e-b410983e3691",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      }
+    },
+    "IWB": {
+      "GMVet2": {
+        "id": "bb3b0edf-377b-438b-80af-bd199455a9bb",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "Video"
+      },
+      "3GBl4i": {
+        "id": "bb3b0edf-377b-438b-80af-bd199455a9bb",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "Video"
+      },
+      "d3VQbJ": {
+        "id": "73f8a7b8-9446-494c-bb3e-b410983e3691",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      }
+    },
+    "Leaderboard": {},
+    "Levels": {},
+    "Live": {},
+    "Material": {
+      "GMVet2": {
+        "type": 0,
+        "intensity": 0,
+        "roughness": 1,
+        "metallic": 0,
+        "emissiveIntensity": 0,
+        "textureType": "COLOR",
+        "emissiveType": "NONE",
+        "emissiveTexture": "",
+        "albedoColor": {
+          "r": 0.78,
+          "g": 0.72,
+          "b": 0.6,
+          "a": 0.5
+        },
+        "emissiveColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "onPlay": false
+      },
+      "3GBl4i": {
+        "type": 0,
+        "intensity": 0,
+        "roughness": 1,
+        "metallic": 0,
+        "emissiveIntensity": 0,
+        "textureType": "VIDEO",
+        "texture": "GMVet2",
+        "emissiveType": "NONE",
+        "emissiveTexture": "",
+        "albedoColor": {
+          "r": 0.78,
+          "g": 0.72,
+          "b": 0.6,
+          "a": 0.5
+        },
+        "emissiveColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "onPlay": false
+      }
+    },
+    "Mesh_Collider": {
+      "GMVet2": {
+        "shape": 1,
+        "layer": 3,
+        "onPlay": false
+      },
+      "3GBl4i": {
+        "shape": 0,
+        "layer": 3,
+        "onPlay": true
+      }
+    },
+    "Mesh_Renderer": {
+      "GMVet2": {
+        "shape": 1
+      },
+      "3GBl4i": {
+        "shape": 0,
+        "onPlay": true
+      }
+    },
+    "Name": {
+      "GMVet2": {
+        "value": "Video - GMVet2"
+      },
+      "3GBl4i": {
+        "value": "Video - 3GBl4i"
+      },
+      "d3VQbJ": {
+        "value": "AsianFloor - d3VQbJ"
+      }
+    },
+    "NFT_Shape": {},
+    "Path": {},
+    "Physics": {},
+    "Playlist": {},
+    "Pointers": {},
+    "Raycast": {},
+    "Reward": {},
+    "States": {},
+    "Text": {
+      "GMVet2": {
+        "text": "Video",
+        "font": 2,
+        "fontSize": 3,
+        "textAlign": 4,
+        "dataType": 0,
+        "onPlay": false,
+        "isText": false,
+        "outlineColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        }
+      },
+      "3GBl4i": {
+        "text": "Video",
+        "font": 2,
+        "fontSize": 3,
+        "textAlign": 4,
+        "dataType": 0,
+        "onPlay": false,
+        "isText": false,
+        "outlineColor": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        },
+        "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1,
+          "a": 1
+        }
+      }
+    },
+    "Texture": {},
+    "Transform": {
+      "GMVet2": {
+        "p": {
+          "x": 5.56,
+          "y": 1.07,
+          "z": 6.66
+        },
+        "r": {
+          "x": 0,
+          "y": 286.16,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "3GBl4i": {
+        "p": {
+          "x": 9.47,
+          "y": 4.12,
+          "z": 15
+        },
+        "r": {
+          "x": 0,
+          "y": 0.63,
+          "z": 0
+        },
+        "s": {
+          "x": 9.000000000000002,
+          "y": 4.499999999999998,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "d3VQbJ": {
+        "p": {
+          "x": 2,
+          "y": 0,
+          "z": 2
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 6,
+          "y": 1,
+          "z": 6
+        },
+        "delta": 0
+      }
+    },
+    "Triggers": {
+      "GMVet2": {
+        "triggers": [
+          {
+            "id": "IzNLw3",
+            "type": "on_enter_scene",
+            "input": 0,
+            "pointer": 0,
+            "tick": 0,
+            "decisions": [
+              {
+                "id": "Jh49xR",
+                "name": "Jh49xR",
+                "operator": "and",
+                "conditions": [],
+                "actions": [
+                  "pzusTP"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "UI_Text": {},
+    "UI_Image": {},
+    "Visibility": {
+      "GMVet2": {
+        "visible": true
+      },
+      "3GBl4i": {
+        "visible": true
+      },
+      "d3VQbJ": {
+        "visible": true
+      }
+    },
+    "Video": {
+      "GMVet2": {
+        "type": 0,
+        "volume": 1,
+        "autostart": false,
+        "loop": true,
+        "synced": false,
+        "link": "https://dclstreams.com/media/videos/play/8091c67c-2d61-411f-b440-424efb2fbfbb.m3u8"
+      },
+      "3GBl4i": {
+        "type": 1,
+        "autostart": false,
+        "loop": false,
+        "synced": false,
+        "link": ""
+      }
+    },
+    "Vehicle": {},
+    "Weapon": {},
+    "Quest": {},
+    "Parenting": [
+      {
+        "aid": "0",
+        "children": [
+          "GMVet2",
+          "3GBl4i",
+          "d3VQbJ"
+        ]
+      },
+      {
+        "aid": "1",
+        "children": []
+      },
+      {
+        "aid": "2",
+        "children": []
+      },
+      {
+        "aid": "GMVet2",
+        "children": []
+      },
+      {
+        "aid": "3GBl4i",
+        "children": []
+      },
+      {
+        "aid": "d3VQbJ",
         "children": []
       }
     ],

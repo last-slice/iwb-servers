@@ -40,7 +40,7 @@ import { createVLMComponent, VLMComponent } from "./VLM";
 import { MultiplayerComponent } from "./Multiplayer";
 import { createLeaderboardComponent, LeaderboardComponent } from "./Leaderboard";
 import { createVehicleComponent, VehicleComponent } from "./Vehicle";
-import { createPhysicsComponent, PhysicsComponent } from "./Physics";
+import { CheckPhysicsCache, createPhysicsComponent, PhysicsComponent } from "./Physics";
 import { checkQuestCache, createQuestComponent, getQuestsPlayerData, QuestComponent } from "./Quest";
 import { QuestManager } from "./QuestManager";
 import { createWeaponComponent, WeaponComponent } from "./Weapon";
@@ -163,6 +163,7 @@ export class Scene extends Schema {
     checkLeave:boolean
     loaded:boolean
     hiddenForGame:boolean
+    color:any
 
     constructor(room?:IWBRoom, data?:any) {
         super(data)
@@ -515,6 +516,7 @@ export function initServerScenes(room:IWBRoom, options?:any){
                     console.log('couldnt find scene in scene pool, dont load room')
                 }
             }else{
+                console.log('we have regular scene to load')
                 let world = iwbManager.worlds.find((w)=> w.ens === room.state.world)
                 if(world){
                     iwbManager.initiateRealm(world.owner)
@@ -523,18 +525,18 @@ export function initServerScenes(room:IWBRoom, options?:any){
                         room.state.realmId = realmData.EntityToken.Entity.Id
                         room.state.realmTokenType = realmData.EntityToken.Entity.Type
     
-                        QuestManager.create(room).then((questManager)=>{
-                            room.state.questManager = questManager
-    
-                            iwbManager.fetchRealmData(realmData)
+                        // QuestManager.create(room).then((questManager)=>{
+                        //     room.state.questManager = questManager 
+                        // })  
+
+                        iwbManager.fetchRealmData(realmData)
                             .then((realmData)=>{
                                 iwbManager.fetchRealmScenes(room.state.world, realmData)
                                 .then(async (sceneData)=>{
                                     await loadRealmScenes(room, sceneData, options)
                                     iwbManager.initUsers(room)
                                 })
-                            }) 
-                        })  
+                            })
                     })
                     .catch((error)=>{
                         console.log('error initating realm', error)
@@ -591,21 +593,22 @@ export async function loadRealmScenes(room:IWBRoom, scenes:any[], options?:any, 
     let filter = [...scenes.filter((scene)=> scene.w === scenePool ? scenePool : room.state.world)]
     room.state.sceneCount = filter.length
 
-    console.log('filtered scenes are ', filter)
+    // console.log('filtered scenes are ', filter)
 
     if(options){
         console.log('we have connectoin from gc, only load specfic scene', options)
         let scene = filter.find(($:any)=> $.id === options.localConfig.scene)
-        console.log('gc scene is ', scene)
+        // console.log('gc scene is ', scene)
         if(scene){
             console.log('we found scene to load for gc')
             scene.pcls = translateGCParcels(scene.pcls)
             scene.bpcl = "0,0"
-            // scene.pcls = options.localConfig.parcels
-            // scene.bpcl = options.localConfig.base
+            scene.pcls = options.localConfig.parcels
+            scene.bpcl = options.localConfig.base
             room.state.scenes.set(scene.id, new Scene(room, scene))
         }
     }else{
+        console.log('we have iwb world to load scenes')
         filter.forEach((scene)=>{
             console.log('creating new iwb scene', scene.id)
             room.state.scenes.set(scene.id, new Scene(room, scene))
@@ -692,6 +695,7 @@ export function saveRealmAssets(room:IWBRoom){
 export async function checkAssetCacheStates(room:IWBRoom, scene:Scene, jsonScene:any){
     scene[COMPONENT_TYPES.IWB_COMPONENT].forEach(async (iwbComponent:IWBComponent, aid:string)=>{
         jsonScene = await checkIWBCache(room, scene, aid, jsonScene) 
+        jsonScene = await CheckPhysicsCache(scene, aid, jsonScene)
         jsonScene = await checkRewardCache(scene, aid, jsonScene)
         jsonScene = await checkGameCache(scene, aid, jsonScene)
         jsonScene = await checkQuestCache(scene, aid, jsonScene)

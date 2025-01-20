@@ -5,6 +5,6 @@ export function colyseusRouter(router:any){
     router.use('/colyseus', monitor())
 
     if (process.env.NODE_ENV !== "production") {
-        router.use("/playground", playground);
+        return
     }
 }

@@ -489,7 +489,6 @@ export function iwbSceneHandler(room:IWBRoom){
 
                     let assetIds:any[] = []
                     scene[COMPONENT_TYPES.IWB_COMPONENT].forEach((iwb:IWBComponent, aid:string)=>{
-                        console.log(iwb.toJSON())
                         assetIds.push({id:iwb.id, ugc:iwb.ugc, type:iwb.type})
                     })
                     
