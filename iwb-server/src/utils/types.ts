@@ -107,6 +107,8 @@ export enum SERVER_MESSAGE_TYPES {
     FORCE_BACKUP = 'force_backup',
     EXPORT_WORLD = 'export_world',
 
+    PHYSICS_UPDATE = 'physics_update',
+
     CUSTOM = "custom",
     IWB_VERSION_UPDATE ='iwb_version_update',
 

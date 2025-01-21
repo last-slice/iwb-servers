@@ -10,6 +10,7 @@ import { addPlayerToWorld, iwbPlayerHandler, removePlayer, savePlayerCache } fro
 import { itemManager, iwbManager } from "../app.config";
 import { playerLogin, PLAYFAB_DATA_ACCOUNT, pushPlayfabEvent, updatePlayerDisplayName, updatePlayerInternalData } from "../utils/Playfab";
 import { refreshLeaderboards } from "../Objects/Leaderboard";
+import { disableRoomPhysics, initRoomPhysics, physicsTick } from "../Objects/Physics";
 
 export class IWBRoom extends Room<IWBRoomState> {
 
@@ -34,7 +35,11 @@ export class IWBRoom extends Room<IWBRoomState> {
     onCreate(options: any) {
         // console.log('on create options are ', options)
         this.setState(new IWBRoomState());
+        this.clock.start()
+
         this.state.world = options.world
+
+        initRoomPhysics(this)
 
         if(options.island === "client"){
             if(!options.world){
@@ -60,7 +65,6 @@ export class IWBRoom extends Room<IWBRoomState> {
             this.state.owner = worldConfig.owner
         }
 
-        this.clock.start()
         this.leaderboardRefreshInterval = this.clock.setInterval(() => {
             // console.log('checking world leaderboards')
             refreshLeaderboards(this)
@@ -126,6 +130,8 @@ export class IWBRoom extends Room<IWBRoomState> {
         iwbManager.removeRoom(this)
 
         iwbManager.garbageCollectRoom(this)
+
+        disableRoomPhysics(this)
        }
     }
 

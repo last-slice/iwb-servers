@@ -2,6 +2,8 @@ import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
 import { Scene } from "./Scene";
 import { COMPONENT_TYPES } from "../utils/types";
 import { Vector3 } from "./Transform";
+import { IWBRoom } from "../rooms/IWBRoom";
+import { CANNON } from "../utils/libraries";
 
 export class PhysicsContactMaterialsComponent extends Schema{
     @type("number") friction:number = 1
@@ -143,4 +145,66 @@ export async function CheckPhysicsCache(scene:Scene, aid:string, jsonScene:any){
         jsonScene[COMPONENT_TYPES.PHYSICS_COMPONENT][aid] = itemJSON
     }
     return jsonScene
+}
+
+export function initRoomPhysics(room:IWBRoom){
+    room.state.physicsWorld = new CANNON.World()
+    room.state.physicsWorld.gravity.set(0,-9.82, 0)
+
+    let groundMaterial = addCannonMaterial(room, "ground")
+    let vehicleMaterial = addCannonMaterial(room, "vehicle")
+    addCannonMaterial(room, "player")
+  
+    const groundBody: CANNON.Body = new CANNON.Body({
+      mass: 0, // mass === 0 makes the body static,
+      material: groundMaterial,
+      shape:new CANNON.Plane()
+    })
+    groundBody.position.set(0, 0, 0); // X = 0, Y = -1 (down by 1), Z = 0//
+    groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2) // Reorient ground plane to be in the y-axis
+  
+    groundBody.collisionFilterGroup = 1; // We'll use 1 for terrain, 2 for vehicles, 3 for balls
+    groundBody.collisionFilterMask = 1 //| 2 | 3 | 4 | 5
+  
+    vehicleMaterial.friction    = 1
+    vehicleMaterial.restitution = 0
+  
+    // Set restitution to 0 to avoid bouncing
+    const carGroundContactMaterial = new CANNON.ContactMaterial(vehicleMaterial, groundMaterial, {
+      friction: 0.8,    // Adjust friction as needed for grip
+      restitution: 0.0  // No bounce
+    });
+    world.addContactMaterial(carGroundContactMaterial);
+    world.addBody(groundBody)
+
+
+
+    room.state.physicsInterval = room.clock.setInterval(()=>{
+        physicsTick(room)
+    }, 1000 / 60)
+}
+
+export function disableRoomPhysics(room:IWBRoom){
+    room.state.scenes.forEach((scene:Scene, sceneId:string)=>{
+        scene[COMPONENT_TYPES.PHYSICS_COMPONENT].forEach((physics:PhysicsComponent, aid:string)=>{
+            if(physics.type === 1){
+                room.state.physicsWorld.removeBody(physics.cannonBody)
+            }
+        })
+    })
+    room.state.physicsWorld.bodies.length = 0
+    room.state.physicsWorld = null
+}
+
+export function physicsTick(room:IWBRoom){
+    const fixedTimeStep = 1.0 / 60.0;
+    const maxSubSteps = 3;
+    room.state.physicsWorld.step(fixedTimeStep, room.clock.currentTime, maxSubSteps);
+}
+
+export function addCannonMaterial(room:IWBRoom, material:string){
+    let cannonMaterial = new CANNON.Material(material)
+    room.state.cann.set(material, cannonMaterial)
+    retryPendingContactMaterials();
+    return cannonMaterial
 }

@@ -2,6 +2,7 @@ import { Schema, MapSchema,ArraySchema, type } from "@colyseus/schema";
 import { Scene, TempScene } from "../Objects/Scene";
 import { Player } from "../Objects/Player";
 import { QuestManager } from "../Objects/QuestManager";
+import { CANNON } from "../utils/libraries";
 
 export class IWBRoomState extends Schema {
 
@@ -41,5 +42,8 @@ export class IWBRoomState extends Schema {
 
   questManager:QuestManager
   backupInterval:any
+
+  physicsWorld:CANNON.World
+  physicsInterval:any
 
 }

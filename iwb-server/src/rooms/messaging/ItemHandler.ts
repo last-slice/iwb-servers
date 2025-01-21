@@ -130,6 +130,12 @@ let createComponentFunctions:any = {
 }
 
 export function iwbItemHandler(room:IWBRoom){
+    room.onMessage(SERVER_MESSAGE_TYPES.PHYSICS_UPDATE, (client:Client, info:any)=>{
+        // console.log(SERVER_MESSAGE_TYPES.PHYSICS_UPDATE + " received", info)
+        room.broadcast(SERVER_MESSAGE_TYPES.PHYSICS_UPDATE, {player:client.userData.userId, info:info})
+    })
+
+    
     room.onMessage(SERVER_MESSAGE_TYPES.SCENE_DROPPED_GRABBED, (client:Client, info:any)=>{
         console.log(SERVER_MESSAGE_TYPES.SCENE_DROPPED_GRABBED + " received", info)
         let scene = room.state.scenes.get(info.sceneId)

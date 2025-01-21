@@ -48,6 +48,7 @@ import { createVirtualCameraComponent, VirtualCameraComponent } from "./VirtualC
 import { getCache } from "../utils/cache";
 import { SCENE_POOL_CACHE_KEY } from "./IWBManager";
 import { createRaycastComponent, RaycastComponent } from "./Raycast";
+import { CANNON } from "../utils/libraries";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -164,6 +165,10 @@ export class Scene extends Schema {
     loaded:boolean
     hiddenForGame:boolean
     color:any
+
+    cannonMaterials:Map<string, CANNON.Material> = new Map()
+    cannonContactMaterials:Map<string,CANNON.ContactMaterial> = new Map()
+    pendingContactMaterials: Array<{ from: string, to: string, contactData: any }> = [];
 
     constructor(room?:IWBRoom, data?:any) {
         super(data)
