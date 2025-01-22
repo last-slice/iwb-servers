@@ -271,6 +271,12 @@ export class ItemManager{
         return assets
     }
 
+    getCatalog(){
+        let searchableItems:any[] = []
+        let length:number = 0
+        this.items.forEach((item,key)=>{
+            searchableItems.push(item)
+        })
+        return searchableItems
+    }
 }
-
-

@@ -17,7 +17,7 @@ export function downloadRouter(router:any){
         }
     });
 
-    router.get("/warehouse/asset/:userId/:assetId", async (req: any, res: any) => {
+    router.get("/warehouse/asset/:userId/:assetId/", async (req: any, res: any) => {
         console.log('trying to download warehouse asset', req.params.assetId)
         if(!req.params.assetId || !req.params.userId){
             res.status(400).send({valid:false})
@@ -29,12 +29,16 @@ export function downloadRouter(router:any){
             console.log('directory is', directory)
             const imagePath = path.join(directory, req.params.assetId)
             console.log('asset path is', imagePath)
+
+            if(req.params.userId !== "view"){
+                res.setHeader("Content-Disposition", `attachment; filename="${req.params.userId}"`);
+                //  pushPlayfabEvent(
+                // SERVER_MESSAGE_TYPES.DOWNLOAD_IWB_ASSET, 
+                // PLAYFAB_DATA_ACCOUNT, 
+                // [{assetId:req.params.assetId}]
+                // )
+            }
             res.sendFile(imagePath);
-            // pushPlayfabEvent(
-            //     SERVER_MESSAGE_TYPES.DOWNLOAD_IWB_ASSET, 
-            //     PLAYFAB_DATA_ACCOUNT, 
-            //     [{user: req.params.userId, assetId:req.params.assetId}]
-            // )
         }
         catch(e){
             console.log("error getting warehouse asset for download", e)

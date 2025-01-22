@@ -39,6 +39,16 @@ function App() {
       if(userAddress === values[4]){
         setConnected(true)
         setUser(userAddress);
+
+        console.log('user is connected')
+        validateSceneToken()
+      }else{
+        console.log('user is not the same')
+        setConnected(true)
+        setUser(userAddress);
+
+        // console.log('user is connected')
+        // validateSceneToken()
       }
      
 
@@ -49,6 +59,31 @@ function App() {
     }
   };
 
+
+  async function validateSceneToken(){
+    try{
+      const result = await axios.post((DEBUG ? "http://localhost:3525" : 'https://deployment.dcl-iwb.co') + '/scene/verify', { user:user, admin:DEBUG ? "014cc3aa-abe4-404d-bc3c-fe6e56859efb" : undefined},
+      {headers: {
+        'Authorization': `Bearer ${sceneKey}`,
+      }},
+      );
+      
+      if(result.data.valid){
+        console.log('we ahv valid token', result.data)
+        setUploadToken(result.data.token)
+        setTotalUGCSize((result.data.size / (1024 ** 2)).toFixed(2))
+        setConnected(true)
+      }else{
+        console.log('error getting upload token')
+        setError(true)
+      }
+    }
+    catch(e){
+      console.log('error reacyhing server', error)
+      setError(true)
+    }
+  }
+
   useEffect(() => {
     // Get the full URL
     const url = window.location.href;
@@ -57,7 +92,7 @@ function App() {
     const urlParts = url.split('/');
     console.log('urlparts', urlParts)
     
-    if (urlParts.length === 6) {
+    // if (urlParts.length === 6) {
       console.log('we have correct parts')
       // Extract the dynamic values
       const value1 = urlParts[4];
@@ -65,39 +100,13 @@ function App() {
 
       setValues(urlParts)
       setKey(value2)
+      setUser(value1)
 
-      console.log(value1, value2)
+      // console.log(value1, value2)
 
-      async function validateSceneToken(){
-        try{
-          const result = await axios.post((DEBUG ? "http://localhost:3525" : 'https://deployment.dcl-iwb.co') + '/scene/verify', { user:value1, admin:DEBUG ? "014cc3aa-abe4-404d-bc3c-fe6e56859efb" : undefined},
-          {headers: {
-            'Authorization': `Bearer ${value2}`,
-          }},
-          );
-          
-          if(result.data.valid){
-            console.log('we ahv valid token', result.data)
-            setUploadToken(result.data.token)
-            setTotalUGCSize((result.data.size / (1024 ** 2)).toFixed(2))
-            setConnected(true)
-          }else{
-            console.log('error getting upload token')
-            setError(true)
-          }
-        }
-        catch(e){
-          console.log('error reacyhing server', error)
-          setError(true)
-        }
-      }
-
-      // validateSceneToken()
-
-
-    }else{
-      console.log('show error')
-    }
+    // }else{
+    //   console.log('show error')
+    // }
 
 
   }, []);

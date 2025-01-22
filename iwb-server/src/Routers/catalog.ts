@@ -61,4 +61,9 @@ export function catalogRouter(router:any){
         res.status(200).send({valid: true, msg: "refreshing world assets"})
     });
     
+
+    router.get("/catalog/search", async (req: any, res: any) => {
+        console.log('receive ping to search iwb catalog', req.query)
+        res.status(200).send({valid: true, msg: "retreiving catalog", results:await itemManager.getCatalog()})
+    });
 }
