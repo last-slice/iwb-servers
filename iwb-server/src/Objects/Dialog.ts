@@ -21,6 +21,7 @@ export class DialogComponent extends Schema {
     @type("string") id:string
     @type("number") i:number = 0
     @type("number") type:number = 0
+    @type("number") fontSize:number = 15
     @type([DialogInfoComponent]) dialogs = new ArraySchema<DialogInfoComponent>()
 }
 
@@ -31,6 +32,11 @@ export function createDialogComponent(scene:Scene, aid:string, data?:any){
         console.log('dialog component data is', data)
         component.i = data.i
         component.type = data.type
+
+        if(data.fontSize){
+            component.fontSize = data.fontSize
+        }
+        
         data.dialogs && data.dialogs.forEach((dialog:any)=>{
             let dial = new DialogInfoComponent()
             dial.text = dialog.text
@@ -68,6 +74,11 @@ export function editDialogComponent(data:any, scene:Scene){
     let newDialogData = data.data
 
     switch(data.action){
+        case 'update-font':
+            console.log('updating font', newDialogData)
+            dialogInfo.fontSize = newDialogData
+            break;
+
         case 'delete':
             dialogInfo.dialogs.splice(newDialogData.value, 1)
             break;

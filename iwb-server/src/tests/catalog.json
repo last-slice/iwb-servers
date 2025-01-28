@@ -97962,7 +97962,7 @@
                 "textureType": "COLOR"
             },
             "Text": {
-                "text": "Physics Box",
+                "text": "Physics Ball",
                 "onPlay": false,
                 "isText": false
             },
