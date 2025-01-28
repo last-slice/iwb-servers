@@ -109,6 +109,19 @@ export function editPhysicsComponent(info:any, scene:Scene){
             physicsInfo.contactMaterials.set(info.contactMaterial.name, new PhysicsContactMaterialsComponent(info.contactMaterial))
             break;
 
+        case 'edit-contact-material':
+            if(!physicsInfo.contactMaterials){
+                physicsInfo.contactMaterials = new MapSchema()
+            }
+            let contactMaterial = physicsInfo.contactMaterials.get(info.contactMaterial.name)
+            if(!contactMaterial){
+                console.log('couldnt find contact material to edit')
+                return
+            }
+            contactMaterial.friction = info.contactMaterial.friction
+            contactMaterial.bounce = info.contactMaterial.bounce
+            break;
+
         case 'delete-contact-material':
             physicsInfo.contactMaterials.delete(info.contactMaterial)
             break;
