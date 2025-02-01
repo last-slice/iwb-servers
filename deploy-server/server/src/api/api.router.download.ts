@@ -25,17 +25,17 @@ export function downloadRouter(router:any){
         }
     })
 
-    router.get("/download/:user/:sceneid/:id", async function(req: express.Request, res: express.Response) {
+    router.get("/download/:user/:id", async function(req: express.Request, res: express.Response) {
         try{
-            if(!req.params.user || !req.params.id || !req.params.sceneid){
+            if(!req.params.user || !req.params.id){
                 throw new Error("invalid parameters")
             }
 
-            let download = findUserDownload(req.params.user, req.params.sceneid)
+            let download = findUserDownload(req.params.user, req.params.id)
             console.log('downalod from queue is', download)
             console.log('req params area', req.params)
-            if(download && download.user === req.params.user && download.id === req.params.id && download.sceneId === req.params.sceneid){
-                let filepath = temporaryDirectory + download.user +  "-" + download.sceneId + ".zip"
+            if(download && download.id === req.params.user + "-" + req.params.id){
+                let filepath = temporaryDirectory + download.id + ".zip"
                 let filename = "scene.zip"
                 
                 res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
@@ -54,7 +54,7 @@ export function downloadRouter(router:any){
     })
 
   router.post("/scene/download", (req: any, res: any) => {
-    console.log('trying to download scene', req.body)
+    // console.log('trying to download scene', req.body)
     res.status(200).send({valid: true})
     handleSceneDownload(req, res)
   });

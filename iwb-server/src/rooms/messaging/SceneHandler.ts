@@ -68,7 +68,7 @@ export function iwbSceneHandler(room:IWBRoom){
         let player:Player = room.state.players.get(client.userData.userId)
         if(player){//} && (player.mode === SCENE_MODES.BUILD_MODE)){
             let scene = room.state.scenes.get(info.sceneId)
-            if(scene && scene.metadata.o === player.userId){
+            if(scene && isWorldOwner(room, client.userData.userId)){//} scene.metadata.o === player.userId){
 
                 let jsonScene:any = scene.toJSON()
                 jsonScene =  await checkAssetCacheStates(room, scene, jsonScene)

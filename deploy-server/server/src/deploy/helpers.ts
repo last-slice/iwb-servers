@@ -2,6 +2,8 @@ import path from 'path'
 import { spawn } from 'child_process'
 import fetch from 'node-fetch'
 import fs from 'fs-extra'
+import { REQUIRED_ASSETS } from '../utils/types'
+import { assetDirectory } from '../download/scripts'
 
 // import { readJSON } from '../utils/filesystem'
 // import { getNodeModulesPath } from '../utils/project'
@@ -198,3 +200,15 @@ export async function getSceneFile(
 //   }
 //   return false
 // }
+
+export async function copyRequiredAssets(directory:string){
+  for(let i = 0; i < Object.values(REQUIRED_ASSETS).length; i++){
+    let file = Object.values(REQUIRED_ASSETS)[i]
+    try{
+        await fs.copy(path.join(assetDirectory, "assets", file), path.join(directory, file))
+    }
+    catch(e){
+        console.log('file copy error', e)
+    }
+}
+}

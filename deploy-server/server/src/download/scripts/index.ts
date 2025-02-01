@@ -31,6 +31,8 @@ export async function buildScene(data:any, type:string, bucketDirectory?:string,
             await writeSceneMetadata(path.join(directory, 'scene.json'), data, image, type, pendingData)
             await copyUITextures(path.join(directory, "assets/"), data)
             await copyAssets(path.join(directory, "assets/"), data, type)
+
+            
         }
         catch(e:any){
             console.log('error building directory', e.message)

@@ -1,10 +1,16 @@
 import * as fs from 'fs-extra';
-import { temporaryDirectory } from '.';
+import { assetDirectory, bucketDirectory, temporaryDirectory } from '.';
 import { addDownloadQueue } from '..';
 import { fail } from 'assert';
+import path from 'path';
+import fss from "fs/promises";
+import archiver from "archiver";
+import Axios from 'axios';
+import { downloadSceneImage } from './downloadImage';
+import { copyAssetsToZip, copyUITextures } from './assets';
+import { REQUIRED_ASSETS } from '../../utils/types'
 
 const fsp = require('fs/promises');
-const path = require('path');
 const JSZip = require('jszip');
 
 interface ProcessDirectoryResult {
@@ -13,26 +19,26 @@ interface ProcessDirectoryResult {
 }
 
 export async function zipScene(data:any, type:string){
-  return new Promise(async (resolve) => {
-    let directory:string = path.join(temporaryDirectory, data.metadata.o + "-" + data.id)
-    console.log('zipping scene')
-    try {
-      const zip = await createZipFromFolder(directory);
-      let now = Math.floor(Date.now()/1000)
-      zip
-        .generateNodeStream({ streamFiles: true, compression: 'DEFLATE' })
-        .pipe(fs.createWriteStream(directory + '.zip'))
-        .on('error', (err:any) => console.error('Error writing file', err.stack))
-        .on('finish', async () => {
-          console.log('finished zipping')
-          addDownloadQueue(data.id, data.metadata.o, now)
-          resolve(data)
-        });
-    } catch (ex) {
-      console.error('Error creating zip', ex);
-      fail()
-    }
-  });
+  // return new Promise(async (resolve) => {
+  //   let directory:string = path.join(temporaryDirectory, data.metadata.o + "-" + data.id)
+  //   console.log('zipping scene')
+  //   try {
+  //     const zip = await createZipFromFolder(directory);
+  //     let now = Math.floor(Date.now()/1000)
+  //     zip
+  //       .generateNodeStream({ streamFiles: true, compression: 'DEFLATE' })
+  //       .pipe(fs.createWriteStream(directory + '.zip'))
+  //       .on('error', (err:any) => console.error('Error writing file', err.stack))
+  //       .on('finish', async () => {
+  //         console.log('finished zipping')
+  //         addDownloadQueue(data.id, data.metadata.o, now)
+  //         resolve(data)
+  //       });
+  //   } catch (ex) {
+  //     console.error('Error creating zip', ex);
+  //     fail()
+  //   }
+  // });
 }
 
 const createZipFromFolder = async (dir:any) => {
@@ -125,10 +131,10 @@ export const processDirectory = async (
   }
 };
 
-export const zipDirectory = async (data:any, type:string): Promise<void> => {
+export const zipDirectory = async (data:any, sceneJSON:any): Promise<void> => {
   let directory:string = path.join(temporaryDirectory, data.metadata.o + "-" + data.id)
   console.log('zipping directory', directory)
-  const excludedDirectories:string[] = ["assets", "node_modules"]
+  const excludedDirectories:string[] = ["assets", "node_modules", "bin"]
 
   try {
     const zip = new JSZip();
@@ -172,5 +178,140 @@ export const zipDirectory = async (data:any, type:string): Promise<void> => {
   } catch (error) {
     console.error('Error creating ZIP file:', error);
     throw error;
+  }
+};
+
+export const createZipFromDirectory = async (
+  outputZipPath: string,
+  sceneJSON:any
+): Promise<void> => {
+  let excludeDirs: string[] = ["node_modules", "assets", "bin", ".git"]
+  let excludeFiles: string[] = [".gitignore", "README.md", ".gitattributes"]
+  try {
+      // Ensure the source directory exists
+      await fss.access(bucketDirectory);
+
+      // Create a write stream for the zip file
+      const output = await fss.open(outputZipPath, "w");
+      const archive = archiver("zip", {
+          zlib: { level: 9 }, // Best compression
+      });
+
+      const stream = output.createWriteStream();
+      archive.pipe(stream);
+
+      // Function to recursively add files to the archive
+      const addFilesToArchive = async (dir: string, sceneJSON:any) => {
+          const items = await fss.readdir(dir, { withFileTypes: true });
+
+          for (const item of items) {
+              const fullPath = path.join(dir, item.name);
+              const relativePath = path.relative(bucketDirectory, fullPath);
+
+              if (item.isDirectory()) {
+                  // Skip directories in the exclude list
+                  if (excludeDirs.includes(relativePath)) {
+                      console.log(`Skipping excluded directory: ${relativePath}`);
+                      continue;
+                  }
+                  await addFilesToArchive(fullPath, sceneJSON);
+              } else if (item.name === "scene.json") {
+                  // Modify `scene.json` if applicable
+                  const jsonContent = await fss.readFile(fullPath, "utf-8");
+                  const json = JSON.parse(jsonContent);
+                  console.log('json content is', json)
+
+                  json.display.title = sceneJSON.metadata.n
+                  json.display.description = sceneJSON.metadata.d
+                  json.display.owner = sceneJSON.metadata.o
+                  json.display.navmapThumbnail = "images/scene-thumbnail.png" 
+                  json.scene.parcels = sceneJSON.pcls
+                  json.scene.base = sceneJSON.bpcl
+                  json.spawnPoints = []
+                  console.log('spawn points', sceneJSON.sp)
+                  sceneJSON.sp.forEach((spawn:any, i:number)=>{
+                    let [x,y,z] = spawn.split(",")
+                    let [cx,cy,cz] = sceneJSON.cp[i].split(",")
+                    console.log('spawn is', spawn, x,y,z)
+                    json.spawnPoints.push({
+                      name:"spawn-"+i,
+                      default:true,
+                      position:{
+                        x:parseFloat(x),
+                        y:parseFloat(y),
+                        z:parseFloat(z)
+                      },
+                      cameraTarget:
+                      {
+                        x:parseFloat(cx),
+                        y:parseFloat(cy),
+                        z:parseFloat(cz)
+                      },
+                    })
+                  })
+
+                  json.iwb.name = sceneJSON.w
+                  json.iwb.gcScene = true
+                  json.iwb.scene = sceneJSON.id
+
+                  // Add the modified JSON to the zip
+                  archive.append(JSON.stringify(json, null, 2), { name: relativePath });
+              } 
+              else if(item.name === "scene-thumbnail.png"){
+                console.log(`❌ Skipping image thumbnail until later`);
+              }
+              else {
+                    // Skip excluded files
+                  if (excludeFiles.includes(item.name)) {
+                    console.log(`❌ Skipping excluded file: ${item.name}`);
+                    continue;
+                  }
+
+                  archive.file(fullPath, { name: relativePath });
+              }
+          }
+      };
+
+      // Start adding files
+      await addFilesToArchive(bucketDirectory, sceneJSON);
+
+      if(sceneJSON.metadata.im !== ""){
+        let {file, extension} = await downloadSceneImage(sceneJSON)
+        if(file !== undefined){
+          archive.append(file, { name: 'images/scene-thumbnail' + extension });        
+        }
+      }else{
+        archive.file(path.join(bucketDirectory, "images", "scene-thumbnail.png"), { name: 'images/scene-thumbnail.png' });    
+      }
+
+      //add assets
+      await copyAssetsToZip(archive, sceneJSON)
+      await copyUITextures("", undefined, archive)
+
+      //add required textures
+      for(let i = 0; i < Object.values(REQUIRED_ASSETS).length; i++){
+        let file = Object.values(REQUIRED_ASSETS)[i]
+        try{
+          archive.file(path.join(assetDirectory, file), { name: "assets/" + file });
+        }
+        catch(e){
+            console.log('file copy error', e)
+        }
+      }
+
+      // Finalize the archive
+      await archive.finalize();
+
+      return new Promise<void>((resolve, reject) => {
+          stream.on("close", () => {
+              console.log(`Zip file created at: ${outputZipPath}`);
+              resolve();
+          });
+
+          stream.on("error", reject);
+      });
+  } catch (error) {
+      console.error(`Error creating zip file for ${bucketDirectory}:`, error);
+      throw error;
   }
 };

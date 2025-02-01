@@ -281,7 +281,7 @@ const closeModal = () => {
               </ul>
             ) : null }</td>
             <td>{item.sty}</td>
-            <td>{item.o}</td>
+            <td>{item.on}</td>
             <td>{formatSize(item.si)} MB</td>
             <td>{formatDollarAmount(item.pc)}</td>
             <td>{item.ty === "3D" || item.ty === "Audio" ? <Button primary onClick={(e:any)=> downloadAsset(e, item)}>Download</Button> : null}</td>
