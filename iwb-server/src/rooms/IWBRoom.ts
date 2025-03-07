@@ -67,10 +67,10 @@ export class IWBRoom extends Room<IWBRoomState> {
         }, 1000 * this.leaderboardRefreshTime);
 
         // this.state.backupInterval = setInterval(async ()=>{
-        //     if(!this.state.gcWorld){
+        //     if(this.state.gcWorld){
         //         await saveRealm(this)
         //     }
-        // }, 1000 * 20)
+        // }, 1000 * 30)
     }
  
     onJoin(client: Client, options: any) {

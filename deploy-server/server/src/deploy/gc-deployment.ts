@@ -335,7 +335,7 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
       })
   }
   else{
-    target = undefined
+    target = 'interconnected.online'
       if(target){
           catalyst = await createCatalystClient({
               url: target,

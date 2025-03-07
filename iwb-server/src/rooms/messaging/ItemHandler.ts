@@ -603,7 +603,7 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
             await createNewItem(room, client, scene, videoScreenItem, videoScreenItem)
 
             createVideoComponent(scene, videoScreenItem.aid, {...videoScreenItem, type:1})
-            createMeshRendererComponent(scene, {aid:videoScreenItem.aid, shape:0})
+            createMeshRendererComponent(scene, {aid:videoScreenItem.aid, shape:0,  onPlay:true})
             createMeshColliderComponent(scene, {aid:videoScreenItem.aid, shape:0, layer:3})
             createTextComponent(scene, videoScreenItem.aid, {text:"" + videoScreenItem.n, onPlay:false})
             createMaterialComponent(scene, videoScreenItem.aid, {onPlay:false, textureType:"COLOR", type:0, "albedoColor": {

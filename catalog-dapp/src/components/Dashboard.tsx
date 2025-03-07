@@ -195,13 +195,13 @@ const closeModal = () => {
 
     const show3DModel = (item:any) => {
       setModelName(item.n)
-      openModal((resources.ENV === "Development" ? resources.DEV_SERVER : resources.PROD_SERVER) + "warehouse/asset/0x00/" + item.id + ".glb")
+      openModal((resources.ENV === "Development" ? resources.DEV_DEPLOY_SERVER : resources.PROD_DEPLOY_SERVER) + "warehouse/asset/0x00/" + item.id + ".glb")
     }
 
     const downloadAsset = async (e:any, item:any) => {
       e.preventDefault()
       const anchor = document.createElement("a");
-      anchor.href = (resources.ENV === "Development" ? resources.DEV_SERVER : resources.PROD_SERVER) + "warehouse/asset/" + item.n + getExtType(item.ty) + "/" + item.id  + getExtType(item.ty);
+      anchor.href = (resources.ENV === "Development" ? resources.DEV_DEPLOY_SERVER : resources.PROD_DEPLOY_SERVER) + "warehouse/asset/" + item.n + getExtType(item.ty) + "/" + item.id  + getExtType(item.ty);
       anchor.download = item.n + getExtType(item.ty);
       anchor.target = "_blank"; // Open in a new tab if needed
       anchor.click();
@@ -264,7 +264,7 @@ const closeModal = () => {
             :
 
             item.ty === "Audio" ? 
-            <AudioPlayer url={`https://dcl-iwb.co/toolset/qa/warehouse/asset/view/${item.id}.mp3`} />
+            <AudioPlayer url={`https://deployment.dcl-iwb.co/warehouse/asset/view/${item.id}.mp3`} />
 
             :
 

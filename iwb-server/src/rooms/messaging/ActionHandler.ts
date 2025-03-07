@@ -119,7 +119,7 @@ export function iwbSceneActionHandler(room:IWBRoom){
                                     break;
 
                                 default:
-                                    handleGlobalActionSync(scene, aid, player.address, action)
+                                    // handleGlobalActionSync(scene, aid, player.address, action)
                                     room.broadcast(SERVER_MESSAGE_TYPES.SCENE_ACTION, {type:'live-action', aid:info.aid, sceneId:sceneId, actionId:actionId, forceScene:info.forceScene})
                                     break;
                             }

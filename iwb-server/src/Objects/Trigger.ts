@@ -156,183 +156,191 @@ export function removeActionFromTriggers(scene:Scene, actionId:string){
 
 export function editTriggerComponent(data:any, scene:Scene){
     console.log('editing trigger component', data)
-    let triggers = scene[COMPONENT_TYPES.TRIGGER_COMPONENT].get(data.aid)
-    if(triggers){
-        let triggerData = data.data
-        let trigger:any
-        let triggerIndex:any
-        let decision:any
-
-        switch(data.action){
-            case 'add':
-                let schema = new TriggerComponentSchema()
-                schema.type = triggerData.type
-                schema.input = triggerData.input ? triggerData.input : 0
-                schema.pointer = triggerData.pointer ? triggerData.pointer : 0
-
-                // schema.caid = new ArraySchema<string>()
-                // schema.ctype = new ArraySchema<string>()
-                // schema.cvalue = new ArraySchema<string>()
-                // schema.ccounter = new ArraySchema<number>()
-
-                // schema.conditions = new ArraySchema<TriggerConditionComponent>()
-                // schema.actions = new ArraySchema<string>()
-        
-                schema['id'] = generateRandomId(6)
-                triggers.triggers.push(schema)
-                break;
-
-            case 'editoperation':
-                trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
-                // console.log('trigger to edit operation is', trigger)
-                if(trigger){
-                    let decision:TriggerDecisionComponent = trigger.decisions.find(($:any)=> $.id === triggerData.did)
-                    console.log('decision is', decision)
-                    if(decision){
-                        console.log('found decision to update operation')
-                        decision.operator = triggerData.conditionperator
-                    }
-                }
-                break;
-
-            case 'edit':
-                trigger = triggers.triggers.find(trigger => trigger.id === triggerData.id)
-                if(trigger){
-                    for(let key in triggerData){
-                        let update = triggerData[key]
-                        if(key !== "tick"){
-                            if(key === "conditions"){
-
-                            }else if(key === "actions"){
+    try{
+        let triggers = scene[COMPONENT_TYPES.TRIGGER_COMPONENT].get(data.aid)
+        if(triggers){
+            let triggerData = data.data
+            let trigger:any
+            let triggerIndex:any
+            let decision:any
     
-                            }else{
-                                trigger[key] = update
-                            }
+            switch(data.action){
+                case 'add':
+                    let schema = new TriggerComponentSchema()
+                    schema.type = triggerData.type
+                    schema.input = triggerData.input ? triggerData.input : 0
+                    schema.pointer = triggerData.pointer ? triggerData.pointer : 0
+    
+                    // schema.caid = new ArraySchema<string>()
+                    // schema.ctype = new ArraySchema<string>()
+                    // schema.cvalue = new ArraySchema<string>()
+                    // schema.ccounter = new ArraySchema<number>()
+    
+                    // schema.conditions = new ArraySchema<TriggerConditionComponent>()
+                    // schema.actions = new ArraySchema<string>()
+            
+                    schema['id'] = generateRandomId(6)
+                    triggers.triggers.push(schema)
+                    break;
+    
+                case 'editoperation':
+                    trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
+                    // console.log('trigger to edit operation is', trigger)
+                    if(trigger){
+                        let decision:TriggerDecisionComponent = trigger.decisions.find(($:any)=> $.id === triggerData.did)
+                        console.log('decision is', decision)
+                        if(decision){
+                            console.log('found decision to update operation')
+                            decision.operator = triggerData.conditionperator
                         }
                     }
-                    trigger.tick++
-                }
-                break;
-
-            case 'delete':
-                triggerIndex = triggers.triggers.findIndex($=> $.id === triggerData.id)
-                if(triggerIndex >= 0){
-                    triggers.triggers.splice(triggerIndex, 1)
-                }
-                break;
-            
-            case 'addaction':
-                console.log('trying to add an action')
-                trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
-                if(trigger){
-                    console.log('trigger found', trigger)
-                    let decision = trigger.decisions.find(($:any)=> $.id === triggerData.did)
-                    if(decision){
-                        console.log('decision found', decision)
-                        decision.actions.push(triggerData.id)
+                    break;
+    
+                case 'edit':
+                    trigger = triggers.triggers.find(trigger => trigger.id === triggerData.id)
+                    if(trigger){
+                        for(let key in triggerData){
+                            let update = triggerData[key]
+                            if(key !== "tick"){
+                                if(key === "conditions"){
+    
+                                }else if(key === "actions"){
+        
+                                }else{
+                                    trigger[key] = update
+                                }
+                            }
+                        }
                         trigger.tick++
                     }
-                }
-                break;
-
-            case 'deleteaction':
-                trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
-                if(trigger){
-                    let decision = trigger.decisions.find(($:any)=> $.id === triggerData.did)
-                    if(decision){
-                        let actionIndex = decision.actions.findIndex(($:any)=> $ === triggerData.actionId)
-                        if(actionIndex >= 0){
-                            decision.actions.splice(actionIndex, 1)
+                    break;
+    
+                case 'delete':
+                    triggerIndex = triggers.triggers.findIndex($=> $.id === triggerData.id)
+                    if(triggerIndex >= 0){
+                        triggers.triggers.splice(triggerIndex, 1)
+                    }
+                    break;
+                
+                case 'addaction':
+                    console.log('trying to add an action')
+                    trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
+                    if(trigger){
+                        console.log('trigger found', trigger)
+                        let decision = trigger.decisions.find(($:any)=> $.id === triggerData.did)
+                        if(decision){
+                            console.log('decision found', decision)
+                            decision.actions.push(triggerData.id)
                             trigger.tick++
                         }
                     }
-                }
-                break;
-
-            case 'decisionname':
-                trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
-                decision = trigger.decisions.find((d:any)=> d.id === triggerData.did)
-                if(decision){
-                    decision.name = triggerData.name
-                }
-                break;
-
-            case 'adddecision':
-                trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
-                if(trigger){
-                    let newDecision = new TriggerDecisionComponent()
-                    newDecision.id = triggerData.did
-                    newDecision.name = triggerData.did
-                    newDecision.operator = TriggerConditionOperation.AND
-                    trigger.decisions.push(newDecision)
-                }
-                break;
-
-            case 'deletedecision':
-                triggerIndex = triggers.triggers.findIndex($=> $.id === triggerData.tid)
-                if(triggerIndex >= 0){
-                    console.log('found trigger by index', triggerIndex)
-                    let decisionIndex = triggers.triggers[triggerIndex].decisions.findIndex(($:any)=> $.id === triggerData.did)
-                    console.log('decision index to delete is', decisionIndex)
-                    if(decisionIndex >= 0){
-                        console.log("found decision to delete")
-                        triggers.triggers[triggerIndex].decisions.splice(decisionIndex, 1)
-                        //need to delete actions as well
-                    }
-                }
-                // if(deleteCondition){
-                //     deleteCondition.caid.splice(triggerData.index, 1)
-                //     deleteCondition.ctype.splice(triggerData.index, 1)
-                //     deleteCondition.cvalue.splice(triggerData.index, 1)
-                //     deleteCondition.ccounter.splice(triggerData.index, 1)
-                // }
-                break;
-
-            case 'addcondition':
-                trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
-                console.log('add trigger condition', trigger)
-                if(trigger){
-                    let triggerDecision = trigger.decisions.find(($:any)=> $.id === triggerData.did)
-                    if(triggerDecision){
-                        if(!triggerDecision.conditions){
-                            triggerDecision.conditions = new ArraySchema<TriggerConditionComponent>()
-                        }
-                        let newCondition = new TriggerConditionComponent()
-                        newCondition.aid = triggerData.aid
-
-                        let newConditionData = triggerData.condition
-                        newCondition.condition = newConditionData.condition
-
-                        switch(newConditionData.type){
-                            case COMPONENT_TYPES.COUNTER_COMPONENT:
-                                newCondition.counter = triggerData.counter
-                                break;
+                    break;
     
-                            case COMPONENT_TYPES.STATE_COMPONENT:
-                                newCondition.value = triggerData.value
-                                break;
+                case 'deleteaction':
+                    trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
+                    if(trigger){
+                        let decision = trigger.decisions.find(($:any)=> $.id === triggerData.did)
+                        if(decision){
+                            let actionIndex = decision.actions.findIndex(($:any)=> $ === triggerData.actionId)
+                            if(actionIndex >= 0){
+                                decision.actions.splice(actionIndex, 1)
+                                trigger.tick++
+                            }
                         }
-                        triggerDecision.conditions.push(newCondition)
-                        trigger.tick++
                     }
-                }
-                break;
-
-            case 'deletecondition':
-                trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
-                if(trigger){
-                    let decision = trigger.decisions.find(($:any)=> $.id === triggerData.did)
+                    break;
+    
+                case 'decisionname':
+                    trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
+                    decision = trigger.decisions.find((d:any)=> d.id === triggerData.did)
                     if(decision){
-                        decision.conditions.splice(triggerData.index, 1)
+                        decision.name = triggerData.name
                     }
-                }
-                // if(deleteCondition){
-                //     deleteCondition.caid.splice(triggerData.index, 1)
-                //     deleteCondition.ctype.splice(triggerData.index, 1)
-                //     deleteCondition.cvalue.splice(triggerData.index, 1)
-                //     deleteCondition.ccounter.splice(triggerData.index, 1)
-                // }
-                break;
+                    break;
+    
+                case 'adddecision':
+                    trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
+                    if(trigger){
+                        let newDecision = new TriggerDecisionComponent()
+                        newDecision.id = triggerData.did
+                        newDecision.name = triggerData.did
+                        newDecision.operator = TriggerConditionOperation.AND
+                        trigger.decisions.push(newDecision)
+                    }
+                    break;
+    
+                case 'deletedecision':
+                    triggerIndex = triggers.triggers.findIndex($=> $.id === triggerData.tid)
+                    if(triggerIndex >= 0){
+                        console.log('found trigger by index', triggerIndex)
+                        let decisionIndex = triggers.triggers[triggerIndex].decisions.findIndex(($:any)=> $.id === triggerData.did)
+                        console.log('decision index to delete is', decisionIndex)
+                        if(decisionIndex >= 0){
+                            console.log("found decision to delete")
+                            triggers.triggers[triggerIndex].decisions.splice(decisionIndex, 1)
+                            //need to delete actions as well
+                        }
+                    }
+                    // if(deleteCondition){
+                    //     deleteCondition.caid.splice(triggerData.index, 1)
+                    //     deleteCondition.ctype.splice(triggerData.index, 1)
+                    //     deleteCondition.cvalue.splice(triggerData.index, 1)
+                    //     deleteCondition.ccounter.splice(triggerData.index, 1)
+                    // }
+                    break;
+    
+                case 'addcondition':
+                    trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
+                    console.log('add trigger condition', trigger)
+                    if(trigger){
+                        let triggerDecision = trigger.decisions.find(($:any)=> $.id === triggerData.did)
+                        if(triggerDecision){
+                            if(!triggerDecision.conditions){
+                                triggerDecision.conditions = new ArraySchema<TriggerConditionComponent>()
+                            }
+                            let newCondition = new TriggerConditionComponent()
+                            newCondition.aid = triggerData.aid
+    
+                            let newConditionData = triggerData.condition
+                            newCondition.condition = newConditionData.condition
+    
+                            switch(newConditionData.type){
+                                case COMPONENT_TYPES.COUNTER_COMPONENT:
+                                    newCondition.counter = triggerData.counter
+                                    if(triggerData.variable){
+                                        newCondition.value = triggerData.value
+                                    }
+                                    break;
+        
+                                case COMPONENT_TYPES.STATE_COMPONENT:
+                                    newCondition.value = triggerData.value
+                                    break;
+                            }
+                            triggerDecision.conditions.push(newCondition)
+                            trigger.tick++
+                        }
+                    }
+                    break;
+    
+                case 'deletecondition':
+                    trigger = triggers.triggers.find(trigger => trigger.id === triggerData.tid)
+                    if(trigger){
+                        let decision = trigger.decisions.find(($:any)=> $.id === triggerData.did)
+                        if(decision){
+                            decision.conditions.splice(triggerData.index, 1)
+                        }
+                    }
+                    // if(deleteCondition){
+                    //     deleteCondition.caid.splice(triggerData.index, 1)
+                    //     deleteCondition.ctype.splice(triggerData.index, 1)
+                    //     deleteCondition.cvalue.splice(triggerData.index, 1)
+                    //     deleteCondition.ccounter.splice(triggerData.index, 1)
+                    // }
+                    break;
+            }
         }
+    }
+    catch(e:any){
+        console.log('error with editing trigger', e)
     }
 }

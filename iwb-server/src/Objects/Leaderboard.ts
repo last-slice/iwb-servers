@@ -6,7 +6,7 @@ import { GameComponent } from "./Game";
 
 export class LeaderboardComponent extends Schema{
     @type("number") type:number = -1  //0 - 3d, 1 - ui 
-    @type("number") variableType:number = 0 //0 - game variable
+    @type("number") variableType:number = -1
     @type("number") order:number = 0 //0 - descending, 1 - ascending
     @type("number") topAmount:number = 10
     @type("number") fontSize:number = 3
