@@ -89,7 +89,7 @@ export enum SERVER_MESSAGE_TYPES {
     SCENE_POOL_GET = 'scene_pool_get',
     SCENE_POOL_PLACE = 'scene_pool_place',
     SCENE_PHYSICS_UPDATE = 'scene_physics_update',
-
+    SCENE_ADMIN_ACTION = 'scene_admin_action',
     
     //World
     INIT_WORLD = "init_world",

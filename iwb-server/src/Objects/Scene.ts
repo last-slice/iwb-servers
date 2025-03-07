@@ -30,7 +30,7 @@ import { GameComponent, checkGameCache, createGameComponent } from "./Game";
 import { UIImageComponent, createUIImageComponent } from "./UIImage";
 import { BillboardComponent, createBillboardComponent } from "./Billboard";
 import { LevelComponent, createLevelComponent } from "./Level";
-import { createLiveComponent, LiveShowComponent } from "./LiveShow";
+// import { createLiveComponent, LiveShowComponent } from "./LiveShow";
 // import { createTeamComponent, TeamComponent } from "./Team";
 import { createGameItemComponent, GameItemComponent } from "./GameItem";
 import { createDialogComponent, DialogComponent } from "./Dialog";
@@ -48,6 +48,7 @@ import { createVirtualCameraComponent, VirtualCameraComponent } from "./VirtualC
 import { getCache } from "../utils/cache";
 import { SCENE_POOL_CACHE_KEY } from "./IWBManager";
 import { createRaycastComponent, RaycastComponent } from "./Raycast";
+import { createAdminComponent, SceneAdminComponent } from "./SceneAdmin";
 
 export class TempScene extends Schema {
     @type("string") id: string
@@ -68,6 +69,7 @@ export class SceneMetaDataComponent extends Schema{
     @type(['number']) offsets = new ArraySchema<number>();
     @type("boolean") dv: boolean = false
     @type("boolean") dpx: boolean = false
+    @type({map: SceneAdminComponent}) admin:MapSchema<SceneAdminComponent> = new MapSchema();
 }
 
 export class Scene extends Schema {
@@ -116,7 +118,7 @@ export class Scene extends Schema {
     @type({map:IWBComponent}) [COMPONENT_TYPES.IWB_COMPONENT]:MapSchema<IWBComponent> = new MapSchema<IWBComponent>()
     @type({map:LeaderboardComponent}) [COMPONENT_TYPES.LEADERBOARD_COMPONENT]:MapSchema<LeaderboardComponent> = new MapSchema<LeaderboardComponent>()
     @type({map:LevelComponent}) [COMPONENT_TYPES.LEVEL_COMPONENT]:MapSchema<LevelComponent> = new MapSchema<LevelComponent>()
-    @type({map:LiveShowComponent}) [COMPONENT_TYPES.LIVE_COMPONENT]:MapSchema<LiveShowComponent> = new MapSchema<LiveShowComponent>()
+    // @type({map:LiveShowComponent}) [COMPONENT_TYPES.LIVE_COMPONENT]:MapSchema<LiveShowComponent> = new MapSchema<LiveShowComponent>()
     @type({map:MaterialComponent}) [COMPONENT_TYPES.MATERIAL_COMPONENT]:MapSchema<MaterialComponent> = new MapSchema<MaterialComponent>()
     @type({map:MeshColliderComponent}) [COMPONENT_TYPES.MESH_COLLIDER_COMPONENT]:MapSchema<MeshColliderComponent> = new MapSchema<MeshColliderComponent>()
     @type({map:MeshRendererComponent}) [COMPONENT_TYPES.MESH_RENDER_COMPONENT]:MapSchema<MeshRendererComponent> = new MapSchema<MeshRendererComponent>()
@@ -197,6 +199,8 @@ export class Scene extends Schema {
             this.cp = data.hasOwnProperty("cp") ? data.cp : ["0,0,0"]
             data.hasOwnProperty("direction") ? this.metadata.direction = data.direction : this.metadata.direction = 0
             this.metadata.offsets = data.hasOwnProperty("offsets") ? data.offsets : [0,0]
+
+            createAdminComponent(this, {admins:[this.metadata.o], n:[this.metadata.ona]})
 
             this.setComponents(data, room)
         }
@@ -292,7 +296,7 @@ export class Scene extends Schema {
                     //     break;
                     case COMPONENT_TYPES.LIVE_COMPONENT:
                         for (const aid in data[component]) {
-                            createLiveComponent(this, aid,  data[component][aid])
+                            createAdminComponent(this, data[component][aid])
                         }
                         break;
                     case COMPONENT_TYPES.LEVEL_COMPONENT:

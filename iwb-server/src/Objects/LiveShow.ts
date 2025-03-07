@@ -1,66 +1,66 @@
-import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
-import { Quaternion, Vector3 } from "./Transform";
-import { Scene } from "./Scene";
-import { COMPONENT_TYPES } from "../utils/types";
+// import {ArraySchema, Schema, type, filter, MapSchema} from "@colyseus/schema";
+// import { Quaternion, Vector3 } from "./Transform";
+// import { Scene } from "./Scene";
+// import { COMPONENT_TYPES } from "../utils/types";
 
-export class LiveShowComponent extends Schema{
-    @type(["string"]) admins:ArraySchema<string> = new ArraySchema()
-    @type(["string"]) n:ArraySchema<string> = new ArraySchema()
-    @type([Vector3]) p:ArraySchema<Vector3> = new ArraySchema()
-    @type([Vector3]) l:ArraySchema<Vector3> = new ArraySchema()
-}
+// export class LiveShowComponent extends Schema{
+//     @type(["string"]) admins:ArraySchema<string> = new ArraySchema()
+//     @type(["string"]) n:ArraySchema<string> = new ArraySchema()
+//     @type([Vector3]) p:ArraySchema<Vector3> = new ArraySchema()
+//     @type([Vector3]) l:ArraySchema<Vector3> = new ArraySchema()
+// }
 
-export function createLiveComponent(scene:Scene, aid:string, data:any){
-    console.log('create live component function', data)
-    let component:any = new LiveShowComponent()
-    for(let key in data){
-        if(key === "admins"){
-            data.admins.forEach((admin:string)=>{
-                component.admins.push(admin)
-            })
-        }else if(key === "p" || key === "l"){
-            data[key].forEach((vector:any)=>{
-                component[key].push(new Vector3(vector))
-            }) 
-        }else if(key === "n"){
-            data[key].forEach((name:any)=>{
-                component[key].push(name)
-            }) 
-        }
-        else{
-            component[key] = data[key]
-        }
+// export function createLiveComponent(scene:Scene, aid:string, data:any){
+//     console.log('create live component function', data)
+//     let component:any = new LiveShowComponent()
+//     for(let key in data){
+//         if(key === "admins"){
+//             data.admins.forEach((admin:string)=>{
+//                 component.admins.push(admin)
+//             })
+//         }else if(key === "p" || key === "l"){
+//             data[key].forEach((vector:any)=>{
+//                 component[key].push(new Vector3(vector))
+//             }) 
+//         }else if(key === "n"){
+//             data[key].forEach((name:any)=>{
+//                 component[key].push(name)
+//             }) 
+//         }
+//         else{
+//             component[key] = data[key]
+//         }
         
-    }
-    scene[COMPONENT_TYPES.LIVE_COMPONENT].set(aid, component)
-}
+//     }
+//     scene[COMPONENT_TYPES.LIVE_COMPONENT].set(aid, component)
+// }
 
-export function editLiveComponent(info:any, scene:Scene){
-    let itemInfo:LiveShowComponent = scene[COMPONENT_TYPES.LIVE_COMPONENT].get(info.aid)
-    if(itemInfo){
-        switch(info.action){
-            case 'addadmin':
-                itemInfo.admins.push(info.data.toLowerCase())
-                break;
+// export function editLiveComponent(info:any, scene:Scene){
+//     let itemInfo:LiveShowComponent = scene[COMPONENT_TYPES.LIVE_COMPONENT].get(info.aid)
+//     if(itemInfo){
+//         switch(info.action){
+//             case 'addadmin':
+//                 itemInfo.admins.push(info.data.toLowerCase())
+//                 break;
 
-            case 'deleteadmin':
-                let adminIndex = itemInfo.admins.findIndex($=> $ === info.data.toLowerCase())
-                if(adminIndex >=0){
-                    itemInfo.admins.splice(adminIndex, 1)
-                }
-                break;
+//             case 'deleteadmin':
+//                 let adminIndex = itemInfo.admins.findIndex($=> $ === info.data.toLowerCase())
+//                 if(adminIndex >=0){
+//                     itemInfo.admins.splice(adminIndex, 1)
+//                 }
+//                 break;
 
-            case 'addBounce':
-                itemInfo.n.push(info.data.n)
-                itemInfo.p.push(new Vector3(info.data.p))
-                itemInfo.l.push(new Vector3(info.data.l))
-                break;
+//             case 'addBounce':
+//                 itemInfo.n.push(info.data.n)
+//                 itemInfo.p.push(new Vector3(info.data.p))
+//                 itemInfo.l.push(new Vector3(info.data.l))
+//                 break;
 
-            case 'deletebounce':
-                itemInfo.n.splice(info.data, 1)
-                itemInfo.p.splice(info.data, 1)
-                itemInfo.l.splice(info.data, 1)
-                break;
-        }
-    }
-}
+//             case 'deletebounce':
+//                 itemInfo.n.splice(info.data, 1)
+//                 itemInfo.p.splice(info.data, 1)
+//                 itemInfo.l.splice(info.data, 1)
+//                 break;
+//         }
+//     }
+// }

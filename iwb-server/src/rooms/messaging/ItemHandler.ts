@@ -31,7 +31,7 @@ import { createUIImageComponent, editUIImageComponent } from "../../Objects/UIIm
 import { createBillboardComponent } from "../../Objects/Billboard";
 import { createGameComponent, deleteGameComponent, editGameComponent, sceneHasGame } from "../../Objects/Game";
 import { editLevelComponent } from "../../Objects/Level";
-import { createLiveComponent, editLiveComponent } from "../../Objects/LiveShow";
+// import { createLiveComponent, editLiveComponent } from "../../Objects/LiveShow";
 import { createGameItemComponent, editGameItemComponent } from "../../Objects/GameItem";
 import { createDialogComponent, editDialogComponent } from "../../Objects/Dialog";
 import { createRewardComponent, editRewardComponent } from "../../Objects/Rewards";
@@ -45,11 +45,13 @@ import { createPhysicsComponent, editPhysicsComponent } from "../../Objects/Phys
 import { createQuestComponent, editQuestComponent } from "../../Objects/Quest";
 import { createWeaponComponent, editWeaponComponent } from "../../Objects/Weapon";
 import { createVirtualCameraComponent, editVirtualCameraComponent } from "../../Objects/VirtualCamera";
+import { editSceneAdminComponent } from "../../Objects/SceneAdmin";
 
 
 export let updateComponentFunctions:any = {
     ['Delete']: (scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{deleteComponent(room, scene, player, info)},
     ['Add']: (scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{addNewComponent(scene, info, client, room)},
+    [SERVER_MESSAGE_TYPES.SCENE_ADMIN_ACTION]: (scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editSceneAdminComponent(info, scene)},
     [COMPONENT_TYPES.TRANSFORM_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editTransform(client,info, scene)}, 
     [COMPONENT_TYPES.VISBILITY_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editVisibility(client, info, scene)}, 
     [COMPONENT_TYPES.TEXT_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editTextShape(client, info, scene)}, 
@@ -73,7 +75,7 @@ export let updateComponentFunctions:any = {
     [COMPONENT_TYPES.COUNTER_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editCounterComponent(info, scene)}, 
     [COMPONENT_TYPES.GAME_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editGameComponent(room, client, info, scene, player)}, 
     [COMPONENT_TYPES.LEVEL_COMPONENT]:(scene:any, info:any, client:any, player:Player,room:IWBRoom)=>{editLevelComponent(info, scene)}, 
-    [COMPONENT_TYPES.LIVE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editLiveComponent(info, scene)}, 
+    // [COMPONENT_TYPES.LIVE_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editLiveComponent(info, scene)}, 
     [COMPONENT_TYPES.MATERIAL_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editMaterialComponent(info, scene)}, 
     [COMPONENT_TYPES.DIALOG_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editDialogComponent(info, scene)}, 
     [COMPONENT_TYPES.REWARD_COMPONENT]:(scene:any, info:any, client:any, player:Player, room:IWBRoom)=>{editRewardComponent(info, scene)}, 
@@ -112,7 +114,7 @@ let createComponentFunctions:any = {
     [COMPONENT_TYPES.COUNTER_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createCounterComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.MATERIAL_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createMaterialComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.BILLBOARD_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createBillboardComponent(scene, aid, info)}, 
-    [COMPONENT_TYPES.LIVE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createLiveComponent(scene, aid, info)}, 
+    // [COMPONENT_TYPES.LIVE_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createLiveComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.DIALOG_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createDialogComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.REWARD_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createRewardComponent(scene, aid, info)}, 
     [COMPONENT_TYPES.PLAYLIST_COMPONENT]:(room:IWBRoom, scene:Scene, client:Client, player:Player, aid:string, info:any)=>{createPlaylistComponent(scene, aid, info)}, 
@@ -157,6 +159,15 @@ export function iwbItemHandler(room:IWBRoom){
     room.onMessage(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, async(client, info)=>{
         // console.log(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS + " message", info)
         // room.broadcast(SERVER_MESSAGE_TYPES.UPDATE_GRAB_Y_AXIS, {user:client.userData.userId, y:info.y, aid:info.aid})
+    })
+
+    room.onMessage(SERVER_MESSAGE_TYPES.SCENE_ADMIN_ACTION, async(client, info)=>{
+        console.log(SERVER_MESSAGE_TYPES.SCENE_ADMIN_ACTION + " received", info)
+        let scene = room.state.scenes.get(info.sceneId)
+        let sceneAdmin = scene.metadata.admin.get(scene.id)
+        if(sceneAdmin.admins.includes(client.userData.userId)){
+            editSceneAdminComponent(info, scene)
+        }
     })
 
     room.onMessage(SERVER_MESSAGE_TYPES.EDIT_SCENE_ASSET, (client:Client, info:any)=>{
@@ -490,11 +501,11 @@ function addNewComponent(scene:Scene, item:any, client:Client, room:IWBRoom){
                 createGameItemComponent(scene, item.aid)
             }
             break;
-        case COMPONENT_TYPES.LIVE_COMPONENT:
-            // if(scene[COMPONENT_TYPES.LIVE_COMPONENT].has(item.aid)){
-                createLiveComponent(scene, item.aid, {admins:[client.userData.userId.toLowerCase()]})
-            // }
-            break;
+        // case COMPONENT_TYPES.LIVE_COMPONENT:
+        //     // if(scene[COMPONENT_TYPES.LIVE_COMPONENT].has(item.aid)){
+        //         createLiveComponent(scene, item.aid, {admins:[client.userData.userId.toLowerCase()]})
+        //     // }
+        //     break;
 
         case COMPONENT_TYPES.BILLBOARD_COMPONENT:
             if(!scene[COMPONENT_TYPES.BILLBOARD_COMPONENT].has(item.aid)){
@@ -655,11 +666,11 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
     if(catalogItemInfo.sty === "Smart Items"){
         console.log('popuplating smart item', catalogItemInfo.components)
         if(catalogItemInfo.components){
-            if(catalogItemInfo.components.Live){
-                console.log('creating live component', catalogItemInfo.components.Live)
-                await createLiveComponent(scene, item.aid, {admins:[room.state.owner.toLowerCase()]})
-                delete catalogItemInfo.components.Live
-            }
+            // if(catalogItemInfo.components.Live){
+            //     console.log('creating live component', catalogItemInfo.components.Live)
+            //     await createLiveComponent(scene, item.aid, {admins:[room.state.owner.toLowerCase()]})
+            //     delete catalogItemInfo.components.Live
+            // }
 
             if(catalogItemInfo.components.Actions){
                 await createActionComponent(scene, item.aid, catalogItemInfo.components.Actions)

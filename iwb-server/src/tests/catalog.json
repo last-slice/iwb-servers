@@ -98394,54 +98394,6 @@
         }
     },
     {
-        "id": "46af7e26-05c2-4fbd-87c8-a525f38db9c0",
-        "m": "",
-        "n": "IWB Live Show",
-        "im": "https://bafkreigsp7ldeom72jgdm5hwspy2z3njiwwmezpqmuaqo6kbb3h6jem23q.ipfs.nftstorage.link/",
-        "d": "Manage your live show!",
-        "cat": "Gallery/Venue",
-        "on": "IWB Builder",
-        "o": "IWB Team",
-        "isdl": true,
-        "ty": "SM",
-        "pc": 0,
-        "si": 0,
-        "tag": [],
-        "v": 20,
-        "bb": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-        },
-        "sty": "Smart Items",
-        "components": {
-            "Live": {},
-            "Material": {
-                "type": 0,
-                "onPlay": false,
-                "albedoColor": {
-                    "r": 1,
-                    "g": 0,
-                    "b": 0,
-                    "a": 0.5
-                },
-                "textureType": "COLOR"
-            },
-            "Mesh_Collider": {
-                "shape": 1,
-                "layer": 1
-            },
-            "Mesh_Renderer": {
-                "shape": 1,
-                "layer": 2
-            },
-            "Text": {
-                "text": "Live Show",
-                "onPlay": false
-            }
-        }
-    },
-    {
         "n": "Candy Start Terminal",
         "d": "",
         "sty": "Fantasy",
