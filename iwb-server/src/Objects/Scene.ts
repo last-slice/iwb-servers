@@ -200,7 +200,12 @@ export class Scene extends Schema {
             data.hasOwnProperty("direction") ? this.metadata.direction = data.direction : this.metadata.direction = 0
             this.metadata.offsets = data.hasOwnProperty("offsets") ? data.offsets : [0,0]
 
-            createAdminComponent(this, {admins:[this.metadata.o], n:[this.metadata.ona]})
+            if(data.metadata.hasOwnProperty("admin")){
+                createAdminComponent(this, data.metadata.admin[data.id])
+            }else{
+                createAdminComponent(this, {admins:[this.metadata.o], n:[this.metadata.ona]})
+            }
+            
 
             this.setComponents(data, room)
         }

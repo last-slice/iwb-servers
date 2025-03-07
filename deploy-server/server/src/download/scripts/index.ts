@@ -4,6 +4,8 @@ import { writeSceneMetadata } from "./metadata";
 import { copyAssets, copyUITextures } from "./assets";
 import { downloadImage } from './downloadImage';
 import { addSceneJSONFile } from './addSceneJSONFile';
+import * as fs from 'fs-extra';
+
 import { resetBucket } from 'src/deploy';
 const path = require('path');
 
@@ -32,7 +34,15 @@ export async function buildScene(data:any, type:string, bucketDirectory?:string,
             await copyUITextures(path.join(directory, "assets/"), data)
             await copyAssets(path.join(directory, "assets/"), data, type)
 
-            
+            // Create the src/iwb directory in the destination
+            let sceneJSON = data.scene
+            const srcIwbDir = path.join(directory, 'src', 'iwb');
+            await fs.ensureDir(srcIwbDir);
+
+            // Create and write the scene.ts file
+            const sceneTsContent = `export let iwbScene:any = ${JSON.stringify(sceneJSON, null, 2)}`;
+            const sceneTsPath = path.join(srcIwbDir, 'scene.ts');
+            await fs.writeFile(sceneTsPath, sceneTsContent, 'utf8');            
         }
         catch(e:any){
             console.log('error building directory', e.message)

@@ -275,6 +275,10 @@ export const createZipFromDirectory = async (
       // Start adding files
       await addFilesToArchive(bucketDirectory, sceneJSON);
 
+      // Add the scene.ts file under src/iwb/
+      const sceneTsContent = `export let iwbScene:any = ${JSON.stringify(sceneJSON, null, 2)}`;
+      archive.append(sceneTsContent, { name: 'src/iwb/scene.ts' });
+
       if(sceneJSON.metadata.im !== ""){
         let {file, extension} = await downloadSceneImage(sceneJSON)
         if(file !== undefined){

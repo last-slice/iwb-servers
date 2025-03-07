@@ -482,6 +482,10 @@ export function iwbSceneHandler(room:IWBRoom){
         let player:Player = room.state.players.get(client.userData.userId)
         // if(player){
             let scene:Scene = room.state.scenes.get(info.sceneId)
+
+            let jsonScene:any = scene.toJSON()
+            jsonScene =  await checkAssetCacheStates(room, scene, jsonScene)
+
         //     if(scene && scene.o === player.address){
         //       //   console.log('owner is requesting deployment')
 
@@ -499,7 +503,7 @@ export function iwbSceneHandler(room:IWBRoom){
                             "Auth": "" + process.env.IWB_DEPLOYMENT_AUTH
                         },
                         body: JSON.stringify({
-                            // scene:scene,
+                            scene:jsonScene,
                             metadata:{
                                 title: scene.metadata.n,
                                 description: scene.metadata.d,
