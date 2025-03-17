@@ -2,18 +2,25 @@
   {
     "id": "9c5ZM",
     "metadata": {
-      "n": "Default 2",
+      "n": "Spiral Pad",
       "d": "",
       "o": "0x7bbea9c18cd0541acab8c19da2b11d0c03faef1c",
       "ona": "BuilderWorld",
       "cat": "art",
-      "im": ""
+      "im": "",
+      "direction": 0,
+      "offsets": [
+        0,
+        0
+      ],
+      "dv": false,
+      "dpx": false
     },
-    "bpcl": "0,0",
+    "bpcl": "-2,0",
     "w": "BuilderWorld.dcl.eth",
     "bps": [],
     "pcls": [
-      "0,0"
+      "-2,0"
     ],
     "sp": [
       "0,0,0"
@@ -23,19 +30,12 @@
     ],
     "cd": 1735452298,
     "upd": 1735452298,
-    "si": 117720,
-    "pc": 478,
+    "si": 3583836,
+    "pc": 13274,
     "pcnt": 1,
-    "direction": 0,
-    "offsets": [
-      0,
-      0
-    ],
     "isdl": false,
     "e": true,
     "priv": false,
-    "dv": false,
-    "dpx": false,
     "Actions": {},
     "Animator": {},
     "Avatar_Shape": {},
@@ -47,15 +47,285 @@
     "Game": {},
     "GameItem": {},
     "Gltf": {
-      "7MMZTm": {
-        "src": "22b16aef-9055-47d3-a9aa-f04f1c8edf02",
+      "DLGJ9o": {
+        "src": "aefcbb59-05eb-49f9-8c10-9a178e03ad09",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "qvkmyt": {
+        "src": "6c0dd2e5-0b71-43cc-adaf-2d376ad1488a",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "AO1fAC": {
+        "src": "aefcbb59-05eb-49f9-8c10-9a178e03ad09",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "lmepCN": {
+        "src": "cb31fd84-181d-4e54-bff9-9cc54cdcfa21",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "4GEKiT": {
+        "src": "530ef7a6-e19c-4ce5-8491-617ce4377669",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "S29pUX": {
+        "src": "6c0dd2e5-0b71-43cc-adaf-2d376ad1488a",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "imh9Te": {
+        "src": "547282ab-4b27-4124-95fe-d3df225423a6",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "3l9TMq": {
+        "src": "aad2064d-c68e-40c1-9333-c3a535adb0e1",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "i3Jly3": {
+        "src": "aad2064d-c68e-40c1-9333-c3a535adb0e1",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "s3mwSv": {
+        "src": "e3db52c7-ee79-4b3d-98f9-195d6fb66e8f",
+        "visibleCollision": 2,
+        "invisibleCollision": 2
+      },
+      "GsgyYX": {
+        "src": "e3db52c7-ee79-4b3d-98f9-195d6fb66e8f",
+        "visibleCollision": 2,
+        "invisibleCollision": 2
+      },
+      "8CIyR4": {
+        "src": "e3db52c7-ee79-4b3d-98f9-195d6fb66e8f",
+        "visibleCollision": 2,
+        "invisibleCollision": 2
+      },
+      "Sd03hw": {
+        "src": "3488c3fe-eab7-4fbd-9f5b-804c11cd595d",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "zvMm9W": {
+        "src": "3488c3fe-eab7-4fbd-9f5b-804c11cd595d",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "jUwkYU": {
+        "src": "3488c3fe-eab7-4fbd-9f5b-804c11cd595d",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "mzGch7": {
+        "src": "3488c3fe-eab7-4fbd-9f5b-804c11cd595d",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "ZYyj2a": {
+        "src": "c3ac0239-95a2-4087-a33d-4553259f1bdd",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "m7Tgzs": {
+        "src": "530ef7a6-e19c-4ce5-8491-617ce4377669",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      },
+      "saZRkQ": {
+        "src": "aad2064d-c68e-40c1-9333-c3a535adb0e1",
         "visibleCollision": 1,
         "invisibleCollision": 2
       }
     },
     "IWB": {
-      "7MMZTm": {
-        "id": "22b16aef-9055-47d3-a9aa-f04f1c8edf02",
+      "DLGJ9o": {
+        "id": "aefcbb59-05eb-49f9-8c10-9a178e03ad09",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "qvkmyt": {
+        "id": "6c0dd2e5-0b71-43cc-adaf-2d376ad1488a",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "AO1fAC": {
+        "id": "aefcbb59-05eb-49f9-8c10-9a178e03ad09",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "lmepCN": {
+        "id": "cb31fd84-181d-4e54-bff9-9cc54cdcfa21",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "4GEKiT": {
+        "id": "530ef7a6-e19c-4ce5-8491-617ce4377669",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "S29pUX": {
+        "id": "6c0dd2e5-0b71-43cc-adaf-2d376ad1488a",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "imh9Te": {
+        "id": "547282ab-4b27-4124-95fe-d3df225423a6",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "3l9TMq": {
+        "id": "aad2064d-c68e-40c1-9333-c3a535adb0e1",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "i3Jly3": {
+        "id": "aad2064d-c68e-40c1-9333-c3a535adb0e1",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "s3mwSv": {
+        "id": "e3db52c7-ee79-4b3d-98f9-195d6fb66e8f",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "GsgyYX": {
+        "id": "e3db52c7-ee79-4b3d-98f9-195d6fb66e8f",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "8CIyR4": {
+        "id": "e3db52c7-ee79-4b3d-98f9-195d6fb66e8f",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "Sd03hw": {
+        "id": "3488c3fe-eab7-4fbd-9f5b-804c11cd595d",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "zvMm9W": {
+        "id": "3488c3fe-eab7-4fbd-9f5b-804c11cd595d",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "jUwkYU": {
+        "id": "3488c3fe-eab7-4fbd-9f5b-804c11cd595d",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "mzGch7": {
+        "id": "3488c3fe-eab7-4fbd-9f5b-804c11cd595d",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "ZYyj2a": {
+        "id": "c3ac0239-95a2-4087-a33d-4553259f1bdd",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "m7Tgzs": {
+        "id": "530ef7a6-e19c-4ce5-8491-617ce4377669",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "priv": false,
+        "editor": "",
+        "type": "3D"
+      },
+      "saZRkQ": {
+        "id": "aad2064d-c68e-40c1-9333-c3a535adb0e1",
         "ugc": false,
         "locked": false,
         "buildVis": true,
@@ -72,8 +342,62 @@
     "Mesh_Collider": {},
     "Mesh_Renderer": {},
     "Name": {
-      "7MMZTm": {
-        "value": "Wood Plank Floor 4x4M - 7MMZTm"
+      "DLGJ9o": {
+        "value": "Velvet ropes and VIP areas solo - DLGJ9o"
+      },
+      "qvkmyt": {
+        "value": "SpiralStairs - qvkmyt"
+      },
+      "AO1fAC": {
+        "value": "Velvet ropes and VIP areas solo - AO1fAC"
+      },
+      "lmepCN": {
+        "value": "Checker Floor - lmepCN"
+      },
+      "4GEKiT": {
+        "value": "LightCylinder 02 - 4GEKiT"
+      },
+      "S29pUX": {
+        "value": "SpiralStairs - S29pUX"
+      },
+      "imh9Te": {
+        "value": "FloorHexa 02 - imh9Te"
+      },
+      "3l9TMq": {
+        "value": "Tree 01 - 3l9TMq"
+      },
+      "i3Jly3": {
+        "value": "Tree 01 - i3Jly3"
+      },
+      "s3mwSv": {
+        "value": "Deck Railing - s3mwSv"
+      },
+      "GsgyYX": {
+        "value": "Deck Railing - GsgyYX"
+      },
+      "8CIyR4": {
+        "value": "Deck Railing - 8CIyR4"
+      },
+      "Sd03hw": {
+        "value": "BushPatch 01 - Sd03hw"
+      },
+      "zvMm9W": {
+        "value": "BushPatch 01 - zvMm9W"
+      },
+      "jUwkYU": {
+        "value": "BushPatch 01 - jUwkYU"
+      },
+      "mzGch7": {
+        "value": "BushPatch 01 - mzGch7"
+      },
+      "ZYyj2a": {
+        "value": "Dart Board - ZYyj2a"
+      },
+      "m7Tgzs": {
+        "value": "LightCylinder 02 - m7Tgzs"
+      },
+      "saZRkQ": {
+        "value": "Tree 01 - saZRkQ"
       }
     },
     "NFT_Shape": {},
@@ -81,16 +405,71 @@
     "Physics": {},
     "Playlist": {},
     "Pointers": {},
+    "Raycast": {},
     "Reward": {},
     "States": {},
     "Text": {},
     "Texture": {},
     "Transform": {
-      "7MMZTm": {
+      "DLGJ9o": {
         "p": {
-          "x": 16,
+          "x": 6.140000000000006,
+          "y": 6.940000000000001,
+          "z": 14.599999999999989
+        },
+        "r": {
+          "x": 0,
+          "y": 139.71,
+          "z": 180
+        },
+        "s": {
+          "x": 4,
+          "y": 6.930000000000003,
+          "z": 4
+        },
+        "delta": 0
+      },
+      "qvkmyt": {
+        "p": {
+          "x": 5.900000000000004,
           "y": 0,
-          "z": 16
+          "z": 6.400000000000013
+        },
+        "r": {
+          "x": 0,
+          "y": 705,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 1.7399999999999998,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "AO1fAC": {
+        "p": {
+          "x": 2.24,
+          "y": 6.94,
+          "z": 10.700000000000003
+        },
+        "r": {
+          "x": 0,
+          "y": 99.71000000000001,
+          "z": 180
+        },
+        "s": {
+          "x": 4,
+          "y": 6.93,
+          "z": 4
+        },
+        "delta": 0
+      },
+      "lmepCN": {
+        "p": {
+          "x": 8,
+          "y": 0,
+          "z": 8
         },
         "r": {
           "x": 0,
@@ -98,9 +477,279 @@
           "z": 0
         },
         "s": {
-          "x": 4,
+          "x": 1,
           "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      },
+      "4GEKiT": {
+        "p": {
+          "x": 5.880000000000002,
+          "y": 6.95,
+          "z": 10.689999999999998
+        },
+        "r": {
+          "x": 0,
+          "y": 313.88,
+          "z": 180
+        },
+        "s": {
+          "x": 5,
+          "y": 3.2,
           "z": 4
+        },
+        "delta": 0
+      },
+      "S29pUX": {
+        "p": {
+          "x": 9.880000000000003,
+          "y": 6.83,
+          "z": 11.63
+        },
+        "r": {
+          "x": 0,
+          "y": 90,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 2,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "imh9Te": {
+        "p": {
+          "x": 14.170000000000002,
+          "y": 14.809999999999995,
+          "z": 9.58999999999998
+        },
+        "r": {
+          "x": 0,
+          "y": 180,
+          "z": 0
+        },
+        "s": {
+          "x": 4.300000000000001,
+          "y": 3,
+          "z": 4.500000000000012
+        },
+        "delta": 0
+      },
+      "3l9TMq": {
+        "p": {
+          "x": 11.000000000000004,
+          "y": 0,
+          "z": 9.500000000000002
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 0.8,
+          "y": 1,
+          "z": 0.8
+        },
+        "delta": 0
+      },
+      "i3Jly3": {
+        "p": {
+          "x": 5.600000000000001,
+          "y": 0,
+          "z": 5.0000000000000036
+        },
+        "r": {
+          "x": 0,
+          "y": 90,
+          "z": 0
+        },
+        "s": {
+          "x": 0.8,
+          "y": 0.77,
+          "z": 0.8
+        },
+        "delta": 0
+      },
+      "s3mwSv": {
+        "p": {
+          "x": 12.28,
+          "y": 13.93,
+          "z": 13.040000000000001
+        },
+        "r": {
+          "x": 0,
+          "y": 62.519999999999996,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1.5000000000000004,
+          "z": 2.6000000000000014
+        },
+        "delta": 0
+      },
+      "GsgyYX": {
+        "p": {
+          "x": 12.300000000000002,
+          "y": 13.930000000000001,
+          "z": 6.470000000000008
+        },
+        "r": {
+          "x": 0,
+          "y": 117.52000000000001,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1.5000000000000002,
+          "z": 2.6000000000000005
+        },
+        "delta": 0
+      },
+      "8CIyR4": {
+        "p": {
+          "x": 14.22999999999999,
+          "y": 13.93,
+          "z": 10.08000000000001
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1.5,
+          "z": 4.600000000000005
+        },
+        "delta": 0
+      },
+      "Sd03hw": {
+        "p": {
+          "x": 1.4000000000000004,
+          "y": 0,
+          "z": 8
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 2.000000000000001,
+          "y": 3.900000000000001,
+          "z": 2.2999999999999994
+        },
+        "delta": 0
+      },
+      "zvMm9W": {
+        "p": {
+          "x": 14.600000000000001,
+          "y": 0,
+          "z": 8
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 3.9,
+          "z": 2.1999999999999993
+        },
+        "delta": 0
+      },
+      "jUwkYU": {
+        "p": {
+          "x": 8,
+          "y": 0,
+          "z": 14.600000000000001
+        },
+        "r": {
+          "x": 0,
+          "y": -90,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 3.9,
+          "z": 2.2999999999999994
+        },
+        "delta": 0
+      },
+      "mzGch7": {
+        "p": {
+          "x": 8,
+          "y": 0,
+          "z": 1.400000000000001
+        },
+        "r": {
+          "x": 0,
+          "y": 270,
+          "z": 0
+        },
+        "s": {
+          "x": 2,
+          "y": 3.9,
+          "z": 2.1999999999999997
+        },
+        "delta": 0
+      },
+      "ZYyj2a": {
+        "p": {
+          "x": 5.700000000000001,
+          "y": 6.9,
+          "z": 15.799999999999999
+        },
+        "r": {
+          "x": -450,
+          "y": 0,
+          "z": -360
+        },
+        "s": {
+          "x": 17,
+          "y": 17,
+          "z": 2
+        },
+        "delta": 0
+      },
+      "m7Tgzs": {
+        "p": {
+          "x": 12.679999999999996,
+          "y": 14.95,
+          "z": 9.59
+        },
+        "r": {
+          "x": 0,
+          "y": -90,
+          "z": 180
+        },
+        "s": {
+          "x": 5,
+          "y": 3.2,
+          "z": 4
+        },
+        "delta": 0
+      },
+      "saZRkQ": {
+        "p": {
+          "x": 11,
+          "y": 0,
+          "z": 9.5
+        },
+        "r": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "s": {
+          "x": 0.8,
+          "y": 1,
+          "z": 0.8
         },
         "delta": 0
       }
@@ -109,7 +758,61 @@
     "UI_Text": {},
     "UI_Image": {},
     "Visibility": {
-      "7MMZTm": {
+      "DLGJ9o": {
+        "visible": true
+      },
+      "qvkmyt": {
+        "visible": true
+      },
+      "AO1fAC": {
+        "visible": true
+      },
+      "lmepCN": {
+        "visible": true
+      },
+      "4GEKiT": {
+        "visible": true
+      },
+      "S29pUX": {
+        "visible": true
+      },
+      "imh9Te": {
+        "visible": true
+      },
+      "3l9TMq": {
+        "visible": true
+      },
+      "i3Jly3": {
+        "visible": true
+      },
+      "s3mwSv": {
+        "visible": true
+      },
+      "GsgyYX": {
+        "visible": true
+      },
+      "8CIyR4": {
+        "visible": true
+      },
+      "Sd03hw": {
+        "visible": true
+      },
+      "zvMm9W": {
+        "visible": true
+      },
+      "jUwkYU": {
+        "visible": true
+      },
+      "mzGch7": {
+        "visible": true
+      },
+      "ZYyj2a": {
+        "visible": true
+      },
+      "m7Tgzs": {
+        "visible": true
+      },
+      "saZRkQ": {
         "visible": true
       }
     },
@@ -121,7 +824,25 @@
       {
         "aid": "0",
         "children": [
-          "7MMZTm"
+          "DLGJ9o",
+          "qvkmyt",
+          "AO1fAC",
+          "lmepCN",
+          "4GEKiT",
+          "S29pUX",
+          "imh9Te",
+          "3l9TMq",
+          "i3Jly3",
+          "s3mwSv",
+          "GsgyYX",
+          "8CIyR4",
+          "Sd03hw",
+          "zvMm9W",
+          "jUwkYU",
+          "mzGch7",
+          "ZYyj2a",
+          "m7Tgzs",
+          "saZRkQ"
         ]
       },
       {
@@ -133,7 +854,79 @@
         "children": []
       },
       {
-        "aid": "7MMZTm",
+        "aid": "DLGJ9o",
+        "children": []
+      },
+      {
+        "aid": "qvkmyt",
+        "children": []
+      },
+      {
+        "aid": "AO1fAC",
+        "children": []
+      },
+      {
+        "aid": "lmepCN",
+        "children": []
+      },
+      {
+        "aid": "4GEKiT",
+        "children": []
+      },
+      {
+        "aid": "S29pUX",
+        "children": []
+      },
+      {
+        "aid": "imh9Te",
+        "children": []
+      },
+      {
+        "aid": "3l9TMq",
+        "children": []
+      },
+      {
+        "aid": "i3Jly3",
+        "children": []
+      },
+      {
+        "aid": "s3mwSv",
+        "children": []
+      },
+      {
+        "aid": "GsgyYX",
+        "children": []
+      },
+      {
+        "aid": "8CIyR4",
+        "children": []
+      },
+      {
+        "aid": "Sd03hw",
+        "children": []
+      },
+      {
+        "aid": "zvMm9W",
+        "children": []
+      },
+      {
+        "aid": "jUwkYU",
+        "children": []
+      },
+      {
+        "aid": "mzGch7",
+        "children": []
+      },
+      {
+        "aid": "ZYyj2a",
+        "children": []
+      },
+      {
+        "aid": "m7Tgzs",
+        "children": []
+      },
+      {
+        "aid": "saZRkQ",
         "children": []
       }
     ],
@@ -149,11 +942,11 @@
       "cat": "art",
       "im": ""
     },
-    "bpcl": "0,0",
+    "bpcl": "-9,-82",
     "w": "BuilderWorld.dcl.eth",
     "bps": [],
     "pcls": [
-      "0,0"
+      "-9,-82"
     ],
     "sp": [
       "0,0,0"
@@ -2440,7 +3233,7 @@
     "metadata": {
       "n": "Space Crib",
       "d": "",
-      "o": "0xaabe0ecfaf9e028d63cf7ea7e772cf52d662691a",
+      "o": "0x3edfae1ce7aeb54ed6e171c4b13e343ba81669b6",
       "ona": "BuilderWorld",
       "cat": "art",
       "im": "https://dclstreams.com/media/images/fa3b8ada-d161-422b-9913-3473d84d9fa5.png",
@@ -4312,7 +5105,30 @@
         "children": []
       }
     ],
-    "Multiplayer": {}
+    "Multiplayer": {
+      "TH0gwR": {
+        "attachedItem": {
+          "enabled": false
+        },
+        "actionsToSync": [
+          {
+            "actionId": "VEgnHF",
+            "userId": "0x3edfae1ce7aeb54ed6e171c4b13e343ba81669b6"
+          }
+        ]
+      },
+      "oNPcDu": {
+        "attachedItem": {
+          "enabled": false
+        },
+        "actionsToSync": [
+          {
+            "actionId": "AV4KlW",
+            "userId": "0x3edfae1ce7aeb54ed6e171c4b13e343ba81669b6"
+          }
+        ]
+      }
+    }
   },
   {
     "id": "65FXP",
@@ -4688,6 +5504,155 @@
       },
       {
         "aid": "d3VQbJ",
+        "children": []
+      }
+    ],
+    "Multiplayer": {}
+  },
+  {
+    "id": "CtBho",
+    "metadata": {
+      "n": "Test",
+      "d": "Test",
+      "o": "0x3edfae1ce7aeb54ed6e171c4b13e343ba81669b6",
+      "ona": "MastaWainzz",
+      "cat": "art",
+      "im": "",
+      "direction": 0,
+      "offsets": [
+        0,
+        0
+      ],
+      "dv": false,
+      "dpx": false
+    },
+    "bpcl": "0,3",
+    "w": "MastaWainzz.dcl.eth",
+    "bps": [],
+    "pcls": [
+      "0,3",
+      "0,4",
+      "0,5",
+      "1,5",
+      "2,5",
+      "2,4",
+      "1,4",
+      "1,3",
+      "2,3"
+    ],
+    "sp": [
+      "0,0,0"
+    ],
+    "cp": [
+      "0,0,0"
+    ],
+    "cd": 1738633667,
+    "upd": 1738633667,
+    "si": 104736,
+    "pc": 278,
+    "pcnt": 9,
+    "isdl": false,
+    "e": true,
+    "priv": false,
+    "Actions": {},
+    "Animator": {},
+    "Avatar_Shape": {},
+    "Audio": {},
+    "Billboard": {},
+    "Camera": {},
+    "Counters": {},
+    "Dialog": {},
+    "Game": {},
+    "GameItem": {},
+    "Gltf": {
+      "oIDNg2": {
+        "src": "b6b99242-7d00-4639-9bf5-faeba5e42f3a",
+        "visibleCollision": 1,
+        "invisibleCollision": 2
+      }
+    },
+    "IWB": {
+      "oIDNg2": {
+        "id": "b6b99242-7d00-4639-9bf5-faeba5e42f3a",
+        "ugc": false,
+        "locked": false,
+        "buildVis": true,
+        "editing": false,
+        "editor": "",
+        "priv": false,
+        "type": "3D"
+      }
+    },
+    "Leaderboard": {},
+    "Levels": {},
+    "Live": {},
+    "Material": {},
+    "Mesh_Collider": {},
+    "Mesh_Renderer": {},
+    "Name": {
+      "oIDNg2": {
+        "value": "Acoustic Guitar - oIDNg2"
+      }
+    },
+    "NFT_Shape": {},
+    "Path": {},
+    "Physics": {},
+    "Playlist": {},
+    "Pointers": {},
+    "Raycast": {},
+    "Reward": {},
+    "States": {},
+    "Text": {},
+    "Texture": {},
+    "Transform": {
+      "oIDNg2": {
+        "p": {
+          "x": 23.132900353029772,
+          "y": 0.1446184443892088,
+          "z": 14.49447016081541
+        },
+        "r": {
+          "x": 0,
+          "y": 28.51954191876809,
+          "z": 0
+        },
+        "s": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        "delta": 0
+      }
+    },
+    "Triggers": {},
+    "UI_Text": {},
+    "UI_Image": {},
+    "Visibility": {
+      "oIDNg2": {
+        "visible": true
+      }
+    },
+    "Video": {},
+    "Vehicle": {},
+    "Weapon": {},
+    "Quest": {},
+    "Parenting": [
+      {
+        "aid": "0",
+        "children": [
+          "oIDNg2"
+        ]
+      },
+      {
+        "aid": "1",
+        "children": []
+      },
+      {
+        "aid": "2",
+        "children": []
+      },
+      {
+        "aid": "oIDNg2",
         "children": []
       }
     ],

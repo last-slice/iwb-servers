@@ -377,6 +377,9 @@ export async function checkQuestCache(scene:Scene, aid:string, jsonScene:any){
 
 
 
+
+
+
 export function handleReward(room:IWBRoom, client:Client, scene:Scene, info:any){
     console.log('handling reward givewaway', info)
     let now = Math.floor(Date.now() / 1000)
@@ -490,3 +493,32 @@ export async function checkRewardCache(scene:Scene, aid:string, jsonScene:any){
 
 
 
+
+
+
+// export class QuestComponent extends Schema {
+//   @type("string") name:string = ""
+//   @type("string") description:string = ""
+//   @type("boolean") enabled:boolean = false
+// }
+
+// export async function createQuestComponent(room:IWBRoom, scene:Scene, aid:string, data?:any){
+//   console.log('creating quest component',data)
+//   let component:any = new QuestComponent()
+//   if(data){
+//       for(let key in data){
+//           if(key !== "steps" && key !== "prerequisites"){
+//               component[key] = data[key]
+//           }
+//       }
+//       if(data.hasOwnProperty("steps") || data.hasOwnProperty("prerequisites")){
+//           await loadQuestDefinition(component, data)
+//       }
+
+//       if(room.state.questManager.data[aid]){
+//           component.playerData = room.state.questManager.data[aid].playerData
+//           console.log('queset player data is', component.playerData)
+//       }
+//   }
+//   scene[COMPONENT_TYPES.QUEST_COMPONENT].set(aid, component)
+// }

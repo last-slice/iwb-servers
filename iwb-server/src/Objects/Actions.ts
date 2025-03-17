@@ -111,6 +111,52 @@ export function editActionComponent(data:any, scene:Scene){
     actions = scene[COMPONENT_TYPES.ACTION_COMPONENT].get(data.aid)
 
     switch(data.action){
+        case 'edit':
+            console.log('editing scene action')
+            let actionIndex = actions.actions.findIndex((act:any)=> act.id === data.data.id)
+            if(actionIndex < 0) return;
+            let currentAction:any = actions.actions[actionIndex]
+
+            let editAction:any = data.data
+            for(let key in editAction){
+                if(currentAction.hasOwnProperty(key)){
+                    if(key === "actions"){
+                        if(!currentAction.actions){
+                            currentAction.actions = new ArraySchema<string>()
+                        }
+
+                        editAction.actions.forEach((actionId:string)=>{
+                            currentAction.actions.push(actionId)
+                        })
+                    }
+                    
+                    else if(key === "button1"){
+                        currentAction.button1 = editAction.button1.enabled
+                        if(editAction.button1.enabled){
+                            currentAction.button1Label = editAction.button1.label
+                            if(editAction.button1.actionId){
+                                currentAction.button1Actions = new ArraySchema<string>()
+                                currentAction.button1Actions.push(editAction.button1.actionId)
+                            }
+                        }
+                    }
+                    else if(key === "button2"){
+                        currentAction.button2 = editAction.button2.enabled
+                        if(editAction.button2.enabled){
+                            currentAction.button2Label = editAction.button2.label
+                            if(editAction.button2.actionId){
+                                currentAction.button2Actions = new ArraySchema<string>()
+                                currentAction.button2Actions.push(editAction.button2.actionId)
+                            }
+                        }
+                    }
+                    else{
+                        currentAction[key] = editAction[key]
+                    }
+                }
+            }
+            break;
+
         case 'add':
             let newAction:any = new ActionComponentSchema()
             let action = data.data
