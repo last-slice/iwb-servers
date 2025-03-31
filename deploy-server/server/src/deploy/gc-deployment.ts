@@ -147,6 +147,7 @@ catch(e){
 }
 
 export async function handleGenesisCityDeployment(key:string, data:any){
+  console.log('handling gc deployment', data)
   let bucket = deployBuckets.get(key)
   data.user = data.user.toLowerCase()
 

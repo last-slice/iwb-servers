@@ -9,7 +9,7 @@ const path = require('path');
 export let dclDeploymentQueue:any[] = []
 
 export function checkDCLDeploymentQueue(){
-    console.log('checking deployment queue')
+    console.log('checking deployment queue for gc')
     if(dclDeploymentQueue.length > 0){
         outerLoop: for (const [key, bucket] of deployBuckets) {
             if(bucket.available && bucket.enabled){

@@ -166,6 +166,25 @@ export function iwbSceneHandler(room:IWBRoom){
             if(info.offsets){
                 scene.metadata.offsets = info.offsets
             }
+
+            // Step 2: Check if bpcl is still in pcls
+            // if (!scene.pcls.includes(scene.bpcl)) {
+                // Step 3: Find the SW-most parcel
+                let swMost = scene.pcls[0]; // Default to first parcel (assume pcls isn't empty)
+
+                for (const pcl of scene.pcls) {
+                const { x, y } = parseCoordinates(pcl);
+                const { x: swX, y: swY } = parseCoordinates(swMost);
+
+                // SW-most: smallest x, or same x with smallest y
+                if (x < swX || (x === swX && y < swY)) {
+                    swMost = pcl;
+                }
+                }
+
+                // Update bpcl to the SW-most parcel
+                scene.bpcl = swMost;
+            // }
         }
     })
 
@@ -513,12 +532,12 @@ export function iwbSceneHandler(room:IWBRoom){
                             assetIds:assetIds,
                             spawns:scene.sp,
                             dest:info.dest,
-                            worldName:scene.w,
+                            worldName: info.hasOwnProperty("worldName") ? info.worldName : scene.w,
                             user: client.userData.userId,// scene.o,
                             parcels: info.parcels,
                             tokenId: info.tokenId,
                             sceneId: info.sceneId,
-                            target: 'interconnected.online',
+                            target: info.hasOwnProperty('worldName')? 'worlds-content-server.decentraland.org' : 'interconnected.online',
                             locationId:info.locationId,
                             reservationId:info.reservationId
                         })
@@ -913,3 +932,9 @@ export function createScene(player:Player, room:IWBRoom, info:any, parcels:strin
     }
     return false
 }
+
+// Function to parse coordinates from a parcel string (e.g., "-2,1" -> { x: -2, y: 1 })
+function parseCoordinates(parcel: string): { x: number; y: number } {
+    const [x, y] = parcel.split(",").map(Number);
+    return { x, y };
+  }

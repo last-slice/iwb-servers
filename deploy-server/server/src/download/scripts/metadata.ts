@@ -103,21 +103,19 @@ export async function writeSceneMetadata(location:string, data:any, image:string
             })
             metadata = determineBaseParcel(metadata, data.parcels)
             pendingData.base = metadata.scene.base
-        }else{
+        }else if(data.dest === "worlds"){
+            console.log('we need to get world parcels', data.scene.pcls)
+            data.scene.pcls.forEach((parcel:any)=>{
+                metadata.scene.parcels.push(parcel)
+            })
+            metadata.scene.base = data.scene.bpcl
+        }
+        else{
             data.pcls.forEach((parcel:any)=>{
                 metadata.scene.parcels.push(parcel)
             })
             metadata.scene.base = data.bpcl
         }
-    }
-
-    if(data.dest === "worlds"){
-        metadata['worldConfiguration'] = {
-            name: data.worldName
-        }
-    }
-    else{
-        delete metadata.worldConfiguration
     }
 
     metadata['iwb'] = {
@@ -126,6 +124,18 @@ export async function writeSceneMetadata(location:string, data:any, image:string
         online:true,
         scene: type === "download" ? data : undefined
     }
+
+    if(data.dest === "worlds"){
+        metadata['worldConfiguration'] = {
+            name: data.worldName
+        }
+        // metadata['iwb'].gcScene = false
+    }
+    else{
+        delete metadata.worldConfiguration
+    }
+
+
     if(data.hasOwnProperty("angzaarReset")){
         metadata['iwb'].scenePool = true
         metadata['iwb'].parcles = locationJson.location.parcels

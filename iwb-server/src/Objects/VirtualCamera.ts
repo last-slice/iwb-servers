@@ -6,6 +6,7 @@ import { Scene } from "./Scene";
 export class VirtualCameraComponent extends Schema{
     @type("number") transitiontype:number = -1
     @type("number") transitionAmount:number = 0
+    @type("number") fov:number = 60
     @type("number") lookAt:string
 }
 
