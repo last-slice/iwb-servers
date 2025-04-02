@@ -169,7 +169,7 @@ export function editTriggerComponent(data:any, scene:Scene){
                     let schema = new TriggerComponentSchema()
                     schema.type = triggerData.type
                     schema.input = triggerData.input ? triggerData.input : 0
-                    schema.pointer = triggerData.pointer ? triggerData.pointer : 0
+                    schema.pointer = triggerData.pointer ? triggerData.pointer : 1
     
                     // schema.caid = new ArraySchema<string>()
                     // schema.ctype = new ArraySchema<string>()
