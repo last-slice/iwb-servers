@@ -715,7 +715,7 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
             let componentData = {...catalogItemInfo.components[componentType]}
             componentData.aid = item.aid
 
-            console.log('component data to copy is', componentData)
+            console.log('component data to copy is', componentType, componentData)
             createComponentFunctions[componentType](room, scene, client, player, item.aid, componentData)
         }
     }
@@ -881,11 +881,70 @@ async function copyItem(room:IWBRoom, scene:any, client:Client, player:Player, i
             }
         })
 
+        // Create a mapping of old action IDs to new action IDs
+        let actionIdMap = new Map();
+        
+        // Copy the action component first if it exists
+        if(scene[COMPONENT_TYPES.ACTION_COMPONENT] && 
+           scene[COMPONENT_TYPES.ACTION_COMPONENT].get(duplicateAid)) {
+            
+            let oldActions = scene[COMPONENT_TYPES.ACTION_COMPONENT].get(duplicateAid);
+            if(oldActions && oldActions.actions) {
+                // Deep copy actions
+                let newActions = JSON.parse(JSON.stringify(oldActions));
+                
+                // Generate new IDs for each action and create mapping
+                newActions.actions.forEach((action: any, index: number) => {
+                    let oldId = action.id;
+                    let newId = generateId(5); // Generate new ID
+                    action.id = newId;
+                    actionIdMap.set(oldId, newId);
+                });
+                
+                // Set the new actions on the catalogInfo
+                catalogInfo.components[COMPONENT_TYPES.ACTION_COMPONENT] = newActions;
+            }
+        }
+        
+        // Now handle trigger component if it exists, using the action ID mapping
+        if(scene[COMPONENT_TYPES.TRIGGER_COMPONENT] && 
+           scene[COMPONENT_TYPES.TRIGGER_COMPONENT].get(duplicateAid)) {
+            
+            let oldTriggers = scene[COMPONENT_TYPES.TRIGGER_COMPONENT].get(duplicateAid);
+            if(oldTriggers && oldTriggers.triggers) {
+                // Deep copy triggers
+                let newTriggers = JSON.parse(JSON.stringify(oldTriggers));
+                
+                // Update trigger actions references
+                newTriggers.triggers.forEach((trigger: any) => {
+                    if(trigger.decisions) {
+                        trigger.decisions.forEach((decision: any) => {
+                            // Generate new decision ID
+                            let oldDecisionId = decision.id;
+                            decision.id = generateId(5);
+                            decision.name = decision.id;
+                            
+                            // Update action references
+                            if(decision.actions && Array.isArray(decision.actions)) {
+                                decision.actions = decision.actions.map((actionId: string) => {
+                                    // If this is a local action (from the same entity being copied),
+                                    // replace with the new action ID
+                                    return actionIdMap.get(actionId) || actionId;
+                                });
+                            }
+                        });
+                    }
+                });
+                
+                // Set the new triggers on the catalogInfo
+                catalogInfo.components[COMPONENT_TYPES.TRIGGER_COMPONENT] = newTriggers;
+            }
+        }
 
-        scene
+        // scene
         await addItemComponents(room, client, scene, player, info.item, catalogInfo)
     
-        let parentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate)
+        let parentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.aid)
         if(parentIndex >= 0 && scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentIndex].children.length > 0){
             console.log('parent has children to copy', scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentIndex].children.length)
             let parent = {...scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentIndex]}

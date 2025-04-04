@@ -92,7 +92,7 @@ export async function createActionComponent(scene:Scene, aid:string, data:any){
                     newAction[key] = action[key]
                 }
             }
-            newAction['id'] = generateRandomId(6)
+            newAction['id'] = action.id ? action.id : generateRandomId(6)
             actions.push(newAction)
         })
     }
