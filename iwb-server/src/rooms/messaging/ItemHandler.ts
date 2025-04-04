@@ -565,7 +565,7 @@ export async function addItemComponents(room:IWBRoom, client:Client, scene:Scene
     //     return
     // }
 
-    let catalogItemInfo = {...data}
+    let catalogItemInfo = JSON.parse(JSON.stringify(data)) // Create deep copy
     switch(catalogItemInfo.ty){
         case '3D':
             if(catalogItemInfo.anim){
