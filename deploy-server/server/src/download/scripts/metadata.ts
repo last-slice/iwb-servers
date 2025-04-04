@@ -53,7 +53,7 @@ export async function writeSceneMetadata(location:string, data:any, image:string
     if(data.dest === "angzaar"){
         console.log('we need to get angzaar parcels')
         try{
-            let res = await fetch((status.DEBUG ? "http://localhost:5353" : "https://angzaar-plaza.dcl-iwb.co/ws") + "/api/plaza/locations/" + data.locationId)
+            let res = await fetch((status.DEBUG ? "http://localhost:5353" : "https://angzaar-plaza.dcl-iwb.co/ws") + "/api/locations/plaza/locations/" + data.locationId)
             locationJson = await res.json()
             console.log('angzaar plaza location is', locationJson)
 

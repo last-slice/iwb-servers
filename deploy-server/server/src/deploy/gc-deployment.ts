@@ -209,7 +209,7 @@ export async function handleGenesisCityDeployment(key:string, data:any){
             console.log('deploying to angzaar land')
             await runCommand( "DCL_PRIVATE_KEY=" + process.env.ANGZAAR_DEPLOY_KEY + " " + process.env.ANGZAAR_DEPLOY_CMD, bucketDirectory);
             resetDeployment(key)
-            pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, dest:data.dest, user:data.user, name:data.name, world:data.worldName, valid:true})
+            pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, dest:data.dest, user:data.user, name:data.metadata.title, world:data.worldName, valid:true})
             return
           }
 
