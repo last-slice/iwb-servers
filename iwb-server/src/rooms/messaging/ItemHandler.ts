@@ -944,7 +944,7 @@ async function copyItem(room:IWBRoom, scene:any, client:Client, player:Player, i
         // scene
         await addItemComponents(room, client, scene, player, info.item, catalogInfo)
     
-        let parentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.aid)
+        let parentIndex = scene[COMPONENT_TYPES.PARENTING_COMPONENT].findIndex(($:any)=> $.aid === info.item.duplicate)
         if(parentIndex >= 0 && scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentIndex].children.length > 0){
             console.log('parent has children to copy', scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentIndex].children.length)
             let parent = {...scene[COMPONENT_TYPES.PARENTING_COMPONENT][parentIndex]}
