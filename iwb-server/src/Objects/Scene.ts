@@ -200,7 +200,7 @@ export class Scene extends Schema {
             data.hasOwnProperty("direction") ? this.metadata.direction = data.direction : this.metadata.direction = 0
             this.metadata.offsets = data.hasOwnProperty("offsets") ? data.offsets : [0,0]
 
-            if(data.metadata.hasOwnProperty("admin")){
+            if(data.metadata && data.metadata.admin){
                 createAdminComponent(this, data.metadata.admin[data.id])
             }else{
                 createAdminComponent(this, {admins:[this.metadata.o], n:[this.metadata.ona]})
@@ -634,9 +634,9 @@ export async function saveRealm(room:IWBRoom){
     fileNames.push("" + room.state.world + "-scenes.json")
     data.push(scenes)
 
-    let playerQuestData:any = await getQuestsPlayerData(room)
-    fileNames.push("" + room.state.world + "-quests-data.json")
-    data.push(playerQuestData)
+    // let playerQuestData:any = await getQuestsPlayerData(room)
+    // fileNames.push("" + room.state.world + "-quests-data.json")
+    // data.push(playerQuestData)
 
 
     if(room.state.realmAssetsChanged){

@@ -442,6 +442,13 @@ export class IWBManager{
             }else{
                 if(room){
                     await saveRealm(room)
+                    let fileNames:any[] = []
+                    let data:any[] = []
+                
+                    fileNames.push(`${worldToDeploy.ens}-scenes.json`)
+                    data.push([])
+                    iwbManager.addWorldPendingSave(worldToDeploy.ens, room.roomId, fileNames, room.state.realmToken, room.state.realmTokenType, room.state.realmId, data)
+
                 }
                 await this.deploy(worldToDeploy.owner, worldToDeploy, url)    
             }
@@ -512,7 +519,7 @@ export class IWBManager{
         console.log('saving new world', world)
         world.updated = Math.floor(Date.now()/1000)
         world.builds = 0
-        world.bps = []
+        world.bps = ["0x3edfae1ce7aeb54ed6e171c4b13e343ba81669b6"]
         world.bans = []
         world.v = this.version
         world.cv = 0
@@ -891,7 +898,7 @@ export class IWBManager{
 
             let link = (DEBUG ? "http://localhost:3000/" : "https://dcl-iwb.co/") + "toolset/qa/" + body.user + "/" + body.data.dest + "/"
             if(body.data.dest === "gc"){
-                link += body.data.tokenId === "" ? ("parcel/" + body.bucket + "/" + body.data.name +"/x/y") : ("estate/" +  body.bucket + "/" + body.data.tokenId + "/") 
+                link += body.data.tokenId === "" ? ("parcel/" + body.bucket + "/" + body.data.name +"/x/y") : ("estate/" +  body.bucket + "/" + body.data.tokenId) 
             }else{
                 link += body.bucket + "/" + body.data.name +"/" + body.data.worldName
             }
@@ -899,7 +906,7 @@ export class IWBManager{
             link += "/" + body.auth
 
             console.log('link is', link)
-            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_READY, {link:link, entityId: body.entityId})
+            player.sendPlayerMessage(SERVER_MESSAGE_TYPES.SCENE_DEPLOY_READY, {ready:body.ready,link:link, entityId: body.entityId})
         }
     }
 

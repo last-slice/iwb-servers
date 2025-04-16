@@ -98,10 +98,15 @@ export async function writeSceneMetadata(location:string, data:any, image:string
         console.log('have a gc or download deployment')
 
         if(data.dest === "gc"){
+            console.log('we need to get gc parcels', data.parcels)
             data.parcels.forEach((parcel:any)=>{
-                metadata.scene.parcels.push("" + parcel.x + "," + parcel.y)
+                if(data.tokenId === ""){
+                    metadata.scene.parcels.push("" + parcel.x + "," + parcel.y)
+                }else{
+                    metadata.scene.parcels.push(parcel)
+                }
             })
-            metadata = determineBaseParcel(metadata, data.parcels)
+            metadata = determineBaseParcel(metadata, data.parcels, data.tokenId !== "")
             pendingData.base = metadata.scene.base
         }else if(data.dest === "worlds"){
             console.log('we need to get world parcels', data.scene.pcls)
@@ -189,7 +194,7 @@ export async function writeSceneMetadata(location:string, data:any, image:string
     await fs.promises.writeFile(location, JSON.stringify(metadata,null, 2));
 }
 
-function determineBaseParcel(metadata:any, parcels:any[]){
-    metadata.scene.base = "" + (parcels[0].x + "," + parcels[0].y)
+function determineBaseParcel(metadata:any, parcels:any[], gc:boolean = false){
+    metadata.scene.base = "" + (gc ? parcels[0] : parcels[0].x + "," + parcels[0].y)
     return metadata
 }

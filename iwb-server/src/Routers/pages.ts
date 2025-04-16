@@ -19,7 +19,7 @@ export function pagesRouter(router:any){
 
     //genesis city estate deployment
     router.get('/:user/:dest/:type/:bucket/:name/:id/:auth', (req:any, res:any) => {
-        console.log('load deploy page')
+        console.log('load estate deploy page')
         res.sendFile(path.join('/root', 'iwb-game-qa', 'dapps', 'deploy', 'index.html'));
     });
 

@@ -209,7 +209,7 @@ export async function handleGenesisCityDeployment(key:string, data:any){
             console.log('deploying to angzaar land')
             await runCommand( "DCL_PRIVATE_KEY=" + process.env.ANGZAAR_DEPLOY_KEY + " " + process.env.ANGZAAR_DEPLOY_CMD, bucketDirectory);
             resetDeployment(key)
-            pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, dest:data.dest, user:data.user, name:data.metadata.title, world:data.worldName, valid:true})
+            pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, ready:true, dest:data.dest, user:data.user, name:data.metadata.title, world:data.worldName, valid:true})
             return
           }
 
@@ -222,54 +222,12 @@ export async function handleGenesisCityDeployment(key:string, data:any){
           // }, 1000 * 60)
 
           // console.log('pending deployments', pendingDeployments)
-
-          try{
-            console.log('senging message', {
-              user:data.user, 
-              auth:pendingDeployments[data.user].auth, 
-              entityId:pendingDeployments[data.user].entityId, 
-              // data:pendingDeployments[data.user].data,
-              bucket: key
-            })
-            const result = await fetch((status.DEBUG ? process.env.IWB_DEV_PATH : process.env.IWB_PROD_PATH) + "scene/deployment/ready",
-            {headers: {                      
-                'Authorization': `${process.env.IWB_DEPLOYMENT_AUTH}`,
-                "content-type":"application/json"
-            },
-            method:"POST",
-            body: JSON.stringify({
-              user:data.user, 
-              auth:pendingDeployments[data.user].auth, 
-              entityId:pendingDeployments[data.user].entityId, 
-              data:{
-                worldName:pendingDeployments[data.user].worldName,
-                name:pendingDeployments[data.user].name,
-                dest:pendingDeployments[data.user].dest,
-                tokenId: pendingDeployments[data.user].tokenId,
-                sceneId: pendingDeployments[data.user].sceneId
-              },
-              bucket: key
-            })
-          });
-          let res = await result.json()
-            console.log('result is', res)
-
-            if(res.valid){
-              console.log('valid ping, now wait for user to accept link')
-              pendingDeployments[data.user].status = "signature"
-              bucket.status = "awaiting signature"
-            }else{
-              resetDeployment(key)
-            }
-        }
-        catch(e:any){
-            console.log('error posting to iwb server', e)
-            resetDeployment(key)
-        }
+          notifyUser(bucket, key, data, true)
       }
   }
   catch(e){
-      console.log('error building gc deployment', e)
+      console.log('error building gc deployment for user', data.user, e)
+      notifyUser(bucket, key, data, false)
       resetDeployment(key)
       return
   }
@@ -278,8 +236,13 @@ export async function handleGenesisCityDeployment(key:string, data:any){
 export function resetDeployment(key:string){
     console.log('begin resetting bucket', key)
     let bucket = deployBuckets.get(key)
-    delete pendingDeployments[bucket.owner]
-    resetBucket(key)
+    if(bucket){   
+      delete pendingDeployments[bucket.owner]
+      resetBucket(key)
+    }else{
+      console.log('bucket not found, resetting iwb bucket', key)
+      resetBucket('bucket1')
+    }
 }
 
 export async function pingCatalyst(req:any, res:any){//entityId:any, address:any, signature:any){
@@ -390,7 +353,7 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
         if (response.message) {
           console.log(response.message)
         }
-        pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, base:pendingDeployments[req.body.user].base, dest:pendingDeployments[req.body.user].dest, user:req.body.user, name:pendingDeployments[req.body.user].name, world:pendingDeployments[req.body.user].worldName, valid:true})
+        pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, ready:true, base:pendingDeployments[req.body.user].base, dest:pendingDeployments[req.body.user].dest, user:req.body.user, name:pendingDeployments[req.body.user].name, world:pendingDeployments[req.body.user].worldName, valid:true})
 
         if(req.body.dest === "worlds" || req.body.dest === "dclname"){
           delete pendingDeployments[req.body.user]
@@ -404,7 +367,7 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
         console.log('Could not upload content', error)
 
         res.status(200).json({valid: false, msg:"invalid api call"})
-        pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, user:req.body.user, valid:false})
+        pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, ready:false, user:req.body.user, valid:false})
         if(req.body.dest === "worlds" || req.body.dest === "dclname"){
           delete pendingDeployments[req.body.user]
           resetIWBBucket(req.body.key)
@@ -412,11 +375,12 @@ export async function pingCatalyst(req:any, res:any){//entityId:any, address:any
           resetDeployment(req.body.key)
         }
       }
-    }else{
+    }
+    else{
       console.log('cannot validate message from signature request')
 
       res.status(200).json({valid:false})
-      pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, user:req.body.user, valid:false})
+      pingIWBServer({type:SERVER_MESSAGE_TYPES.SCENE_DEPLOY_FINISHED, ready:false, user:req.body.user, valid:false})
       
       if(req.body.dest === "worlds" || req.body.dest === "dclname"){
         delete pendingDeployments[req.body.user]
@@ -439,19 +403,66 @@ async function pingIWBServer(data:any){
   console.log('ping iwb server for deployment finished res', json)
 }
 
+async function notifyUser(bucket:any, key:string, data:any, ready:boolean){
+  try{
+    // console.log('senging message', {
+    //   user:data.user, 
+    //   auth:pendingDeployments[data.user].auth, 
+    //   entityId:pendingDeployments[data.user].entityId, 
+    //   // data:pendingDeployments[data.user].data,
+    //   bucket: key
+    // })
+    const result = await fetch((status.DEBUG ? process.env.IWB_DEV_PATH : process.env.IWB_PROD_PATH) + "scene/deployment/ready",
+    {headers: {                      
+        'Authorization': `${process.env.IWB_DEPLOYMENT_AUTH}`,
+        "content-type":"application/json"
+    },
+    method:"POST",
+    body: JSON.stringify({
+      user:data.user, 
+      auth:pendingDeployments[data.user].auth, 
+      entityId:pendingDeployments[data.user].entityId, 
+      data:{
+        worldName:pendingDeployments[data.user].worldName,
+        name:pendingDeployments[data.user].name,
+        dest:pendingDeployments[data.user].dest,
+        tokenId: pendingDeployments[data.user].tokenId,
+        sceneId: pendingDeployments[data.user].sceneId
+      },
+      ready:ready,
+      bucket: key
+    })
+  });
+  let res = await result.json()
+    console.log('result is', res)
+
+    if(res.valid){
+      console.log('valid ping, now wait for user to accept link')
+      // pendingDeployments[data.user].status = "signature"
+      bucket.status = "awaiting signature"
+    }else{
+      resetDeployment(key)
+    }
+}
+catch(e:any){
+    console.log('error posting to iwb server', e)
+    resetDeployment(key)
+}
+}
+
 function validateSignature(req:any){
   if(req.body && 
     req.body.user && 
     req.body.signature && 
     req.body.entityId && 
     pendingDeployments[req.body.user.toLowerCase()] &&
-    pendingDeployments[req.body.user.toLowerCase()].entityId === req.body.entityId &&
-    (deployBuckets.has(req.body.key) || iwbBuckets.has(req.body.key)) //&&
+    pendingDeployments[req.body.user.toLowerCase()].entityId === req.body.entityId //&&
+    // (deployBuckets.has(req.body.key) || iwbBuckets.has(req.body.key)) //&&
     // (deployBuckets.get(req.body.key).owner || iwbBuckets.get(req.body.key).owner) === req.body.user
     ){
     return true
   }else{
-    console.log('body is', req.body, deployBuckets.get(req.body.key))
+    console.log('not valid signature, body is', req.body, deployBuckets.get(req.body.key))
     return false
   }
 }

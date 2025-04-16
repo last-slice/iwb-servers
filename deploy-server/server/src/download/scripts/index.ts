@@ -45,7 +45,7 @@ export async function buildScene(data:any, type:string, bucketDirectory?:string,
             await fs.writeFile(sceneTsPath, sceneTsContent, 'utf8');            
         }
         catch(e:any){
-            console.log('error building directory', e.message)
+            console.log('error writing scene files', e.message)
             throw new Error("Error building directory")
         }
     }
